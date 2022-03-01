@@ -1,0 +1,9 @@
+export enum Colors {
+  METALLIC_BLUE = '#2A6171',
+  PEARL_AQUA = '#75CAC3',
+  WATER = '#D7F7F5',
+  INFRA_RED = '#F34573',
+  YANKEES_BLUE = '#272343',
+  LIGHT_SILVER = '#D3DEDC',
+  CULTURED = '#F7F7F7',
+}

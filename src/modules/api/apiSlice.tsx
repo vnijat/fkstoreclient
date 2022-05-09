@@ -2,19 +2,19 @@
 import { BaseQueryFn, createApi, FetchArgs, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
 import { AddItemInterface } from '../../types/addItem';
 import { Data, Item, QueryParams } from '../../types/ItemsQuery';
+import { RootState } from '../redux/store';
 
 // Define a service using a base URL and expected endpoints
 
-// const asyncFetchBaseQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = (args, api, extraOptions) => {
-
-
-
-// };
-
+const asyncFetchBaseQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (args, api, extraOptions) => {
+    const baseUrl = (api.getState() as RootState).appStateSlicer.url;
+    const rawBaseQuery = fetchBaseQuery({ baseUrl });
+    return rawBaseQuery(args, api, extraOptions);
+};
 
 export const inventoryApi = createApi({
     reducerPath: 'inventoryApi',
-    baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3000' }),
+    baseQuery: asyncFetchBaseQuery,
     endpoints: (build) => ({
         getAllItems: build.query<Data<Item>, undefined | QueryParams>({
             providesTags: ['Items'],
@@ -24,6 +24,14 @@ export const inventoryApi = createApi({
                     params: filter,
                 };
             },
+        }),
+        getItemInputs: build.query<undefined, any>({
+            providesTags: ['itemInputs'],
+            query: () => {
+                return {
+                    url: '/items/inputs'
+                };
+            }
         }),
         deleteManyItems: build.mutation<undefined, { Ids: number[]; }>({
             query: (Ids) => {
@@ -46,10 +54,10 @@ export const inventoryApi = createApi({
             invalidatesTags: ['Items']
         })
     }),
-    tagTypes: ['Items']
+    tagTypes: ['Items', 'itemInputs']
 });
 
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const { useGetAllItemsQuery, useDeleteManyItemsMutation, useAddItemMutation } = inventoryApi;
+export const { useGetAllItemsQuery, useDeleteManyItemsMutation, useAddItemMutation, useGetItemInputsQuery } = inventoryApi;

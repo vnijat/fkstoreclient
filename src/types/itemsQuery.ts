@@ -1,7 +1,7 @@
 interface QueryParams {
   limit?: number;
   offset?: number;
-  barCode?: string;
+  barcode?: string;
   category?: string;
 }
 
@@ -9,6 +9,7 @@ interface Common {
   id: number;
   createdAt: Date;
   updatedAt: Date;
+  skuCode?: string;
 }
 
 interface Supplier extends Common {
@@ -18,7 +19,7 @@ interface Supplier extends Common {
   email?: string;
 }
 
-interface BarCode extends Common {
+interface Barcode extends Common {
   code: string;
 }
 
@@ -54,7 +55,7 @@ interface Item {
   supplier: Supplier;
   createdAt: Date;
   updatedAt: Date;
-  barCode: BarCode;
+  barcode: Barcode;
   category: Category;
   photoPath?: string;
   location: Location;

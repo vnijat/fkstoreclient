@@ -7,15 +7,16 @@ interface PrimaryButtonProps {
     textColor?: string;
     onPress: () => void;
     buttonColor?: string;
-
+    width?: number;
+    height?: number;
 }
 
-export const PrimaryButton: FC<PrimaryButtonProps> = ({ title, textColor, onPress, buttonColor }) => {
+export const PrimaryButton: FC<PrimaryButtonProps> = ({ title, textColor, onPress, buttonColor, width, height }) => {
     const style = useMemo(() => getStyle(textColor, buttonColor), [buttonColor, textColor]);
 
 
     return (
-        < Pressable onPress={onPress} style={style.buttonContainer}>
+        < Pressable onPress={onPress} style={[style.buttonContainer, { width, height }]}>
             <Text style={style.title}>
                 {title}
             </Text>

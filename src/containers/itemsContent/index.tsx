@@ -1,17 +1,15 @@
-import React, { FC, useMemo, useRef } from "react";
+import React, { FC, useMemo, useRef, useState } from "react";
 import { Image, Pressable, Text, View } from "react-native";
-import { Flyout } from "react-native-windows";
 import { useSelector } from "react-redux";
-import { useGetAllItemsQuery } from "../../modules/api/apiSlice";
 import { addItemId, setIsEditMode } from "../../modules/redux/ItemsSlicer";
+import { selectIsEditMode } from "../../modules/redux/selectors/itemSelectors";
 import { RootState, useAppDispatch } from "../../modules/redux/store";
-import { Data, Item } from "../../types/ItemsQuery";
+import { Colors } from "../../utils/colors";
 import { currency } from "../../utils/currency";
-import { Signs } from "../../utils/unicodeSigns";
 import { getStyle } from "./styles";
 
 
-interface FlatListContentProps {
+interface ItemsContentProps {
     id: number;
     name: string;
     barcode: string;
@@ -26,11 +24,11 @@ interface FlatListContentProps {
     photoName: string;
 }
 
-export const FlatListContent: FC<FlatListContentProps> = ({ id, name, barcode, category, quantity, unit, purchasePrice, stockPrice, itemIndex, lastItem, selectBulk, photoName }) => {
+const ItemsContent: FC<ItemsContentProps> = ({ id, name, barcode, category, quantity, unit, purchasePrice, stockPrice, itemIndex, lastItem, selectBulk, photoName }) => {
     const style = getStyle();
     const dispatch = useAppDispatch();
-    const isLastInList = lastItem === itemIndex;
-    const isEditMode = useSelector((state: RootState) => state.itemsSlicer.isEditMode);
+    const isEditMode = useSelector(selectIsEditMode);
+    const [opacity, setOpacity] = useState(1);
     const { isSelected, selectedCount, firstSelectedItem } = useSelector((state: RootState) => {
         return {
             firstSelectedItem: state.itemsSlicer.selectedItems[0],
@@ -38,6 +36,8 @@ export const FlatListContent: FC<FlatListContentProps> = ({ id, name, barcode, c
             selectedCount: state.itemsSlicer.selectedItems.length,
         };
     });
+
+    const pressableRef = useRef(null);
 
     const onLongPress = ({ nativeEvent }: any) => {
         if (isEditMode) {
@@ -47,7 +47,13 @@ export const FlatListContent: FC<FlatListContentProps> = ({ id, name, barcode, c
         dispatch(addItemId({ index: itemIndex, Id: id }));
     };
 
+    const onHoverIn = () => {
+        setOpacity(0.7);
+    };
 
+    const onHoverOut = () => {
+        setOpacity(1);
+    };
 
     const onPress = ({ nativeEvent: { shiftKey } }: any) => {
         if (isEditMode) {
@@ -64,41 +70,33 @@ export const FlatListContent: FC<FlatListContentProps> = ({ id, name, barcode, c
         };
     };
 
-
     const RenderColumnContent: FC<{ content: string | number; id: number; columnID: number; lastItem: number; photoName: string; }> = ({ content, id, columnID, lastItem }) => {
-        const isFirstColumn = columnID === 0;
-        const isLastinRow = lastItem === columnID;
-        const nameColumn = columnID === 1;
         return (
             <>
-                <View key={id} style={[style.columContent, isFirstColumn && { flexGrow: 0.2 }, nameColumn && { justifyContent: 'flex-start' }]}>
+                <View key={id} style={[style.columContent]}>
                     {(columnID === 1 && photoName.length) ? <Image key={id + photoName} style={{ borderRadius: 4, width: 60, height: 60, marginRight: 5 }} resizeMode={'contain'} source={{ uri: `http://localhost:3000/items/photos/${photoName}` }} />
                         : null}
                     <Text key={`${content}-${id}`} style={style.columContentText}>
                         {content}
                     </Text>
                 </View>
-
-                {/* {isLastinRow ? null : < View style={style.rowVertical} />} */}
             </>
         );
     };
 
     const renderRow = useMemo(() => {
-        return [itemIndex + 1, name, barcode, category, quantity, unit, currency.format(purchasePrice), currency.format(stockPrice)].map((content, i, array) => {
+        return [name, barcode, category, quantity, unit, currency.format(purchasePrice), currency.format(stockPrice)].map((content, i, array) => {
             return <RenderColumnContent content={content} id={id + i} key={i} columnID={i} lastItem={array.length - 1} photoName={photoName} />;
         });
 
-    }, [itemIndex, name, barcode, category, quantity, unit, purchasePrice, stockPrice, photoName]);
-
-
-
+    }, [name, barcode, category, quantity, unit, purchasePrice, stockPrice, photoName]);
     return (
         <>
-            <Pressable key={id} onLongPress={onLongPress} onPress={onPress} style={({ pressed }) => [{ flexDirection: 'row', flex: 1, justifyContent: 'space-evenly', backgroundColor: (pressed || isSelected) ? '#A2D9CE' : 'transparent' }]} >
+            <Pressable ref={pressableRef} key={id} onLongPress={onLongPress} onHoverIn={onHoverIn} onHoverOut={onHoverOut} onPress={onPress} style={({ pressed }) => [{ margin: 1, flexDirection: 'row', opacity: opacity, borderRadius: 5, flex: 1, justifyContent: 'space-evenly', backgroundColor: (pressed || isSelected) ? Colors.OLD_GOLD : Colors.FLORAL_WHITE }]} >
                 {renderRow}
             </Pressable>
-            {isLastInList ? null : <View style={style.rowHorizontal} />}
         </>
     );
 };
+
+export default ItemsContent; 

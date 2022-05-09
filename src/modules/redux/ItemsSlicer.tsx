@@ -1,13 +1,19 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { AddItemInterface } from '../../types/addItem';
+import { ItemForPostDefaults } from '../../utils/defaults';
 
 interface ItemsSlicerInterface {
     selectedItems: Array<{ index: number; Id: number; }>;
     isEditMode: boolean;
+    itemforPost: AddItemInterface;
 }
 
 const initialState = {
     selectedItems: [],
-    isEditMode: false
+    isEditMode: false,
+    itemforPost: {
+        ...ItemForPostDefaults
+    }
 } as ItemsSlicerInterface;
 
 const itemsSlicer = createSlice({
@@ -28,9 +34,15 @@ const itemsSlicer = createSlice({
         ,
         setIsEditMode: (state, action: PayloadAction<boolean>) => {
             state.isEditMode = action.payload;
+        },
+        setItemForPost: (state, action: PayloadAction<{ key: string; value: string | number; }>) => {
+            Object.assign(state.itemforPost, { [action.payload.key]: action.payload.value });
+        },
+        clearItemForPosting: (state) => {
+            state.itemforPost = ItemForPostDefaults;
         }
     },
 });
 
-export const { addItemId, setIsEditMode, clearSelectedItems } = itemsSlicer.actions;
+export const { addItemId, setIsEditMode, clearSelectedItems, setItemForPost, clearItemForPosting } = itemsSlicer.actions;
 export default itemsSlicer.reducer;

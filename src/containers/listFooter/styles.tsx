@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { Colors } from '../../utils/colors';
 
 export const getStyle = () => {
     const style = StyleSheet.create({
@@ -6,7 +7,7 @@ export const getStyle = () => {
             width: "100%",
             height: 45,
             flexDirection: 'row',
-            backgroundColor: '#4DB6AC',
+            backgroundColor: Colors.FLORAL_WHITE,
             alignItems: 'center',
             paddingHorizontal: 10,
             justifyContent: 'space-evenly',

@@ -1,10 +1,11 @@
 import { StyleSheet } from 'react-native';
+import { Colors } from '../../utils/colors';
 
 export const getStyle = () => {
     const style = StyleSheet.create({
         container: {
-            backgroundColor: '#E8F6F3',
-            flex: 1
+            backgroundColor: Colors.ALABASTER,
+            flex: 1,
         },
         columContent: {
             height: "100%",
@@ -21,19 +22,6 @@ export const getStyle = () => {
             color: 'black',
             fontSize: 12,
         },
-        rowVertical: {
-            height: "100%",
-            width: 1,
-            backgroundColor: '#FFF',
-            alignSelf: 'center',
-            
-        },
-        rowHorizontal: {
-            height: 1,
-            backgroundColor: 'white',
-            width: '100%',
-            alignSelf: 'center'
-        }
     });
 
     return style;

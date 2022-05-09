@@ -1,9 +1,10 @@
 import { StyleSheet } from 'react-native';
+import { Colors } from 'react-native/Libraries/NewAppScreen';
 
 export const getStyle = () => {
     const style = StyleSheet.create({
         container: {
-            backgroundColor: '#E8F6F3',
+            backgroundColor: Colors.FLORAL_WHITE,
             flex: 1
         },
         logoText: {
@@ -14,7 +15,7 @@ export const getStyle = () => {
         drawerItemLogo: {
             justifyContent: 'center',
             alignItems: 'center',
-            width: "100%"
+            width: "100%",
         },
     });
 

@@ -1,14 +1,14 @@
 export interface AddItemInterface {
   name: string;
   description?: string;
-  purchasePrice: number;
-  pricePerUnit: number;
-  quantity: number;
-  unitId: number;
-  supplierId: number;
-  barCodeId: number;
-  categoryId: number;
-  locationId: number;
-  storeId: number;
+  purchasePrice?: string;
+  pricePerUnit?: string;
+  quantity?: string;
+  unitId?: string;
+  supplierId?: string;
+  barcodeId?: string;
+  categoryId?: string;
+  locationId?: string;
+  storeId?: string;
   color?: string;
 }

@@ -6,7 +6,7 @@ interface AppStateInterface {
 }
 
 const initialState = {
-    url: '',
+    url: 'http://localhost:3000',
     isShowAddItemPopUp: false
 } as AppStateInterface;
 

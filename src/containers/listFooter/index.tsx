@@ -3,6 +3,7 @@ import { View } from "react-native";
 import { Alert } from "react-native-windows";
 import { useSelector } from "react-redux";
 import { AlertModal } from "../../components/alertModal";
+import { PagePagination } from "../../components/pagePagination";
 import { PrimaryButton } from "../../components/primaryButton";
 import { useAddItemMutation, useDeleteManyItemsMutation } from "../../modules/api/apiSlice";
 import { clearSelectedItems, setIsEditMode } from "../../modules/redux/ItemsSlicer";
@@ -37,7 +38,8 @@ const ListFooter: FC<ListFooterProps> = ({ }) => {
     };
 
     const cancelDeletion = () => {
-        console.log('canceled-->>');
+        dispatch(clearSelectedItems());
+        dispatch(setIsEditMode(false));
     };
     const deleteItem = () => {
         // await alertWithPromise('do you want to delete Items?', 'you cant recover deletet Items!', 'Cancel', 'Yes').then((value) => {
@@ -54,6 +56,7 @@ const ListFooter: FC<ListFooterProps> = ({ }) => {
 
     return (
         <View style={style.container}  >
+            <PagePagination />
             {isEditMode && <>
                 <PrimaryButton title={'Cancel'} onPress={cancelEdit} />
                 <PrimaryButton title={'Delete'} onPress={deleteItem} buttonColor={'#E74C3C'} />

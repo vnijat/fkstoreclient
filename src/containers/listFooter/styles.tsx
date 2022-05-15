@@ -10,7 +10,6 @@ export const getStyle = () => {
             backgroundColor: Colors.FLORAL_WHITE,
             alignItems: 'center',
             paddingHorizontal: 10,
-            justifyContent: 'space-evenly',
         },
 
 

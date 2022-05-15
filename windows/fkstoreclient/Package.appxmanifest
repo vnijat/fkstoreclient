@@ -9,7 +9,7 @@
   <Identity
     Name="bae43724-a05b-49ec-a840-f0d87e8089a9"
     Publisher="CN=neejee"
-    Version="1.0.0.0" />
+    Version="1.0.1.0" />
 
   <mp:PhoneIdentity PhoneProductId="bae43724-a05b-49ec-a840-f0d87e8089a9" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 

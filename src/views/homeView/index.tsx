@@ -1,16 +1,12 @@
 import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { ActivityIndicator, FlatList, Text, View, Pressable, Alert, Button } from 'react-native';
-import { IKeyboardEvent } from 'react-native-windows';
 import { useSelector } from 'react-redux';
-import { InventoryInfo } from '../../components/inventoryInfo';
 import { ListHeader } from '../../components/listHeader';
 import RowItem from '../../components/rowItem';
-import AddItemСontainer from '../../containers/addItem';
 import ItemsContent from '../../containers/itemsContent';
 import ListFooter from '../../containers/listFooter';
 import { useGetAllItemsQuery } from '../../modules/api/apiSlice';
 import { addItemId } from '../../modules/redux/ItemsSlicer';
-import { setQueryParams } from '../../modules/redux/querySlicer';
 import { RootState, useAppDispatch } from '../../modules/redux/store';
 import { selectMany } from '../../services/ItemServices';
 import { Colors } from '../../utils/colors';
@@ -31,7 +27,6 @@ export const HomeView: FC<any> = ({ navigation }) => {
     ),
     pollingInterval: 5000
   });
-  const isAllfetched = queryData?.items.length === itemsCount;
 
   useEffect(() => {
     if (fetchError && !isAlerted) {
@@ -47,13 +42,7 @@ export const HomeView: FC<any> = ({ navigation }) => {
     }
   }, [fetchError, isAlerted]);
 
-  console.log("DAta--->>>", queryData);
   const selectBulk = useCallback((from: number, to: number) => selectMany(from, to, queryData!, dispatch, addItemId), [queryData]);
-
-  const loadMore = () => {
-    const limit = selectQueryParams.limit! + 10;
-    dispatch(setQueryParams({ limit }));
-  };
 
 
   return (

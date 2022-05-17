@@ -44,11 +44,16 @@ export const HomeView: FC<any> = ({ navigation }) => {
 
   const selectBulk = useCallback((from: number, to: number) => selectMany(from, to, queryData!, dispatch, addItemId), [queryData]);
 
+  const renderFooter = useMemo(() => {
+    return < ListFooter meta={queryData?.meta} />;
+  },
+    [queryData]);
+
 
   return (
     <View style={style.container}>
       <View style={{ flex: 0.9, flexGrow: 0.9 }}>
-        <ListHeader items={queryData?.items!} />
+        <ListHeader />
         <RowItem height={10} />
         {isLoading && <ActivityIndicator />}
         <FlatList
@@ -81,15 +86,15 @@ export const HomeView: FC<any> = ({ navigation }) => {
                 purchasePrice={Number(purchasePrice)}
                 unit={unit.name}
                 itemIndex={index}
-                lastItem={queryData.items.length - 1}
+                lastItem={(queryData?.items.length ?? 1) - 1}
                 selectBulk={selectBulk}
                 photoName={photoPath || ''}
               />
             );
           }}
         />
-        <ListFooter />
       </View>
+      {renderFooter}
     </View >
   );
 };

@@ -5,10 +5,10 @@ import { getStyle } from "./styles";
 
 
 interface ListHeaderProps {
-    items: Item[];
+    columnHeaders?: object;
 }
 
-export const ListHeader: FC<ListHeaderProps> = ({ items }) => {
+export const ListHeader: FC<ListHeaderProps> = ({ columnHeaders }) => {
     const style = getStyle();
     const columns = ['name', 'barcode', 'category', 'quantity', 'unit', 'price', 'stock price'].map((item) => item.toUpperCase());
 

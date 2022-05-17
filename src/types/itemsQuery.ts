@@ -65,6 +65,16 @@ interface Item {
 interface Data<T> {
   items: T[];
   itemsCount: number;
+  meta: Imeta;
 }
 
-export type {QueryParams, Data, Item};
+interface Imeta {
+  page?: number;
+  take?: number;
+  itemCount?: number;
+  pageCount?: number;
+  hasPreviousPage: boolean;
+  hasNextPage: boolean;
+}
+
+export type {QueryParams, Data, Item, Imeta};

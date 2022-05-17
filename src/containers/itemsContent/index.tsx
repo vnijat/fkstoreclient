@@ -19,7 +19,7 @@ interface ItemsContentProps {
     purchasePrice: number;
     stockPrice: number;
     itemIndex: number;
-    lastItem: number;
+    lastItem: number | undefined;
     selectBulk: Function;
     photoName: string;
 }

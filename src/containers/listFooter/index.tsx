@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useMemo, useState } from "react";
 import { View } from "react-native";
 import { Alert } from "react-native-windows";
 import { useSelector } from "react-redux";
@@ -8,14 +8,17 @@ import { PrimaryButton } from "../../components/primaryButton";
 import { useAddItemMutation, useDeleteManyItemsMutation } from "../../modules/api/apiSlice";
 import { clearSelectedItems, setIsEditMode } from "../../modules/redux/ItemsSlicer";
 import { RootState, useAppDispatch } from "../../modules/redux/store";
+import { Imeta } from "../../types/ItemsQuery";
 import { getStyle } from "./styles";
 
 
 
 interface ListFooterProps {
+    meta?: Imeta;
 }
 
-const ListFooter: FC<ListFooterProps> = ({ }) => {
+
+const ListFooter: FC<ListFooterProps> = ({ meta }) => {
     const style = getStyle();
     const dispatch = useAppDispatch();
     const isEditMode = useSelector((state: RootState) => state.itemsSlicer.isEditMode);
@@ -54,9 +57,15 @@ const ListFooter: FC<ListFooterProps> = ({ }) => {
         ], { onDismiss: () => console.log('dissmissed'), cancelable: false });
     };
 
+    const renderPageCount = useMemo(() => {
+        return <PagePagination pageCount={meta?.pageCount ?? 0} page={meta?.page} />;
+
+    }, [meta]);
+
+
     return (
         <View style={style.container}  >
-            <PagePagination />
+            {renderPageCount}
             {isEditMode && <>
                 <PrimaryButton title={'Cancel'} onPress={cancelEdit} />
                 <PrimaryButton title={'Delete'} onPress={deleteItem} buttonColor={'#E74C3C'} />

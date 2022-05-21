@@ -3,10 +3,7 @@ import { QueryParams } from '../../types/ItemsQuery';
 
 
 
-const initialState = {
-    limit: 21,
-    offset: 0,
-} as QueryParams;
+const initialState = {} as QueryParams;
 
 const querySlicer = createSlice({
     name: 'queryParams',

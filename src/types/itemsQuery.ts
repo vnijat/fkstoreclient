@@ -1,8 +1,17 @@
+import {Order} from '../enums/order.enum';
+
 interface QueryParams {
-  limit?: number;
-  offset?: number;
-  barcode?: string;
-  category?: string;
+  page?: number;
+  search?: string;
+  take?: number;
+  barcodeId?: string;
+  categoryId?: string;
+  supplierId?: string;
+  unitId?: string;
+  locationId?: string;
+  storeId?: string;
+  sort?: string;
+  order?: Order;
 }
 
 interface Common {

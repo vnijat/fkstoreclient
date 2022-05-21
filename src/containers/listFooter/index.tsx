@@ -58,10 +58,9 @@ const ListFooter: FC<ListFooterProps> = ({ meta }) => {
     };
 
     const renderPageCount = useMemo(() => {
-        return <PagePagination pageCount={meta?.pageCount ?? 0} page={meta?.page} />;
+        return <PagePagination pageCount={meta?.pageCount ?? 0} page={meta?.page} hasPreviousPage={meta?.hasPreviousPage} hasNextPage={meta?.hasNextPage} />;
 
-    }, [meta]);
-
+    }, [meta?.pageCount, meta?.page, meta?.hasNextPage, meta?.hasPreviousPage]);
 
     return (
         <View style={style.container}  >

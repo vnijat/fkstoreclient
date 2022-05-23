@@ -22,6 +22,13 @@ export const getStyle = () => {
             color: 'black',
             fontSize: 12,
         },
+        rowItem: {
+            margin: 1,
+            flexDirection: 'row',
+            borderRadius: 5,
+            flex: 1,
+            justifyContent: 'space-evenly',
+        }
     });
 
     return style;

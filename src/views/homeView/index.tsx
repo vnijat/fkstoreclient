@@ -17,12 +17,13 @@ export const HomeView: FC<any> = ({ navigation }) => {
   const selectQueryParams = useSelector((state: RootState) => state.querySlicer);
   const dispatch = useAppDispatch();
   const [isAlerted, setIsAlerted] = useState<boolean>(false);
-  const { data: queryData, error: fetchError, isLoading, itemsCount, } = useGetAllItemsQuery(selectQueryParams, {
-    selectFromResult: ({ data, isLoading, isUninitialized, error, }) => ({
+  const { currentData: queryData, error: fetchError, isLoading, itemsCount } = useGetAllItemsQuery(selectQueryParams, {
+    selectFromResult: ({ data, isLoading, isUninitialized, error, currentData }) => ({
       data,
       error,
       isLoading: isUninitialized ? true : isLoading,
       itemsCount: data?.itemsCount ? data?.itemsCount : 0,
+      currentData,
     }
     ),
     pollingInterval: 5000
@@ -42,6 +43,7 @@ export const HomeView: FC<any> = ({ navigation }) => {
     }
   }, [fetchError, isAlerted]);
 
+
   const selectBulk = useCallback((from: number, to: number) => selectMany(from, to, queryData!, dispatch, addItemId), [queryData]);
 
   const renderFooter = useMemo(() => {
@@ -52,47 +54,54 @@ export const HomeView: FC<any> = ({ navigation }) => {
 
   return (
     <View style={style.container}>
-      <View style={{ flex: 0.9, flexGrow: 0.9 }}>
+      <View style={{ flex: 0.9, flexGrow: 0.9, }}>
         <ListHeader />
         <RowItem height={10} />
-        {isLoading && <ActivityIndicator />}
-        <FlatList
-          style={{ flex: 1, backgroundColor: Colors.ALABASTER, margin: 5 }}
-          data={queryData?.items}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item, index }) => {
-            const {
-              name,
-              barcode,
-              category,
-              quantity,
-              purchasePrice,
-              unit,
-              id,
-              photoPath,
-              pricePerUnit,
-              description,
-              supplier,
-              store } = item;
-            return (
-              <ItemsContent
-                key={id + index}
-                id={id}
-                name={name}
-                barcode={barcode?.code!}
-                category={category?.title!}
-                quantity={Number(quantity)}
-                stockPrice={Number(pricePerUnit)}
-                purchasePrice={Number(purchasePrice)}
-                unit={unit.name}
-                itemIndex={index}
-                lastItem={(queryData?.items.length ?? 1) - 1}
-                selectBulk={selectBulk}
-                photoName={photoPath || ''}
-              />
-            );
-          }}
-        />
+        {isLoading ?
+          <View style={{ position: 'absolute', top: 100, alignSelf: 'center' }}>
+            <ActivityIndicator size={'small'} color={Colors.OLD_GOLD} />
+          </View>
+          :
+          <FlatList
+            style={{ flex: 1, backgroundColor: Colors.ALABASTER, margin: 5 }}
+            data={queryData?.items}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({ item, index }) => {
+              const {
+                name,
+                barcode,
+                category,
+                quantity,
+                purchasePrice,
+                unit,
+                id,
+                photoPath,
+                pricePerUnit,
+                description,
+                supplier,
+                store } = item;
+              return (
+                <ItemsContent
+                  key={id + index}
+                  id={id}
+                  name={name}
+                  barcode={barcode?.code!}
+                  category={category?.title!}
+                  quantity={Number(quantity)}
+                  stockPrice={Number(pricePerUnit)}
+                  purchasePrice={Number(purchasePrice)}
+                  unit={unit.name}
+                  itemIndex={index}
+                  lastItem={(queryData?.items.length ?? 1) - 1}
+                  selectBulk={selectBulk}
+                  photoName={photoPath || ''}
+                />
+              );
+            }}
+          />
+
+        }
+
       </View>
       {renderFooter}
     </View >

@@ -36,7 +36,15 @@ export const PagePagination: FC<IPagePAgination> = ({ page, pageCount, take, set
 
     const renderPageNumbers = useMemo(() => {
         if (page && pageCountToNumbers?.length) {
-            const sliceStart = page >= 5 ? page - 2 : 0;
+            let diffFromMax = 2;
+            let diff = pageCount! - page;
+            if (diff <= 2) {
+                for (let i = 5; diff >= 0; i--) {
+                    diff--;
+                    diffFromMax = i;
+                }
+            }
+            const sliceStart = page >= 5 ? (page - diffFromMax) : 0;
             const sliceEnd = page >= 5 ? page + 3 : 5;
             return pageCountToNumbers?.slice(sliceStart, sliceEnd).map((item, index) => {
                 const selectedPage = item === page;
@@ -49,12 +57,12 @@ export const PagePagination: FC<IPagePAgination> = ({ page, pageCount, take, set
         } else {
             return null;
         }
-    }, [page, pageCountToNumbers.length]);
+    }, [page, pageCountToNumbers.length, pageCount]);
 
 
     const renderPages = useMemo(() => {
         return (
-            <View style={{ flexDirection: "row" }}>
+            <View style={{ flexDirection: "row", width: 160, justifyContent: 'center' }}>
                 {renderPageNumbers}
             </View>
         );

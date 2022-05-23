@@ -6,7 +6,7 @@ export const getStyle = (textColor?: string, buttonColor?: string) => {
         paginationContainer: {
             flexDirection: 'row',
             height: 45,
-            alignItems: 'center'
+            alignItems: 'center',
         },
         buttonsStyle: {
             height: 30,
@@ -15,11 +15,14 @@ export const getStyle = (textColor?: string, buttonColor?: string) => {
         pageText: {
             color: Colors.FLORAL_WHITE,
             textAlign: 'center',
+            fontSize:12
         },
         pageButtons: {
-            paddingHorizontal: 5,
+            height: 25,
+            width: 30,
             margin: 1,
-            borderRadius: 2
+            borderRadius: 2,
+            justifyContent: 'center'
         }
     });
 

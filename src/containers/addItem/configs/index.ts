@@ -30,6 +30,19 @@ const inputsConfig = [
     selectable: true,
   },
   {
+    title: 'Color',
+    width: 130,
+    height: 35,
+    selectable: true,
+  },
+  {
+    title: 'Label',
+    width: 130,
+    height: 35,
+    selectable: true,
+  },
+
+  {
     title: 'Category',
     width: 130,
     height: 35,

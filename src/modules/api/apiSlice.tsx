@@ -43,7 +43,7 @@ export const inventoryApi = createApi({
             },
             invalidatesTags: ['Items']
         }),
-        addItem: build.mutation<undefined, FormData>({
+        addItem: build.mutation<undefined, any>({
             query: (body) => {
                 return {
                     url: '/items/',

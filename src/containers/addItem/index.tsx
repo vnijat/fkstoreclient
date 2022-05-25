@@ -33,10 +33,11 @@ const AddItemСontainer: FC<AddItemProps> = ({ }) => {
     const itemForPosting: any = useSelector((state: RootState) => state.itemsSlicer.itemforPost);
     const dispatch = useAppDispatch();
     const inputRef = useRef<any>([]);
+
     const postItem = () => {
-        const formdata = new FormData();
-        formdata.append('item', JSON.stringify(itemForPosting));
-        apiAdditem(formdata);
+        // const formdata = new FormData();
+        // formdata.append('item', JSON.stringify(itemForPosting));
+        apiAdditem(itemForPosting);
     };
 
     useEffect(() => data && setItemInputs(data), [data, itemInputs]);

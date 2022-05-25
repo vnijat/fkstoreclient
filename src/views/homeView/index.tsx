@@ -17,12 +17,13 @@ export const HomeView: FC<any> = ({ navigation }) => {
   const selectQueryParams = useSelector((state: RootState) => state.querySlicer);
   const dispatch = useAppDispatch();
   const [isAlerted, setIsAlerted] = useState<boolean>(false);
-  const { data: queryData, error: fetchError, isLoading, itemsCount, } = useGetAllItemsQuery(selectQueryParams, {
-    selectFromResult: ({ data, isLoading, isUninitialized, error, }) => ({
+  const { data: queryData, error: fetchError, isLoading, itemsCount, currentData } = useGetAllItemsQuery(selectQueryParams, {
+    selectFromResult: ({ data, isLoading, isUninitialized, error, currentData }) => ({
       data,
       error,
       isLoading: isUninitialized ? true : isLoading,
       itemsCount: data?.itemsCount ? data?.itemsCount : 0,
+      currentData
     }
     ),
     pollingInterval: 5000
@@ -46,8 +47,7 @@ export const HomeView: FC<any> = ({ navigation }) => {
 
   const renderFooter = useMemo(() => {
     return < ListFooter meta={queryData?.meta} />;
-  },
-    [queryData]);
+  }, [queryData?.meta]);
 
 
   return (
@@ -55,7 +55,11 @@ export const HomeView: FC<any> = ({ navigation }) => {
       <View style={{ flex: 0.9, flexGrow: 0.9 }}>
         <ListHeader />
         <RowItem height={10} />
-        {isLoading && <ActivityIndicator />}
+        {isLoading &&
+          <View style={{ position: 'absolute', top: 200 }}>
+            <ActivityIndicator color={Colors.OLD_GOLD} />
+          </View>
+        }
         <FlatList
           style={{ flex: 1, backgroundColor: Colors.ALABASTER, margin: 5 }}
           data={queryData?.items}
@@ -69,7 +73,6 @@ export const HomeView: FC<any> = ({ navigation }) => {
               purchasePrice,
               unit,
               id,
-              photoPath,
               pricePerUnit,
               description,
               supplier,
@@ -88,7 +91,6 @@ export const HomeView: FC<any> = ({ navigation }) => {
                 itemIndex={index}
                 lastItem={(queryData?.items.length ?? 1) - 1}
                 selectBulk={selectBulk}
-                photoName={photoPath || ''}
               />
             );
           }}

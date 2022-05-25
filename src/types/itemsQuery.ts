@@ -66,7 +66,6 @@ interface Item {
   updatedAt: Date;
   barcode: Barcode;
   category: Category;
-  photoPath?: string;
   location: Location;
   store: Store;
 }

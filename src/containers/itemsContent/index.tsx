@@ -21,10 +21,9 @@ interface ItemsContentProps {
     itemIndex: number;
     lastItem: number | undefined;
     selectBulk: Function;
-    photoName: string;
 }
 
-const ItemsContent: FC<ItemsContentProps> = ({ id, name, barcode, category, quantity, unit, purchasePrice, stockPrice, itemIndex, lastItem, selectBulk, photoName }) => {
+const ItemsContent: FC<ItemsContentProps> = ({ id, name, barcode, category, quantity, unit, purchasePrice, stockPrice, itemIndex, lastItem, selectBulk }) => {
     const style = getStyle();
     const dispatch = useAppDispatch();
     const isEditMode = useSelector(selectIsEditMode);
@@ -55,6 +54,7 @@ const ItemsContent: FC<ItemsContentProps> = ({ id, name, barcode, category, quan
         setOpacity(1);
     };
 
+
     const onPress = ({ nativeEvent: { shiftKey } }: any) => {
         if (isEditMode) {
             if (isSelected && selectedCount === 1) {
@@ -70,12 +70,10 @@ const ItemsContent: FC<ItemsContentProps> = ({ id, name, barcode, category, quan
         };
     };
 
-    const RenderColumnContent: FC<{ content: string | number; id: number; columnID: number; lastItem: number; photoName: string; }> = ({ content, id, columnID, lastItem }) => {
+    const RenderColumnContent: FC<{ content: string | number; id: number; }> = ({ content, id }) => {
         return (
             <>
                 <View key={id} style={[style.columContent]}>
-                    {(columnID === 1 && photoName.length) ? <Image key={id + photoName} style={{ borderRadius: 4, width: 60, height: 60, marginRight: 5 }} resizeMode={'contain'} source={{ uri: `http://localhost:3000/items/photos/${photoName}` }} />
-                        : null}
                     <Text key={`${content}-${id}`} style={style.columContentText}>
                         {content}
                     </Text>
@@ -85,11 +83,12 @@ const ItemsContent: FC<ItemsContentProps> = ({ id, name, barcode, category, quan
     };
 
     const renderRow = useMemo(() => {
-        return [name, barcode, category, quantity, unit, currency.format(purchasePrice), currency.format(stockPrice)].map((content, i, array) => {
-            return <RenderColumnContent content={content} id={id + i} key={i} columnID={i} lastItem={array.length - 1} photoName={photoName} />;
+        return [name, barcode, category, quantity, unit, currency.format(purchasePrice), currency.format(stockPrice)].map((content, i) => {
+            return <RenderColumnContent content={content} id={id + i} key={i} />;
         });
 
-    }, [name, barcode, category, quantity, unit, purchasePrice, stockPrice, photoName]);
+    }, [name, barcode, category, quantity, unit, purchasePrice, stockPrice]);
+
     return (
         <>
             <Pressable ref={pressableRef} key={id} onLongPress={onLongPress} onHoverIn={onHoverIn} onHoverOut={onHoverOut} onPress={onPress} style={({ pressed }) => [{ margin: 1, flexDirection: 'row', opacity: opacity, borderRadius: 5, flex: 1, justifyContent: 'space-evenly', backgroundColor: (pressed || isSelected) ? Colors.OLD_GOLD : Colors.FLORAL_WHITE }]} >

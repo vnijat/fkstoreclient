@@ -43,6 +43,7 @@ export const HomeView: FC<any> = ({ navigation }) => {
     }
   }, [fetchError, isAlerted]);
 
+
   const selectBulk = useCallback((from: number, to: number) => selectMany(from, to, queryData!, dispatch, addItemId), [queryData]);
 
   const renderFooter = useMemo(() => {
@@ -52,7 +53,7 @@ export const HomeView: FC<any> = ({ navigation }) => {
 
   return (
     <View style={style.container}>
-      <View style={{ flex: 0.9, flexGrow: 0.9 }}>
+      <View style={{ flex: 0.9, flexGrow: 0.9, }}>
         <ListHeader />
         <RowItem height={10} />
         {isLoading &&

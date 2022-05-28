@@ -43,6 +43,7 @@ export const HomeView: FC<any> = ({ navigation }) => {
     }
   }, [fetchError, isAlerted]);
 
+
   const selectBulk = useCallback((from: number, to: number) => selectMany(from, to, queryData!, dispatch, addItemId), [queryData]);
 
   const renderFooter = useMemo(() => {

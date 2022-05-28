@@ -54,8 +54,7 @@ const ItemsContent: FC<ItemsContentProps> = ({ id, name, barcode, category, quan
         setOpacity(1);
     };
 
-
-    const onPress = ({ nativeEvent: { shiftKey } }: any) => {
+    const onPressItem = ({ nativeEvent: { shiftKey } }: any) => {
         if (isEditMode) {
             if (isSelected && selectedCount === 1) {
                 dispatch(setIsEditMode(false));
@@ -91,7 +90,12 @@ const ItemsContent: FC<ItemsContentProps> = ({ id, name, barcode, category, quan
 
     return (
         <>
-            <Pressable ref={pressableRef} key={id} onLongPress={onLongPress} onHoverIn={onHoverIn} onHoverOut={onHoverOut} onPress={onPress} style={({ pressed }) => [{ margin: 1, flexDirection: 'row', opacity: opacity, borderRadius: 5, flex: 1, justifyContent: 'space-evenly', backgroundColor: (pressed || isSelected) ? Colors.OLD_GOLD : Colors.FLORAL_WHITE }]} >
+            <Pressable ref={pressableRef} key={id}
+                onLongPress={onLongPress}
+                onHoverIn={onHoverIn}
+                onHoverOut={onHoverOut}
+                onPress={onPressItem}
+                style={({ pressed }) => [{ backgroundColor: (pressed || isSelected) ? Colors.OLD_GOLD : Colors.FLORAL_WHITE, opacity: opacity }, style.rowItem]} >
                 {renderRow}
             </Pressable>
         </>

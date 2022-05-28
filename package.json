@@ -11,6 +11,7 @@
     "windows": "react-native run-windows"
   },
   "dependencies": {
+    "@fluentui/react-native": "^0.29.12",
     "@react-native-async-storage/async-storage": "1.15.17",
     "@react-native-picker/picker": "2.3.1",
     "@react-navigation/drawer": "6.1.8",

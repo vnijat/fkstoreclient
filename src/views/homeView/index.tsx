@@ -1,6 +1,8 @@
-import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
-import { ActivityIndicator, FlatList, Text, View, Pressable, Alert, Button } from 'react-native';
+import React, { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { ActivityIndicator, FlatList, Text, View, Pressable, Alert, ScrollView } from 'react-native';
+import { Flyout } from 'react-native-windows';
 import { useSelector } from 'react-redux';
+import CustomPicker from '../../components/customPicker';
 import { InputItem } from '../../components/inputItem';
 import { ListHeader } from '../../components/listHeader';
 import RowItem from '../../components/rowItem';
@@ -14,11 +16,15 @@ import { selectMany } from '../../services/ItemServices';
 import { Colors } from '../../utils/colors';
 import { getStyle } from './style';
 
+
 export const HomeView: FC<any> = ({ navigation }) => {
   const style = getStyle();
   const selectQueryParams = useSelector((state: RootState) => state.querySlicer);
   const dispatch = useAppDispatch();
   const [isAlerted, setIsAlerted] = useState<boolean>(false);
+  const [showFl, setShowFl] = useState<boolean>(false);
+
+  const ViewRef = useRef(null);
   const { data: queryData, error: fetchError, isLoading, itemsCount } = useGetAllItemsQuery(selectQueryParams, {
     selectFromResult: ({ data, isLoading, isUninitialized, error }) => ({
       data,
@@ -97,6 +103,8 @@ export const HomeView: FC<any> = ({ navigation }) => {
     />;
   }, [queryData?.items]);
 
+
+
   return (
     <View style={style.container}>
       <View style={{ flex: 0.9, flexGrow: 0.9 }}>
@@ -104,6 +112,14 @@ export const HomeView: FC<any> = ({ navigation }) => {
           <View style={{ height: 30, flexDirection: 'row' }}>
             <View style={{ flex: 1 }}>
               {renderSearch}
+              <CustomPicker title={'Category'} data={[
+                { id: 1, label: 'Parcha' },
+                { id: 2, label: 'Sap' },
+                { id: 3, label: 'Qaychi' },
+                { id: 4, label: 'Rafiq' },
+                { id: 5, label: 'Nijat ' },
+                { id: 6, label: 'Namiq ' }
+              ]} getSelectedId={(data: Array<number>) => console.log("SELECTED-IDS---->>", data)} />
             </View>
           </View>
         </View>
@@ -114,7 +130,7 @@ export const HomeView: FC<any> = ({ navigation }) => {
             <ActivityIndicator color={Colors.OLD_GOLD} />
           </View>
         }
-        <FlatList
+        {/* <FlatList
           style={{ flex: 1, backgroundColor: Colors.ALABASTER, margin: 5 }}
           data={queryData?.items}
           keyExtractor={(item) => item.id.toString()}
@@ -148,7 +164,7 @@ export const HomeView: FC<any> = ({ navigation }) => {
               />
             );
           }}
-        />
+        /> */}
         {renderList}
       </View>
       {renderFooter}

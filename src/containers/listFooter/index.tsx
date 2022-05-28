@@ -7,6 +7,7 @@ import { PagePagination } from "../../components/pagePagination";
 import { PrimaryButton } from "../../components/primaryButton";
 import { useAddItemMutation, useDeleteManyItemsMutation } from "../../modules/api/apiSlice";
 import { clearSelectedItems, setIsEditMode } from "../../modules/redux/ItemsSlicer";
+import { setQueryParams } from "../../modules/redux/querySlicer";
 import { RootState, useAppDispatch } from "../../modules/redux/store";
 import { Imeta } from "../../types/ItemsQuery";
 import { getStyle } from "./styles";
@@ -38,6 +39,7 @@ const ListFooter: FC<ListFooterProps> = ({ meta }) => {
         apiDeleteItems({ Ids: selectedItemsID });
         dispatch(clearSelectedItems());
         dispatch(setIsEditMode(false));
+        dispatch(setQueryParams({ page: 1, search: '' }));
     };
 
     const cancelDeletion = () => {

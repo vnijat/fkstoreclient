@@ -51,31 +51,32 @@ export const InputItem: FC<IInputItem> = memo(({ inputTitle, isNumeric, placeHol
 
     return (
         <View>
-            <Text style={style.inputTitle}>{`${inputTitle?.toUpperCase()} ${isErorr ? '*' : ''} `}
-            </Text>
-            {selectable ?
-                <Picker
-                    key={id}
-                    style={style.picker}
-                    selectedValue={inputValue}
-                    onValueChange={onValueChange}
-                    itemStyle={style.pickerItem}
-                >
-                    {renderPickerItem}
-                </Picker>
-                :
-                <TextInput
-                    key={id}
-                    style={style.textInput}
-                    ref={(r) => inputRef && inputRef(r)}
-                    onChangeText={onChangeText}
-                    value={inputValue}
-                    placeholder={placeHolder}
-                    multiline={isMultiLine}
-                    maxLength={maxLength}
-                />
+            {!!inputTitle && < Text style={style.inputTitle}>{`${inputTitle?.toUpperCase()} ${isErorr ? '*' : ''} `}</Text>}
+            {
+                selectable ?
+                    <Picker
+                        key={id}
+                        style={style.picker
+                        }
+                        selectedValue={inputValue}
+                        onValueChange={onValueChange}
+                        itemStyle={style.pickerItem}
+                    >
+                        {renderPickerItem}
+                    </Picker >
+                    :
+                    <TextInput
+                        key={id}
+                        style={style.textInput}
+                        ref={(r) => inputRef && inputRef(r)}
+                        onChangeText={onChangeText}
+                        value={inputValue}
+                        placeholder={placeHolder}
+                        multiline={isMultiLine}
+                        maxLength={maxLength}
+                    />
             }
-        </View>
+        </View >
     );
 
 });

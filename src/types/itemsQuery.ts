@@ -10,9 +10,18 @@ interface QueryParams {
   unitId?: string;
   locationId?: string;
   storeId?: string;
+  labelId?: string;
+  colorId?: string;
   sort?: string;
   order?: Order;
 }
+
+type queryFilterByParam = Omit<
+  QueryParams,
+  'page' | 'search' | 'take' | 'sort' | 'order'
+>;
+
+type FilterParamskey = keyof queryFilterByParam;
 
 interface Common {
   id: number;
@@ -85,4 +94,11 @@ interface Imeta {
   hasNextPage: boolean;
 }
 
-export type {QueryParams, Data, Item, Imeta};
+export type {
+  QueryParams,
+  Data,
+  Item,
+  Imeta,
+  queryFilterByParam,
+  FilterParamskey,
+};

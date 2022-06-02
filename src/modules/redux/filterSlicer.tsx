@@ -19,7 +19,7 @@ interface IfilterSlicerInterface {
         colorId: number[];
     };
     selectedWithLabel: Array<{
-        parent: string;
+        parent: FilterParamskey;
         id: number;
         label: string;
     }>;
@@ -54,9 +54,12 @@ const filterSlicer = createSlice({
             }
         },
         setSelectedWithLabel: (state, action: PayloadAction<{ id: number; label: string; parent: FilterParamskey; }>) => {
-            const isExist = state.selectedWithLabel.map((item) => item.id).includes(action.payload.id);
+            const { parent, id } = action.payload;
+            const isExist = state.selectedWithLabel.filter((item) => item.parent === parent).map(item => item.id).includes(id);
             if (isExist) {
-                state.selectedWithLabel = state.selectedWithLabel.filter(item => item.id !== action.payload.id);
+                const filteredParent = state.selectedWithLabel.filter(item => item.parent === parent).filter(item => item.id !== id);
+                const selectedWitoutParent = state.selectedWithLabel.filter(item => item.parent !== parent);
+                state.selectedWithLabel = [...selectedWitoutParent, ...filteredParent];
             } else {
                 state.selectedWithLabel.push(action.payload);
             }

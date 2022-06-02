@@ -15,3 +15,6 @@ export const selectFilterbyForQuery = (
 
 export const selectFilterByForPicker = (state: RootState) =>
   state.filterSlicer.filterByParams;
+
+export const selectSelectedWithLabel = (state: RootState) =>
+  state.filterSlicer.selectedWithLabel;

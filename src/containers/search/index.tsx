@@ -7,9 +7,10 @@ import { InputItem } from '../../components/inputItem';
 import { useGetItemInputsQuery } from '../../modules/api/apiSlice';
 import { clearFilters, setFilterByParams, setSelectedWithLabel } from '../../modules/redux/filterSlicer';
 import { setQueryParams } from '../../modules/redux/querySlicer';
-import { selectFilterByForPicker } from '../../modules/redux/selectors/filterSelector';
+import { selectFilterByForPicker, selectSelectedWithLabel } from '../../modules/redux/selectors/filterSelector';
 import { useAppDispatch } from '../../modules/redux/store';
 import { FilterParamskey } from '../../types/ItemsQuery';
+import FilterItem from './component/filterItems';
 import { getStyle } from './styles';
 
 
@@ -24,6 +25,7 @@ const SearchContainer: FC<ISearchContainer> = ({ searchValue }) => {
     const style = getStyle();
     const dispatch = useAppDispatch();
     const pickerFilterParams = useSelector(selectFilterByForPicker, shallowEqual);
+    const selectedWithLabel = useSelector(selectSelectedWithLabel, shallowEqual);
     const searchInputRef = useRef(null);
     const { data: dataForFilterBy } = useGetItemInputsQuery(undefined, {
         selectFromResult: ({ data }) => ({
@@ -74,12 +76,34 @@ const SearchContainer: FC<ISearchContainer> = ({ searchValue }) => {
         dispatch(clearFilters());
     };
 
+
+    const removeFromFiltered = (selected: { id: number; label: string; parent: FilterParamskey; }) => {
+        dispatch(setSelectedWithLabel(selected));
+        dispatch(setFilterByParams({ id: selected.id, parent: selected.parent }));
+    };
+
+    const renderFilterItems = useMemo(() => {
+        if (selectedWithLabel.length) {
+            return selectedWithLabel.map((item: { id: number, label: string, parent: FilterParamskey; }, index: number) => {
+                const { id, label, parent } = item;
+                return <FilterItem label={label} key={index} onPress={() => removeFromFiltered({ id, label, parent })} />;
+            });
+        } else {
+            return null;
+        }
+
+    }, [selectedWithLabel.length]);
+
+
     return (
         <View style={style.container}>
             <View style={style.search}>
                 <View style={{ flex: 1, paddingTop: 15 }}>
                     {renderSearch}
                 </View>
+            </View>
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap',paddingLeft:17,marginVertical:10 }}>
+                {renderFilterItems}
             </View>
             <View style={style.sortBy}>
                 <Text style={style.filterByText}>

@@ -44,10 +44,8 @@ const SearchContainer: FC<ISearchContainer> = ({ searchValue }) => {
         dispatch(setFilterByParams({ id: selected.id, parent: selected.parent }));
     };
 
-    console.log("isFocused--->>>",searchInputRef?.current?.isFocused());
-
     const renderSearch = useMemo(() => {
-        return <InputItem width={'100%'} setValue={onInputvalueChange} inputValue={searchValue || ''} placeHolder={'Search in name or description'} inputRef={(r) => searchInputRef.current = r} />;
+        return <InputItem width={'100%'} setValue={onInputvalueChange} inputValue={searchValue || ''} inputRef={(r) => searchInputRef.current = r} isSearch={true} />;
 
     }, [searchValue]);
 
@@ -79,7 +77,7 @@ const SearchContainer: FC<ISearchContainer> = ({ searchValue }) => {
     return (
         <View style={style.container}>
             <View style={style.search}>
-                <View style={{ flex: 1 }}>
+                <View style={{ flex: 1, paddingTop: 15 }}>
                     {renderSearch}
                 </View>
             </View>

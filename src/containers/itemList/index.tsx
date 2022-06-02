@@ -1,4 +1,4 @@
-import React, { FC, useCallback } from "react";
+import React, { FC, useCallback, useEffect, useState } from "react";
 import { ActivityIndicator, FlatList, View } from "react-native";
 import { Colors } from "react-native/Libraries/NewAppScreen";
 import { ListHeader } from "../../components/listHeader";
@@ -19,13 +19,21 @@ interface IItemListTable {
 
 const ItemListTable: FC<IItemListTable> = ({ data, isLoading }) => {
     const dispatch = useAppDispatch();
-
-
     const selectBulk = useCallback((from: number, to: number) => selectMany(from, to, data!, dispatch, addItemId), [data]);
-
+    const columnHeaders = [
+        'Name',
+        'Description',
+        'Barcode',
+        'Category',
+        'Color',
+        'Quantity',
+        'Unit',
+        'Purchase Price',
+        'Price Per Unit',
+    ]
     return (
         <>
-            <ListHeader />
+            <ListHeader columnHeaders={columnHeaders} />
             <RowItem height={10} />
             {isLoading ?
                 <View style={{ paddingTop: 100 }}>
@@ -38,30 +46,31 @@ const ItemListTable: FC<IItemListTable> = ({ data, isLoading }) => {
                     renderItem={({ item, index }) => {
                         const {
                             name,
+                            description,
                             barcode,
                             category,
+                            color,
                             quantity,
-                            purchasePrice,
                             unit,
-                            id,
+                            purchasePrice,
                             pricePerUnit,
-                            description,
-                            supplier,
-                            store } = item;
+                            id } = item;
                         return (
                             <ItemsContent
                                 key={id + index}
                                 id={id}
-                                name={name}
-                                barcode={barcode?.code!}
-                                category={category?.title!}
-                                quantity={Number(quantity)}
-                                stockPrice={Number(pricePerUnit)}
-                                purchasePrice={Number(purchasePrice)}
-                                unit={unit.name}
                                 itemIndex={index}
                                 lastItem={(data?.length ?? 1) - 1}
                                 selectBulk={selectBulk}
+                                name={name}
+                                description={description}
+                                barcode={barcode?.code!}
+                                category={category?.title!}
+                                color={color?.name}
+                                quantity={Number(quantity)}
+                                unit={unit?.name}
+                                purchasePrice={Number(purchasePrice)}
+                                stockPrice={Number(pricePerUnit)}
                             />
 
                         );

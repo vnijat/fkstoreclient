@@ -39,11 +39,9 @@ export const HomeView: FC<any> = ({ navigation }) => {
   });
 
 
-
   useEffect(() => {
     dispatch(setQueryParams({ ...queryFilterParams, page: 1 }));
   }, [queryFilterParams]);
-
 
 
   useEffect(() => {
@@ -59,7 +57,6 @@ export const HomeView: FC<any> = ({ navigation }) => {
       setIsAlerted(false);
     }
   }, [fetchError, isAlerted]);
-
 
   const renderFooter = useMemo(() => {
     return < ListFooter meta={queryData?.meta} />;

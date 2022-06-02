@@ -16,19 +16,20 @@ export const getStyle = () => {
         },
         sortBy: {
             flexDirection: 'row',
-            margin: 10,
+            marginBottom: 10,
             alignItems: 'center'
         },
         filterByText: {
             color: Colors.OLD_GOLD,
             fontWeight: '600',
             fontSize: 11,
-            textAlign: 'center'
+            textAlign: 'center',
+            marginLeft: 20
         },
         clearText: {
             color: Colors.OLD_GOLD,
             fontWeight: '700',
-            ontSize: 14,
+            fontSize: 14,
             textAlign: 'center',
             marginLeft: 10
         }

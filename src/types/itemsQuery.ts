@@ -62,6 +62,11 @@ interface Store extends Common {
   phone?: string;
 }
 
+interface Color extends Common {
+  name: string;
+  items?: Item[];
+}
+
 interface Item {
   id: number;
   name: string;
@@ -77,6 +82,7 @@ interface Item {
   category: Category;
   location: Location;
   store: Store;
+  color: Color;
 }
 
 interface Data<T> {

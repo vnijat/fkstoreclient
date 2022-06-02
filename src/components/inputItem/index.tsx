@@ -1,5 +1,5 @@
 import { Picker } from "@react-native-picker/picker";
-import React, { FC, memo, useMemo } from "react";
+import React, { FC, memo, useMemo, useState } from "react";
 import { View, TextInput, Text } from "react-native";
 import Icon from "react-native-vector-icons/Entypo";
 import { regExPatterns } from "../../utils/validation";
@@ -28,6 +28,8 @@ interface IInputItem {
 
 export const InputItem: FC<IInputItem> = memo(({ inputTitle, isNumeric, placeHolder, width, height, maxLength, isMultiLine, inputRef, setValue, inputValue, id, selectable, selectableData, isErorr, titleColor, isSearch, backgroundColor }) => {
     const style = useMemo(() => getStyle(height, width, isErorr, titleColor, backgroundColor), [isErorr, titleColor, height, width, backgroundColor]);
+    const [isFocused, setIsFocused] = useState<boolean>(false);
+    const isShowMagnify = useMemo(() => !isFocused && isSearch && !inputValue.length, [isFocused, isSearch, inputValue]);
 
     const onChangeText = (text: string) => {
         const isNum = regExPatterns.IS_NUMERIC;
@@ -41,6 +43,16 @@ export const InputItem: FC<IInputItem> = memo(({ inputTitle, isNumeric, placeHol
     const onValueChange = (itemValue: string) => {
         setValue(itemValue.toString());
     };
+
+
+    const onFocus = () => {
+        setIsFocused(true);
+    };
+
+    const onBlur = () => {
+        setIsFocused(false);
+    };
+
 
     const renderPickerItem = useMemo(() => {
         if (selectableData?.length) {
@@ -68,7 +80,7 @@ export const InputItem: FC<IInputItem> = memo(({ inputTitle, isNumeric, placeHol
                         {renderPickerItem}
                     </Picker >
                     :
-                    <>
+                    <View style={{ justifyContent: 'center' }}>
                         <TextInput
                             key={id}
                             style={style.textInput}
@@ -78,13 +90,13 @@ export const InputItem: FC<IInputItem> = memo(({ inputTitle, isNumeric, placeHol
                             placeholder={placeHolder}
                             multiline={isMultiLine}
                             maxLength={maxLength}
-                            onFocus={() => console.log("Focused")}
-                            onBlur={() => console.log("Blurred")}
+                            onFocus={onFocus}
+                            onBlur={onBlur}
                         />
-                        {/* <View style={{ position: 'absolute', top: 15, left: 5 }}>
+                        {isShowMagnify && < View style={{ position: 'absolute', width: 20, height: 20, justifyContent: 'center', alignItems: 'center',marginLeft:3 }}>
                             <Icon name="magnifying-glass" size={16} color={'white'} />
-                        </View> */}
-                    </>
+                        </View>}
+                    </View>
             }
         </View >
     );

@@ -12,6 +12,7 @@ import { getStyle } from "./styles";
 interface ItemsContentProps {
     id: number;
     name: string;
+    description: string;
     barcode: string;
     category: string;
     quantity: number;
@@ -20,10 +21,11 @@ interface ItemsContentProps {
     stockPrice: number;
     itemIndex: number;
     lastItem: number | undefined;
+    color: string;
     selectBulk: Function;
 }
 
-const ItemsContent: FC<ItemsContentProps> = ({ id, name, barcode, category, quantity, unit, purchasePrice, stockPrice, itemIndex, lastItem, selectBulk }) => {
+const ItemsContent: FC<ItemsContentProps> = ({ id, name, barcode, category, quantity, unit, purchasePrice, stockPrice, itemIndex, lastItem, selectBulk, color, description }) => {
     const style = getStyle();
     const dispatch = useAppDispatch();
     const isEditMode = useSelector(selectIsEditMode);
@@ -82,11 +84,11 @@ const ItemsContent: FC<ItemsContentProps> = ({ id, name, barcode, category, quan
     };
 
     const renderRow = useMemo(() => {
-        return [name, barcode, category, quantity, unit, currency.format(purchasePrice), currency.format(stockPrice)].map((content, i) => {
+        return [name, description, barcode, category, color, quantity, unit, currency.format(purchasePrice), currency.format(stockPrice)].map((content, i) => {
             return <RenderColumnContent content={content} id={id + i} key={i} />;
         });
 
-    }, [name, barcode, category, quantity, unit, purchasePrice, stockPrice]);
+    }, [name, barcode, category, quantity, unit, purchasePrice, stockPrice, color, description]);
 
     return (
         <>

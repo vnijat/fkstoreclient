@@ -15,7 +15,6 @@ export const getStyle = (height: number, width: number, isErorr?: boolean, title
             width,
             height: 100,
             padding: 5,
-            marginTop: 5
         },
         pickerItem: {
             height,
@@ -25,7 +24,6 @@ export const getStyle = (height: number, width: number, isErorr?: boolean, title
             width,
             height,
             padding: 5,
-            marginTop: 5,
             justifyContent: 'center',
             borderRadius: 3,
             borderBottomWidth: 1,

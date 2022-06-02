@@ -35,6 +35,7 @@ const AddItemСontainer: FC<AddItemProps> = ({ }) => {
     const inputRef = useRef<any>([]);
 
     const postItem = async () => {
+        console.log("itemForPosting==>>", itemForPosting);
         try {
             const response = await apiAdditem(itemForPosting);
             if (response.error) {
@@ -71,6 +72,7 @@ const AddItemСontainer: FC<AddItemProps> = ({ }) => {
         });
         dispatch(setItemForPost({ key: `${objectKey}${selectableInput ? 'Id' : ''}`, value: inputValue }));
     };
+
     return (
         <View style={style.container}>
             <View style={{ justifyContent: 'center', alignItems: 'center' }}>

@@ -57,7 +57,6 @@ const CustomPicker = ({ data, title, onSelect, selectedIds, parent }: ICustomPic
                 isOpen={isShowContent}
                 onDismiss={onDismiss}
                 showMode={'transient'}
-
             >
                 <View style={{ flex: 1, maxHeight: 100 }}>
                     <FlatList
@@ -90,8 +89,6 @@ const CustomPicker = ({ data, title, onSelect, selectedIds, parent }: ICustomPic
                 </View>
             </Flyout>
         </>
-
-
     );
 };
 

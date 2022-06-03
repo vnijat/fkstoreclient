@@ -22,7 +22,7 @@ const FilterItem: FC<IFilterItem> = ({ label, onPress }) => {
             <Text style={{ fontSize: 12, fontWeight: '500', color: Colors.CULTURED }}>
                 {label}
             </Text>
-            <CustomPressable style={{ width: 15, height: 15, justifyContent: 'center', alignItems: 'center', marginLeft: 3 }} onPress={onPress} onHoverOpacity>
+            <CustomPressable style={{ width: 15, height: 15, justifyContent: 'center', alignItems: 'center', marginLeft: 3 }} onPress={onPress} onHoverOpacity >
                 <Icon name={'cross'} color={'white'} size={15} />
             </CustomPressable>
         </View>

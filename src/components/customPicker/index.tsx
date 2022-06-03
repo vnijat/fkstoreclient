@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/Entypo';
 import { Flyout } from 'react-native-windows';
 import { FilterParamskey } from '../../types/ItemsQuery';
 import { Colors } from '../../utils/colors';
+import CustomPressable from '../customPressable';
 import { getStyle } from './style';
 
 
@@ -15,7 +16,7 @@ interface ICustomPicker {
     parent: FilterParamskey;
 }
 
-const CustomPicker: FC<ICustomPicker> = ({ data, title, onSelect, selectedIds, parent }) => {
+const CustomPicker = ({ data, title, onSelect, selectedIds, parent }: ICustomPicker) => {
     const style = getStyle();
     const [isShowContent, setShowContent] = useState(false);
     const [opacity, setOpacity] = useState(1);
@@ -29,16 +30,6 @@ const CustomPicker: FC<ICustomPicker> = ({ data, title, onSelect, selectedIds, p
     };
 
 
-    const onHoverIn = () => {
-        setOpacity(0.7);
-    };
-
-    const onHoverOut = () => {
-        setOpacity(1);
-    };
-
-
-
     return (
         <>
             <View>
@@ -47,18 +38,17 @@ const CustomPicker: FC<ICustomPicker> = ({ data, title, onSelect, selectedIds, p
                         {selectedIds.length}
                     </Text>
                 </View>}
-                <Pressable
-                    style={[{ width: 90, height: 30, margin: 3, padding: 5, flexDirection: 'row', alignItems: 'center', borderRadius: 1, borderWidth: 1, borderColor: Colors.OLD_GOLD, justifyContent: 'space-between' }, { opacity }]}
+                <CustomPressable
+                    style={{ width: 90, height: 30, margin: 3, padding: 5, flexDirection: 'row', alignItems: 'center', borderRadius: 1, borderWidth: 1, borderColor: Colors.OLD_GOLD, justifyContent: 'space-between' }}
                     ref={buttonRef}
                     onPress={onPress}
-                    onHoverIn={onHoverIn}
-                    onHoverOut={onHoverOut}
+                    key={title}
                 >
                     <Text style={{ color: Colors.OLD_GOLD, fontSize: 14 }}>
                         {title || ''}
                     </Text>
                     <Icon name="chevron-small-down" size={17} color={Colors.OLD_GOLD} />
-                </Pressable>
+                </CustomPressable>
             </View>
             <Flyout
                 target={buttonRef.current}
@@ -66,7 +56,7 @@ const CustomPicker: FC<ICustomPicker> = ({ data, title, onSelect, selectedIds, p
                 isOpen={isShowContent}
                 onDismiss={onDismiss}
                 showMode={'transient'}
-                
+
             >
                 <View style={{ flex: 1, maxHeight: 100 }}>
                     <FlatList

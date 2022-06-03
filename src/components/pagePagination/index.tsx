@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/Entypo';
 import { setQueryParams } from '../../modules/redux/querySlicer';
 import { useAppDispatch } from '../../modules/redux/store';
 import { Colors } from '../../utils/colors';
+import CustomPressable from '../customPressable';
 import { getStyle } from './styles';
 
 interface IPagePAgination {
@@ -46,13 +47,17 @@ export const PagePagination: FC<IPagePAgination> = ({ page, pageCount, take, set
             }
             const sliceStart = page >= 5 ? (page - diffFromMax) : 0;
             const sliceEnd = page >= 5 ? page + 3 : 5;
+
+
             return pageCountToNumbers?.slice(sliceStart, sliceEnd).map((item, index) => {
                 const selectedPage = item === page;
-                return (<Pressable key={index} onPress={() => onPressPageNumber(Number(item))} style={({ pressed }) => [{ backgroundColor: (pressed || selectedPage) ? Colors.OLD_GOLD : Colors.ALABASTER }, styles.pageButtons]}>
+                return (<CustomPressable key={index} onPress={() => onPressPageNumber(Number(item))} style={[{ backgroundColor: selectedPage ? Colors.OLD_GOLD : Colors.ALABASTER }, styles.pageButtons]}
+                    pressedStyle={{ backgroundColor: Colors.OLD_GOLD }}
+                >
                     <Text style={styles.pageText} key={`${index}-${item}`}>
                         {item}
                     </Text>
-                </Pressable>);
+                </CustomPressable >);
             });
         } else {
             return null;
@@ -91,12 +96,12 @@ export const PagePagination: FC<IPagePAgination> = ({ page, pageCount, take, set
         const iconColor = hasPreviousPage ? Colors.OLD_GOLD : Colors.ALABASTER;
         return (
             <>
-                <Pressable onPress={onPressAlignLeft} style={styles.buttonsStyle} disabled={!hasPreviousPage}>
+                <CustomPressable onPress={onPressAlignLeft} style={styles.buttonsStyle} disabled={!hasPreviousPage}>
                     <Icon name="align-left" size={17} color={iconColor} />
-                </Pressable>
-                <Pressable onPress={onPressLeft} style={styles.buttonsStyle} disabled={!hasPreviousPage}>
+                </CustomPressable>
+                <CustomPressable onPress={onPressLeft} style={styles.buttonsStyle} disabled={!hasPreviousPage}>
                     <Icon name="chevron-small-left" size={20} color={iconColor} />
-                </Pressable>
+                </CustomPressable>
             </>
         );
     }, [page, hasPreviousPage]);
@@ -106,12 +111,12 @@ export const PagePagination: FC<IPagePAgination> = ({ page, pageCount, take, set
         const iconColor = hasNextPage ? Colors.OLD_GOLD : Colors.ALABASTER;
         return (
             <>
-                <Pressable onPress={onPressRight} style={styles.buttonsStyle} disabled={!hasNextPage} >
+                <CustomPressable onPress={onPressRight} style={styles.buttonsStyle} disabled={!hasNextPage} >
                     <Icon name="chevron-small-right" size={20} color={iconColor} />
-                </Pressable>
-                <Pressable onPress={onPressAlignRight} style={styles.buttonsStyle} disabled={!hasNextPage}>
+                </CustomPressable>
+                <CustomPressable onPress={onPressAlignRight} style={styles.buttonsStyle} disabled={!hasNextPage}>
                     <Icon name="align-right" size={17} color={iconColor} />
-                </Pressable>
+                </CustomPressable>
             </>
         );
 

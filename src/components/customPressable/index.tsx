@@ -5,11 +5,12 @@ interface IcustomPressable {
     children?: React.ReactNode;
     style?: StyleProp<ViewStyle>;
     pressedStyle?: StyleProp<ViewStyle>;
+    onHoverOpacity?: boolean;
 }
 
 
 
-const CustomPressable = React.forwardRef(({ children, style, pressedStyle, ...rest }: PressableProps & IcustomPressable, ref: Ref<View>) => {
+const CustomPressable = React.forwardRef(({ children, style, pressedStyle, onHoverOpacity, ...rest }: PressableProps & IcustomPressable, ref: Ref<View>) => {
     const [opacity, setOpacity] = useState(1);
     const onHoverIn = () => {
         setOpacity(0.7);
@@ -21,7 +22,7 @@ const CustomPressable = React.forwardRef(({ children, style, pressedStyle, ...re
 
     return (
         <Pressable
-            style={({ pressed }) => [pressed ? [style, pressedStyle] : style, { opacity: opacity }]}
+            style={({ pressed }) => [pressed ? [style, pressedStyle] : style, { opacity: onHoverOpacity ? opacity : 1 }]}
             onHoverIn={onHoverIn}
             onHoverOut={onHoverOut}
             ref={ref}

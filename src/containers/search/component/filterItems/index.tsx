@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
+import CustomPressable from '../../../../components/customPressable';
 import { Colors } from '../../../../utils/colors';
 
 
@@ -18,12 +19,12 @@ const FilterItem: FC<IFilterItem> = ({ label, onPress }) => {
     return (
         <View style={{ height: 25, flexDirection: 'row', backgroundColor: Colors.OLD_GOLD, borderRadius: 3, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 5, margin: 3 }}>
 
-            <Text style={{ fontSize: 12,fontWeight:'500', color: Colors.CULTURED }}>
+            <Text style={{ fontSize: 12, fontWeight: '500', color: Colors.CULTURED }}>
                 {label}
             </Text>
-            <Pressable style={{ width: 15, height: 15, justifyContent: 'center', alignItems: 'center',marginLeft:3}} onPress={onPress}>
+            <CustomPressable style={{ width: 15, height: 15, justifyContent: 'center', alignItems: 'center', marginLeft: 3 }} onPress={onPress} onHoverOpacity>
                 <Icon name={'cross'} color={'white'} size={15} />
-            </Pressable>
+            </CustomPressable>
         </View>
     );
 };

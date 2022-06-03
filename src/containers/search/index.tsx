@@ -3,6 +3,7 @@ import { Text, View } from 'react-native';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import { shallowEqual, useSelector } from 'react-redux';
 import CustomPicker from '../../components/customPicker';
+import CustomPressable from '../../components/customPressable';
 import { InputItem } from '../../components/inputItem';
 import { useGetItemInputsQuery } from '../../modules/api/apiSlice';
 import { clearFilters, setFilterByParams, setSelectedWithLabel } from '../../modules/redux/filterSlicer';
@@ -102,7 +103,7 @@ const SearchContainer: FC<ISearchContainer> = ({ searchValue }) => {
                     {renderSearch}
                 </View>
             </View>
-            <View style={{ flexDirection: 'row', flexWrap: 'wrap',paddingLeft:17,marginVertical:10 }}>
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', paddingLeft: 17, marginVertical: 10 }}>
                 {renderFilterItems}
             </View>
             <View style={style.sortBy}>
@@ -110,11 +111,14 @@ const SearchContainer: FC<ISearchContainer> = ({ searchValue }) => {
                     {'Filter By:'}
                 </Text>
                 {renderFilterByPickers}
-                <Text style={style.clearText}
-                    onPress={clearFiler}
+                <CustomPressable onPress={clearFiler}
+                    onHoverOpacity
+                    style={{justifyContent:'center',alignItems:'center',marginLeft:10}}
                 >
-                    {'Clear'}
-                </Text>
+                    <Text style={style.clearText}>
+                        {'Clear'}
+                    </Text>
+                </CustomPressable>
             </View>
         </View>
 

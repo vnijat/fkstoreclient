@@ -84,11 +84,12 @@ const ItemsContent: FC<ItemsContentProps> = ({ id, name, barcode, category, quan
 
     return (
         <>
-            <CustomPressable ref={pressableRef} key={id}
+            <CustomPressable  ref={pressableRef} key={id}
                 onLongPress={onLongPress}
                 onPress={onPressItem}
                 style={[{ backgroundColor: isSelected ? Colors.OLD_GOLD : Colors.FLORAL_WHITE }, style.rowItem]}
                 pressedStyle={{ backgroundColor: Colors.OLD_GOLD }}
+                onHoverOpacity
             >
                 {renderRow}
             </CustomPressable>

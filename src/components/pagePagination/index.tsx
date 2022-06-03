@@ -51,7 +51,7 @@ export const PagePagination: FC<IPagePAgination> = ({ page, pageCount, take, set
 
             return pageCountToNumbers?.slice(sliceStart, sliceEnd).map((item, index) => {
                 const selectedPage = item === page;
-                return (<CustomPressable key={index} onPress={() => onPressPageNumber(Number(item))} style={[{ backgroundColor: selectedPage ? Colors.OLD_GOLD : Colors.ALABASTER }, styles.pageButtons]}
+                return (<CustomPressable onHoverOpacity key={index} onPress={() => onPressPageNumber(Number(item))} style={[{ backgroundColor: selectedPage ? Colors.OLD_GOLD : Colors.ALABASTER }, styles.pageButtons]}
                     pressedStyle={{ backgroundColor: Colors.OLD_GOLD }}
                 >
                     <Text style={styles.pageText} key={`${index}-${item}`}>
@@ -96,10 +96,10 @@ export const PagePagination: FC<IPagePAgination> = ({ page, pageCount, take, set
         const iconColor = hasPreviousPage ? Colors.OLD_GOLD : Colors.ALABASTER;
         return (
             <>
-                <CustomPressable onPress={onPressAlignLeft} style={styles.buttonsStyle} disabled={!hasPreviousPage}>
+                <CustomPressable onHoverOpacity  onPress={onPressAlignLeft} style={styles.buttonsStyle} disabled={!hasPreviousPage}>
                     <Icon name="align-left" size={17} color={iconColor} />
                 </CustomPressable>
-                <CustomPressable onPress={onPressLeft} style={styles.buttonsStyle} disabled={!hasPreviousPage}>
+                <CustomPressable  onHoverOpacity  onPress={onPressLeft} style={styles.buttonsStyle} disabled={!hasPreviousPage}>
                     <Icon name="chevron-small-left" size={20} color={iconColor} />
                 </CustomPressable>
             </>
@@ -111,10 +111,10 @@ export const PagePagination: FC<IPagePAgination> = ({ page, pageCount, take, set
         const iconColor = hasNextPage ? Colors.OLD_GOLD : Colors.ALABASTER;
         return (
             <>
-                <CustomPressable onPress={onPressRight} style={styles.buttonsStyle} disabled={!hasNextPage} >
+                <CustomPressable  onHoverOpacity onPress={onPressRight} style={styles.buttonsStyle} disabled={!hasNextPage} >
                     <Icon name="chevron-small-right" size={20} color={iconColor} />
                 </CustomPressable>
-                <CustomPressable onPress={onPressAlignRight} style={styles.buttonsStyle} disabled={!hasNextPage}>
+                <CustomPressable  onHoverOpacity onPress={onPressAlignRight} style={styles.buttonsStyle} disabled={!hasNextPage}>
                     <Icon name="align-right" size={17} color={iconColor} />
                 </CustomPressable>
             </>

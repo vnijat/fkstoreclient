@@ -32,7 +32,6 @@ export const getStyle = () => {
             fontWeight: '700',
             fontSize: 14,
             textAlign: 'center',
-            marginLeft: 10
         }
 
     });

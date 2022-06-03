@@ -1,3 +1,4 @@
+import CheckBox from '@react-native-community/checkbox';
 import React, { FC, useEffect, useRef, useState, } from 'react';
 import { Pressable, Text, View, ScrollView, FlatList } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
@@ -43,7 +44,7 @@ const CustomPicker = ({ data, title, onSelect, selectedIds, parent }: ICustomPic
                     ref={buttonRef}
                     onPress={onPress}
                     key={title}
-                >
+                    onHoverOpacity>
                     <Text style={{ color: Colors.OLD_GOLD, fontSize: 14 }}>
                         {title || ''}
                     </Text>
@@ -68,13 +69,21 @@ const CustomPicker = ({ data, title, onSelect, selectedIds, parent }: ICustomPic
                             const { id, label } = item;
                             const isSelected = selectedIds?.includes(id);
                             return (
-                                <Pressable style={{ height: 30, width: 100, margin: 1, justifyContent: 'center' }} onPress={() => onSelect({ id, label, parent })} key={`${index}-${label}`}>
-                                    <Text style={{
-                                        color: isSelected ? 'red' : 'black', fontSize: 12,
-                                    }} key={`${label}`}>
+                                <CustomPressable style={{ height: 30, maxWidth: 200, minWidth: 100, margin: 1, marginHorizontal: 5, flexDirection: 'row', alignItems: 'center', backgroundColor: 'transparent' }} key={`${index}-${label}`} onPress={() => onSelect({ id, label, parent })} onHoverOpacity>
+                                    <CheckBox value={isSelected}
+                                        tintColor={Colors.ALABASTER}
+                                        onValueChange={() => onSelect({ id, label, parent })}
+                                        onCheckColor={Colors.OLD_GOLD}
+                                        onTintColor={Colors.OLD_GOLD}
+                                        onFillColor={Colors.CULTURED}
+                                    />
+                                    <Text style={{ fontSize: 12, color: Colors.OLD_GOLD }} key={`${label}`}>
                                         {label}
                                     </Text>
-                                </Pressable>);
+                                </CustomPressable>
+
+
+                            );
                         }}
 
                     />

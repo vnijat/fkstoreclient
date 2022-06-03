@@ -25,7 +25,7 @@ export const CustomDrawerItem: FC<CustomDrawerItemProps> = ({ navigation, routeN
             Default: <Icon name="flask" size={22} color={itemContentColor} />
         };
         return (
-            <CustomPressable key={route} style={[{ backgroundColor: isSelected ? Colors.OLD_GOLD : 'transparent' }, style.drawerItemLogo]} onPress={() => navigation.navigate(route)}>
+            <CustomPressable  onHoverOpacity key={route} style={[{ backgroundColor: isSelected ? Colors.OLD_GOLD : 'transparent' }, style.drawerItemLogo]} onPress={() => navigation.navigate(route)}>
                 {icons[route] ? icons[route] : icons['Default']}
                 <Text style={{ color: isSelected ? Colors.FLORAL_WHITE : Colors.OLD_GOLD, fontSize: 10, fontWeight: '700' }} >
                     {route}

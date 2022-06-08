@@ -35,7 +35,6 @@ const AddItemСontainer: FC<AddItemProps> = ({ }) => {
     const inputRef = useRef<any>([]);
 
     const postItem = async () => {
-        console.log("itemForPosting==>>", itemForPosting);
         try {
             const response = await apiAdditem(itemForPosting);
             if (response.error) {
@@ -114,7 +113,8 @@ const AddItemСontainer: FC<AddItemProps> = ({ }) => {
                 }
             </View>
             <View style={style.buttonsContainer}>
-                <PrimaryButton title={'Add'}
+                <PrimaryButton
+                    title={'Add'}
                     onPress={postItem}
                     buttonColor={Colors.METALLIC_GOLD}
                     textColor={Colors.FLORAL_WHITE}

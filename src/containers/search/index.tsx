@@ -75,6 +75,7 @@ const SearchContainer: FC<ISearchContainer> = ({ searchValue }) => {
 
     const clearFiler = () => {
         dispatch(clearFilters());
+        dispatch(setQueryParams({ search: '', page: 1 }));
     };
 
 
@@ -103,7 +104,7 @@ const SearchContainer: FC<ISearchContainer> = ({ searchValue }) => {
                     {renderSearch}
                 </View>
             </View>
-            <View style={{ flexDirection: 'row', flexWrap: 'wrap', paddingLeft: 17, marginVertical: 10 }}>
+            <View style={{ flexDirection: 'row', paddingLeft: 17, marginVertical: 2 }}>
                 {renderFilterItems}
             </View>
             <View style={style.sortBy}>
@@ -113,7 +114,7 @@ const SearchContainer: FC<ISearchContainer> = ({ searchValue }) => {
                 {renderFilterByPickers}
                 <CustomPressable onPress={clearFiler}
                     onHoverOpacity
-                    style={{justifyContent:'center',alignItems:'center',marginLeft:10}}
+                    style={{ justifyContent: 'center', alignItems: 'center', marginLeft: 10 }}
                 >
                     <Text style={style.clearText}>
                         {'Clear'}

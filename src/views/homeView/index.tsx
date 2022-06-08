@@ -1,24 +1,13 @@
-import React, { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { ActivityIndicator, FlatList, Text, View, Pressable, Alert, ScrollView } from 'react-native';
-import { Flyout } from 'react-native-windows';
+import React, { FC, useEffect, useMemo, useState } from 'react';
+import { View, Alert } from 'react-native';
 import { shallowEqual, useSelector } from 'react-redux';
-import CustomPicker from '../../components/customPicker';
-import { InputItem } from '../../components/inputItem';
-import { ListHeader } from '../../components/listHeader';
-import RowItem from '../../components/rowItem';
 import ItemListTable from '../../containers/itemList';
-import ItemsContent from '../../containers/itemsContent';
 import ListFooter from '../../containers/listFooter';
 import SearchContainer from '../../containers/search';
-import { useGetAllItemsQuery, useGetItemInputsQuery } from '../../modules/api/apiSlice';
-import { clearFilters, setFilterByParams, setSelectedWithLabel } from '../../modules/redux/filterSlicer';
-import { addItemId } from '../../modules/redux/ItemsSlicer';
+import { useGetAllItemsQuery, } from '../../modules/api/apiSlice';
 import { setQueryParams } from '../../modules/redux/querySlicer';
-import { selectFilterByForPicker, selectFilterbyForQuery } from '../../modules/redux/selectors/filterSelector';
+import { selectFilterbyForQuery } from '../../modules/redux/selectors/filterSelector';
 import { RootState, useAppDispatch } from '../../modules/redux/store';
-import { selectMany } from '../../services/ItemServices';
-import { FilterParamskey } from '../../types/ItemsQuery';
-import { Colors } from '../../utils/colors';
 import { getStyle } from './style';
 
 
@@ -59,8 +48,8 @@ export const HomeView: FC<any> = ({ navigation }) => {
   }, [fetchError, isAlerted]);
 
   const renderFooter = useMemo(() => {
-    return < ListFooter meta={queryData?.meta} />;
-  }, [queryData?.meta]);
+    return < ListFooter meta={queryData?.meta} totalItems={queryData?.itemsCount ?? 0} />;
+  }, [queryData?.meta, queryData?.itemsCount]);
 
 
   const renderListTable = useMemo(() => {
@@ -71,7 +60,6 @@ export const HomeView: FC<any> = ({ navigation }) => {
       return null;
     }
   }, [queryData?.items, isLoading]);
-
 
 
 

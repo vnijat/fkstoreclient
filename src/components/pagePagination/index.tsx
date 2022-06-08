@@ -1,9 +1,11 @@
+import { Picker } from '@react-native-picker/picker';
 import React, { FC, useMemo } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
 import { setQueryParams } from '../../modules/redux/querySlicer';
 import { useAppDispatch } from '../../modules/redux/store';
 import { Colors } from '../../utils/colors';
+import CustomPicker from '../customPicker';
 import CustomPressable from '../customPressable';
 import { getStyle } from './styles';
 
@@ -14,10 +16,12 @@ interface IPagePAgination {
     setPage?: () => void;
     hasNextPage: boolean,
     hasPreviousPage: boolean;
+    totalItems: number;
+    showedItemCount?: number;
 
 }
 
-export const PagePagination: FC<IPagePAgination> = ({ page, pageCount, take, setPage, hasNextPage, hasPreviousPage }) => {
+export const PagePagination: FC<IPagePAgination> = ({ page, pageCount, take = 0, setPage, hasNextPage, hasPreviousPage, totalItems, showedItemCount = 0 }) => {
     const dispatch = useAppDispatch();
     const styles = getStyle();
     const pageCountToNumbers = useMemo(() => {
@@ -30,6 +34,7 @@ export const PagePagination: FC<IPagePAgination> = ({ page, pageCount, take, set
         return pageArray;
     }, [pageCount]);
 
+    const showedItemsCount = useMemo(() => (showedItemCount > 0) ? (!hasNextPage && (showedItemCount % take) > 0) ? showedItemCount % take : take : 0, [take, showedItemCount, hasNextPage]);
 
     const onPressPageNumber = (pageNumber: number) => {
         dispatch(setQueryParams({ page: pageNumber }));
@@ -92,14 +97,20 @@ export const PagePagination: FC<IPagePAgination> = ({ page, pageCount, take, set
         dispatch(setQueryParams({ page: toLastPage }));
     };
 
+    const onChangeTakeParams = (newValue: string | number) => {
+        dispatch(setQueryParams({ take: Number(newValue) }));
+    };
+
+
+
     const renderLeftButtons = useMemo(() => {
         const iconColor = hasPreviousPage ? Colors.OLD_GOLD : Colors.ALABASTER;
         return (
             <>
-                <CustomPressable onHoverOpacity  onPress={onPressAlignLeft} style={styles.buttonsStyle} disabled={!hasPreviousPage}>
+                <CustomPressable onHoverOpacity onPress={onPressAlignLeft} style={styles.buttonsStyle} disabled={!hasPreviousPage}>
                     <Icon name="align-left" size={17} color={iconColor} />
                 </CustomPressable>
-                <CustomPressable  onHoverOpacity  onPress={onPressLeft} style={styles.buttonsStyle} disabled={!hasPreviousPage}>
+                <CustomPressable onHoverOpacity onPress={onPressLeft} style={styles.buttonsStyle} disabled={!hasPreviousPage}>
                     <Icon name="chevron-small-left" size={20} color={iconColor} />
                 </CustomPressable>
             </>
@@ -111,10 +122,10 @@ export const PagePagination: FC<IPagePAgination> = ({ page, pageCount, take, set
         const iconColor = hasNextPage ? Colors.OLD_GOLD : Colors.ALABASTER;
         return (
             <>
-                <CustomPressable  onHoverOpacity onPress={onPressRight} style={styles.buttonsStyle} disabled={!hasNextPage} >
+                <CustomPressable onHoverOpacity onPress={onPressRight} style={styles.buttonsStyle} disabled={!hasNextPage} >
                     <Icon name="chevron-small-right" size={20} color={iconColor} />
                 </CustomPressable>
-                <CustomPressable  onHoverOpacity onPress={onPressAlignRight} style={styles.buttonsStyle} disabled={!hasNextPage}>
+                <CustomPressable onHoverOpacity onPress={onPressAlignRight} style={styles.buttonsStyle} disabled={!hasNextPage}>
                     <Icon name="align-right" size={17} color={iconColor} />
                 </CustomPressable>
             </>
@@ -125,9 +136,26 @@ export const PagePagination: FC<IPagePAgination> = ({ page, pageCount, take, set
 
     return (
         <View style={styles.paginationContainer}>
-            {renderLeftButtons}
-            {renderPages}
-            {renderRightButtons}
+            <View style={{ flexDirection: 'row' }}>
+                {renderLeftButtons}
+                {renderPages}
+                {renderRightButtons}
+            </View>
+            <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                <Text style={{ color: Colors.METALLIC_GOLD, fontSize: 12 }}>
+                    {showedItemCount > 0 ? `page ${page} of ${pageCount} | showed ${showedItemsCount} of ${showedItemCount}` : 'No Data'}
+                </Text>
+                <View style={{ marginLeft: 10 }}>
+                    <CustomPicker
+                        singleSelectMode
+                        singleSelectData={[10, 20, 50]}
+                        singleSelected={take}
+                        singleOnSelect={onChangeTakeParams}
+                        buttonStyle={styles.pickerButton}
+                        title={'show'}
+                    />
+                </View>
+            </View>
         </View>
     );
 

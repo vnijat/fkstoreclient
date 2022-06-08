@@ -16,7 +16,6 @@ export const getStyle = () => {
         },
         sortBy: {
             flexDirection: 'row',
-            marginTop: 5,
             marginBottom: 10,
             alignItems: 'center'
         },

@@ -1,6 +1,5 @@
 import React, { FC, useEffect, useMemo, useState } from "react";
-import { View } from "react-native";
-import { Alert } from "react-native-windows";
+import { View, Alert } from "react-native";
 import { useSelector } from "react-redux";
 import { AlertModal } from "../../components/alertModal";
 import { PagePagination } from "../../components/pagePagination";
@@ -16,10 +15,11 @@ import { getStyle } from "./styles";
 
 interface ListFooterProps {
     meta?: Imeta;
+    totalItems: number;
 }
 
 
-const ListFooter: FC<ListFooterProps> = ({ meta }) => {
+const ListFooter: FC<ListFooterProps> = ({ meta, totalItems }) => {
     const style = getStyle();
     const dispatch = useAppDispatch();
     const isEditMode = useSelector((state: RootState) => state.itemsSlicer.isEditMode);
@@ -46,23 +46,23 @@ const ListFooter: FC<ListFooterProps> = ({ meta }) => {
         dispatch(clearSelectedItems());
         dispatch(setIsEditMode(false));
     };
-    const deleteItem = () => {
-        // await alertWithPromise('do you want to delete Items?', 'you cant recover deletet Items!', 'Cancel', 'Yes').then((value) => {
-        //     apiDeleteItems({ Ids: selectedItemsID });
-        //     dispatch(clearSelectedItems());
-        //     dispatch(setIsEditMode(false));
-        // }).catch((error) => { console.log('deleteItem===>> ', error); });
+    const deleteItem = () => Alert.alert('do you want to delete Items?', 'you cant recover deletet Items!', [
+        { onPress: cancelDeletion },
+        { text: 'Cancel', onPress: cancelDeletion, style: 'cancel' },
+        { text: 'Yes', onPress: aproveDeletion, style: 'destructive' }
+    ]);
 
-        return Alert.alert('do you want to delete Items?', 'you cant recover deletet Items!', [
-            { text: 'Cancel', onPress: cancelDeletion, style: 'cancel' },
-            { text: 'Yes', onPress: aproveDeletion, style: 'destructive' }
-        ], { onDismiss: () => console.log('dissmissed'), cancelable: false });
-    };
 
     const renderPageCount = useMemo(() => {
-        return <PagePagination pageCount={meta?.pageCount ?? 0} page={meta?.page} hasPreviousPage={meta?.hasPreviousPage!} hasNextPage={meta?.hasNextPage!} />;
-
-    }, [meta?.pageCount, meta?.page, meta?.hasNextPage, meta?.hasPreviousPage]);
+        return <PagePagination
+            pageCount={meta?.pageCount ?? 0}
+            page={meta?.page ?? 0}
+            hasPreviousPage={meta?.hasPreviousPage!}
+            hasNextPage={meta?.hasNextPage!}
+            take={meta?.take ?? 0}
+            showedItemCount={meta?.itemCount || 0}
+            totalItems={totalItems} />;
+    }, [meta?.pageCount, meta?.page, meta?.hasNextPage, meta?.hasPreviousPage, meta?.take, totalItems, meta?.itemCount]);
 
     return (
         <View style={style.container}  >

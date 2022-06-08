@@ -1,6 +1,7 @@
 import React, { FC, useMemo, useRef, useState } from "react";
 import { Image, Pressable, Text, View } from "react-native";
 import { useSelector } from "react-redux";
+import CustomPressable from "../../components/customPressable";
 import { addItemId, setIsEditMode } from "../../modules/redux/ItemsSlicer";
 import { selectIsEditMode } from "../../modules/redux/selectors/itemSelectors";
 import { RootState, useAppDispatch } from "../../modules/redux/store";
@@ -12,6 +13,7 @@ import { getStyle } from "./styles";
 interface ItemsContentProps {
     id: number;
     name: string;
+    description: string;
     barcode: string;
     category: string;
     quantity: number;
@@ -20,14 +22,14 @@ interface ItemsContentProps {
     stockPrice: number;
     itemIndex: number;
     lastItem: number | undefined;
+    color: string;
     selectBulk: Function;
 }
 
-const ItemsContent: FC<ItemsContentProps> = ({ id, name, barcode, category, quantity, unit, purchasePrice, stockPrice, itemIndex, lastItem, selectBulk }) => {
+const ItemsContent: FC<ItemsContentProps> = ({ id, name, barcode, category, quantity, unit, purchasePrice, stockPrice, itemIndex, lastItem, selectBulk, color, description }) => {
     const style = getStyle();
     const dispatch = useAppDispatch();
     const isEditMode = useSelector(selectIsEditMode);
-    const [opacity, setOpacity] = useState(1);
     const { isSelected, selectedCount, firstSelectedItem } = useSelector((state: RootState) => {
         return {
             firstSelectedItem: state.itemsSlicer.selectedItems[0],
@@ -44,14 +46,6 @@ const ItemsContent: FC<ItemsContentProps> = ({ id, name, barcode, category, quan
         }
         dispatch(setIsEditMode(true));
         dispatch(addItemId({ index: itemIndex, Id: id }));
-    };
-
-    const onHoverIn = () => {
-        setOpacity(0.7);
-    };
-
-    const onHoverOut = () => {
-        setOpacity(1);
     };
 
     const onPressItem = ({ nativeEvent: { shiftKey } }: any) => {
@@ -82,22 +76,23 @@ const ItemsContent: FC<ItemsContentProps> = ({ id, name, barcode, category, quan
     };
 
     const renderRow = useMemo(() => {
-        return [name, barcode, category, quantity, unit, currency.format(purchasePrice), currency.format(stockPrice)].map((content, i) => {
+        return [name, description, barcode, category, color, quantity, unit, currency.format(purchasePrice), currency.format(stockPrice)].map((content, i) => {
             return <RenderColumnContent content={content} id={id + i} key={i} />;
         });
 
-    }, [name, barcode, category, quantity, unit, purchasePrice, stockPrice]);
+    }, [name, barcode, category, quantity, unit, purchasePrice, stockPrice, color, description]);
 
     return (
         <>
-            <Pressable ref={pressableRef} key={id}
+            <CustomPressable  ref={pressableRef} key={id}
                 onLongPress={onLongPress}
-                onHoverIn={onHoverIn}
-                onHoverOut={onHoverOut}
                 onPress={onPressItem}
-                style={({ pressed }) => [{ backgroundColor: (pressed || isSelected) ? Colors.OLD_GOLD : Colors.FLORAL_WHITE, opacity: opacity }, style.rowItem]} >
+                style={[{ backgroundColor: isSelected ? Colors.OLD_GOLD : Colors.FLORAL_WHITE }, style.rowItem]}
+                pressedStyle={{ backgroundColor: Colors.OLD_GOLD }}
+                onHoverOpacity
+            >
                 {renderRow}
-            </Pressable>
+            </CustomPressable>
         </>
     );
 };

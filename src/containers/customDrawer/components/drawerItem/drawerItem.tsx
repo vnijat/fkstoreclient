@@ -2,6 +2,7 @@ import { DrawerItem } from "@react-navigation/drawer";
 import React, { FC } from "react";
 import { Text, View } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
+import CustomPressable from "../../../../components/customPressable";
 import { Colors } from "../../../../utils/colors";
 import { getStyle } from "./styles";
 
@@ -24,22 +25,12 @@ export const CustomDrawerItem: FC<CustomDrawerItemProps> = ({ navigation, routeN
             Default: <Icon name="flask" size={22} color={itemContentColor} />
         };
         return (
-            < DrawerItem
-                label={''}
-                onPress={() => navigation.navigate(route)}
-                key={route}
-                icon={() => {
-                    return (
-                        <View style={style.drawerItemLogo}>
-                            {icons[route] ? icons[route] : icons['Default']}
-                            <Text style={{ color: isSelected ? Colors.FLORAL_WHITE : Colors.OLD_GOLD, fontSize: 10, fontWeight: '700' }} >
-                                {route}
-                            </Text>
-                        </View>
-                    );
-                }}
-                style={{ marginHorizontal: 1, backgroundColor: isSelected ? Colors.OLD_GOLD : null }}
-            />
+            <CustomPressable  onHoverOpacity key={route} style={[{ backgroundColor: isSelected ? Colors.OLD_GOLD : 'transparent' }, style.drawerItemLogo]} onPress={() => navigation.navigate(route)}>
+                {icons[route] ? icons[route] : icons['Default']}
+                <Text style={{ color: isSelected ? Colors.FLORAL_WHITE : Colors.OLD_GOLD, fontSize: 10, fontWeight: '700' }} >
+                    {route}
+                </Text>
+            </CustomPressable>
         );
     });
 

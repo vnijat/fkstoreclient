@@ -10,9 +10,18 @@ interface QueryParams {
   unitId?: string;
   locationId?: string;
   storeId?: string;
+  labelId?: string;
+  colorId?: string;
   sort?: string;
   order?: Order;
 }
+
+type queryFilterByParam = Omit<
+  QueryParams,
+  'page' | 'search' | 'take' | 'sort' | 'order'
+>;
+
+type FilterParamskey = keyof queryFilterByParam;
 
 interface Common {
   id: number;
@@ -53,6 +62,11 @@ interface Store extends Common {
   phone?: string;
 }
 
+interface Color extends Common {
+  name: string;
+  items?: Item[];
+}
+
 interface Item {
   id: number;
   name: string;
@@ -68,6 +82,7 @@ interface Item {
   category: Category;
   location: Location;
   store: Store;
+  color: Color;
 }
 
 interface Data<T> {
@@ -85,4 +100,11 @@ interface Imeta {
   hasNextPage: boolean;
 }
 
-export type {QueryParams, Data, Item, Imeta};
+export type {
+  QueryParams,
+  Data,
+  Item,
+  Imeta,
+  queryFilterByParam,
+  FilterParamskey,
+};

@@ -7,6 +7,8 @@ export const getStyle = (textColor?: string, buttonColor?: string) => {
             flexDirection: 'row',
             height: 45,
             alignItems: 'center',
+            flex: 1,
+            justifyContent: 'space-between'
         },
         buttonsStyle: {
             height: 30,
@@ -15,7 +17,7 @@ export const getStyle = (textColor?: string, buttonColor?: string) => {
         pageText: {
             color: Colors.FLORAL_WHITE,
             textAlign: 'center',
-            fontSize:12
+            fontSize: 12
         },
         pageButtons: {
             height: 25,
@@ -23,6 +25,19 @@ export const getStyle = (textColor?: string, buttonColor?: string) => {
             margin: 1,
             borderRadius: 2,
             justifyContent: 'center'
+        },
+        pickerButton: {
+            minWidth: 60,
+            maxWidth: 200,
+            height: 25,
+            margin: 1,
+            padding: 1,
+            flexDirection: 'row',
+            alignItems: 'center',
+            borderRadius: 1,
+            borderWidth: 1,
+            borderColor: Colors.OLD_GOLD,
+            justifyContent: 'space-between'
         }
     });
 

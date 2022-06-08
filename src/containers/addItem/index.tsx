@@ -34,10 +34,18 @@ const AddItemСontainer: FC<AddItemProps> = ({ }) => {
     const dispatch = useAppDispatch();
     const inputRef = useRef<any>([]);
 
-    const postItem = () => {
-        // const formdata = new FormData();
-        // formdata.append('item', JSON.stringify(itemForPosting));
-        apiAdditem(itemForPosting);
+    const postItem = async () => {
+        try {
+            const response = await apiAdditem(itemForPosting);
+            if (response.error) {
+                throw new Error('Server sent error');
+            }
+            dispatch(clearItemForPosting());
+            setErrorMessages({});
+            setItemInputs(null);
+        } catch (error) {
+            console.log('error====>>>', error);
+        }
     };
 
     useEffect(() => data && setItemInputs(data), [data, itemInputs]);
@@ -63,6 +71,7 @@ const AddItemСontainer: FC<AddItemProps> = ({ }) => {
         });
         dispatch(setItemForPost({ key: `${objectKey}${selectableInput ? 'Id' : ''}`, value: inputValue }));
     };
+
     return (
         <View style={style.container}>
             <View style={{ justifyContent: 'center', alignItems: 'center' }}>
@@ -104,7 +113,8 @@ const AddItemСontainer: FC<AddItemProps> = ({ }) => {
                 }
             </View>
             <View style={style.buttonsContainer}>
-                <PrimaryButton title={'Add'}
+                <PrimaryButton
+                    title={'Add'}
                     onPress={postItem}
                     buttonColor={Colors.METALLIC_GOLD}
                     textColor={Colors.FLORAL_WHITE}

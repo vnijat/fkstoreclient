@@ -18,7 +18,7 @@ interface ItemsContentProps {
     category: string;
     quantity: number;
     unit: string;
-    purchasePrice: number;
+    totalPrice: number;
     stockPrice: number;
     itemIndex: number;
     lastItem: number | undefined;
@@ -26,7 +26,7 @@ interface ItemsContentProps {
     selectBulk: Function;
 }
 
-const ItemsContent: FC<ItemsContentProps> = ({ id, name, barcode, category, quantity, unit, purchasePrice, stockPrice, itemIndex, lastItem, selectBulk, color, description }) => {
+const ItemsContent: FC<ItemsContentProps> = ({ id, name, barcode, category, quantity, unit, totalPrice, stockPrice, itemIndex, lastItem, selectBulk, color, description }) => {
     const style = getStyle();
     const dispatch = useAppDispatch();
     const isEditMode = useSelector(selectIsEditMode);
@@ -76,15 +76,15 @@ const ItemsContent: FC<ItemsContentProps> = ({ id, name, barcode, category, quan
     };
 
     const renderRow = useMemo(() => {
-        return [name, description, barcode, category, color, quantity, unit, currency.format(purchasePrice), currency.format(stockPrice)].map((content, i) => {
+        return [name, description, barcode, category, color, quantity, unit, currency.format(stockPrice), currency.format(totalPrice)].map((content, i) => {
             return <RenderColumnContent content={content} id={id + i} key={i} />;
         });
 
-    }, [name, barcode, category, quantity, unit, purchasePrice, stockPrice, color, description]);
+    }, [name, barcode, category, quantity, unit, totalPrice, stockPrice, color, description]);
 
     return (
         <>
-            <CustomPressable  ref={pressableRef} key={id}
+            <CustomPressable ref={pressableRef} key={id}
                 onLongPress={onLongPress}
                 onPress={onPressItem}
                 style={[{ backgroundColor: isSelected ? Colors.OLD_GOLD : Colors.FLORAL_WHITE }, style.rowItem]}

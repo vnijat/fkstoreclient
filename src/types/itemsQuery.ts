@@ -83,6 +83,7 @@ interface Item {
   location: Location;
   store: Store;
   color: Color;
+  totalPrice: number;
 }
 
 interface Data<T> {

@@ -28,9 +28,11 @@ const ItemListTable: FC<IItemListTable> = ({ data, isLoading }) => {
         'Color',
         'Quantity',
         'Unit',
-        'Purchase Price',
         'Price Per Unit',
-    ]
+        'Total Price'
+    ];
+    console.log("ITEMLISTABLE==>>>", data);
+
     return (
         <>
             <ListHeader columnHeaders={columnHeaders} />
@@ -52,8 +54,8 @@ const ItemListTable: FC<IItemListTable> = ({ data, isLoading }) => {
                             color,
                             quantity,
                             unit,
-                            purchasePrice,
                             pricePerUnit,
+                            totalPrice,
                             id } = item;
                         return (
                             <ItemsContent
@@ -69,8 +71,9 @@ const ItemListTable: FC<IItemListTable> = ({ data, isLoading }) => {
                                 color={color?.name}
                                 quantity={Number(quantity)}
                                 unit={unit?.name}
-                                purchasePrice={Number(purchasePrice)}
+                                // purchasePrice={Number(purchasePrice)}
                                 stockPrice={Number(pricePerUnit)}
+                                totalPrice={totalPrice}
                             />
 
                         );

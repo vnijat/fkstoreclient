@@ -98,7 +98,7 @@ export const PagePagination: FC<IPagePAgination> = ({ page, pageCount, take = 0,
     };
 
     const onChangeTakeParams = (newValue: string | number) => {
-        dispatch(setQueryParams({ take: Number(newValue) }));
+        dispatch(setQueryParams({ take: Number(newValue), page: 1 }));
     };
 
 

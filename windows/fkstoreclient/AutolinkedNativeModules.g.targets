@@ -6,6 +6,10 @@
     <ProjectReference Include="$(ProjectDir)..\..\node_modules\@react-native-async-storage\async-storage\windows\ReactNativeAsyncStorage\ReactNativeAsyncStorage.vcxproj">
       <Project>{4855D892-E16C-404D-8286-0089E0F7F9C4}</Project>
     </ProjectReference>
+    <!-- Projects from @react-native-community/checkbox -->
+    <ProjectReference Include="$(ProjectDir)..\..\node_modules\@react-native-community\checkbox\windows\CheckboxWindows\CheckboxWindows.vcxproj">
+      <Project>{eaf81beb-a159-4421-9b6d-e59c37828a57}</Project>
+    </ProjectReference>
     <!-- Projects from @react-native-picker/picker -->
     <ProjectReference Include="$(ProjectDir)..\..\node_modules\@react-native-picker\picker\windows\ReactNativePicker\ReactNativePicker.vcxproj">
       <Project>{bedcc600-4541-41f2-aa46-9e058202b6ad}</Project>

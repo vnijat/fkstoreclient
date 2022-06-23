@@ -1,1 +1,1 @@
-Client Side UWP App  For Invetory Managemant Application, and small  erp solutions
+Client Side UWP App  For Inventory Managemant Application, and small  erp solutions

@@ -18,9 +18,5 @@
     <ProjectReference Include="$(ProjectDir)..\..\node_modules\react-native-screens\windows\RNScreens\RNScreens.vcxproj">
       <Project>{d638f49e-29d2-4699-ac52-facd82fa7138}</Project>
     </ProjectReference>
-    <!-- Projects from react-native-xaml -->
-    <ProjectReference Include="$(ProjectDir)..\..\node_modules\react-native-xaml\windows\ReactNativeXaml\ReactNativeXaml.vcxproj">
-      <Project>{0ff7027a-222c-4ffb-8f17-91d18bbaf7a8}</Project>
-    </ProjectReference>
   </ItemGroup>
 </Project>

@@ -7,11 +7,11 @@
   IgnorableNamespaces="uap mp">
 
   <Identity
-    Name="b2980cf4-40a7-4627-ac7e-a35e54f3a549"
+    Name="9c1e419d-e69a-4952-9911-6c609ea4c772"
     Publisher="CN=neejee"
     Version="1.0.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="b2980cf4-40a7-4627-ac7e-a35e54f3a549" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="9c1e419d-e69a-4952-9911-6c609ea4c772" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
     <DisplayName>fkstoreclient</DisplayName>

@@ -31,7 +31,6 @@ const ItemListTable: FC<IItemListTable> = ({ data, isLoading }) => {
         'Price Per Unit',
         'Total Price'
     ];
-    console.log("ITEMLISTABLE==>>>", data);
 
     return (
         <>

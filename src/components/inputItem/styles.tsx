@@ -9,7 +9,8 @@ export const getStyle = (height: number, width: number, isErorr?: boolean, title
             color: isErorr ? Colors.INFRA_RED : (titleColor || Colors.METALLIC_BLUE),
             fontWeight: '700',
             fontSize: 9,
-            marginTop: 5
+            marginTop: 5,
+            paddingBottom:3
         },
         picker: {
             width,
@@ -29,6 +30,32 @@ export const getStyle = (height: number, width: number, isErorr?: boolean, title
             borderBottomWidth: 1,
             borderColor: Colors.LIGHT_SILVER,
             backgroundColor: backgroundColor || Colors.OLD_GOLD,
+        },
+        magnify: {
+            position: 'absolute',
+            width: 20,
+            height: 20,
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginLeft: 3,
+        },
+        pickerButtonStyle: {
+            width,
+            height,
+            flexDirection: 'row',
+            alignItems: 'center',
+            borderRadius: 1,
+            borderWidth: 1,
+            borderColor: Colors.OLD_GOLD,
+            justifyContent: 'space-between',
+        },
+        pickerItemStyle: {
+            height: height,
+            flexDirection: 'row',
+            minWidth: width,
+            alignItems: 'center',
+            paddingHorizontal: 5,
+            backgroundColor: 'transparent'
         }
     });
 

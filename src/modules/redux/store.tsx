@@ -6,6 +6,8 @@ import appStateSlicer from './appStateSlicer';
 import itemsSlicer from './ItemsSlicer';
 import menuSlicer from './menuSlicer';
 import querySlicer from './querySlicer';
+import filterSlicer from './filterSlicer';
+import itemOptions from './itemOptions';
 
 export const store = configureStore({
     reducer: {
@@ -13,6 +15,8 @@ export const store = configureStore({
         menuSlicer,
         appStateSlicer,
         itemsSlicer,
+        filterSlicer,
+        itemOptions,
         [inventoryApi.reducerPath]: inventoryApi.reducer
     },
     middleware: (getDefaultMiddleware) =>

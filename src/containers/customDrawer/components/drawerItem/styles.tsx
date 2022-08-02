@@ -15,7 +15,8 @@ export const getStyle = () => {
         drawerItemLogo: {
             justifyContent: 'center',
             alignItems: 'center',
-            width: "100%",
+            height:50,
+            marginVertical: 5
         },
     });
 

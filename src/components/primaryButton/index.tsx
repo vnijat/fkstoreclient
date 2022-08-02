@@ -1,26 +1,43 @@
-import React, { FC, useMemo } from "react";
-import { Pressable, Text } from "react-native";
-import { getStyle } from "./styles";
+import React, { FC, useMemo } from 'react';
+import { Text } from 'react-native';
+import CustomPressable from '../customPressable';
+import { getStyle } from './styles';
 
 interface PrimaryButtonProps {
-    title: string;
-    textColor?: string;
-    onPress: () => void;
-    buttonColor?: string;
-    width?: number;
-    height?: number;
+  title: string;
+  textColor?: string;
+  onPress: () => void;
+  buttonColor?: string;
+  width?: number;
+  height?: number;
+  pressedColor?: string;
+  onHoverOpacity?: boolean;
+  borderRadius?: number;
 }
 
-export const PrimaryButton: FC<PrimaryButtonProps> = ({ title, textColor, onPress, buttonColor, width, height }) => {
-    const style = useMemo(() => getStyle(textColor, buttonColor), [buttonColor, textColor]);
+export const PrimaryButton: FC<PrimaryButtonProps> = ({
+  title,
+  textColor,
+  onPress,
+  buttonColor,
+  width,
+  height,
+  pressedColor,
+  onHoverOpacity,
+  borderRadius
+}) => {
+  const style = useMemo(
+    () => getStyle(textColor, buttonColor),
+    [buttonColor, textColor],
+  );
 
-
-    return (
-        < Pressable onPress={onPress} style={[style.buttonContainer, { width, height }]}>
-            <Text style={style.title}>
-                {title}
-            </Text>
-        </Pressable>
-
-    );
+  return (
+    <CustomPressable
+      onHoverOpacity={onHoverOpacity}
+      onPress={onPress}
+      pressedStyle={[!!pressedColor && { backgroundColor: pressedColor }]}
+      style={[style.buttonContainer, { width, height, borderRadius }]}>
+      <Text style={style.title}>{title}</Text>
+    </CustomPressable>
+  );
 };

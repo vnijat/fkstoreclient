@@ -1,33 +1,40 @@
-import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
-import { ActivityIndicator, FlatList, Text, View, Pressable, Alert, Button } from 'react-native';
-import { useSelector } from 'react-redux';
-import { ListHeader } from '../../components/listHeader';
-import RowItem from '../../components/rowItem';
-import ItemsContent from '../../containers/itemsContent';
+import React, { FC, useEffect, useMemo, useState } from 'react';
+import { View, Alert } from 'react-native';
+import { shallowEqual, useSelector } from 'react-redux';
+import ItemListTable from '../../containers/itemList';
 import ListFooter from '../../containers/listFooter';
-import { useGetAllItemsQuery } from '../../modules/api/apiSlice';
-import { addItemId } from '../../modules/redux/ItemsSlicer';
+import SearchContainer from '../../containers/search';
+import { useGetAllItemsQuery, } from '../../modules/api/apiSlice';
+import { setQueryParams } from '../../modules/redux/querySlicer';
+import { selectFilterbyForQuery } from '../../modules/redux/selectors/filterSelector';
 import { RootState, useAppDispatch } from '../../modules/redux/store';
-import { selectMany } from '../../services/ItemServices';
-import { Colors } from '../../utils/colors';
 import { getStyle } from './style';
 
+// import countries from 'i18n-iso-countries';
+// countries.registerLocale(require("i18n-iso-countries/langs/en.json"));
+// countries.registerLocale(require("i18n-iso-countries/langs/az.json"));
+// const countryobjects = countries.getNames('en', { select: 'official' });
+
 export const HomeView: FC<any> = ({ navigation }) => {
-  const style = useMemo(() => getStyle(), []);
-  const selectQueryParams = useSelector((state: RootState) => state.querySlicer);
+  const style = getStyle();
+  const selectQueryParams = useSelector((state: RootState) => state.querySlicer, shallowEqual);
   const dispatch = useAppDispatch();
   const [isAlerted, setIsAlerted] = useState<boolean>(false);
-  const { currentData: queryData, error: fetchError, isLoading, itemsCount } = useGetAllItemsQuery(selectQueryParams, {
-    selectFromResult: ({ data, isLoading, isUninitialized, error, currentData }) => ({
-      data,
+  const queryFilterParams = useSelector(selectFilterbyForQuery, shallowEqual);
+  const { currentData: queryData, error: fetchError, isLoading } = useGetAllItemsQuery(selectQueryParams, {
+    selectFromResult: ({ currentData, isLoading, isUninitialized, error }) => ({
+      currentData,
       error,
       isLoading: isUninitialized ? true : isLoading,
-      itemsCount: data?.itemsCount ? data?.itemsCount : 0,
-      currentData,
     }
     ),
     pollingInterval: 5000
   });
+
+
+  useEffect(() => {
+    dispatch(setQueryParams({ ...queryFilterParams, page: 1 }));
+  }, [queryFilterParams]);
 
   useEffect(() => {
     if (fetchError && !isAlerted) {
@@ -43,65 +50,30 @@ export const HomeView: FC<any> = ({ navigation }) => {
     }
   }, [fetchError, isAlerted]);
 
-
-  const selectBulk = useCallback((from: number, to: number) => selectMany(from, to, queryData!, dispatch, addItemId), [queryData]);
-
   const renderFooter = useMemo(() => {
-    return < ListFooter meta={queryData?.meta} />;
-  },
-    [queryData]);
+    return < ListFooter meta={queryData?.meta} totalItems={queryData?.itemsCount ?? 0} />;
+  }, [queryData?.meta, queryData?.itemsCount]);
+
+
+  const renderListTable = useMemo(() => {
+    if (queryData?.items.length || isLoading) {
+      return <ItemListTable data={queryData?.items || []} isLoading={isLoading} />;
+    }
+    else {
+      return null;
+    }
+  }, [queryData?.items, isLoading]);
+
+
+
+  const renderSearchContainer = useMemo(() => <SearchContainer searchValue={selectQueryParams.search || ''} />, [selectQueryParams.search]);
 
 
   return (
     <View style={style.container}>
-      <View style={{ flex: 0.9, flexGrow: 0.9, }}>
-        <ListHeader />
-        <RowItem height={10} />
-        {isLoading ?
-          <View style={{ position: 'absolute', top: 100, alignSelf: 'center' }}>
-            <ActivityIndicator size={'small'} color={Colors.OLD_GOLD} />
-          </View>
-          :
-          <FlatList
-            style={{ flex: 1, backgroundColor: Colors.ALABASTER, margin: 5 }}
-            data={queryData?.items}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={({ item, index }) => {
-              const {
-                name,
-                barcode,
-                category,
-                quantity,
-                purchasePrice,
-                unit,
-                id,
-                photoPath,
-                pricePerUnit,
-                description,
-                supplier,
-                store } = item;
-              return (
-                <ItemsContent
-                  key={id + index}
-                  id={id}
-                  name={name}
-                  barcode={barcode?.code!}
-                  category={category?.title!}
-                  quantity={Number(quantity)}
-                  stockPrice={Number(pricePerUnit)}
-                  purchasePrice={Number(purchasePrice)}
-                  unit={unit.name}
-                  itemIndex={index}
-                  lastItem={(queryData?.items.length ?? 1) - 1}
-                  selectBulk={selectBulk}
-                  photoName={photoPath || ''}
-                />
-              );
-            }}
-          />
-
-        }
-
+      <View style={{ flex: 0.9, flexGrow: 0.9 }}>
+        {renderSearchContainer}
+        {renderListTable}
       </View>
       {renderFooter}
     </View >

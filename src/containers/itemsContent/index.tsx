@@ -1,6 +1,7 @@
 import React, { FC, useMemo, useRef, useState } from "react";
 import { Image, Pressable, Text, View } from "react-native";
 import { useSelector } from "react-redux";
+import CustomPressable from "../../components/customPressable";
 import { addItemId, setIsEditMode } from "../../modules/redux/ItemsSlicer";
 import { selectIsEditMode } from "../../modules/redux/selectors/itemSelectors";
 import { RootState, useAppDispatch } from "../../modules/redux/store";
@@ -12,23 +13,23 @@ import { getStyle } from "./styles";
 interface ItemsContentProps {
     id: number;
     name: string;
+    description: string;
     barcode: string;
     category: string;
     quantity: number;
     unit: string;
-    purchasePrice: number;
+    totalPrice: number;
     stockPrice: number;
     itemIndex: number;
     lastItem: number | undefined;
+    color: string;
     selectBulk: Function;
-    photoName: string;
 }
 
-const ItemsContent: FC<ItemsContentProps> = ({ id, name, barcode, category, quantity, unit, purchasePrice, stockPrice, itemIndex, lastItem, selectBulk, photoName }) => {
+const ItemsContent: FC<ItemsContentProps> = ({ id, name, barcode, category, quantity, unit, totalPrice, stockPrice, itemIndex, lastItem, selectBulk, color, description }) => {
     const style = getStyle();
     const dispatch = useAppDispatch();
     const isEditMode = useSelector(selectIsEditMode);
-    const [opacity, setOpacity] = useState(1);
     const { isSelected, selectedCount, firstSelectedItem } = useSelector((state: RootState) => {
         return {
             firstSelectedItem: state.itemsSlicer.selectedItems[0],
@@ -47,14 +48,6 @@ const ItemsContent: FC<ItemsContentProps> = ({ id, name, barcode, category, quan
         dispatch(addItemId({ index: itemIndex, Id: id }));
     };
 
-    const onHoverIn = () => {
-        setOpacity(0.7);
-    };
-
-    const onHoverOut = () => {
-        setOpacity(1);
-    };
-
     const onPressItem = ({ nativeEvent: { shiftKey } }: any) => {
         if (isEditMode) {
             if (isSelected && selectedCount === 1) {
@@ -70,12 +63,10 @@ const ItemsContent: FC<ItemsContentProps> = ({ id, name, barcode, category, quan
         };
     };
 
-    const RenderColumnContent: FC<{ content: string | number; id: number; columnID: number; lastItem: number; photoName: string; }> = ({ content, id, columnID, lastItem }) => {
+    const RenderColumnContent: FC<{ content: string | number; id: number; }> = ({ content, id }) => {
         return (
             <>
                 <View key={id} style={[style.columContent]}>
-                    {(columnID === 1 && photoName.length) ? <Image key={id + photoName} style={{ borderRadius: 4, width: 60, height: 60, marginRight: 5 }} resizeMode={'contain'} source={{ uri: `http://localhost:3000/items/photos/${photoName}` }} />
-                        : null}
                     <Text key={`${content}-${id}`} style={style.columContentText}>
                         {content}
                     </Text>
@@ -85,21 +76,23 @@ const ItemsContent: FC<ItemsContentProps> = ({ id, name, barcode, category, quan
     };
 
     const renderRow = useMemo(() => {
-        return [name, barcode, category, quantity, unit, currency.format(purchasePrice), currency.format(stockPrice)].map((content, i, array) => {
-            return <RenderColumnContent content={content} id={id + i} key={i} columnID={i} lastItem={array.length - 1} photoName={photoName} />;
+        return [name, description, barcode, category, color, quantity, unit, currency.format(stockPrice), currency.format(totalPrice)].map((content, i) => {
+            return <RenderColumnContent content={content} id={id + i} key={i} />;
         });
 
-    }, [name, barcode, category, quantity, unit, purchasePrice, stockPrice, photoName]);
+    }, [name, barcode, category, quantity, unit, totalPrice, stockPrice, color, description]);
+
     return (
         <>
-            <Pressable ref={pressableRef} key={id}
+            <CustomPressable ref={pressableRef} key={id}
                 onLongPress={onLongPress}
-                onHoverIn={onHoverIn}
-                onHoverOut={onHoverOut}
                 onPress={onPressItem}
-                style={({ pressed }) => [{ backgroundColor: (pressed || isSelected) ? Colors.OLD_GOLD : Colors.FLORAL_WHITE, opacity: opacity }, style.rowItem]} >
+                style={[{ backgroundColor: isSelected ? Colors.OLD_GOLD : Colors.FLORAL_WHITE }, style.rowItem]}
+                pressedStyle={{ backgroundColor: Colors.OLD_GOLD }}
+                onHoverOpacity
+            >
                 {renderRow}
-            </Pressable>
+            </CustomPressable>
         </>
     );
 };

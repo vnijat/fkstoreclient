@@ -5,16 +5,16 @@ import { getStyle } from "./styles";
 
 
 interface ListHeaderProps {
-    columnHeaders?: object;
+    columnHeaders: string[];
 }
 
 export const ListHeader: FC<ListHeaderProps> = ({ columnHeaders }) => {
     const style = getStyle();
-    const columns = ['name', 'barcode', 'category', 'quantity', 'unit', 'price', 'stock price'].map((item) => item.toUpperCase());
+    // const columns = ['name', 'barcode', 'category', 'quantity', 'unit', 'price', 'stock price'].map((item) => item.toUpperCase());
 
     return (
         <View style={style.container}>
-            {columns.map((name, i) => {
+            {columnHeaders.map((name, i) => {
                 return (
                     <View key={i} style={style.columnContainer}>
                         <Text key={`${name}-${i}`} style={style.columnText}>

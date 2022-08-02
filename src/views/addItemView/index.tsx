@@ -12,7 +12,7 @@ export const AddItemView: FC<any> = ({ navigation }) => {
 
     return (
         <View style={style.container}>
-            <AddItemСontainer />
+                <AddItemСontainer />
         </View >
     );
 };

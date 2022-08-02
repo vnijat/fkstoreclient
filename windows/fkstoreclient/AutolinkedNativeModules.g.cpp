@@ -6,14 +6,14 @@
 // Includes from @react-native-async-storage/async-storage
 #include <winrt/ReactNativeAsyncStorage.h>
 
+// Includes from @react-native-community/checkbox
+#include <winrt/CheckboxWindows.h>
+
 // Includes from @react-native-picker/picker
 #include <winrt/ReactNativePicker.h>
 
 // Includes from react-native-screens
 #include <winrt/RNScreens.h>
-
-// Includes from react-native-xaml
-#include <winrt/ReactNativeXaml.h>
 
 namespace winrt::Microsoft::ReactNative
 {
@@ -22,12 +22,12 @@ void RegisterAutolinkedNativeModulePackages(winrt::Windows::Foundation::Collecti
 { 
     // IReactPackageProviders from @react-native-async-storage/async-storage
     packageProviders.Append(winrt::ReactNativeAsyncStorage::ReactPackageProvider());
+    // IReactPackageProviders from @react-native-community/checkbox
+    packageProviders.Append(winrt::CheckboxWindows::ReactPackageProvider());
     // IReactPackageProviders from @react-native-picker/picker
     packageProviders.Append(winrt::ReactNativePicker::ReactPackageProvider());
     // IReactPackageProviders from react-native-screens
     packageProviders.Append(winrt::RNScreens::ReactPackageProvider());
-    // IReactPackageProviders from react-native-xaml
-    packageProviders.Append(winrt::ReactNativeXaml::ReactPackageProvider());
 }
 
 }

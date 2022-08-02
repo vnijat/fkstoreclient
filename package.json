@@ -21,6 +21,7 @@
     "@reduxjs/toolkit": "1.7.1",
     "@types/react-redux": "7.1.21",
     "axios": "0.24.0",
+    "i18n-iso-countries": "^7.5.0",
     "react": "17.0.2",
     "react-native": "0.66.4",
     "react-native-gesture-handler": "^2.1.0",
@@ -29,9 +30,9 @@
     "react-native-safe-area-context": "^3.3.2",
     "react-native-screens": "3.10.1",
     "react-native-vector-icons": "^9.0.0",
+    "react-native-windows": "0.66.24",
     "react-redux": "7.2.6",
-    "styled-components": "5.3.3",
-    "react-native-windows": "0.66.24"
+    "styled-components": "5.3.3"
   },
   "devDependencies": {
     "@babel/core": "7.12.9",

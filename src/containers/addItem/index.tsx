@@ -21,12 +21,11 @@ interface AddItemProps { }
 
 const AddItemСontainer: FC<AddItemProps> = ({ }) => {
   const style = getStyle();
-  const [itemInputs, setItemInputs] = useState<{ [key: string]: any; }>({});
-  const { data } = useGetItemInputsQuery(undefined, {
-    selectFromResult: ({ data, isLoading, isUninitialized, error }) => ({
-      data,
+  const { currentData } = useGetItemInputsQuery(undefined, {
+    selectFromResult: ({ isLoading, isUninitialized, error, currentData }) => ({
       error,
       isLoading: isUninitialized ? true : isLoading,
+      currentData
     }),
     pollingInterval: 5000,
   });
@@ -38,22 +37,20 @@ const AddItemСontainer: FC<AddItemProps> = ({ }) => {
   const dispatch = useAppDispatch();
   const inputRef = useRef<any>([]);
 
+
   const postItem = async () => {
     try {
       const response = await apiAdditem(itemForPosting);
       if (response.error) {
-        throw new Error('Server sent error');
+        throw new Error('Server sent error==>', response.error);
       }
       dispatch(clearItemForPosting());
       setErrorMessages({});
-      setItemInputs({});
     } catch (error) {
       console.log('error====>>>', error);
     }
   };
 
-
-  useEffect(() => data && setItemInputs(data), [data, itemInputs]);
 
   useEffect(() => {
     if (error && error?.data) {
@@ -66,7 +63,6 @@ const AddItemСontainer: FC<AddItemProps> = ({ }) => {
   const onPressReset = () => {
     dispatch(clearItemForPosting());
     setErrorMessages({});
-    setItemInputs({});
   };
 
   const setItemForPosting = (
@@ -74,7 +70,7 @@ const AddItemСontainer: FC<AddItemProps> = ({ }) => {
     objectKey: string,
     selectableInput?: boolean,
   ) => {
-    inputValue.length &&
+    !!inputValue.length &&
       errorMessage[`${objectKey}${selectableInput ? 'Id' : ''}`] &&
       setErrorMessages(prev => {
         delete prev[`${objectKey}${selectableInput ? 'Id' : ''}`];
@@ -110,8 +106,9 @@ const AddItemСontainer: FC<AddItemProps> = ({ }) => {
             tooltip: toolTip,
             selectionColor: Colors.JASMINE,
           });
-        const selectableData = selectable && itemInputs ? itemInputs[titleAsObjectKey] : [];
+        const selectableData = selectable && currentData ? currentData[titleAsObjectKey] : [];
         const isError = !!errorMessage[`${titleAsObjectKey}${selectable ? 'Id' : ''}`]?.length;
+        const pickerDataKeyName = selectable ? title.toLowerCase() : '';
         return (
           <InputItem
             inputTitle={title}
@@ -132,11 +129,13 @@ const AddItemСontainer: FC<AddItemProps> = ({ }) => {
             selectableData={selectableData}
             isErorr={isError}
             titleColor={Colors.DARK_GOLDENROD}
+            isPickerAddButton={selectable}
+            pickerDataKeyName={pickerDataKeyName}
           />
         );
       });
     }
-  }, [itemForPosting, errorMessage, itemInputs]);
+  }, [itemForPosting, errorMessage, currentData]);
 
   return (
     <View style={style.container}>

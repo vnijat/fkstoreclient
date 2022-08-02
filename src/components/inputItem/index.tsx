@@ -28,6 +28,8 @@ interface IInputItem {
   backgroundColor?: string;
   isHaveAddButton?: boolean;
   addButtonTitle?: string;
+  pickerDataKeyName: string;
+  isPickerAddButton?: boolean;
 }
 
 export const InputItem: FC<IInputItem> = memo(
@@ -51,6 +53,8 @@ export const InputItem: FC<IInputItem> = memo(
     backgroundColor,
     isHaveAddButton,
     addButtonTitle,
+    pickerDataKeyName,
+    isPickerAddButton
   }) => {
     const style = useMemo(
       () => getStyle(height, width, isErorr, titleColor, backgroundColor),
@@ -91,12 +95,16 @@ export const InputItem: FC<IInputItem> = memo(
       }
     }, [selectableData?.length]);
 
+
+    
     const renderCustomPicker = useMemo(() => {
       return (<>
         < CustomPicker
+          dataKeyName={pickerDataKeyName}
           singleSelected={inputValue}
           singleOnSelect={onValueChange}
           singleSelectData={dataForPicker}
+          isAddButton={isPickerAddButton}
           buttonStyle={style.pickerButtonStyle}
           itemStyle={style.pickerItemStyle}
           selectedItemStyle={[style.pickerItemStyle, { backgroundColor: Colors.METALLIC_GOLD }]}
@@ -104,7 +112,7 @@ export const InputItem: FC<IInputItem> = memo(
         />
       </>
       );
-    }, [inputValue, dataForPicker.length]);
+    }, [inputValue, dataForPicker.length, isErorr, isPickerAddButton, pickerDataKeyName]);
 
 
     return (

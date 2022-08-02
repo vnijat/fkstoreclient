@@ -17,7 +17,8 @@ export const getStyle = () => {
         sortBy: {
             flexDirection: 'row',
             marginBottom: 10,
-            alignItems: 'center'
+            alignItems: 'center',
+            flexWrap: 'wrap'
         },
         filterByText: {
             color: Colors.OLD_GOLD,

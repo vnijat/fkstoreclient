@@ -10,6 +10,10 @@ import { selectFilterbyForQuery } from '../../modules/redux/selectors/filterSele
 import { RootState, useAppDispatch } from '../../modules/redux/store';
 import { getStyle } from './style';
 
+// import countries from 'i18n-iso-countries';
+// countries.registerLocale(require("i18n-iso-countries/langs/en.json"));
+// countries.registerLocale(require("i18n-iso-countries/langs/az.json"));
+// const countryobjects = countries.getNames('en', { select: 'official' });
 
 export const HomeView: FC<any> = ({ navigation }) => {
   const style = getStyle();
@@ -31,7 +35,6 @@ export const HomeView: FC<any> = ({ navigation }) => {
   useEffect(() => {
     dispatch(setQueryParams({ ...queryFilterParams, page: 1 }));
   }, [queryFilterParams]);
-
 
   useEffect(() => {
     if (fetchError && !isAlerted) {

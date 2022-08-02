@@ -1,20 +1,20 @@
 import CheckBox from '@react-native-community/checkbox';
-import React, { FC, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import {
-    Pressable,
     Text,
     View,
-    ScrollView,
     FlatList,
     StyleProp,
-    PressableStateCallbackType,
     ViewStyle,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
 import { Flyout } from 'react-native-windows';
+import AddOptionsModal from '../../containers/addOptionsModal';
+import { inputsForItemOptions } from '../../containers/addOptionsModal/configs';
 import { FilterParamskey } from '../../types/ItemsQuery';
 import { Colors } from '../../utils/colors';
 import CustomPressable from '../customPressable';
+import { PrimaryButton } from '../primaryButton';
 import { getStyle } from './style';
 
 export interface IsingelSelectData {
@@ -42,6 +42,9 @@ interface ICustomPicker {
     selectedItemStyle?: StyleProp<ViewStyle> | undefined;
     itemTextStyle?: StyleProp<ViewStyle> | undefined;
     selectedItemTextStyle?: StyleProp<ViewStyle> | undefined;
+    isFilterEnabled?: boolean;
+    isAddButton?: boolean;
+    dataKeyName?: keyof typeof inputsForItemOptions;
 }
 
 const CustomPicker = ({
@@ -60,9 +63,13 @@ const CustomPicker = ({
     itemTextStyle,
     selectedItemStyle,
     selectedItemTextStyle,
+    isFilterEnabled,
+    isAddButton,
+    dataKeyName
 }: ICustomPicker) => {
     const style = getStyle();
     const [isShowContent, setShowContent] = useState(false);
+    const [isShowAddNewModal, setisShowAddNewModal] = useState(false);
     const buttonRef = useRef(null);
     const onPress = () => {
         setShowContent(true);
@@ -114,6 +121,16 @@ const CustomPicker = ({
             return;
         }
     };
+
+    const onPressAddButton = () => {
+        setShowContent(false);
+        setisShowAddNewModal(true);
+
+    };
+    const closeAddOptionsModal = () => {
+        setisShowAddNewModal(false);
+    };
+
     const singleSelectedTitle = useMemo(() => {
         if (singleSelectData?.length) {
             const selected = singleSelectData.filter((item) => item.value == singleSelected)[0];
@@ -161,11 +178,10 @@ const CustomPicker = ({
 
     }, [singleSelectMode, selectedIds?.length]);
 
-
-
-
     return (
         <>
+            {isAddButton && < AddOptionsModal closeModal={closeAddOptionsModal} isShowModal={isShowAddNewModal} optionName={dataKeyName} />
+            }
             <View>
                 {renderCounter}
                 <CustomPressable
@@ -187,9 +203,8 @@ const CustomPicker = ({
                 placement={'bottom'}
                 isOpen={isShowContent}
                 onDismiss={onDismiss}
-                // showMode={'transient'}
-                >
-                <View style={{ flex: 1 }}>
+            >
+                <View style={{ flex: 1, justifyContent: 'space-between' }}>
                     {singleSelectMode ? (
                         <FlatList
                             style={{
@@ -215,6 +230,7 @@ const CustomPicker = ({
                             renderItem={renderMultipleSelectItem}
                         />
                     )}
+                    {isAddButton && <PrimaryButton onPress={onPressAddButton} title={'Add new'} textColor={Colors.CULTURED} buttonColor={Colors.OLD_GOLD} height={30} />}
                 </View>
             </Flyout>
         </>

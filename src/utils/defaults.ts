@@ -1,5 +1,5 @@
 import { QueryStateSelector } from '@reduxjs/toolkit/dist/query/react/buildHooks';
-import {AddItemInterface} from '../types/addItem';
+import {AddItemInterface} from '../types/Item';
 
 export const ItemForPostDefaults: AddItemInterface = {
   name: '',

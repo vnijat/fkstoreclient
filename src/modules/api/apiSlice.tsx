@@ -1,7 +1,15 @@
 // Need to use the React-specific entry point to import createApi
 import { BaseQueryFn, createApi, FetchArgs, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
-import { AddItemInterface } from '../../types/addItem';
+import { AddBarcode } from '../../types/barcode';
+import { AddCategory } from '../../types/category';
+import { AddColor } from '../../types/color';
+import { AddItemInterface } from '../../types/Item';
 import { Data, Item, QueryParams } from '../../types/ItemsQuery';
+import { AddLabel } from '../../types/label';
+import { AddLocation } from '../../types/location';
+import { AddStore } from '../../types/store';
+import { AddSupplier } from '../../types/supplier';
+import { AddUnit } from '../../types/unit';
 import { RootState } from '../redux/store';
 
 // Define a service using a base URL and expected endpoints
@@ -52,12 +60,102 @@ export const inventoryApi = createApi({
                 };
             },
             invalidatesTags: ['Items']
-        })
+        }),
+        addUnit: build.mutation<undefined, AddUnit>({
+            query: (body) => {
+                return {
+                    url: '/unit/',
+                    body: body,
+                    method: 'POST'
+                };
+            },
+            invalidatesTags: ['itemInputs']
+        }),
+        addSupplier: build.mutation<undefined, AddSupplier>({
+            query: (body) => {
+                return {
+                    url: '/supplier/',
+                    body: body,
+                    method: 'POST'
+                };
+            },
+            invalidatesTags: ['itemInputs']
+        }),
+        addCategory: build.mutation<undefined, AddCategory>({
+            query: (body) => {
+                return {
+                    url: '/category/',
+                    body: body,
+                    method: 'POST'
+                };
+            },
+            invalidatesTags: ['itemInputs']
+        }),
+        addColor: build.mutation<undefined, AddColor>({
+            query: (body) => {
+                return {
+                    url: '/color/',
+                    body: body,
+                    method: 'POST'
+                };
+            },
+            invalidatesTags: ['itemInputs']
+        }),
+        addLabel: build.mutation<undefined, AddLabel>({
+            query: (body) => {
+                return {
+                    url: '/label/',
+                    body: body,
+                    method: 'POST'
+                };
+            },
+            invalidatesTags: ['itemInputs']
+        }),
+        addLocation: build.mutation<undefined, AddLocation>({
+            query: (body) => {
+                return {
+                    url: '/location/',
+                    body: body,
+                    method: 'POST'
+                };
+            },
+            invalidatesTags: ['itemInputs']
+        }),
+        addStore: build.mutation<undefined, AddStore>({
+            query: (body) => {
+                return {
+                    url: '/store/',
+                    body: body,
+                    method: 'POST'
+                };
+            },
+            invalidatesTags: ['itemInputs']
+        }),
+        addBarcode: build.mutation<undefined, AddBarcode>({
+            query: (body) => {
+                return {
+                    url: '/barcode/',
+                    body: body,
+                    method: 'POST'
+                };
+            },
+            invalidatesTags: ['itemInputs']
+        }),
     }),
     tagTypes: ['Items', 'itemInputs']
 });
 
-
-// Export hooks for usage in functional components, which are
-// auto-generated based on the defined endpoints
-export const { useGetAllItemsQuery, useDeleteManyItemsMutation, useAddItemMutation, useGetItemInputsQuery } = inventoryApi;
+export const {
+    useGetAllItemsQuery,
+    useDeleteManyItemsMutation,
+    useAddItemMutation,
+    useGetItemInputsQuery,
+    useAddColorMutation,
+    useAddLabelMutation,
+    useAddCategoryMutation,
+    useAddStoreMutation,
+    useAddUnitMutation,
+    useAddSupplierMutation,
+    useAddLocationMutation,
+    useAddBarcodeMutation
+} = inventoryApi;

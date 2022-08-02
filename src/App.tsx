@@ -1,3 +1,4 @@
+
 import { createNavigationContainerRef, NavigationContainer } from '@react-navigation/native';
 import React, { FC, useRef } from 'react';
 import { RootNavigation } from './modules/navigation/rootNavigation';

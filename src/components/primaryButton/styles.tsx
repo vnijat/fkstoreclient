@@ -7,7 +7,6 @@ export const getStyle = (textColor?: string, buttonColor?: string) => {
             paddingHorizontal: 5,
             backgroundColor: buttonColor || '#455A64',
             justifyContent: 'center',
-            borderRadius: 3,
             alignItems: 'center'
         },
         title: {

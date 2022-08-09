@@ -84,6 +84,15 @@ const AddItemСontainer: FC<AddItemProps> = ({ }) => {
     );
   };
 
+
+  const onPressSave = () => {
+
+
+
+  };
+
+
+
   const renderInputs = useMemo(() => {
     {
       return inputsConfig.map((config, id) => {
@@ -109,6 +118,7 @@ const AddItemСontainer: FC<AddItemProps> = ({ }) => {
         const selectableData = selectable && currentData ? currentData[titleAsObjectKey] : [];
         const isError = !!errorMessage[`${titleAsObjectKey}${selectable ? 'Id' : ''}`]?.length;
         const pickerDataKeyName = selectable ? title.toLowerCase() : '';
+        console.log("renderInputs==>>>AddItem");
         return (
           <InputItem
             inputTitle={title}
@@ -147,6 +157,15 @@ const AddItemСontainer: FC<AddItemProps> = ({ }) => {
           buttonColor={Colors.ALABASTER}
           textColor={Colors.METALLIC_GOLD}
           pressedColor={Colors.OLD_GOLD}
+          height={30}
+          width={80}
+        />
+        <PrimaryButton
+          title={'Save'}
+          onPress={onPressSave}
+          buttonColor={Colors.METALLIC_GOLD}
+          textColor={Colors.FLORAL_WHITE}
+          pressedColor={Colors.DARK_GOLDENROD}
           height={30}
           width={80}
         />

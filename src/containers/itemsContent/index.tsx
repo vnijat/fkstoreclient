@@ -48,7 +48,8 @@ const ItemsContent: FC<ItemsContentProps> = ({ id, name, barcode, category, quan
         dispatch(addItemId({ index: itemIndex, Id: id }));
     };
 
-    const onPressItem = ({ nativeEvent: { shiftKey } }: any) => {
+    const onPressItem = ({ nativeEvent }: any) => {
+        const { shiftKey } = nativeEvent;
         if (isEditMode) {
             if (isSelected && selectedCount === 1) {
                 dispatch(setIsEditMode(false));

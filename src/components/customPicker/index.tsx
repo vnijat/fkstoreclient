@@ -71,6 +71,11 @@ const CustomPicker = ({
     const [isShowContent, setShowContent] = useState(false);
     const [isShowAddNewModal, setisShowAddNewModal] = useState(false);
     const buttonRef = useRef(null);
+    const isShowableExited = useMemo(() => {
+        const itemLength = multipleSelectData?.length || singleSelectData?.length || 0;
+        return itemLength > 3;
+    }, [multipleSelectData?.length, singleSelectData?.length]);
+
     const onPress = () => {
         setShowContent(true);
     };
@@ -209,10 +214,13 @@ const CustomPicker = ({
                         <FlatList
                             style={{
                                 flex: 1,
-                                backgroundColor: Colors.FLORAL_WHITE,
-                                borderRadius: 3,
+                                maxHeight: 100,
+                                paddingRight: 10,
+                                backgroundColor: isShowableExited ? Colors.OLD_GOLD : Colors.FLORAL_WHITE,
                             }}
-                            contentContainerStyle={{ padding: 1 }}
+                            contentContainerStyle={{
+                                backgroundColor: Colors.FLORAL_WHITE,
+                            }}
                             data={singleSelectData}
                             keyExtractor={item => item.label}
                             renderItem={renderSingleSelectItem}
@@ -221,16 +229,19 @@ const CustomPicker = ({
                         <FlatList
                             style={{
                                 flex: 1,
-                                backgroundColor: Colors.FLORAL_WHITE,
-                                borderRadius: 3,
+                                maxHeight: 100,
+                                paddingRight: 10,
+                                backgroundColor: isShowableExited ? Colors.OLD_GOLD : Colors.FLORAL_WHITE,
                             }}
-                            contentContainerStyle={{ padding: 1 }}
+                            contentContainerStyle={{
+                                backgroundColor: Colors.FLORAL_WHITE,
+                            }}
                             data={multipleSelectData}
                             keyExtractor={item => item.id.toString()}
                             renderItem={renderMultipleSelectItem}
                         />
                     )}
-                    {isAddButton && <PrimaryButton onPress={onPressAddButton} title={'Add new'} textColor={Colors.CULTURED} buttonColor={Colors.OLD_GOLD} height={30} />}
+                    {isAddButton && <PrimaryButton onPress={onPressAddButton} title={'Add new'} textColor={Colors.OLD_GOLD} buttonColor={Colors.ALABASTER} height={30} />}
                 </View>
             </Flyout>
         </>

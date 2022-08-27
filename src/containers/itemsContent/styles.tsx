@@ -28,6 +28,13 @@ export const getStyle = () => {
             borderRadius: 5,
             flex: 1,
             justifyContent: 'space-evenly',
+            alignItems: 'center'
+        },
+        checkBoxContainer: {
+            position: 'absolute',
+            left: 10,
+            backgroundColor: 'transparent',
+            justifyContent: 'center'
         }
     });
 

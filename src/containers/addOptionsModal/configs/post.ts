@@ -1,14 +1,14 @@
-import {inventoryApi} from '../../../modules/api/apiSlice';
+import {ItemOptionsPostApi} from '../../../modules/api/itemOptionsPost.api';
 
 const POST_OPTIONS = {
-  color: inventoryApi.endpoints.addColor,
-  unit: inventoryApi.endpoints.addUnit,
-  supplier: inventoryApi.endpoints.addSupplier,
-  category: inventoryApi.endpoints.addCategory,
-  location: inventoryApi.endpoints.addLocation,
-  label: inventoryApi.endpoints.addLabel,
-  store: inventoryApi.endpoints.addStore,
-  barcode: inventoryApi.endpoints.addBarcode,
+  color: ItemOptionsPostApi.endpoints.addColor,
+  unit: ItemOptionsPostApi.endpoints.addUnit,
+  supplier: ItemOptionsPostApi.endpoints.addSupplier,
+  category: ItemOptionsPostApi.endpoints.addCategory,
+  location: ItemOptionsPostApi.endpoints.addLocation,
+  label: ItemOptionsPostApi.endpoints.addLabel,
+  store: ItemOptionsPostApi.endpoints.addStore,
+  barcode: ItemOptionsPostApi.endpoints.addBarcode,
 };
 
 export default POST_OPTIONS;

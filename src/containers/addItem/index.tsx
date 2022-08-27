@@ -118,7 +118,6 @@ const AddItemСontainer: FC<AddItemProps> = ({ }) => {
         const selectableData = selectable && currentData ? currentData[titleAsObjectKey] : [];
         const isError = !!errorMessage[`${titleAsObjectKey}${selectable ? 'Id' : ''}`]?.length;
         const pickerDataKeyName = selectable ? title.toLowerCase() : '';
-        console.log("renderInputs==>>>AddItem");
         return (
           <InputItem
             inputTitle={title}

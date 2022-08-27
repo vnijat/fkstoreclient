@@ -6,18 +6,22 @@ interface IcustomPressable {
     style?: StyleProp<ViewStyle>;
     pressedStyle?: StyleProp<ViewStyle>;
     onHoverOpacity?: boolean;
+    onMouseEnter?: () => void;
+    onMouseLeave?: () => void;
 }
 
 
 
-const CustomPressable = React.forwardRef(({ children, style, pressedStyle, onHoverOpacity, ...rest }: PressableProps & IcustomPressable, ref: Ref<View>) => {
+const CustomPressable = React.forwardRef(({ children, style, pressedStyle, onHoverOpacity, onMouseEnter, onMouseLeave, ...rest }: PressableProps & IcustomPressable, ref: Ref<View>) => {
     const [opacity, setOpacity] = useState(1);
     const onHoverIn = () => {
         setOpacity(0.7);
+        onMouseEnter && onMouseEnter();
     };
 
     const onHoverOut = () => {
         setOpacity(1);
+        onMouseLeave && onMouseLeave();
     };
 
     return (

@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { Text, View, ScrollView } from "react-native";
+import { Text, View, ScrollView, Alert } from "react-native";
 import { Popup, } from "react-native-windows";
 import CustomPressable from "../../components/customPressable";
 import { Colors } from "../../utils/colors";
@@ -39,7 +39,7 @@ const AddOptionsModal = ({ isShowModal, closeModal, optionName }: IaddOptionsMod
         pollingInterval: 5000,
     });
     const inputRef = useRef<any>([]);
-
+    console.log("errorMessage===>>", errorMessage);
     const setItemOptionsForPosting = (
         inputValue: string,
         objectKey: string,
@@ -119,17 +119,35 @@ const AddOptionsModal = ({ isShowModal, closeModal, optionName }: IaddOptionsMod
     };
 
 
+    const errorAlert = (status: string, message: string) => {
+        Alert.alert(`Conflict Status Code  ${status}`, message, [
+            {
+                text: 'Ok',
+                onPress: () => { }
+            },
+        ]);
+    };
+
+
     const onPressAdd = async () => {
         try {
             const response = await sendPost();
+            console.log("response==>>>", response);
             if (response.error) {
                 throw response.error;
             }
             onPressReset();
             closeModal();
         } catch (error) {
-            console.log("onPressAdd===error===>>>", error);
-            setErrorMessages(HELP.modifieErrorMessage(error));
+            console.log("error==>>", error);
+            if (error?.status === 400) {
+                setErrorMessages(HELP.modifieErrorMessage(error));
+            }
+            else {
+                if (error?.data.message) {
+                    errorAlert(error?.status, error?.data.message);
+                }
+            }
         }
     };
 

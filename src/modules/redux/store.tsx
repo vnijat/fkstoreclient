@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/dist/query';
 import { useDispatch } from 'react-redux';
-import { inventoryApi } from '../api/apiSlice';
+import { InventoryApi } from '../api/apiSlice';
 import appStateSlicer from './appStateSlicer';
 import itemsSlicer from './ItemsSlicer';
 import menuSlicer from './menuSlicer';
@@ -17,10 +17,10 @@ export const store = configureStore({
         itemsSlicer,
         filterSlicer,
         itemOptions,
-        [inventoryApi.reducerPath]: inventoryApi.reducer
+        [InventoryApi.reducerPath]: InventoryApi.reducer
     },
     middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware().concat(inventoryApi.middleware),
+        getDefaultMiddleware().concat(InventoryApi.middleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

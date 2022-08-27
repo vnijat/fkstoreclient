@@ -14,4 +14,5 @@ export enum Colors {
   OLD_GOLD = '#e0c152',
   JASMINE = '#FFE68C',
   ALABASTER = '#F3F0E8',
+  DEFAULT_TEXT_COLOR = '#808080',
 }

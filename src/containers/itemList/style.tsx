@@ -8,7 +8,29 @@ export const getStyle = () => {
             marginBottom: 10,
             justifyContent: 'space-between'
         },
+
+        infoTitle: {
+            color: Colors.OLD_GOLD,
+        },
+        infoValue: {
+            fontWeight: '700',
+        },
+        infoText: {
+            fontSize: 12,
+            flexDirection: 'row',
+            paddingLeft: 10,
+            color: Colors.DEFAULT_TEXT_COLOR
+        },
+        infoContainer: {
+            height: 40,
+            backgroundColor: '#FBFBF2',
+            flexDirection: 'row',
+            marginHorizontal: 10,
+            alignItems: 'center',
+            justifyContent: 'space-between'
+        }
     });
+
 
     return style;
 };

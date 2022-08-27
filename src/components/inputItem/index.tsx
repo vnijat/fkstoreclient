@@ -95,8 +95,6 @@ export const InputItem: FC<IInputItem> = memo(
       }
     }, [selectableData?.length]);
 
-
-    
     const renderCustomPicker = useMemo(() => {
       return (<>
         < CustomPicker

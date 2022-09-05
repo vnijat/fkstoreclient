@@ -1,15 +1,20 @@
-import React, { FC, useEffect, useMemo, useRef, useState } from 'react';
+import { useFocusEffect, useIsFocused, useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import React, { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Text, View } from 'react-native';
 import { shallowEqual, useSelector } from 'react-redux';
 import { InputItem } from '../../components/inputItem';
 import { PrimaryButton } from '../../components/primaryButton';
 import {
   useAddItemMutation,
+  useEditItemMutation,
   useGetItemInputsQuery,
 } from '../../modules/api/apiSlice';
 import {
   clearItemForPosting,
+  setIsItemForEdit,
   setItemForPost,
+  setItemValueForPost,
 } from '../../modules/redux/ItemsSlicer';
 import { RootState, useAppDispatch } from '../../modules/redux/store';
 import HELP from '../../services/helpers';
@@ -20,6 +25,7 @@ import { getStyle } from './styles';
 interface AddItemProps { }
 
 const AddItemСontainer: FC<AddItemProps> = ({ }) => {
+  const navigation = useNavigation<StackNavigationProp<any>>();
   const style = getStyle();
   const { currentData } = useGetItemInputsQuery(undefined, {
     selectFromResult: ({ isLoading, isUninitialized, error, currentData }) => ({
@@ -29,11 +35,14 @@ const AddItemСontainer: FC<AddItemProps> = ({ }) => {
     }),
     pollingInterval: 5000,
   });
-  const [apiAdditem, { error }] = useAddItemMutation();
+  const isItemForEdit = useSelector((state: RootState) => state.itemsSlicer.isItemForEdit, shallowEqual);
+  const [apiAdditem] = useAddItemMutation();
+  const [apiEditItem] = useEditItemMutation();
   const [errorMessage, setErrorMessages] = useState<{ [key: string]: string[]; }>(
     {},
   );
   const itemForPosting: any = useSelector((state: RootState) => state.itemsSlicer.itemforPost, shallowEqual);
+  const [itemForEdit, setItemForEdit] = useState({});
   const dispatch = useAppDispatch();
   const inputRef = useRef<any>([]);
 
@@ -41,31 +50,42 @@ const AddItemСontainer: FC<AddItemProps> = ({ }) => {
   const postItem = async () => {
     try {
       const response = await apiAdditem(itemForPosting);
-      if (response.error) {
-        throw new Error('Server sent error==>', response.error);
+      if (response?.error) {
+        throw response?.error;
       }
       dispatch(clearItemForPosting());
       setErrorMessages({});
+      navigation.navigate('Home');
     } catch (error) {
-      console.log('error====>>>', error);
+      setErrorMessages(HELP.modifieErrorMessage(error));
     }
   };
-
-
-  useEffect(() => {
-    if (error && error?.data) {
-      setErrorMessages(HELP.modifieErrorMessage(error));
-    } else {
-      setErrorMessages({});
-    }
-  }, [error]);
 
   const onPressReset = () => {
-    dispatch(clearItemForPosting());
     setErrorMessages({});
+    if (isItemForEdit) {
+      dispatch(setItemForPost(itemForEdit));
+    } else {
+      dispatch(clearItemForPosting());
+    }
   };
 
-  const setItemForPosting = (
+
+  useFocusEffect(
+    useCallback(() => {
+      return () => {
+        if (isItemForEdit) {
+          setItemForEdit({});
+          dispatch(clearItemForPosting());
+          setErrorMessages({});
+          dispatch(setIsItemForEdit(false));
+        }
+      };
+    }, [isItemForEdit])
+  );
+
+
+  const setItemValueForPosting = (
     inputValue: string,
     objectKey: string,
     selectableInput?: boolean,
@@ -77,21 +97,33 @@ const AddItemСontainer: FC<AddItemProps> = ({ }) => {
         return { ...prev };
       });
     dispatch(
-      setItemForPost({
+      setItemValueForPost({
         key: `${objectKey}${selectableInput ? 'Id' : ''}`,
         value: inputValue,
       }),
     );
   };
 
+  useEffect(() => {
+    if (isItemForEdit) {
+      setItemForEdit(itemForPosting);
+    }
+  }, [isItemForEdit]);
 
-  const onPressSave = () => {
-
-
-
+  const onPressSave = async () => {
+    try {
+      const response = await apiEditItem(itemForPosting);
+      if (response?.error) {
+        throw response?.error;
+      }
+      dispatch(setIsItemForEdit(false));
+      setItemForEdit({});
+      navigation.navigate('Home');
+    } catch (error) {
+      setErrorMessages(HELP.modifieErrorMessage(error));
+      console.log("ERORRRRRREDIT==>>>", error);
+    }
   };
-
-
 
   const renderInputs = useMemo(() => {
     {
@@ -131,7 +163,7 @@ const AddItemСontainer: FC<AddItemProps> = ({ }) => {
             inputRef={r => (inputRef.current[id] = r)}
             inputValue={inputValue}
             setValue={inputValue =>
-              setItemForPosting(inputValue, titleAsObjectKey, selectable)
+              setItemValueForPosting(inputValue, titleAsObjectKey, selectable)
             }
             id={id}
             selectable={selectable}
@@ -167,6 +199,7 @@ const AddItemСontainer: FC<AddItemProps> = ({ }) => {
           pressedColor={Colors.DARK_GOLDENROD}
           height={30}
           width={80}
+          disabled={!isItemForEdit}
         />
         <PrimaryButton
           title={'Add'}
@@ -176,6 +209,7 @@ const AddItemСontainer: FC<AddItemProps> = ({ }) => {
           pressedColor={Colors.DARK_GOLDENROD}
           height={30}
           width={80}
+          disabled={isItemForEdit}
         />
       </View>
     </View>

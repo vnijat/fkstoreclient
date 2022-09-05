@@ -60,6 +60,17 @@ export const InventoryApi = createApi({
             },
             invalidatesTags: ['items']
         }),
+        editItem: build.mutation<undefined, any>({
+            query: (body) => {
+                console.log("editItembodyyyyy,", body);
+                return {
+                    url: `/items/${body.id}`,
+                    body: body,
+                    method: 'PATCH'
+                };
+            },
+            invalidatesTags: ['items']
+        }),
     }),
     tagTypes: ['items', 'itemInputs']
 });
@@ -69,4 +80,5 @@ export const {
     useDeleteManyItemsMutation,
     useAddItemMutation,
     useGetItemInputsQuery,
+    useEditItemMutation
 } = InventoryApi;

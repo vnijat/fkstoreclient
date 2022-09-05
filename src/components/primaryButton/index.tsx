@@ -13,6 +13,7 @@ interface PrimaryButtonProps {
   pressedColor?: string;
   onHoverOpacity?: boolean;
   borderRadius?: number;
+  disabled?: boolean;
 }
 
 export const PrimaryButton: FC<PrimaryButtonProps> = ({
@@ -24,11 +25,12 @@ export const PrimaryButton: FC<PrimaryButtonProps> = ({
   height,
   pressedColor,
   onHoverOpacity,
-  borderRadius
+  borderRadius,
+  disabled
 }) => {
   const style = useMemo(
-    () => getStyle(textColor, buttonColor),
-    [buttonColor, textColor],
+    () => getStyle(textColor, buttonColor, disabled),
+    [buttonColor, textColor, disabled],
   );
 
   return (
@@ -36,7 +38,9 @@ export const PrimaryButton: FC<PrimaryButtonProps> = ({
       onHoverOpacity={onHoverOpacity}
       onPress={onPress}
       pressedStyle={[!!pressedColor && { backgroundColor: pressedColor }]}
-      style={[style.buttonContainer, { width, height, borderRadius }]}>
+      style={[style.buttonContainer, { width, height, borderRadius }]}
+      disabled={disabled}
+    >
       <Text style={style.title}>{title}</Text>
     </CustomPressable>
   );

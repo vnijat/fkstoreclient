@@ -6,6 +6,7 @@ interface ItemsSlicerInterface {
     selectedItems: Array<{ index: number; Id: number; totalPrice: number; }>;
     isEditMode: boolean;
     itemforPost: AddItemInterface;
+    isItemForEdit: boolean;
 }
 
 const initialState = {
@@ -13,7 +14,8 @@ const initialState = {
     isEditMode: false,
     itemforPost: {
         ...ItemForPostDefaults
-    }
+    },
+    isItemForEdit: false
 } as ItemsSlicerInterface;
 
 const itemsSlicer = createSlice({
@@ -35,14 +37,20 @@ const itemsSlicer = createSlice({
         setIsEditMode: (state, action: PayloadAction<boolean>) => {
             state.isEditMode = action.payload;
         },
-        setItemForPost: (state, action: PayloadAction<{ key: string; value: string | number; }>) => {
+        setIsItemForEdit: (state, action: PayloadAction<boolean>) => {
+            state.isItemForEdit = action.payload;
+        },
+        setItemValueForPost: (state, action: PayloadAction<{ key: string; value: string | number; }>) => {
             Object.assign(state.itemforPost, { [action.payload.key]: action.payload.value });
         },
         clearItemForPosting: (state) => {
             state.itemforPost = ItemForPostDefaults;
-        }
+        },
+        setItemForPost: (state, action: PayloadAction<{ [key: string]: any; }>) => {
+            Object.assign(state.itemforPost, action.payload);
+        },
     },
 });
 
-export const { addItemId, setIsEditMode, clearSelectedItems, setItemForPost, clearItemForPosting } = itemsSlicer.actions;
+export const { addItemId, setIsEditMode, clearSelectedItems, setItemForPost, setItemValueForPost, clearItemForPosting, setIsItemForEdit } = itemsSlicer.actions;
 export default itemsSlicer.reducer;

@@ -1,6 +1,5 @@
 import { createDrawerNavigator, getDrawerStatusFromState, useDrawerStatus } from '@react-navigation/drawer';
 import React, { FC } from 'react';
-import { FontIcon, NavigationView, NavigationViewItem } from 'react-native-xaml';
 import { HomeView } from '../../views/homeView';
 import { OrderView } from '../../views/orderView';
 import Icon from 'react-native-vector-icons/FontAwesome';

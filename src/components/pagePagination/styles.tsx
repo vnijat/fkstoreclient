@@ -38,7 +38,7 @@ export const getStyle = (textColor?: string, buttonColor?: string) => {
             borderWidth: 1,
             borderColor: Colors.OLD_GOLD,
             justifyContent: 'space-between'
-        }
+        },
     });
 
     return style;

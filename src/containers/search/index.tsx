@@ -61,7 +61,7 @@ const SearchContainer: FC<ISearchContainer> = ({ searchValue }) => {
                     const parent = `${title}Id` as keyof typeof pickerFilterParams;
                     const selectedIds = pickerFilterParams[parent];
                     const data = dataForFilterBy[title];
-                    return < CustomPicker title={title} data={data} onSelect={onSelectIdForFilter} selectedIds={selectedIds} parent={parent} key={index} />;
+                    return < CustomPicker isDataSearchEnabled title={title} data={data} onSelect={onSelectIdForFilter} selectedIds={selectedIds} parent={parent} key={index} />;
                 });
 
             }

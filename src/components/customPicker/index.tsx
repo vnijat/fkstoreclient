@@ -14,6 +14,7 @@ import { inputsForItemOptions } from '../../containers/addOptionsModal/configs';
 import { FilterParamskey } from '../../types/ItemsQuery';
 import { Colors } from '../../utils/colors';
 import CustomPressable from '../customPressable';
+import { InputItem } from '../inputItem';
 import { PrimaryButton } from '../primaryButton';
 import { getStyle } from './style';
 
@@ -42,7 +43,7 @@ interface ICustomPicker {
     selectedItemStyle?: StyleProp<ViewStyle> | undefined;
     itemTextStyle?: StyleProp<ViewStyle> | undefined;
     selectedItemTextStyle?: StyleProp<ViewStyle> | undefined;
-    isFilterEnabled?: boolean;
+    isDataSearchEnabled?: boolean;
     isAddButton?: boolean;
     dataKeyName?: keyof typeof inputsForItemOptions;
 }
@@ -63,13 +64,14 @@ const CustomPicker = ({
     itemTextStyle,
     selectedItemStyle,
     selectedItemTextStyle,
-    isFilterEnabled,
+    isDataSearchEnabled,
     isAddButton,
     dataKeyName
 }: ICustomPicker) => {
     const style = getStyle();
     const [isShowContent, setShowContent] = useState(false);
     const [isShowAddNewModal, setisShowAddNewModal] = useState(false);
+    const [searchText, setSearchText] = useState('');
     const buttonRef = useRef(null);
     const isShowableExited = useMemo(() => {
         const itemLength = multipleSelectData?.length || singleSelectData?.length || 0;
@@ -83,6 +85,23 @@ const CustomPicker = ({
     const onDismiss = () => {
         setShowContent(false);
     };
+
+    const getFilteredData = useMemo(() => {
+        let filteredData;
+        if (isDataSearchEnabled && searchText.trim().length) {
+            const dataForfilter = singleSelectMode ? singleSelectData : multipleSelectData;
+            const regEx = new RegExp(searchText.trim(), 'i');
+            filteredData = dataForfilter?.filter((data: { label: string; }) => regEx.test(data.label.trim()));
+        }
+        return filteredData;
+    }, [searchText, singleSelectMode, singleSelectData, multipleSelectData, isDataSearchEnabled]);
+
+    const renderSearchInput = useMemo(() => {
+
+        return <InputItem isSearch inputValue={searchText} setValue={(text) => setSearchText(text)} height={30} />;
+    }, [searchText]);
+
+
     const renderMultipleSelectItem = useMemo(
         () =>
             ({ item, index }: { item: { id: number; label: string; }; index: number; }) => {
@@ -92,7 +111,7 @@ const CustomPicker = ({
                     <CustomPressable
                         style={[(isSelected && selectedItemStyle) ? selectedItemStyle : (itemStyle || style.multipleSelectItem)]}
                         key={`${index}-${label}`}
-                        onPress={() => onSelect({ id, label, parent })}
+                        onPress={() => onSelect && onSelect({ id, label, parent: parent! })}
                         onHoverOpacity>
                         <CheckBox
                             value={isSelected}
@@ -209,7 +228,13 @@ const CustomPicker = ({
                 isOpen={isShowContent}
                 onDismiss={onDismiss}
             >
-                <View style={{ flex: 1, justifyContent: 'space-between' }}>
+                <View style={{ flex: 1, justifyContent: 'space-between', minWidth: 150 }}>
+                    {isDataSearchEnabled
+                        &&
+                        <View style={{ backgroundColor: Colors.FLORAL_WHITE }}>
+                            {renderSearchInput}
+                        </View>
+                    }
                     {singleSelectMode ? (
                         <FlatList
                             style={{
@@ -221,7 +246,7 @@ const CustomPicker = ({
                             contentContainerStyle={{
                                 backgroundColor: Colors.FLORAL_WHITE,
                             }}
-                            data={singleSelectData}
+                            data={getFilteredData || singleSelectData}
                             keyExtractor={item => item.label}
                             renderItem={renderSingleSelectItem}
                         />
@@ -236,7 +261,7 @@ const CustomPicker = ({
                             contentContainerStyle={{
                                 backgroundColor: Colors.FLORAL_WHITE,
                             }}
-                            data={multipleSelectData}
+                            data={getFilteredData || multipleSelectData}
                             keyExtractor={item => item.id.toString()}
                             renderItem={renderMultipleSelectItem}
                         />

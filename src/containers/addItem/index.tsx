@@ -172,6 +172,7 @@ const AddItemСontainer: FC<AddItemProps> = ({ }) => {
             titleColor={Colors.DARK_GOLDENROD}
             isPickerAddButton={selectable}
             pickerDataKeyName={pickerDataKeyName}
+            isPickerSearchEnabled={selectable}
           />
         );
       });

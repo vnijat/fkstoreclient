@@ -12,8 +12,8 @@ interface IInputItem {
   inputTitle?: string;
   isNumeric?: boolean;
   placeHolder?: string;
-  width: number;
-  height: number;
+  width?: number;
+  height?: number;
   maxLength?: number;
   isMultiLine?: boolean;
   inputRef?: (r: any) => {};
@@ -26,10 +26,10 @@ interface IInputItem {
   titleColor?: string;
   isSearch?: boolean;
   backgroundColor?: string;
-  isHaveAddButton?: boolean;
   addButtonTitle?: string;
-  pickerDataKeyName: string;
+  pickerDataKeyName?: string;
   isPickerAddButton?: boolean;
+  isPickerSearchEnabled?: boolean;
 }
 
 export const InputItem: FC<IInputItem> = memo(
@@ -51,10 +51,10 @@ export const InputItem: FC<IInputItem> = memo(
     titleColor,
     isSearch,
     backgroundColor,
-    isHaveAddButton,
     addButtonTitle,
     pickerDataKeyName,
-    isPickerAddButton
+    isPickerAddButton,
+    isPickerSearchEnabled
   }) => {
     const style = useMemo(
       () => getStyle(height, width, isErorr, titleColor, backgroundColor),
@@ -107,10 +107,11 @@ export const InputItem: FC<IInputItem> = memo(
           itemStyle={style.pickerItemStyle}
           selectedItemStyle={[style.pickerItemStyle, { backgroundColor: Colors.METALLIC_GOLD }]}
           singleSelectMode
+          isDataSearchEnabled={isPickerSearchEnabled}
         />
       </>
       );
-    }, [inputValue, dataForPicker.length, isErorr, isPickerAddButton, pickerDataKeyName]);
+    }, [inputValue, dataForPicker.length, isErorr, isPickerAddButton, pickerDataKeyName, isPickerSearchEnabled]);
 
 
     return (

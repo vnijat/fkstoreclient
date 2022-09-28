@@ -1,7 +1,7 @@
 import React, { FC, useMemo, useRef } from 'react';
 import { Text, View } from 'react-native';
-import { Colors } from 'react-native/Libraries/NewAppScreen';
 import { shallowEqual, useSelector } from 'react-redux';
+import { ClearIcon, FilterByIcon } from '../../assets/icons/searchContainerIcons';
 import CustomPicker from '../../components/customPicker';
 import CustomPressable from '../../components/customPressable';
 import { InputItem } from '../../components/inputItem';
@@ -11,6 +11,7 @@ import { setQueryParams } from '../../modules/redux/querySlicer';
 import { selectFilterByForPicker, selectSelectedWithLabel } from '../../modules/redux/selectors/filterSelector';
 import { useAppDispatch } from '../../modules/redux/store';
 import { FilterParamskey } from '../../types/ItemsQuery';
+import { Colors } from '../../utils/colors';
 import FilterItem from './component/filterItems';
 import { getStyle } from './styles';
 
@@ -99,25 +100,25 @@ const SearchContainer: FC<ISearchContainer> = ({ searchValue }) => {
 
     return (
         <View style={style.container}>
+            <View style={{ flexDirection: 'row', paddingHorizontal: 17, maxHeight: 300, minHeight: 40, paddingTop: 5, flexWrap: 'wrap' }}>
+                {renderFilterItems}
+            </View>
             <View style={style.search}>
-                <View style={{ flex: 1, paddingTop: 15 }}>
+                <View style={{ flex: 1 }}>
                     {renderSearch}
                 </View>
             </View>
-            <View style={{ flexDirection: 'row', paddingLeft: 17, marginVertical: 2 }}>
-                {renderFilterItems}
-            </View>
             <View style={style.sortBy}>
-                <Text style={style.filterByText}>
-                    {'Filter By:'}
-                </Text>
+                <View style={{ marginHorizontal: 1 }}>
+                    <FilterByIcon size={20} color={Colors.DEFAULT_TEXT_COLOR} />
+                </View>
                 {renderFilterByPickers}
                 <CustomPressable onPress={clearFiler}
                     onHoverOpacity
                     style={{ justifyContent: 'center', alignItems: 'center', marginLeft: 10 }}
                 >
                     <Text style={style.clearText}>
-                        {'Clear'}
+                        <ClearIcon size={20} color={Colors.METALLIC_GOLD} />
                     </Text>
                 </CustomPressable>
             </View>

@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { Colors } from '../../utils/colors';
+import { Colors } from '../../../../utils/colors';
 
 export const getStyle = () => {
     const style = StyleSheet.create({
@@ -17,7 +17,7 @@ export const getStyle = () => {
             flexGrow: 1
         },
         columnText: {
-            color: Colors.METALLIC_GOLD,
+            color: Colors.DEFAULT_TEXT_COLOR,
             fontWeight: '700',
             fontSize: 10
         }

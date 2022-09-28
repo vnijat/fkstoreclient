@@ -17,7 +17,7 @@ export const getStyle = () => {
             flexGrow: 1
         },
         columnText: {
-            color: Colors.METALLIC_GOLD,
+            color: Colors.CARD_HEADER_COLOR,
             fontWeight: '700',
             fontSize: 10
         },
@@ -30,7 +30,7 @@ export const getStyle = () => {
             paddingHorizontal: 5,
             borderRadius: 1,
             borderWidth: 1,
-            borderColor: Colors.OLD_GOLD,
+            borderColor: Colors.CARD_COLOR,
             justifyContent: 'space-between',
             backgroundColor: 'transparent'
         },
@@ -39,7 +39,7 @@ export const getStyle = () => {
             width: 18,
             height: 18,
             borderRadius: 100,
-            backgroundColor: Colors.OLD_GOLD,
+            backgroundColor: Colors.METALLIC_GOLD,
             justifyContent: 'center',
             alignItems: 'center',
             top: -5,
@@ -68,7 +68,7 @@ export const getStyle = () => {
             minWidth: 100,
             maxWidth: 200,
             alignItems: 'center',
-            paddingHorizontal: 5
+            paddingHorizontal: 5,
         }
     });
 

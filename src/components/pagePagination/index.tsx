@@ -1,14 +1,14 @@
-import {Picker} from '@react-native-picker/picker';
-import React, {FC, useMemo} from 'react';
-import {Pressable, Text, View} from 'react-native';
+import { Picker } from '@react-native-picker/picker';
+import React, { FC, useMemo } from 'react';
+import { Pressable, Text, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
-import {setQueryParams} from '../../modules/redux/querySlicer';
-import {useAppDispatch} from '../../modules/redux/store';
-import {Colors} from '../../utils/colors';
+import { setQueryParams } from '../../modules/redux/querySlicer';
+import { useAppDispatch } from '../../modules/redux/store';
+import { Colors } from '../../utils/colors';
 import CustomPicker from '../customPicker';
 import CustomPressable from '../customPressable';
-import {IpaginationTakeOptions, paginationTakeOptions} from './configs';
-import {getStyle} from './styles';
+import { IpaginationTakeOptions, paginationTakeOptions } from './configs';
+import { getStyle } from './styles';
 
 interface IPagePAgination {
   page?: number;
@@ -54,7 +54,7 @@ export const PagePagination: FC<IPagePAgination> = ({
   );
 
   const onPressPageNumber = (pageNumber: number) => {
-    dispatch(setQueryParams({page: pageNumber}));
+    dispatch(setQueryParams({ page: pageNumber }));
   };
 
   const renderPageNumbers = useMemo(() => {
@@ -82,13 +82,13 @@ export const PagePagination: FC<IPagePAgination> = ({
               style={[
                 {
                   backgroundColor: selectedPage
-                    ? Colors.OLD_GOLD
-                    : Colors.ALABASTER,
+                    ? Colors.DEFAULT_TEXT_COLOR
+                    : Colors.CARD_COLOR,
                 },
                 styles.pageButtons,
               ]}
-              pressedStyle={{backgroundColor: Colors.OLD_GOLD}}>
-              <Text style={styles.pageText} key={`${index}-${item}`}>
+              pressedStyle={{ backgroundColor: Colors.CARD_HEADER_COLOR }}>
+              <Text style={[styles.pageText, !selectedPage && { color: Colors.DEFAULT_TEXT_COLOR }]} key={`${index}-${item}`}>
                 {item}
               </Text>
             </CustomPressable>
@@ -102,7 +102,7 @@ export const PagePagination: FC<IPagePAgination> = ({
   const renderPages = useMemo(() => {
     return (
       <View
-        style={{flexDirection: 'row', width: 160, justifyContent: 'center'}}>
+        style={{ flexDirection: 'row', width: 160, justifyContent: 'center' }}>
         {renderPageNumbers}
       </View>
     );
@@ -110,28 +110,28 @@ export const PagePagination: FC<IPagePAgination> = ({
 
   const onPressAlignLeft = () => {
     const toFirstPage = page! + 1 - page!;
-    dispatch(setQueryParams({page: toFirstPage}));
+    dispatch(setQueryParams({ page: toFirstPage }));
   };
 
   const onPressLeft = () => {
-    dispatch(setQueryParams({page: page! - 1}));
+    dispatch(setQueryParams({ page: page! - 1 }));
   };
 
   const onPressRight = () => {
-    dispatch(setQueryParams({page: page! + 1}));
+    dispatch(setQueryParams({ page: page! + 1 }));
   };
 
   const onPressAlignRight = () => {
     const toLastPage = pageCount;
-    dispatch(setQueryParams({page: toLastPage}));
+    dispatch(setQueryParams({ page: toLastPage }));
   };
 
   const onChangeTakeParams = (item: IpaginationTakeOptions) => {
-    dispatch(setQueryParams({take: Number(item.value), page: 1}));
+    dispatch(setQueryParams({ take: Number(item.value), page: 1 }));
   };
 
   const renderLeftButtons = useMemo(() => {
-    const iconColor = hasPreviousPage ? Colors.OLD_GOLD : Colors.ALABASTER;
+    const iconColor = hasPreviousPage ? Colors.DEFAULT_TEXT_COLOR : Colors.CARD_COLOR;
     return (
       <>
         <CustomPressable
@@ -153,7 +153,7 @@ export const PagePagination: FC<IPagePAgination> = ({
   }, [page, hasPreviousPage]);
 
   const renderRightButtons = useMemo(() => {
-    const iconColor = hasNextPage ? Colors.OLD_GOLD : Colors.ALABASTER;
+    const iconColor = hasNextPage ? Colors.DEFAULT_TEXT_COLOR : Colors.CARD_COLOR;
     return (
       <>
         <CustomPressable
@@ -176,7 +176,7 @@ export const PagePagination: FC<IPagePAgination> = ({
 
   return (
     <View style={styles.paginationContainer}>
-      <View style={{flexDirection: 'row'}}>
+      <View style={{ flexDirection: 'row' }}>
         {renderLeftButtons}
         {renderPages}
         {renderRightButtons}
@@ -187,12 +187,12 @@ export const PagePagination: FC<IPagePAgination> = ({
           justifyContent: 'center',
           alignItems: 'center',
         }}>
-        <Text style={{color: Colors.METALLIC_GOLD, fontSize: 12}}>
+        <Text style={{ color: Colors.DEFAULT_TEXT_COLOR, fontSize: 12 }}>
           {showedItemCount > 0
             ? `page ${page} of ${pageCount} | showed ${showedItemsCount} of ${showedItemCount}`
             : 'No Data'}
         </Text>
-        <View style={{marginLeft: 10}}>
+        <View style={{ marginLeft: 10 }}>
           <CustomPicker
             singleSelectMode
             singleSelectData={paginationTakeOptions}

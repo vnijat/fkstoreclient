@@ -15,7 +15,7 @@ export const getStyle = (textColor?: string, buttonColor?: string) => {
             justifyContent: 'center',
         },
         pageText: {
-            color: Colors.FLORAL_WHITE,
+            color: Colors.CARD_COLOR,
             textAlign: 'center',
             fontSize: 12
         },
@@ -36,7 +36,7 @@ export const getStyle = (textColor?: string, buttonColor?: string) => {
             alignItems: 'center',
             borderRadius: 1,
             borderWidth: 1,
-            borderColor: Colors.OLD_GOLD,
+            borderColor: Colors.CARD_COLOR,
             justifyContent: 'space-between'
         },
     });

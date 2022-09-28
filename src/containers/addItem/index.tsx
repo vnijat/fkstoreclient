@@ -18,6 +18,7 @@ import {
 } from '../../modules/redux/ItemsSlicer';
 import { RootState, useAppDispatch } from '../../modules/redux/store';
 import HELP from '../../services/helpers';
+import { Item } from '../../types/ItemsQuery';
 import { Colors } from '../../utils/colors';
 import { inputsConfig } from './configs';
 import { getStyle } from './styles';
@@ -41,7 +42,7 @@ const AddItemСontainer: FC<AddItemProps> = ({ }) => {
   const [errorMessage, setErrorMessages] = useState<{ [key: string]: string[]; }>(
     {},
   );
-  const itemForPosting: any = useSelector((state: RootState) => state.itemsSlicer.itemforPost, shallowEqual);
+  const itemForPosting: any = useSelector((state: RootState) => state.itemsSlicer.itemforPost);
   const [itemForEdit, setItemForEdit] = useState({});
   const dispatch = useAppDispatch();
   const inputRef = useRef<any>([]);
@@ -55,7 +56,7 @@ const AddItemСontainer: FC<AddItemProps> = ({ }) => {
       }
       dispatch(clearItemForPosting());
       setErrorMessages({});
-      navigation.navigate('Home');
+      navigation.navigate('Items');
     } catch (error) {
       setErrorMessages(HELP.modifieErrorMessage(error));
     }
@@ -69,7 +70,6 @@ const AddItemСontainer: FC<AddItemProps> = ({ }) => {
       dispatch(clearItemForPosting());
     }
   };
-
 
   useFocusEffect(
     useCallback(() => {
@@ -118,7 +118,7 @@ const AddItemСontainer: FC<AddItemProps> = ({ }) => {
       }
       dispatch(setIsItemForEdit(false));
       setItemForEdit({});
-      navigation.navigate('Home');
+      navigation.navigate('Items');
     } catch (error) {
       setErrorMessages(HELP.modifieErrorMessage(error));
       console.log("ERORRRRRREDIT==>>>", error);
@@ -137,6 +137,9 @@ const AddItemСontainer: FC<AddItemProps> = ({ }) => {
           multiLine,
           maxLength,
           selectable,
+          requiredDataName,
+          filterKeyName,
+          requiredText
         } = config;
         const [firstWord, ...restWords] = title.split(' ');
         const titleAsObjectKey = firstWord.toLowerCase() + restWords.join('');
@@ -147,9 +150,10 @@ const AddItemСontainer: FC<AddItemProps> = ({ }) => {
             tooltip: toolTip,
             selectionColor: Colors.JASMINE,
           });
-        const selectableData = selectable && currentData ? currentData[titleAsObjectKey] : [];
+        const selectableData = selectable && currentData ? (!!requiredDataName ? currentData[titleAsObjectKey]?.filter((item: Item) => (item?.[filterKeyName] ? item?.[filterKeyName] : item?.[filterKeyName.toLowerCase()]) == itemForPosting[filterKeyName]) : currentData[titleAsObjectKey]) : [];
         const isError = !!errorMessage[`${titleAsObjectKey}${selectable ? 'Id' : ''}`]?.length;
         const pickerDataKeyName = selectable ? title.toLowerCase() : '';
+        const disabled = !!requiredDataName && !itemForPosting[filterKeyName];
         return (
           <InputItem
             inputTitle={title}
@@ -169,10 +173,13 @@ const AddItemСontainer: FC<AddItemProps> = ({ }) => {
             selectable={selectable}
             selectableData={selectableData}
             isErorr={isError}
-            titleColor={Colors.DARK_GOLDENROD}
+            titleColor={Colors.DEFAULT_TEXT_COLOR}
             isPickerAddButton={selectable}
             pickerDataKeyName={pickerDataKeyName}
             isPickerSearchEnabled={selectable}
+            isPickerItemEditable={selectable}
+            isDisabled={disabled}
+            requiredText={requiredText}
           />
         );
       });
@@ -184,34 +191,32 @@ const AddItemСontainer: FC<AddItemProps> = ({ }) => {
       <View style={style.inputsContainer}>{renderInputs}</View>
       <View style={style.buttonsContainer}>
         <PrimaryButton
-          title={'Reset'}
+          title={'Reset'.toUpperCase()}
           onPress={onPressReset}
-          buttonColor={Colors.ALABASTER}
-          textColor={Colors.METALLIC_GOLD}
-          pressedColor={Colors.OLD_GOLD}
+          buttonColor={Colors.CARD_COLOR}
+          textColor={Colors.DEFAULT_TEXT_COLOR}
+          pressedColor={Colors.CARD_HEADER_COLOR}
           height={30}
           width={80}
         />
-        <PrimaryButton
-          title={'Save'}
+        {isItemForEdit ? <PrimaryButton
+          title={'Save'.toUpperCase()}
           onPress={onPressSave}
-          buttonColor={Colors.METALLIC_GOLD}
-          textColor={Colors.FLORAL_WHITE}
-          pressedColor={Colors.DARK_GOLDENROD}
+          buttonColor={Colors.DEFAULT_TEXT_COLOR}
+          textColor={Colors.CARD_COLOR}
+          pressedColor={Colors.CARD_HEADER_COLOR}
           height={30}
           width={80}
-          disabled={!isItemForEdit}
         />
-        <PrimaryButton
-          title={'Add'}
-          onPress={postItem}
-          buttonColor={Colors.METALLIC_GOLD}
-          textColor={Colors.FLORAL_WHITE}
-          pressedColor={Colors.DARK_GOLDENROD}
-          height={30}
-          width={80}
-          disabled={isItemForEdit}
-        />
+          : <PrimaryButton
+            title={'Add'.toUpperCase()}
+            onPress={postItem}
+            buttonColor={Colors.DEFAULT_TEXT_COLOR}
+            textColor={Colors.CARD_COLOR}
+            pressedColor={Colors.CARD_HEADER_COLOR}
+            height={30}
+            width={80}
+          />}
       </View>
     </View>
   );

@@ -87,6 +87,9 @@ const inputsConfig = [
     width: 150,
     height: 35,
     selectable: true,
+    requiredDataName: 'store',
+    filterKeyName: 'storeId',
+    requiredText: 'Please select Store First',
   },
   {
     title: 'Supplier',

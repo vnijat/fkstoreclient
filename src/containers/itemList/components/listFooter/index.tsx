@@ -1,7 +1,7 @@
 import React, { FC, useMemo } from "react";
 import { View } from "react-native";
-import { PagePagination } from "../../components/pagePagination";
-import { Imeta } from "../../types/ItemsQuery";
+import { PagePagination } from "../../../../components/pagePagination";
+import { Imeta } from "../../../../types/ItemsQuery";
 import { getStyle } from "./styles";
 
 

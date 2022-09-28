@@ -8,6 +8,7 @@ interface InputsConfig {
   height?: number;
   multiLine?: boolean;
   selectable?: boolean;
+  selectableDataKey?: string;
 }
 
 export type {InputsConfig};

@@ -1,14 +1,6 @@
 // Need to use the React-specific entry point to import createApi
 import { BaseQueryFn, createApi, FetchArgs, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
-import { AddBarcode } from '../../types/barcode';
-import { AddCategory } from '../../types/category';
-import { AddColor } from '../../types/color';
 import { Data, Item, QueryParams } from '../../types/ItemsQuery';
-import { AddLabel } from '../../types/label';
-import { AddLocation } from '../../types/location';
-import { AddStore } from '../../types/store';
-import { AddSupplier } from '../../types/supplier';
-import { AddUnit } from '../../types/unit';
 import { RootState } from '../redux/store';
 
 // Define a service using a base URL and expected endpoints
@@ -62,7 +54,6 @@ export const InventoryApi = createApi({
         }),
         editItem: build.mutation<undefined, any>({
             query: (body) => {
-                console.log("editItembodyyyyy,", body);
                 return {
                     url: `/items/${body.id}`,
                     body: body,
@@ -72,7 +63,7 @@ export const InventoryApi = createApi({
             invalidatesTags: ['items']
         }),
     }),
-    tagTypes: ['items', 'itemInputs']
+    tagTypes: ['items', 'itemInputs', 'itemOptions', 'clients']
 });
 
 export const {

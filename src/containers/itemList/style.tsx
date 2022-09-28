@@ -10,7 +10,7 @@ export const getStyle = () => {
         },
 
         infoTitle: {
-            color: Colors.OLD_GOLD,
+            color: Colors.DEFAULT_TEXT_COLOR,
         },
         infoValue: {
             fontWeight: '700',
@@ -19,7 +19,7 @@ export const getStyle = () => {
             fontSize: 12,
             flexDirection: 'row',
             paddingLeft: 10,
-            color: Colors.DEFAULT_TEXT_COLOR
+            color: Colors.METALLIC_GOLD
         },
         infoContainer: {
             height: 40,

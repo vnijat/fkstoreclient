@@ -86,10 +86,10 @@ const ItemsContent: FC<ItemsContentProps> = ({ id, name, barcode, category, quan
                 <View style={style.checkBoxContainer} key={id}>
                     <CheckBox
                         value={isSelected}
-                        tintColor={Colors.OLD_GOLD}
-                        onCheckColor={Colors.OLD_GOLD}
-                        onTintColor={Colors.OLD_GOLD}
-                        onFillColor={Colors.CULTURED}
+                        tintColor={Colors.CARD_HEADER_COLOR}
+                        onCheckColor={Colors.METALLIC_GOLD}
+                        onTintColor={Colors.CARD_HEADER_COLOR}
+                        onFillColor={Colors.CARD_HEADER_COLOR}
                         onValueChange={onCheckBoxValueChange}
                         key={id}
                     />

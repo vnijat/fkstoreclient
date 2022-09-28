@@ -30,6 +30,9 @@ interface IInputItem {
   pickerDataKeyName?: string;
   isPickerAddButton?: boolean;
   isPickerSearchEnabled?: boolean;
+  isPickerItemEditable?: boolean;
+  isDisabled?: boolean;
+  requiredText?: string;
 }
 
 export const InputItem: FC<IInputItem> = memo(
@@ -54,7 +57,10 @@ export const InputItem: FC<IInputItem> = memo(
     addButtonTitle,
     pickerDataKeyName,
     isPickerAddButton,
-    isPickerSearchEnabled
+    isPickerSearchEnabled,
+    isPickerItemEditable,
+    isDisabled,
+    requiredText
   }) => {
     const style = useMemo(
       () => getStyle(height, width, isErorr, titleColor, backgroundColor),
@@ -93,7 +99,7 @@ export const InputItem: FC<IInputItem> = memo(
       } else {
         return [];
       }
-    }, [selectableData?.length]);
+    }, [selectableData]);
 
     const renderCustomPicker = useMemo(() => {
       return (<>
@@ -105,13 +111,16 @@ export const InputItem: FC<IInputItem> = memo(
           isAddButton={isPickerAddButton}
           buttonStyle={style.pickerButtonStyle}
           itemStyle={style.pickerItemStyle}
-          selectedItemStyle={[style.pickerItemStyle, { backgroundColor: Colors.METALLIC_GOLD }]}
+          selectedItemStyle={[style.pickerItemStyle, { backgroundColor: Colors.CARD_HEADER_COLOR }]}
           singleSelectMode
+          isEditable={isPickerItemEditable}
           isDataSearchEnabled={isPickerSearchEnabled}
+          isDisabled={isDisabled}
+          requiredText={requiredText}
         />
       </>
       );
-    }, [inputValue, dataForPicker.length, isErorr, isPickerAddButton, pickerDataKeyName, isPickerSearchEnabled]);
+    }, [inputValue, dataForPicker.length, isErorr, isPickerAddButton, pickerDataKeyName, isPickerSearchEnabled, isPickerItemEditable, onValueChange, isDisabled]);
 
 
     return (

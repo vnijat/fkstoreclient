@@ -1,7 +1,7 @@
 interface AddLocation {
   title: string;
 
-  parentCategoryId: number;
+  storeId: number;
 
   skuCode: string;
 }

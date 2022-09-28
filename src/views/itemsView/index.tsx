@@ -2,7 +2,7 @@ import React, { FC, useEffect, useMemo, useState } from 'react';
 import { View, Alert } from 'react-native';
 import { shallowEqual, useSelector } from 'react-redux';
 import ItemListTable from '../../containers/itemList';
-import ListFooter from '../../containers/listFooter';
+import ListFooter from '../../containers/itemList/components/listFooter';
 import SearchContainer from '../../containers/search';
 import { useGetAllItemsQuery, } from '../../modules/api/apiSlice';
 import { setQueryParams } from '../../modules/redux/querySlicer';
@@ -15,7 +15,7 @@ import { getStyle } from './style';
 // countries.registerLocale(require("i18n-iso-countries/langs/az.json"));
 // const countryobjects = countries.getNames('en', { select: 'official' });
 
-export const HomeView: FC<any> = ({ navigation }) => {
+export const ItemsView: FC<any> = ({ navigation }) => {
   const style = getStyle();
   const selectQueryParams = useSelector((state: RootState) => state.querySlicer, shallowEqual);
   const dispatch = useAppDispatch();

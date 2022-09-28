@@ -11,6 +11,16 @@ const location: InputsConfig[] = [
     multiLine: false,
   },
   {
+    title: 'Store',
+    dtoKey: 'storeId',
+    isNumeric: false,
+    maxLength: 200,
+    selectable: true,
+    height: 35,
+    selectableDataKey: 'store',
+    width: 200,
+  },
+  {
     title: 'SKU',
     dtoKey: 'skuCode',
     isNumeric: false,

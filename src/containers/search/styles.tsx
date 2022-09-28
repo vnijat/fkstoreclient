@@ -18,17 +18,18 @@ export const getStyle = () => {
             flexDirection: 'row',
             marginBottom: 10,
             alignItems: 'center',
-            flexWrap: 'wrap'
+            flexWrap: 'wrap',
+            paddingLeft:17
         },
         filterByText: {
-            color: Colors.OLD_GOLD,
+            color: Colors.DEFAULT_TEXT_COLOR,
             fontWeight: '600',
             fontSize: 11,
             textAlign: 'center',
             marginLeft: 20
         },
         clearText: {
-            color: Colors.OLD_GOLD,
+            color: Colors.DEFAULT_TEXT_COLOR,
             fontWeight: '700',
             fontSize: 14,
             textAlign: 'center',

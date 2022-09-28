@@ -4,7 +4,7 @@ import React, { FC, useCallback, useEffect, useMemo, useRef, useState } from "re
 import { ActivityIndicator, Alert, Animated, Easing, FlatList, Text, View } from "react-native";
 import { Flyout } from "react-native-windows";
 import { useSelector } from "react-redux";
-import { ListHeader } from "../../components/listHeader";
+import { ListHeader } from "./components/listHeader";
 import { PrimaryButton } from "../../components/primaryButton";
 import RowItem from "../../components/rowItem";
 import { useDeleteManyItemsMutation } from "../../modules/api/apiSlice";
@@ -108,9 +108,9 @@ const ItemListTable: FC<IItemListTable> = ({ data, isLoading }) => {
                         <Text style={style.infoTitle}>Total Price:</Text> <Text style={style.infoValue}>{currency.format(selectedTotalPrice)} </Text>
                     </Text>
                     <View style={{ flexDirection: 'row', width: 180, height: 30, marginRight: 10, justifyContent: 'space-between' }}>
-                        {selectedCount === 1 && < PrimaryButton title={'Edit'} onHoverOpacity onPress={onPressEdit} buttonColor={Colors.LIGHT_SILVER} borderRadius={2} />}
-                        < PrimaryButton title={`Delete (${selectedCount})`} onPress={deleteItem} onHoverOpacity buttonColor={Colors.INFRA_RED} borderRadius={2} />
-                        < PrimaryButton title={'Cancel'} onPress={cancelEdit} onHoverOpacity buttonColor={Colors.METALLIC_BLUE} borderRadius={2} />
+                        {selectedCount === 1 && < PrimaryButton title={'Edit'} onHoverOpacity onPress={onPressEdit} buttonColor={Colors.CARD_COLOR} borderRadius={2} textColor={Colors.DEFAULT_TEXT_COLOR} />}
+                        < PrimaryButton title={`Delete (${selectedCount})`} onPress={deleteItem} onHoverOpacity buttonColor={Colors.METALLIC_GOLD} borderRadius={2} />
+                        < PrimaryButton title={'Cancel'} onPress={cancelEdit} onHoverOpacity buttonColor={Colors.CARD_COLOR} borderRadius={2} textColor={Colors.DEFAULT_TEXT_COLOR} />
                     </View>
                 </View>
             );
@@ -132,7 +132,7 @@ const ItemListTable: FC<IItemListTable> = ({ data, isLoading }) => {
                     <ActivityIndicator color={Colors.OLD_GOLD} />
                 </View>
                 : <FlatList
-                    style={{ flex: 1, backgroundColor: Colors.ALABASTER, margin: 5 }}
+                    style={{ flex: 1, backgroundColor: Colors.BACKGROUND_COLOR, margin: 5 }}
                     data={data}
                     keyExtractor={(item) => item.id.toString()}
                     renderItem={({ item, index }) => {

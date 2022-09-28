@@ -10,7 +10,7 @@ export const getStyle = (height: number, width: number, isErorr?: boolean, title
             fontWeight: '700',
             fontSize: 9,
             marginTop: 5,
-            paddingBottom:3
+            paddingBottom: 3
         },
         picker: {
             width,
@@ -28,8 +28,8 @@ export const getStyle = (height: number, width: number, isErorr?: boolean, title
             justifyContent: 'center',
             borderRadius: 3,
             borderBottomWidth: 1,
-            borderColor: Colors.LIGHT_SILVER,
-            backgroundColor: backgroundColor || Colors.OLD_GOLD,
+            borderColor: Colors.CARD_COLOR,
+            backgroundColor: backgroundColor || Colors.CARD_HEADER_COLOR,
         },
         magnify: {
             position: 'absolute',
@@ -46,7 +46,7 @@ export const getStyle = (height: number, width: number, isErorr?: boolean, title
             alignItems: 'center',
             borderRadius: 1,
             borderWidth: 1,
-            borderColor: Colors.OLD_GOLD,
+            borderColor: Colors.CARD_COLOR,
             justifyContent: 'space-between',
         },
         pickerItemStyle: {
@@ -55,7 +55,7 @@ export const getStyle = (height: number, width: number, isErorr?: boolean, title
             minWidth: width,
             alignItems: 'center',
             paddingHorizontal: 5,
-            backgroundColor: 'transparent'
+            backgroundColor: 'transparent',
         }
     });
 

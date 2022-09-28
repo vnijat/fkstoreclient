@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Text, View, ScrollView, Alert } from "react-native";
 import { Popup, } from "react-native-windows";
 import CustomPressable from "../../components/customPressable";
@@ -9,13 +9,13 @@ import { InputsConfig } from "../../types/inputsconfig";
 import { InputItem } from "../../components/inputItem";
 import { shallowEqual, useSelector } from "react-redux";
 import { RootState, useAppDispatch } from "../../modules/redux/store";
-import { addItemOptions, clearItemOptions } from "../../modules/redux/itemOptions";
+import { addItemOption, clearItemOptions, setIsOptionForEdit } from "../../modules/redux/itemOptions";
 import { getStyle } from "./styles";
 import { PrimaryButton } from "../../components/primaryButton";
-
-import POST_OPTIONS from "./configs/post";
 import HELP from "../../services/helpers";
 import { useGetItemInputsQuery } from "../../modules/api/apiSlice";
+import { ItemOptionsApi } from "../../modules/api/itemOptions.api";
+import { setIsItemForEdit } from "../../modules/redux/ItemsSlicer";
 
 interface IaddOptionsModal {
     isShowModal: boolean;
@@ -27,8 +27,11 @@ interface IaddOptionsModal {
 const AddOptionsModal = ({ isShowModal, closeModal, optionName }: IaddOptionsModal) => {
     const style = getStyle();
     const dispatch = useAppDispatch();
+    const optionDataForPost = useSelector((state: RootState) => state.itemOptions.options[optionName], shallowEqual);
+    const options = useSelector((state: RootState) => state.itemOptions.options, shallowEqual);
+    const isOptionForEdit = useSelector((state: RootState) => state.itemOptions.isOptionForEdit);
     const optionsInputData: InputsConfig[] = inputsForItemOptions[optionName];
-    const optionDataForPost = useSelector((state: RootState) => state.itemOptions[optionName], shallowEqual);
+    const [tempOptionDataForEdit, settempDataForOptionEdit] = useState({});
     const [errorMessage, setErrorMessages] = useState<{ [key: string]: string[]; }>({});
     const { currentData: ItemInputsData } = useGetItemInputsQuery(undefined, {
         selectFromResult: ({ isLoading, isUninitialized, error, currentData }) => ({
@@ -38,8 +41,15 @@ const AddOptionsModal = ({ isShowModal, closeModal, optionName }: IaddOptionsMod
         }),
         pollingInterval: 5000,
     });
+
+    useEffect(() => {
+        if (isShowModal && isOptionForEdit && optionDataForPost) {
+            settempDataForOptionEdit(optionDataForPost);
+        }
+    }, [isShowModal]);
+
+
     const inputRef = useRef<any>([]);
-    console.log("errorMessage===>>", errorMessage);
     const setItemOptionsForPosting = (
         inputValue: string,
         objectKey: string,
@@ -52,12 +62,13 @@ const AddOptionsModal = ({ isShowModal, closeModal, optionName }: IaddOptionsMod
                 return { ...prev };
             });
         dispatch(
-            addItemOptions({ [optionName]: { ...optionDataForPost, [objectKey]: inputValue } }),
+            addItemOption({ [optionName]: { ...optionDataForPost, [objectKey]: inputValue } }),
         );
     };
+
     const renderInputs = useMemo(() => {
         {
-            if (optionsInputData?.length) {
+            if (optionsInputData?.length && isShowModal) {
                 return optionsInputData.map((config, id) => {
                     const {
                         title,
@@ -68,10 +79,11 @@ const AddOptionsModal = ({ isShowModal, closeModal, optionName }: IaddOptionsMod
                         multiLine,
                         maxLength,
                         selectable,
-                        dtoKey
+                        dtoKey,
+                        selectableDataKey
                     } = config;
                     const inputValue: string = (optionDataForPost && Object.keys(optionDataForPost!).length) ? optionDataForPost[dtoKey] : '';
-                    const dataForPicker = selectable && ItemInputsData ? ItemInputsData[optionName] : [];
+                    const dataForPicker = selectable && ItemInputsData ? ItemInputsData[selectableDataKey ? selectableDataKey : optionName] : [];
                     const isError = !!errorMessage[dtoKey!]?.length;
                     return (
                         <InputItem
@@ -102,20 +114,25 @@ const AddOptionsModal = ({ isShowModal, closeModal, optionName }: IaddOptionsMod
             }
 
         }
-    }, [optionDataForPost, optionsInputData, optionName, errorMessage, ItemInputsData]);
+    }, [optionDataForPost, optionsInputData, optionName, errorMessage, ItemInputsData, isShowModal]);
 
     const clearInputs = () => {
         dispatch(clearItemOptions());
     };
 
     const onPressReset = () => {
-        setErrorMessages({});
-        clearInputs();
+        if (isOptionForEdit) {
+            dispatch(
+                addItemOption({ [optionName]: tempOptionDataForEdit }),
+            );
+        } else {
+            setErrorMessages({});
+            clearInputs();
+        }
     };
 
     const sendPost = async (): Promise<any> => {
-        const api = POST_OPTIONS[optionName];
-        return dispatch(api.initiate(optionDataForPost));
+        return await dispatch(ItemOptionsApi.endpoints.addOption.initiate({ optionName, body: optionDataForPost }));
     };
 
 
@@ -132,14 +149,42 @@ const AddOptionsModal = ({ isShowModal, closeModal, optionName }: IaddOptionsMod
     const onPressAdd = async () => {
         try {
             const response = await sendPost();
-            console.log("response==>>>", response);
             if (response.error) {
                 throw response.error;
             }
-            onPressReset();
-            closeModal();
+            onCloseAddOptionModal();
         } catch (error) {
             console.log("error==>>", error);
+            if (error?.status === 400) {
+                setErrorMessages(HELP.modifieErrorMessage(error));
+            }
+            else {
+                if (error?.data.message) {
+
+                    errorAlert(error?.status, error?.data.message);
+                }
+            }
+        }
+    };
+
+    const onCloseAddOptionModal = async () => {
+        setErrorMessages({});
+        clearInputs();
+        settempDataForOptionEdit({});
+        dispatch(setIsOptionForEdit(false));
+        closeModal();
+    };
+
+    const onPressSave = async () => {
+        const { id, ...body } = optionDataForPost;
+        try {
+            const response = await dispatch(ItemOptionsApi.endpoints.editOption.initiate({ id: id, optionName, body: body }));
+            if (response.error) {
+                throw response.error;
+            }
+            onCloseAddOptionModal();
+        } catch (error) {
+            console.log("onPressSave==erorr>>", error);
             if (error?.status === 400) {
                 setErrorMessages(HELP.modifieErrorMessage(error));
             }
@@ -148,21 +193,16 @@ const AddOptionsModal = ({ isShowModal, closeModal, optionName }: IaddOptionsMod
                     errorAlert(error?.status, error?.data.message);
                 }
             }
-        }
-    };
 
-    const onCloseAddOptionModal = () => {
-        setErrorMessages({});
-        clearInputs();
-        closeModal();
+        }
     };
 
 
     return (
         <Popup
             isOpen={isShowModal}
-            onDismiss={closeModal}
-            isLightDismissEnabled={false}
+            onDismiss={onCloseAddOptionModal}
+            isLightDismissEnabled={true}
         // placement={'full'}
         >
             <View style={{ flex: 1 }}>
@@ -186,15 +226,25 @@ const AddOptionsModal = ({ isShowModal, closeModal, optionName }: IaddOptionsMod
                             height={30}
                             width={80}
                         />
-                        <PrimaryButton
-                            title={'Add'}
-                            onPress={onPressAdd}
-                            buttonColor={Colors.METALLIC_GOLD}
-                            textColor={Colors.FLORAL_WHITE}
-                            pressedColor={Colors.DARK_GOLDENROD}
-                            height={30}
-                            width={80}
-                        />
+                        {isOptionForEdit ?
+                            <PrimaryButton
+                                title={'Save'}
+                                onPress={onPressSave}
+                                buttonColor={Colors.METALLIC_GOLD}
+                                textColor={Colors.FLORAL_WHITE}
+                                pressedColor={Colors.DARK_GOLDENROD}
+                                height={30}
+                                width={80}
+                            /> :
+                            <PrimaryButton
+                                title={'Add'}
+                                onPress={onPressAdd}
+                                buttonColor={Colors.METALLIC_GOLD}
+                                textColor={Colors.FLORAL_WHITE}
+                                pressedColor={Colors.DARK_GOLDENROD}
+                                height={30}
+                                width={80}
+                            />}
                     </View>
 
 

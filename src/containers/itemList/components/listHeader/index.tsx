@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { Text, View } from "react-native";
-import { Item } from "../../types/ItemsQuery";
+import { Item } from "../../../../types/ItemsQuery";
 import { getStyle } from "./styles";
 
 
@@ -10,7 +10,6 @@ interface ListHeaderProps {
 
 export const ListHeader: FC<ListHeaderProps> = ({ columnHeaders }) => {
     const style = getStyle();
-    // const columns = ['name', 'barcode', 'category', 'quantity', 'unit', 'price', 'stock price'].map((item) => item.toUpperCase());
 
     return (
         <View style={style.container}>

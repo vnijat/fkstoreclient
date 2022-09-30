@@ -109,17 +109,18 @@ const SearchContainer: FC<ISearchContainer> = ({ searchValue }) => {
                 </View>
             </View>
             <View style={style.sortBy}>
-                <View style={{ marginHorizontal: 1 }}>
+                <View style={{ marginHorizontal: 1, justifyContent: 'center', alignItems: 'center' }} tooltip={'Filters'} >
                     <FilterByIcon size={20} color={Colors.DEFAULT_TEXT_COLOR} />
                 </View>
                 {renderFilterByPickers}
                 <CustomPressable onPress={clearFiler}
+                pointerEvents={(e)=>console.log('events==>>',e)}
                     onHoverOpacity
                     style={{ justifyContent: 'center', alignItems: 'center', marginLeft: 10 }}
                 >
-                    <Text style={style.clearText}>
+                    <View style={style.clearText} tooltip={'Clear Filters'}  >
                         <ClearIcon size={20} color={Colors.METALLIC_GOLD} />
-                    </Text>
+                    </View>
                 </CustomPressable>
             </View>
         </View>

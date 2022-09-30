@@ -11,7 +11,7 @@ export const DrawerNavigation: FC<any> = () => {
     const Drawer = createDrawerNavigator();
 
     return (
-        <Drawer.Navigator initialRouteName='Home'
+        <Drawer.Navigator initialRouteName='Items'
             drawerContent={({ navigation, state }) =>
                 <CustomDrawer
                     navigation={navigation}

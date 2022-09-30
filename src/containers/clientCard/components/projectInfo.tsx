@@ -44,7 +44,6 @@ const ProjectInfo = ({ projectsCompleted, projectsDeclined, projectsInProgress, 
             title: ProjectStatus.COMPLETED.toUpperCase()
         },
     ];
-    console.log("isShowProjects==>>", isShowProjects);
 
     return (
         <View>

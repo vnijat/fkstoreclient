@@ -42,7 +42,7 @@ const AddItemСontainer: FC<AddItemProps> = ({ }) => {
   const [errorMessage, setErrorMessages] = useState<{ [key: string]: string[]; }>(
     {},
   );
-  const itemForPosting: any = useSelector((state: RootState) => state.itemsSlicer.itemforPost);
+  const itemForPosting: any = useSelector((state: RootState) => state.itemsSlicer.itemforPost, shallowEqual);
   const [itemForEdit, setItemForEdit] = useState({});
   const dispatch = useAppDispatch();
   const inputRef = useRef<any>([]);

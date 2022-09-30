@@ -1,5 +1,5 @@
 import CheckBox from '@react-native-community/checkbox';
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, { memo, useCallback, useMemo, useRef, useState } from 'react';
 import {
     Text,
     View,
@@ -85,10 +85,19 @@ const CustomPicker = ({
     const [isShowEditButton, setIsshowEditButton] = useState<Array<{ id: number, isHover: boolean; }>>([]);
     const [searchText, setSearchText] = useState('');
     const buttonRef = useRef(null);
-    const isShowableExited = useMemo(() => {
-        const itemLength = multipleSelectData?.length || singleSelectData?.length || 0;
-        return itemLength > 3;
-    }, [multipleSelectData?.length, singleSelectData?.length]);
+
+
+    const getFilteredData = useMemo(() => {
+        let filteredData;
+        if (isDataSearchEnabled && searchText.trim().length) {
+            const dataForfilter = singleSelectMode ? singleSelectData : multipleSelectData;
+            const regEx = new RegExp(searchText.trim(), 'i');
+            filteredData = dataForfilter?.filter((data: { label: string; }) => regEx.test(data.label.trim()));
+        }
+        return filteredData;
+    }, [searchText, singleSelectMode, singleSelectData, multipleSelectData, isDataSearchEnabled]);
+
+
 
     const onPress = () => {
         if (isDisabled) {
@@ -145,20 +154,15 @@ const CustomPicker = ({
         setisShowAddNewModal(true);
     };
 
-
-    const getFilteredData = useMemo(() => {
-        let filteredData;
-        if (isDataSearchEnabled && searchText.trim().length) {
-            const dataForfilter = singleSelectMode ? singleSelectData : multipleSelectData;
-            const regEx = new RegExp(searchText.trim(), 'i');
-            filteredData = dataForfilter?.filter((data: { label: string; }) => regEx.test(data.label.trim()));
-        }
-        return filteredData;
-    }, [searchText, singleSelectMode, singleSelectData, multipleSelectData, isDataSearchEnabled]);
-
     const renderSearchInput = useMemo(() => {
         return <InputItem isSearch inputValue={searchText} setValue={(text) => setSearchText(text)} height={30} />;
     }, [searchText]);
+
+
+    const isShowableExited = useMemo(() => {
+        const itemLength = getFilteredData?.length || multipleSelectData?.length || singleSelectData?.length || 0;
+        return itemLength > 3;
+    }, [multipleSelectData?.length, singleSelectData?.length, getFilteredData?.length]);
 
 
     const renderMultipleSelectItem = useMemo(
@@ -306,6 +310,7 @@ const CustomPicker = ({
                 placement={'bottom'}
                 isOpen={isShowContent}
                 onDismiss={onDismiss}
+                showMode={'transient-with-dismiss-on-pointer-move-away'}
             >
                 <View style={{ flex: 1, justifyContent: 'space-between', minWidth: 150 }}>
                     {isDataSearchEnabled
@@ -352,4 +357,4 @@ const CustomPicker = ({
     );
 };
 
-export default CustomPicker;
+export default memo(CustomPicker);

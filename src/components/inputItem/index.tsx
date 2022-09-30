@@ -71,7 +71,6 @@ export const InputItem: FC<IInputItem> = memo(
       () => !isFocused && isSearch && !inputValue.length,
       [isFocused, isSearch, inputValue],
     );
-
     const onChangeText = (text: string) => {
       const isNum = regExPatterns.IS_NUMERIC;
       if (isNumeric) {
@@ -123,6 +122,21 @@ export const InputItem: FC<IInputItem> = memo(
     }, [inputValue, dataForPicker.length, isErorr, isPickerAddButton, pickerDataKeyName, isPickerSearchEnabled, isPickerItemEditable, onValueChange, isDisabled]);
 
 
+    const renderTextInput = useMemo(() => {
+      return (
+        <TextInput
+          key={id}
+          style={style.textInput}
+          onChangeText={onChangeText}
+          value={inputValue}
+          placeholder={placeHolder}
+          multiline={isMultiLine}
+          maxLength={maxLength}
+          onFocus={onFocus}
+          onBlur={onBlur}
+        />);
+    }, [id, onChangeText, inputValue, placeHolder, isMultiLine, maxLength, onFocus, onBlur]);
+
     return (
       <View style={{ margin: 5 }}>
         {!!inputTitle && (
@@ -133,18 +147,7 @@ export const InputItem: FC<IInputItem> = memo(
           :
           (
             <View style={{ justifyContent: 'center' }}>
-              <TextInput
-                key={id}
-                style={style.textInput}
-                ref={r => inputRef && inputRef(r)}
-                onChangeText={onChangeText}
-                value={inputValue}
-                placeholder={placeHolder}
-                multiline={isMultiLine}
-                maxLength={maxLength}
-                onFocus={onFocus}
-                onBlur={onBlur}
-              />
+              {renderTextInput}
               {isShowMagnify && (
                 <View
                   style={style.magnify}>

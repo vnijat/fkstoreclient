@@ -19,7 +19,7 @@ export const getStyle = () => {
             marginBottom: 10,
             alignItems: 'center',
             flexWrap: 'wrap',
-            paddingLeft:17
+            paddingLeft: 17
         },
         filterByText: {
             color: Colors.DEFAULT_TEXT_COLOR,
@@ -29,10 +29,9 @@ export const getStyle = () => {
             marginLeft: 20
         },
         clearText: {
-            color: Colors.DEFAULT_TEXT_COLOR,
-            fontWeight: '700',
-            fontSize: 14,
-            textAlign: 'center',
+            justifyContent: 'center',
+            marginLeft: 5,
+            alignItems: 'center'
         }
 
     });

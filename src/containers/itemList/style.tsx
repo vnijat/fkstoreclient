@@ -10,22 +10,21 @@ export const getStyle = () => {
         },
 
         infoTitle: {
-            color: Colors.DEFAULT_TEXT_COLOR,
+            color: Colors.CARD_COLOR,
         },
         infoValue: {
             fontWeight: '700',
         },
         infoText: {
-            fontSize: 12,
+            fontSize: 13,
             flexDirection: 'row',
             paddingLeft: 10,
             color: Colors.METALLIC_GOLD
         },
         infoContainer: {
             height: 40,
-            backgroundColor: '#FBFBF2',
+            backgroundColor:Colors.DEFAULT_TEXT_COLOR,
             flexDirection: 'row',
-            marginHorizontal: 10,
             alignItems: 'center',
             justifyContent: 'space-between'
         }

@@ -69,6 +69,7 @@ export const getStyle = () => {
             maxWidth: 200,
             alignItems: 'center',
             paddingHorizontal: 5,
+            justifyContent: 'space-between'
         }
     });
 

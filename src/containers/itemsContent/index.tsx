@@ -3,7 +3,7 @@ import React, { FC, useMemo, useRef, useState } from "react";
 import { Image, Pressable, Text, View } from "react-native";
 import { useSelector } from "react-redux";
 import CustomPressable from "../../components/customPressable";
-import { addItemId, setIsEditMode } from "../../modules/redux/ItemsSlicer";
+import { addItemId, setIsEditMode } from "../../modules/redux/itemsSlicer";
 import { selectIsEditMode } from "../../modules/redux/selectors/itemSelectors";
 import { RootState, useAppDispatch } from "../../modules/redux/store";
 import { Colors } from "../../utils/colors";
@@ -101,19 +101,30 @@ const ItemsContent: FC<ItemsContentProps> = ({ id, name, barcode, category, quan
 
     }, [isSelected, isShowCheckBox, isEditMode, selectedCount]);
 
+    const rowData = useMemo(() => [
+        name,
+        description,
+        barcode,
+        category,
+        color,
+        unit,
+        quantity,
+        currency.format(stockPrice),
+        currency.format(totalPrice)
+    ], [name, description, barcode, category, color, quantity, unit, stockPrice, totalPrice]);
 
     const renderRow = useMemo(() => {
-        return [name, description, barcode, category, color, quantity, unit, currency.format(stockPrice), currency.format(totalPrice)].map((content, i) => {
+        return rowData.map((content, i) => {
             return <RenderColumnContent content={content} id={id + i} key={i} />;
         });
 
-    }, [name, barcode, category, quantity, unit, totalPrice, stockPrice, color, description]);
+    }, [rowData]);
 
     return (
         <>
             <CustomPressable ref={pressableRef} key={id}
                 onPress={onPressItem}
-                style={[{ backgroundColor: isSelected ? Colors.ALABASTER : Colors.FLORAL_WHITE }, style.rowItem]}
+                style={[{ backgroundColor: isSelected ? Colors.CARD_COLOR : Colors.FLORAL_WHITE }, style.rowItem]}
                 onMouseEnter={() => setIsShowCheckBox(true)}
                 onMouseLeave={() => setIsShowCheckBox(false)}
                 onHoverOpacity

@@ -23,8 +23,8 @@ import { getStyle } from './style';
 import { addItemOption, setIsOptionForEdit } from "../../modules/redux/itemOptions";
 
 export interface IsingelSelectData {
-    label: string;
-    value: number | string;
+    label?: string;
+    value?: number | string;
 }
 
 interface ICustomPicker {
@@ -39,7 +39,7 @@ interface ICustomPicker {
     parent?: FilterParamskey;
     singleSelectMode?: boolean;
     singleSelected?: string | number;
-    singleSelectData?: Array<IsingelSelectData>;
+    singleSelectData?: IsingelSelectData[];
     singleOnSelect?: (selected: IsingelSelectData) => void;
     buttonStyle?: StyleProp<ViewStyle> | undefined;
     butonTextStyle?: StyleProp<ViewStyle> | undefined;
@@ -53,6 +53,7 @@ interface ICustomPicker {
     isEditable?: boolean;
     isDisabled?: boolean;
     requiredText?: string;
+    arrowDownColor?: string;
 }
 
 const CustomPicker = ({
@@ -76,7 +77,8 @@ const CustomPicker = ({
     dataKeyName,
     isEditable,
     isDisabled,
-    requiredText
+    requiredText,
+    arrowDownColor
 }: ICustomPicker) => {
     const style = getStyle();
     const dispatch = useAppDispatch();
@@ -144,7 +146,6 @@ const CustomPicker = ({
         }
     };
 
-
     const onPressEdit = async (optionId: number) => {
         const dataForEdit = await getOptionData(optionId);
         if (dataKeyName && dataForEdit) {
@@ -152,6 +153,16 @@ const CustomPicker = ({
             dispatch(setIsOptionForEdit(true));
         }
         setisShowAddNewModal(true);
+    };
+
+    const renerListEmptyComponent = () => {
+        return (
+            <View style={itemStyle || (singleSelectMode ? style.singleSelectItem : style.multipleSelectItem)}>
+                <Text style={{ color: Colors.DEFAULT_TEXT_COLOR }}>
+                    {(isDataSearchEnabled && searchText.length) ? 'not found' : 'no data'}
+                </Text>
+            </View>
+        );
     };
 
     const renderSearchInput = useMemo(() => {
@@ -163,7 +174,6 @@ const CustomPicker = ({
         const itemLength = getFilteredData?.length || multipleSelectData?.length || singleSelectData?.length || 0;
         return itemLength > 3;
     }, [multipleSelectData?.length, singleSelectData?.length, getFilteredData?.length]);
-
 
     const renderMultipleSelectItem = useMemo(
         () =>
@@ -196,7 +206,7 @@ const CustomPicker = ({
                         </Text>
                         {isEditable && isShowEdit &&
                             <CustomPressable onPress={onPressEdit} key={`${index}-${item.label}`}>
-                                <Icon size={14} color={Colors.METALLIC_GOLD} name={'edit'} key={`${index}-${item.label}`} />
+                                <Icon size={14} color={Colors.METALLIC_GOLD} name={'cog'} key={`${index}-${item.label}`} />
                             </CustomPressable>
                         }
                     </CustomPressable>
@@ -204,8 +214,6 @@ const CustomPicker = ({
             },
         [selectedIds, multipleSelectData?.length, parent, itemStyle, selectedItemStyle, itemTextStyle, selectedItemTextStyle, isShowEditButton.length],
     );
-
-
 
     const onPressSingleItem = (item: IsingelSelectData) => {
         const { label, value } = item;
@@ -233,8 +241,6 @@ const CustomPicker = ({
         } else return 'no data';
     }, [singleSelected, singleSelectData?.length]);
 
-
-
     const renderSingleSelectItem = useMemo(
         () =>
             ({ item, index }: { item: IsingelSelectData; index: number; }) => {
@@ -255,16 +261,14 @@ const CustomPicker = ({
                         </Text>
                         {isEditable && isShowEdit &&
                             <CustomPressable onPress={() => onPressEdit(item.value)} key={`${index}-${item.label}`}>
-                                <Icon size={14} color={Colors.METALLIC_GOLD} name={'edit'} key={`${index}-${item.label}`} />
+                                <Icon size={14} color={Colors.METALLIC_GOLD} name={'cog'} key={`${index}-${item.label}`} />
                             </CustomPressable>
                         }
-
                     </CustomPressable >
                 );
             },
         [singleSelected, singleSelectData?.length, itemStyle, selectedItemStyle, itemTextStyle, selectedItemTextStyle, isEditable, isShowEditButton.length, isDisabled]
     );
-
 
     const renderCounter = useMemo(() => {
         if (!singleSelectMode && !!selectedIds?.length) {
@@ -283,6 +287,7 @@ const CustomPicker = ({
 
     }, [singleSelectMode, selectedIds?.length]);
 
+
     return (
         <>
             {(isAddButton || isEditable) && < AddOptionsModal closeModal={closeAddOptionsModal} isShowModal={isShowAddNewModal} optionName={dataKeyName} />
@@ -295,14 +300,13 @@ const CustomPicker = ({
                     onPress={onPress}
                     key={title}
                     onHoverOpacity
-                // disabled={isDisabled}
                 >
                     <Text style={[butonTextStyle || { color: Colors.DEFAULT_TEXT_COLOR, fontSize: 12 }]}>
                         {(singleSelectMode
                             ? ` ${(title && title) || ''} ${singleSelectedTitle}`
                             : title) || ''}
                     </Text>
-                    <Icon name="chevron-small-down" size={17} color={Colors.CARD_HEADER_COLOR} />
+                    <Icon name="chevron-small-down" size={17} color={arrowDownColor || Colors.CARD_HEADER_COLOR} />
                 </CustomPressable>
             </View>
             <Flyout
@@ -312,7 +316,7 @@ const CustomPicker = ({
                 onDismiss={onDismiss}
                 showMode={'transient-with-dismiss-on-pointer-move-away'}
             >
-                <View style={{ flex: 1, justifyContent: 'space-between', minWidth: 150 }}>
+                <View style={{ flex: 1, justifyContent: 'space-between', minWidth: 90 }}>
                     {isDataSearchEnabled
                         &&
                         <View style={{ backgroundColor: Colors.FLORAL_WHITE }}>
@@ -333,6 +337,8 @@ const CustomPicker = ({
                             data={getFilteredData || singleSelectData}
                             keyExtractor={(item) => `${item.label}-${item.value}`}
                             renderItem={renderSingleSelectItem}
+                            ListEmptyComponent={renerListEmptyComponent}
+
                         />
                     ) : (
                         <FlatList
@@ -348,6 +354,7 @@ const CustomPicker = ({
                             data={getFilteredData || multipleSelectData}
                             keyExtractor={item => item.id.toString()}
                             renderItem={renderMultipleSelectItem}
+                            ListEmptyComponent={renerListEmptyComponent}
                         />
                     )}
                     {isAddButton && <PrimaryButton onPress={onPressAddButton} title={'Add new'.toUpperCase()} textColor={Colors.DEFAULT_TEXT_COLOR} buttonColor={Colors.CARD_HEADER_COLOR} height={30} />}

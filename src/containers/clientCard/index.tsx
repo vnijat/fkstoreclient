@@ -43,11 +43,14 @@ const ClientCard = ({
     };
 
     const renderClientIcon = useMemo(() => {
-        const ICON_SIZE = 50;
+        const options: IICON = {
+            size: 50,
+            color: Colors.CARD_COLOR
+        };
         if (type === ClientType.INDIVIDUAL) {
-            return <IndividualClientIcon color={Colors.CARD_COLOR} size={ICON_SIZE} />;
+            return <IndividualClientIcon {...options} />;
         } else {
-            return <CorporateClientIcon color={Colors.CARD_COLOR} size={ICON_SIZE} />;
+            return <CorporateClientIcon {...options} />;
         }
 
     }, [type]);
@@ -66,24 +69,24 @@ const ClientCard = ({
                     <View style={style.iconContainer}>
                         {renderClientIcon}
                     </View>
-                    <View style={{ flex: 0.7, justifyContent: 'center', alignItems: 'center' }}>
-                        <Text style={{ fontSize: 16, color: Colors.DEFAULT_TEXT_COLOR, fontWeight: '700' }}>
+                    <View style={style.clientInfo}>
+                        <Text style={style.clientInfoText}>
                             {`${firstName} ${lastName}`.toUpperCase()}
                         </Text>
-                        {!!companyName?.length && <Text style={{ fontSize: 12, color: Colors.DARK_GOLDENROD, fontWeight: '700' }}>
+                        {!!companyName?.length && <Text style={style.companyText}>
                             {companyName.toUpperCase()}
                         </Text>}
                     </View>
                 </View>
-                <View style={{ flex: 0.6, alignItems: 'flex-start', alignSelf: 'flex-start', paddingTop: 10, marginLeft: 10 }}>
+                <View style={style.infoContainer}>
                     {clientInfo.map((info, index) => {
                         if (info?.value) {
                             return (
-                                <View style={{ flexDirection: 'row', justifyContent: 'center', margin: 5, alignItems: 'center' }} key={index}>
-                                    <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                                <View style={style.infoContent} key={index}>
+                                    <View style={style.infoIcon}>
                                         {info.icon}
                                     </View>
-                                    <Text style={{ fontSize: 12, color: Colors.DEFAULT_TEXT_COLOR, marginLeft: 5 }}>
+                                    <Text style={style.infoText}>
                                         {info?.value}
                                     </Text>
                                 </View>
@@ -96,12 +99,12 @@ const ClientCard = ({
 
                     })}
                 </View>
-                    <ProjectInfo {...{
-                        projectsCompleted,
-                        projectsDeclined,
-                        projectsInProgress,
-                        totalProjects,
-                    }} />
+                <ProjectInfo {...{
+                    projectsCompleted,
+                    projectsDeclined,
+                    projectsInProgress,
+                    totalProjects,
+                }} />
             </View>
         </View >
     );

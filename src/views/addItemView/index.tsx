@@ -3,7 +3,7 @@
 import React, { FC, useMemo } from 'react';
 import { View } from 'react-native-windows';
 import AddItemСontainer from '../../containers/addItem';
-import { getStyle } from './style';
+import { getStyle } from './styles';
 
 
 

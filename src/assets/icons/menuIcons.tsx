@@ -39,3 +39,9 @@ export const DefaultMenuIcon = ({ size, color }: IICON) => {
         <Icon name="layers" size={size} color={color} />
     );
 };
+
+export const ProjectsIcon = ({ size, color }: IICON) => {
+    return (
+        <Icon name="suitcase" size={size} color={color} />
+    );
+};

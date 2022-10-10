@@ -28,7 +28,6 @@ export const ItemOptionsApi = InventoryApi.injectEndpoints({
       }
     >({
       query: ({id, body, optionName}) => {
-        console.log('id, body, optionName=>', id, body, optionName);
         return {
           url: `/${optionName}/${id}`,
           body: body,

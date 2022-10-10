@@ -7,7 +7,7 @@ import CustomPressable from '../../components/customPressable';
 import { InputItem } from '../../components/inputItem';
 import { useGetItemInputsQuery } from '../../modules/api/apiSlice';
 import { clearFilters, setFilterByParams, setSelectedWithLabel } from '../../modules/redux/filterSlicer';
-import { setQueryParams } from '../../modules/redux/querySlicer';
+import { setItemQueryParams } from '../../modules/redux/itemQuerySlicer';
 import { selectFilterByForPicker, selectSelectedWithLabel } from '../../modules/redux/selectors/filterSelector';
 import { useAppDispatch } from '../../modules/redux/store';
 import { FilterParamskey } from '../../types/ItemsQuery';
@@ -37,11 +37,9 @@ const SearchContainer: FC<ISearchContainer> = ({ searchValue }) => {
         pollingInterval: 5000
     });
 
-
     const onInputvalueChange = (text: string) => {
-        dispatch(setQueryParams({ search: text, page: 1 }));
+        dispatch(setItemQueryParams({ search: text, page: 1 }));
     };
-
 
     const onSelectIdForFilter = (selected: { id: number; label: string; parent: FilterParamskey; }) => {
         dispatch(setSelectedWithLabel(selected));
@@ -53,16 +51,37 @@ const SearchContainer: FC<ISearchContainer> = ({ searchValue }) => {
 
     }, [searchValue]);
 
+    const inWaitAnotherData = [{ title: 'location', waitsForDtokey: 'storeId', waitsForTitle: 'store' }];
+
 
     const renderFilterByPickers = useMemo(() => {
         if (dataForFilterBy) {
             const titleArray = Object.keys(dataForFilterBy);
             if (titleArray.length) {
                 return titleArray.map((title, index) => {
+                    let data = dataForFilterBy[title];
+                    const waitsFor = inWaitAnotherData.find(item => item.title === title)?.waitsForDtokey;
+                    const waitsForTitle = inWaitAnotherData.find(item => item.title === title)?.waitsForTitle;
+                    let isDisabled = !!waitsFor?.length;
+                    const requiredDataIds = !!waitsFor && pickerFilterParams[waitsFor as keyof typeof pickerFilterParams];
+                    if (requiredDataIds.length) {
+                        data = dataForFilterBy[title]?.filter(item => requiredDataIds.includes(Number((item[waitsFor] || item[waitsFor.toLowerCase()]))));
+                        isDisabled = false;
+                    }
                     const parent = `${title}Id` as keyof typeof pickerFilterParams;
                     const selectedIds = pickerFilterParams[parent];
-                    const data = dataForFilterBy[title];
-                    return < CustomPicker isDataSearchEnabled title={title} data={data} onSelect={onSelectIdForFilter} selectedIds={selectedIds} parent={parent} key={index} />;
+                    return < CustomPicker
+                        isDataSearchEnabled
+                        title={title}
+                        data={data}
+                        onSelect={onSelectIdForFilter}
+                        selectedIds={selectedIds}
+                        parent={parent}
+                        key={index}
+                        buttonStyle={style.pickerButtonStyle}
+                        requiredText={`Please select ${waitsForTitle} first`.toUpperCase()}
+                        isDisabled={isDisabled}
+                    />;
                 });
 
             }
@@ -70,13 +89,13 @@ const SearchContainer: FC<ISearchContainer> = ({ searchValue }) => {
             return null;
         }
 
-    }, [dataForFilterBy, pickerFilterParams]);
+    }, [dataForFilterBy, pickerFilterParams, inWaitAnotherData]);
 
 
 
     const clearFiler = () => {
         dispatch(clearFilters());
-        dispatch(setQueryParams({ search: '', page: 1 }));
+        dispatch(setItemQueryParams({ search: '', page: 1 }));
     };
 
 
@@ -100,7 +119,7 @@ const SearchContainer: FC<ISearchContainer> = ({ searchValue }) => {
 
     return (
         <View style={style.container}>
-            <View style={{ flexDirection: 'row', paddingHorizontal: 17, maxHeight: 300, minHeight: 40, paddingTop: 5, flexWrap: 'wrap' }}>
+            <View style={style.filterItemsContainer}>
                 {renderFilterItems}
             </View>
             <View style={style.search}>
@@ -109,14 +128,13 @@ const SearchContainer: FC<ISearchContainer> = ({ searchValue }) => {
                 </View>
             </View>
             <View style={style.sortBy}>
-                <View style={{ marginHorizontal: 1, justifyContent: 'center', alignItems: 'center' }} tooltip={'Filters'} >
+                <View style={style.filterByIconContainer} tooltip={'Filters'} >
                     <FilterByIcon size={20} color={Colors.DEFAULT_TEXT_COLOR} />
                 </View>
                 {renderFilterByPickers}
                 <CustomPressable onPress={clearFiler}
-                pointerEvents={(e)=>console.log('events==>>',e)}
                     onHoverOpacity
-                    style={{ justifyContent: 'center', alignItems: 'center', marginLeft: 10 }}
+                    style={style.clearButtonContainer}
                 >
                     <View style={style.clearText} tooltip={'Clear Filters'}  >
                         <ClearIcon size={20} color={Colors.METALLIC_GOLD} />

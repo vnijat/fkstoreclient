@@ -1,23 +1,23 @@
 import React, { FC } from "react";
 import { Text, View } from "react-native";
 import { Item } from "../../../../types/ItemsQuery";
+import { columnHeaders } from "../../configs/columnHeaders";
 import { getStyle } from "./styles";
 
 
 interface ListHeaderProps {
-    columnHeaders: string[];
 }
 
-export const ListHeader: FC<ListHeaderProps> = ({ columnHeaders }) => {
+export const ListHeader: FC<ListHeaderProps> = () => {
     const style = getStyle();
 
     return (
         <View style={style.container}>
-            {columnHeaders.map((name, i) => {
+            {columnHeaders.map(({ title, dtoKey, sortable }, i) => {
                 return (
                     <View key={i} style={style.columnContainer}>
-                        <Text key={`${name}-${i}`} style={style.columnText}>
-                            {name}
+                        <Text key={`${title}-${i}`} style={style.columnText}>
+                            {title.toUpperCase()}
                         </Text>
                     </View>
                 );

@@ -1,37 +1,46 @@
-import { Picker } from '@react-native-picker/picker';
 import React, { FC, useMemo } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
-import { setQueryParams } from '../../modules/redux/querySlicer';
-import { useAppDispatch } from '../../modules/redux/store';
-import { Colors } from '../../utils/colors';
-import CustomPicker from '../customPicker';
-import CustomPressable from '../customPressable';
+import CustomPicker from '../../../../components/customPicker';
+import CustomPressable from '../../../../components/customPressable';
+import { Imeta } from '../../../../types/common/common';
+import { Colors } from '../../../../utils/colors';
+
 import { IpaginationTakeOptions, paginationTakeOptions } from './configs';
 import { getStyle } from './styles';
+
+
+
 
 interface IPagePAgination {
   page?: number;
   take?: number;
   pageCount?: number;
-  setPage?: () => void;
   hasNextPage: boolean;
   hasPreviousPage: boolean;
-  totalItems: number;
   showedItemCount?: number;
+  onPressToFirst: (query: Imeta) => void;
+  onPressToLast: (query: Imeta) => void;
+  onPressPrevious: (query: Imeta) => void;
+  onPressNext: (query: Imeta) => void;
+  onSelectTakeValue?: (query: Imeta) => void;
+  setPage: (query: Imeta) => void;
 }
 
 export const PagePagination: FC<IPagePAgination> = ({
   page,
   pageCount,
   take = 0,
-  setPage,
   hasNextPage,
   hasPreviousPage,
-  totalItems,
   showedItemCount = 0,
+  onPressToFirst,
+  onPressToLast,
+  onPressPrevious,
+  onPressNext,
+  onSelectTakeValue,
+  setPage
 }) => {
-  const dispatch = useAppDispatch();
   const styles = getStyle();
   const pageCountToNumbers = useMemo(() => {
     let pageArray = [];
@@ -54,7 +63,7 @@ export const PagePagination: FC<IPagePAgination> = ({
   );
 
   const onPressPageNumber = (pageNumber: number) => {
-    dispatch(setQueryParams({ page: pageNumber }));
+    setPage({ page: pageNumber });
   };
 
   const renderPageNumbers = useMemo(() => {
@@ -110,24 +119,24 @@ export const PagePagination: FC<IPagePAgination> = ({
 
   const onPressAlignLeft = () => {
     const toFirstPage = page! + 1 - page!;
-    dispatch(setQueryParams({ page: toFirstPage }));
+    onPressToFirst({ page: toFirstPage });
   };
 
   const onPressLeft = () => {
-    dispatch(setQueryParams({ page: page! - 1 }));
+    onPressPrevious({ page: page! - 1 });
   };
 
   const onPressRight = () => {
-    dispatch(setQueryParams({ page: page! + 1 }));
+    onPressNext({ page: page! + 1 });
   };
 
   const onPressAlignRight = () => {
     const toLastPage = pageCount;
-    dispatch(setQueryParams({ page: toLastPage }));
+    onPressToLast({ page: toLastPage });
   };
 
   const onChangeTakeParams = (item: IpaginationTakeOptions) => {
-    dispatch(setQueryParams({ take: Number(item.value), page: 1 }));
+    onSelectTakeValue && onSelectTakeValue({ take: Number(item.value), page: 1 });
   };
 
   const renderLeftButtons = useMemo(() => {

@@ -1,4 +1,6 @@
-const inputsConfig = [
+import {InputsConfig} from '../../../types/inputsconfig';
+
+const inputsConfig: InputsConfig[] = [
   {
     title: 'Name',
     isNumeric: false,
@@ -7,6 +9,7 @@ const inputsConfig = [
     width: 500,
     height: 35,
     multiLine: false,
+    dtoKey: 'name',
   },
   {
     title: 'Description',
@@ -16,6 +19,7 @@ const inputsConfig = [
     width: 500,
     height: 150,
     multiLine: true,
+    dtoKey: 'description',
   },
   {
     title: 'Quantity',
@@ -25,6 +29,7 @@ const inputsConfig = [
     width: 150,
     height: 35,
     multiLine: false,
+    dtoKey: 'quantity',
   },
   {
     title: 'Purchase Price',
@@ -34,6 +39,7 @@ const inputsConfig = [
     width: 150,
     height: 35,
     multiLine: false,
+    dtoKey: 'purchasePrice',
   },
   {
     title: 'Price Per Unit',
@@ -43,6 +49,7 @@ const inputsConfig = [
     width: 150,
     height: 35,
     multiLine: false,
+    dtoKey: 'pricePerUnit',
   },
 
   {
@@ -50,24 +57,32 @@ const inputsConfig = [
     width: 150,
     height: 35,
     selectable: true,
+    dtoKey: 'unitId',
+    selectableDataKey: 'unit',
   },
   {
     title: 'Barcode',
     width: 150,
     height: 35,
     selectable: true,
+    dtoKey: 'barcodeId',
+    selectableDataKey: 'barcode',
   },
   {
     title: 'Color',
     width: 150,
     height: 35,
     selectable: true,
+    dtoKey: 'colorId',
+    selectableDataKey: 'color',
   },
   {
     title: 'Label',
     width: 150,
     height: 35,
     selectable: true,
+    dtoKey: 'labelId',
+    selectableDataKey: 'label',
   },
 
   {
@@ -75,12 +90,16 @@ const inputsConfig = [
     width: 150,
     height: 35,
     selectable: true,
+    dtoKey: 'categoryId',
+    selectableDataKey: 'category',
   },
   {
     title: 'Store',
     width: 150,
     height: 35,
     selectable: true,
+    dtoKey: 'storeId',
+    selectableDataKey: 'store',
   },
   {
     title: 'Location',
@@ -88,14 +107,18 @@ const inputsConfig = [
     height: 35,
     selectable: true,
     requiredDataName: 'store',
-    filterKeyName: 'storeId',
+    requiredDataDtoKey: 'storeId',
     requiredText: 'Please select Store First',
+    selectableDataKey: 'location',
+    dtoKey: 'locationId',
   },
   {
     title: 'Supplier',
     width: 150,
     height: 35,
     selectable: true,
+    selectableDataKey: 'supplier',
+    dtoKey: 'supplierId',
   },
 ];
 

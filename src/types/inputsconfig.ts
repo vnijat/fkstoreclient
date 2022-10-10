@@ -9,6 +9,11 @@ interface InputsConfig {
   multiLine?: boolean;
   selectable?: boolean;
   selectableDataKey?: string;
+  requiredDataName?: string;
+  requiredDataDtoKey?: string;
+  requiredText?: string;
+  isEnum?: boolean;
+  enumData?: {label: string; value: string | number}[];
 }
 
 export type {InputsConfig};

@@ -2,6 +2,7 @@ import { useFocusEffect, useIsFocused, useNavigation } from '@react-navigation/n
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Text, View } from 'react-native';
+import { useToast } from 'react-native-rooster';
 import { shallowEqual, useSelector } from 'react-redux';
 import { InputItem } from '../../components/inputItem';
 import { PrimaryButton } from '../../components/primaryButton';
@@ -15,9 +16,10 @@ import {
   setIsItemForEdit,
   setItemForPost,
   setItemValueForPost,
-} from '../../modules/redux/ItemsSlicer';
+} from '../../modules/redux/itemsSlicer';
 import { RootState, useAppDispatch } from '../../modules/redux/store';
 import HELP from '../../services/helpers';
+import { AddItemInterface } from '../../types/Item';
 import { Item } from '../../types/ItemsQuery';
 import { Colors } from '../../utils/colors';
 import { inputsConfig } from './configs';
@@ -28,7 +30,8 @@ interface AddItemProps { }
 const AddItemСontainer: FC<AddItemProps> = ({ }) => {
   const navigation = useNavigation<StackNavigationProp<any>>();
   const style = getStyle();
-  const { currentData } = useGetItemInputsQuery(undefined, {
+  const { addToast } = useToast();
+  const { currentData: inputsData } = useGetItemInputsQuery(undefined, {
     selectFromResult: ({ isLoading, isUninitialized, error, currentData }) => ({
       error,
       isLoading: isUninitialized ? true : isLoading,
@@ -42,7 +45,7 @@ const AddItemСontainer: FC<AddItemProps> = ({ }) => {
   const [errorMessage, setErrorMessages] = useState<{ [key: string]: string[]; }>(
     {},
   );
-  const itemForPosting: any = useSelector((state: RootState) => state.itemsSlicer.itemforPost, shallowEqual);
+  const itemForPosting: AddItemInterface = useSelector((state: RootState) => state.itemsSlicer.itemforPost, shallowEqual);
   const [itemForEdit, setItemForEdit] = useState({});
   const dispatch = useAppDispatch();
   const inputRef = useRef<any>([]);
@@ -54,9 +57,14 @@ const AddItemСontainer: FC<AddItemProps> = ({ }) => {
       if (response?.error) {
         throw response?.error;
       }
+      await addToast({
+        type: 'success',
+        title: 'Success',
+        message: `${itemForPosting.name} Added`.toLowerCase()
+      });
       dispatch(clearItemForPosting());
       setErrorMessages({});
-      navigation.navigate('Items');
+      // navigation.navigate('Items');
     } catch (error) {
       setErrorMessages(HELP.modifieErrorMessage(error));
     }
@@ -91,14 +99,14 @@ const AddItemСontainer: FC<AddItemProps> = ({ }) => {
     selectableInput?: boolean,
   ) => {
     !!inputValue.length &&
-      errorMessage[`${objectKey}${selectableInput ? 'Id' : ''}`] &&
+      errorMessage[objectKey] &&
       setErrorMessages(prev => {
-        delete prev[`${objectKey}${selectableInput ? 'Id' : ''}`];
+        delete prev[objectKey];
         return { ...prev };
       });
     dispatch(
       setItemValueForPost({
-        key: `${objectKey}${selectableInput ? 'Id' : ''}`,
+        key: objectKey,
         value: inputValue,
       }),
     );
@@ -109,7 +117,7 @@ const AddItemСontainer: FC<AddItemProps> = ({ }) => {
       setItemForEdit(itemForPosting);
     }
   }, [isItemForEdit]);
-
+  console.log("asdad", AddItemСontainer.displayName);
   const onPressSave = async () => {
     try {
       const response = await apiEditItem(itemForPosting);
@@ -117,11 +125,16 @@ const AddItemСontainer: FC<AddItemProps> = ({ }) => {
         throw response?.error;
       }
       dispatch(setIsItemForEdit(false));
+      await addToast({
+        type: 'success',
+        title: 'Success',
+        message: `${itemForPosting.name} saved!`.toLowerCase()
+      });
       setItemForEdit({});
       navigation.navigate('Items');
     } catch (error) {
       setErrorMessages(HELP.modifieErrorMessage(error));
-      console.log("ERORRRRRREDIT==>>>", error);
+      console.log("AddItemСontainer==>>onPressSave==>>>", error);
     }
   };
 
@@ -138,22 +151,16 @@ const AddItemСontainer: FC<AddItemProps> = ({ }) => {
           maxLength,
           selectable,
           requiredDataName,
-          filterKeyName,
-          requiredText
+          requiredText,
+          requiredDataDtoKey,
+          dtoKey,
+          selectableDataKey
         } = config;
-        const [firstWord, ...restWords] = title.split(' ');
-        const titleAsObjectKey = firstWord.toLowerCase() + restWords.join('');
-        const inputValue: string = itemForPosting[selectable ? titleAsObjectKey + 'Id' : titleAsObjectKey] ?? (selectable ? '0' : '');
-        const toolTip: string = inputValue.length ? inputValue : title;
-        inputRef?.current[id] &&
-          inputRef?.current[id]?.setNativeProps({
-            tooltip: toolTip,
-            selectionColor: Colors.JASMINE,
-          });
-        const selectableData = selectable && currentData ? (!!requiredDataName ? currentData[titleAsObjectKey]?.filter((item: Item) => (item?.[filterKeyName] ? item?.[filterKeyName] : item?.[filterKeyName.toLowerCase()]) == itemForPosting[filterKeyName]) : currentData[titleAsObjectKey]) : [];
-        const isError = !!errorMessage[`${titleAsObjectKey}${selectable ? 'Id' : ''}`]?.length;
-        const pickerDataKeyName = selectable ? title.toLowerCase() : '';
-        const disabled = !!requiredDataName && !itemForPosting[filterKeyName];
+        const inputValue: string = itemForPosting[dtoKey as keyof AddItemInterface] ?? (selectable ? '0' : '');
+        const selectableData = selectable && inputsData ? (!!requiredDataName ? inputsData[selectableDataKey!!]?.filter((data: { [key: string]: any; }) => (data?.[requiredDataDtoKey!!] ? data?.[requiredDataDtoKey!!] : data?.[requiredDataDtoKey?.toLowerCase()!!]) == itemForPosting[requiredDataDtoKey as keyof AddItemInterface]) : inputsData[selectableDataKey!!]) : [];
+        const isError = !!errorMessage[dtoKey!!]?.length;
+        const pickerDataKeyName = selectable ? selectableDataKey : '';
+        const disabled = !!requiredDataName && !itemForPosting[requiredDataDtoKey as keyof AddItemInterface];
         return (
           <InputItem
             inputTitle={title}
@@ -167,7 +174,7 @@ const AddItemСontainer: FC<AddItemProps> = ({ }) => {
             inputRef={r => (inputRef.current[id] = r)}
             inputValue={inputValue}
             setValue={inputValue =>
-              setItemValueForPosting(inputValue, titleAsObjectKey, selectable)
+              setItemValueForPosting(inputValue, dtoKey, selectable)
             }
             id={id}
             selectable={selectable}
@@ -184,7 +191,7 @@ const AddItemСontainer: FC<AddItemProps> = ({ }) => {
         );
       });
     }
-  }, [itemForPosting, errorMessage, currentData]);
+  }, [itemForPosting, errorMessage, inputsData]);
 
   return (
     <View style={style.container}>

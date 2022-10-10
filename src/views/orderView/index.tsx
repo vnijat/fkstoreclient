@@ -1,10 +1,7 @@
-import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { FC } from 'react';
-import { Button, Pressable, Text, View } from 'react-native';
-import { FontIcon, NavigationView, NavigationViewItem } from 'react-native-xaml';
-import { XamlSideBar } from '../../modules/navigation/xamlSideBar';
-import { getStyle } from './style';
+import {View } from 'react-native';
+import { getStyle } from './styles';
 
 
 interface IorderView {

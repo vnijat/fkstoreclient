@@ -27,8 +27,44 @@ export const getStyle = () => {
             borderRightWidth: 1,
             borderColor: Colors.CULTURED,
             justifyContent: 'center', alignItems: 'center'
+        },
+        infoContainer: {
+            flex: 0.6,
+            alignItems: 'flex-start',
+            alignSelf: 'flex-start',
+            paddingTop: 10,
+            marginLeft: 10
+        },
+        infoContent: {
+            flexDirection: 'row',
+            justifyContent: 'center',
+            margin: 5,
+            alignItems: 'center'
+        },
+        infoIcon: {
+            justifyContent: 'center',
+            alignItems: 'center'
+        },
+        infoText: {
+            fontSize: 12,
+            color: Colors.DEFAULT_TEXT_COLOR,
+            marginLeft: 5
+        },
+        companyText: {
+            fontSize: 12,
+            color: Colors.DARK_GOLDENROD,
+            fontWeight: '700'
+        },
+        clientInfo: {
+            flex: 0.7,
+            justifyContent: 'center',
+            alignItems: 'center'
+        },
+        clientInfoText: {
+            fontSize: 16,
+            color: Colors.DEFAULT_TEXT_COLOR,
+            fontWeight: '700'
         }
-
     });
 
     return style;

@@ -19,7 +19,9 @@ export interface AddItemInterface {
 
   locationId?: string;
 
+  labelId?: string;
+
   storeId?: string;
 
-  color?: string;
+  colorId?: string;
 }

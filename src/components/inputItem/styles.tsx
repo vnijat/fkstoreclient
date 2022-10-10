@@ -56,6 +56,8 @@ export const getStyle = (height: number, width: number, isErorr?: boolean, title
             alignItems: 'center',
             paddingHorizontal: 5,
             backgroundColor: 'transparent',
+            justifyContent: 'space-between',
+            paddingRight: 20
         }
     });
 

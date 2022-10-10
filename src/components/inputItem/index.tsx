@@ -1,3 +1,4 @@
+import { assertAccessor } from '@babel/types';
 import { Picker } from '@react-native-picker/picker';
 import React, { FC, memo, useMemo, useState } from 'react';
 import { View, TextInput, Text } from 'react-native';
@@ -21,7 +22,7 @@ interface IInputItem {
   inputValue: string;
   id?: number;
   selectable?: boolean;
-  selectableData?: { label: string; id: number; }[];
+  selectableData?: Array<IsingelSelectData & { id?: number; }>;
   isErorr?: boolean;
   titleColor?: string;
   isSearch?: boolean;
@@ -94,7 +95,8 @@ export const InputItem: FC<IInputItem> = memo(
 
     const dataForPicker = useMemo(() => {
       if (selectableData?.length) {
-        return selectableData.map(({ id, label }) => ({ value: id, label }));
+        const singleSelectData = selectableData.map((item) => (item.id ? { value: item.id, label: item.label } : item));
+        return singleSelectData as IsingelSelectData[];
       } else {
         return [];
       }

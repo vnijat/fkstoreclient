@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { Colors } from '../../utils/colors';
+import { Colors } from '../../../../utils/colors';
 
 export const getStyle = (textColor?: string, buttonColor?: string) => {
     const style = StyleSheet.create({

@@ -14,7 +14,6 @@ export const getStyle = () => {
             justifyContent: 'center',
             alignItems: 'center',
             flex: 1,
-            flexGrow: 1
         },
         columnText: {
             color: Colors.DEFAULT_TEXT_COLOR,

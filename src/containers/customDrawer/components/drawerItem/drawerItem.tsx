@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import { Text, View } from "react-native";
 import Icon from "react-native-vector-icons/Entypo";
-import { AddItemIcon, ClientsIcon, DefaultMenuIcon, ItemsIcon, OrdersIcon, PurchasesIcon } from "../../../../assets/icons/menuIcons";
+import { AddItemIcon, ClientsIcon, DefaultMenuIcon, ItemsIcon, OrdersIcon, ProjectsIcon, PurchasesIcon } from "../../../../assets/icons/menuIcons";
 import CustomPressable from "../../../../components/customPressable";
 import { Colors } from "../../../../utils/colors";
 import { getStyle } from "./styles";
@@ -24,6 +24,7 @@ export const CustomDrawerItem: FC<CustomDrawerItemProps> = ({ navigation, routeN
             Orders: <OrdersIcon size={ICON_SIZE} color={itemContentColor} />,
             Purchases: <PurchasesIcon size={ICON_SIZE} color={itemContentColor} />,
             AddItem: <AddItemIcon size={ICON_SIZE} color={itemContentColor} />,
+            Projects: <ProjectsIcon size={ICON_SIZE} color={itemContentColor} />,
             Default: <DefaultMenuIcon size={ICON_SIZE} color={itemContentColor} />,
         };
         return (

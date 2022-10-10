@@ -4,7 +4,6 @@ import { Colors } from '../../utils/colors';
 export const getStyle = () => {
     const style = StyleSheet.create({
         container: {
-            backgroundColor: Colors.FLORAL_WHITE,
             marginBottom: 10,
             justifyContent: 'space-between'
         },
@@ -32,6 +31,37 @@ export const getStyle = () => {
             justifyContent: 'center',
             marginLeft: 5,
             alignItems: 'center'
+        },
+        pickerButtonStyle: {
+            width: 90,
+            height: 30,
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginHorizontal: 3,
+            paddingHorizontal: 5,
+            borderRadius: 1,
+            borderWidth: 1,
+            borderColor: Colors.CARD_HEADER_COLOR,
+            justifyContent: 'space-between',
+            backgroundColor: 'transparent'
+        },
+        filterItemsContainer: {
+            flexDirection: 'row',
+            paddingHorizontal: 17,
+            maxHeight: 300,
+            minHeight: 40,
+            paddingTop: 5,
+            flexWrap: 'wrap'
+        },
+        filterByIconContainer: {
+            marginHorizontal: 1,
+            justifyContent: 'center',
+            alignItems: 'center'
+        },
+        clearButtonContainer: {
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginLeft: 10
         }
 
     });

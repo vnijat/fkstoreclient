@@ -8,12 +8,12 @@ import { ListHeader } from "./components/listHeader";
 import { PrimaryButton } from "../../components/primaryButton";
 import RowItem from "../../components/rowItem";
 import { useDeleteManyItemsMutation } from "../../modules/api/apiSlice";
-import { addItemId, clearSelectedItems, setIsEditMode, setIsItemForEdit, setItemForPost } from "../../modules/redux/ItemsSlicer";
-import { setQueryParams } from "../../modules/redux/querySlicer";
+import { addItemId, clearSelectedItems, setIsEditMode, setIsItemForEdit, setItemForPost } from "../../modules/redux/itemsSlicer";
+import { setItemQueryParams } from "../../modules/redux/itemQuerySlicer";
 import { selectIsEditMode } from "../../modules/redux/selectors/itemSelectors";
 import { RootState, useAppDispatch } from "../../modules/redux/store";
 import { getSelectedTotalPrice, selectMany } from "../../services/ItemServices";
-import { Data, Item } from "../../types/ItemsQuery";
+import { Item } from "../../types/ItemsQuery";
 import { Colors } from "../../utils/colors";
 import { currency } from "../../utils/currency";
 import ItemsContent from "../itemsContent";
@@ -41,17 +41,7 @@ const ItemListTable: FC<IItemListTable> = ({ data, isLoading }) => {
         };
     });
     const selectBulk = useCallback((from: number, to: number) => selectMany(from, to, data!, dispatch, addItemId), [data]);
-    const columnHeaders = [
-        'Name',
-        'Description',
-        'Barcode',
-        'Category',
-        'Color',
-        'Quantity',
-        'Unit',
-        'Price Per Unit',
-        'Total Price'
-    ];
+  
 
     const cancelEdit = () => {
         dispatch(clearSelectedItems());
@@ -62,7 +52,7 @@ const ItemListTable: FC<IItemListTable> = ({ data, isLoading }) => {
         apiDeleteItems({ Ids: selectedItemsID });
         dispatch(clearSelectedItems());
         dispatch(setIsEditMode(false));
-        dispatch(setQueryParams({ page: 1, search: '' }));
+        dispatch(setItemQueryParams({ page: 1, search: '' }));
     };
 
     const cancelDeletion = () => { };
@@ -121,10 +111,11 @@ const ItemListTable: FC<IItemListTable> = ({ data, isLoading }) => {
     }, [isEditMode, selectedCount, selectedTotalPrice]);
 
     return (
-        <>
+        <View style={{ flex: 1 }}>
             {renderSelectedInfo}
-            <ListHeader columnHeaders={columnHeaders} />
-            <RowItem height={10} />
+            <View style={{ backgroundColor: Colors.CARD_HEADER_COLOR, justifyContent: 'center' }}>
+                <ListHeader />
+            </View>
             <View>
             </View>
             {isLoading ?
@@ -142,8 +133,8 @@ const ItemListTable: FC<IItemListTable> = ({ data, isLoading }) => {
                             barcode,
                             category,
                             color,
-                            quantity,
                             unit,
+                            quantity,
                             pricePerUnit,
                             totalPrice,
                             id } = item;
@@ -170,7 +161,7 @@ const ItemListTable: FC<IItemListTable> = ({ data, isLoading }) => {
                     }}
                 />
             }
-        </>
+        </View>
     );
 };
 

@@ -44,7 +44,7 @@ const itemsSlicer = createSlice({
             Object.assign(state.itemforPost, { [action.payload.key]: action.payload.value });
         },
         clearItemForPosting: (state) => {
-            state.itemforPost = ItemForPostDefaults;
+            Object.assign(state.itemforPost, ItemForPostDefaults);
         },
         setItemForPost: (state, action: PayloadAction<{ [key: string]: any; }>) => {
             Object.assign(state.itemforPost, action.payload);

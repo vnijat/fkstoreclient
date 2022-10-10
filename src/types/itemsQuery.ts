@@ -1,6 +1,7 @@
 import {Order} from '../enums/order.enum';
+import {Common, Imeta} from './common/common';
 
-interface QueryParams {
+interface itemQueryParams {
   page?: number;
   search?: string;
   take?: number;
@@ -17,18 +18,11 @@ interface QueryParams {
 }
 
 type queryFilterByParam = Omit<
-  QueryParams,
+itemQueryParams,
   'page' | 'search' | 'take' | 'sort' | 'order'
 >;
 
 type FilterParamskey = keyof queryFilterByParam;
-
-interface Common {
-  id: number;
-  createdAt: Date;
-  updatedAt: Date;
-  skuCode?: string;
-}
 
 interface Supplier extends Common {
   name: string;
@@ -86,26 +80,16 @@ interface Item {
   totalPrice: number;
 }
 
-interface Data<T> {
-  items: T[];
+interface ItemResponse {
+  items: Item[];
   itemsCount: number;
   meta: Imeta;
 }
 
-interface Imeta {
-  page?: number;
-  take?: number;
-  itemCount?: number;
-  pageCount?: number;
-  hasPreviousPage: boolean;
-  hasNextPage: boolean;
-}
-
 export type {
-  QueryParams,
-  Data,
+  itemQueryParams,
+  ItemResponse,
   Item,
-  Imeta,
   queryFilterByParam,
   FilterParamskey,
 };

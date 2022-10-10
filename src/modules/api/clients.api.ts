@@ -1,8 +1,10 @@
+import {AddClient} from '../../types/client';
+import {ClientsQueryParams, ClientsResponse} from '../../types/clientsQuery';
 import {InventoryApi} from './apiSlice';
 
 export const ClientsApi = InventoryApi.injectEndpoints({
   endpoints: build => ({
-    getClients: build.query<undefined, undefined>({
+    getClients: build.query<ClientsResponse, ClientsQueryParams>({
       providesTags: ['clients'],
       query: filter => {
         return {
@@ -11,8 +13,18 @@ export const ClientsApi = InventoryApi.injectEndpoints({
         };
       },
     }),
+    addClient: build.mutation<ClientsResponse, AddClient>({
+      invalidatesTags: ['clients'],
+      query: body => {
+        return {
+          url: '/client/',
+          body: body,
+          method: 'POST',
+        };
+      },
+    }),
   }),
   overrideExisting: true,
 });
 
-export const {useGetClientsQuery} = ClientsApi;
+export const {useGetClientsQuery, useAddClientMutation} = ClientsApi;

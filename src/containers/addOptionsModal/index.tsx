@@ -1,9 +1,6 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Text, View, ScrollView, Alert } from "react-native";
-import { Popup, } from "react-native-windows";
-import CustomPressable from "../../components/customPressable";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { Text, View, Alert } from "react-native";
 import { Colors } from "../../utils/colors";
-import Icon from 'react-native-vector-icons/Entypo';
 import { inputsForItemOptions } from "./configs";
 import { InputsConfig } from "../../types/inputsconfig";
 import { InputItem } from "../../components/inputItem";
@@ -15,7 +12,8 @@ import { PrimaryButton } from "../../components/primaryButton";
 import HELP from "../../services/helpers";
 import { useGetItemInputsQuery } from "../../modules/api/apiSlice";
 import { ItemOptionsApi } from "../../modules/api/itemOptions.api";
-import { setIsItemForEdit } from "../../modules/redux/ItemsSlicer";
+import CustomModal from "../../components/customModal";
+import { useToast } from "react-native-rooster";
 
 interface IaddOptionsModal {
     isShowModal: boolean;
@@ -27,6 +25,7 @@ interface IaddOptionsModal {
 const AddOptionsModal = ({ isShowModal, closeModal, optionName }: IaddOptionsModal) => {
     const style = getStyle();
     const dispatch = useAppDispatch();
+    const { addToast } = useToast();
     const optionDataForPost = useSelector((state: RootState) => state.itemOptions.options[optionName], shallowEqual);
     const options = useSelector((state: RootState) => state.itemOptions.options, shallowEqual);
     const isOptionForEdit = useSelector((state: RootState) => state.itemOptions.isOptionForEdit);
@@ -41,6 +40,7 @@ const AddOptionsModal = ({ isShowModal, closeModal, optionName }: IaddOptionsMod
         }),
         pollingInterval: 5000,
     });
+
 
     useEffect(() => {
         if (isShowModal && isOptionForEdit && optionDataForPost) {
@@ -104,7 +104,7 @@ const AddOptionsModal = ({ isShowModal, closeModal, optionName }: IaddOptionsMod
                             selectable={selectable}
                             selectableData={dataForPicker}
                             isErorr={isError}
-                            titleColor={Colors.DARK_GOLDENROD}
+                            titleColor={Colors.METALLIC_GOLD}
 
                         />
 
@@ -152,6 +152,11 @@ const AddOptionsModal = ({ isShowModal, closeModal, optionName }: IaddOptionsMod
             if (response.error) {
                 throw response.error;
             }
+            await addToast({
+                type: 'success',
+                message: `new ${optionName} added`.toUpperCase(),
+                title: "Success"
+            });
             onCloseAddOptionModal();
         } catch (error) {
             console.log("error==>>", error);
@@ -166,6 +171,7 @@ const AddOptionsModal = ({ isShowModal, closeModal, optionName }: IaddOptionsMod
             }
         }
     };
+
 
     const onCloseAddOptionModal = async () => {
         setErrorMessages({});
@@ -199,58 +205,50 @@ const AddOptionsModal = ({ isShowModal, closeModal, optionName }: IaddOptionsMod
 
 
     return (
-        <Popup
-            isOpen={isShowModal}
-            onDismiss={onCloseAddOptionModal}
-            isLightDismissEnabled={true}
-        // placement={'full'}
+        <CustomModal
+            closeModal={onCloseAddOptionModal}
+            isShowModal={isShowModal}
+            isDissmissEnabled={true}
         >
             <View style={{ flex: 1 }}>
-                <CustomPressable onHoverOpacity onPress={onCloseAddOptionModal} style={{ position: 'absolute', top: -5, right: -5, zIndex: 2, width: 22, height: 22, borderRadius: 22, justifyContent: 'center', alignItems: 'center', backgroundColor: Colors.FLORAL_WHITE }}>
-                    <Icon name={'circle-with-cross'} size={22} color={Colors.METALLIC_GOLD} />
-                </CustomPressable>
-                <View style={{ width: 500, paddingVertical: 10, backgroundColor: Colors.ALABASTER, borderRadius: 3, borderWidth: 2, borderColor: Colors.METALLIC_GOLD, zIndex: 1 }}>
-                    <Text style={{ color: Colors.OLD_GOLD, fontWeight: '700', textAlign: 'center', fontSize: 14 }}>
-                        {`${optionName.toUpperCase()}`}
-                    </Text>
-                    <View style={{ justifyContent: 'flex-start', paddingHorizontal: 5 }}>
-                        {renderInputs}
-                    </View>
-                    <View style={style.buttonsContainer}>
+                <Text style={style.headerText}>
+                    {`${optionName.toUpperCase()}`}
+                </Text>
+                <View style={style.contentContainer}>
+                    {renderInputs}
+                </View>
+                <View style={style.buttonsContainer}>
+                    <PrimaryButton
+                        title={'Reset'}
+                        onPress={onPressReset}
+                        buttonColor={Colors.CARD_HEADER_COLOR}
+                        textColor={Colors.DEFAULT_TEXT_COLOR}
+                        pressedColor={Colors.METALLIC_GOLD}
+                        height={30}
+                        width={80}
+                    />
+                    {isOptionForEdit ?
                         <PrimaryButton
-                            title={'Reset'}
-                            onPress={onPressReset}
-                            buttonColor={Colors.CULTURED}
-                            textColor={Colors.METALLIC_GOLD}
-                            pressedColor={Colors.OLD_GOLD}
+                            title={'Save'}
+                            onPress={onPressSave}
+                            buttonColor={Colors.METALLIC_GOLD}
+                            textColor={Colors.FLORAL_WHITE}
+                            pressedColor={Colors.DARK_GOLDENROD}
                             height={30}
                             width={80}
-                        />
-                        {isOptionForEdit ?
-                            <PrimaryButton
-                                title={'Save'}
-                                onPress={onPressSave}
-                                buttonColor={Colors.METALLIC_GOLD}
-                                textColor={Colors.FLORAL_WHITE}
-                                pressedColor={Colors.DARK_GOLDENROD}
-                                height={30}
-                                width={80}
-                            /> :
-                            <PrimaryButton
-                                title={'Add'}
-                                onPress={onPressAdd}
-                                buttonColor={Colors.METALLIC_GOLD}
-                                textColor={Colors.FLORAL_WHITE}
-                                pressedColor={Colors.DARK_GOLDENROD}
-                                height={30}
-                                width={80}
-                            />}
-                    </View>
-
-
+                        /> :
+                        <PrimaryButton
+                            title={'Add'}
+                            onPress={onPressAdd}
+                            buttonColor={Colors.DEFAULT_TEXT_COLOR}
+                            textColor={Colors.CULTURED}
+                            pressedColor={Colors.CARD_HEADER_COLOR}
+                            height={30}
+                            width={80}
+                        />}
                 </View>
             </View>
-        </Popup >
+        </CustomModal >
     );
 
 

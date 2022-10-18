@@ -5,7 +5,7 @@ import { Colors } from '../../utils/colors';
 export const getStyle = (width: number) => {
     const style = StyleSheet.create({
         container: {
-            backgroundColor: Colors.FLORAL_WHITE,
+            backgroundColor: Colors.CARD_HEADER_COLOR,
             flex: 1,
             width: width * 0.05,
         },
@@ -18,7 +18,7 @@ export const getStyle = (width: number) => {
             alignItems: 'center',
         },
         logoText: {
-            color: Colors.DARK_GOLDENROD,
+            color: Colors.METALLIC_GOLD,
             fontWeight: '700',
             fontSize: 30
         },

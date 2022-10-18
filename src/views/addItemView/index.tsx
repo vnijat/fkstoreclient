@@ -1,8 +1,9 @@
-import React, { FC, useMemo, useState } from 'react';
-import { ActivityIndicator, FlatList, Text, View, Pressable, Alert } from 'react-native';
-import AddItemСontainer from '../../containers/addItem';
 
-import { getStyle } from './style';
+
+import React, { FC, useMemo } from 'react';
+import { View } from 'react-native-windows';
+import AddItemСontainer from '../../containers/addItem';
+import { getStyle } from './styles';
 
 
 
@@ -12,7 +13,7 @@ export const AddItemView: FC<any> = ({ navigation }) => {
 
     return (
         <View style={style.container}>
-                <AddItemСontainer />
+            <AddItemСontainer />
         </View >
     );
 };

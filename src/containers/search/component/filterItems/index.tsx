@@ -17,9 +17,9 @@ interface IFilterItem {
 const FilterItem: FC<IFilterItem> = ({ label, onPress }) => {
 
     return (
-        <View style={{ height: 25, flexDirection: 'row', backgroundColor: Colors.OLD_GOLD, borderRadius: 3, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 5, margin: 3 }}>
+        <View style={{ height: 25, flexDirection: 'row', backgroundColor: Colors.CARD_HEADER_COLOR, borderRadius: 3, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 5, margin: 3 }}>
 
-            <Text style={{ fontSize: 12, fontWeight: '500', color: Colors.CULTURED }}>
+            <Text style={{ fontSize: 12, fontWeight: '500', color: Colors.DEFAULT_TEXT_COLOR }}>
                 {label}
             </Text>
             <CustomPressable style={{ width: 15, height: 15, justifyContent: 'center', alignItems: 'center', marginLeft: 3 }} onPress={onPress} onHoverOpacity >

@@ -55,11 +55,10 @@ const filterSlicer = createSlice({
         },
         setSelectedWithLabel: (state, action: PayloadAction<{ id: number; label: string; parent: FilterParamskey; }>) => {
             const { parent, id } = action.payload;
-            const isExist = state.selectedWithLabel.filter((item) => item.parent === parent).map(item => item.id).includes(id);
+            const isExist = state.selectedWithLabel.some(item => item.parent === parent && item.id === id);
             if (isExist) {
-                const filteredParent = state.selectedWithLabel.filter(item => item.parent === parent).filter(item => item.id !== id);
-                const selectedWitoutParent = state.selectedWithLabel.filter(item => item.parent !== parent);
-                state.selectedWithLabel = [...selectedWitoutParent, ...filteredParent];
+                const indexOfExisted = state.selectedWithLabel.findIndex((item) => item.parent === parent && item.id === id);
+                state.selectedWithLabel.splice(indexOfExisted, 1);
             } else {
                 state.selectedWithLabel.push(action.payload);
             }

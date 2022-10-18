@@ -1,18 +1,12 @@
-enum ClientType {
-  CORPORATE = 'corporate',
-  INDIVIDUAL = 'individual',
-}
+import {ClientType} from '../enums/clientType';
 
 interface AddClient {
-  firstName: string;
-
-  lastName: string;
-
-  phone: string;
-
-  description: string;
-
+  companyName?: string;
+  firstName?: string;
+  lastName?: string;
   type: ClientType;
+  email?: string;
+  phone?: string;
 }
 
-export type {AddClient, ClientType};
+export type {AddClient};

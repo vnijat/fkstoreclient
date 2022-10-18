@@ -1,8 +1,9 @@
+import CheckBox from "@react-native-community/checkbox";
 import React, { FC, useMemo, useRef, useState } from "react";
 import { Image, Pressable, Text, View } from "react-native";
 import { useSelector } from "react-redux";
 import CustomPressable from "../../components/customPressable";
-import { addItemId, setIsEditMode } from "../../modules/redux/ItemsSlicer";
+import { addItemId, setIsEditMode } from "../../modules/redux/itemsSlicer";
 import { selectIsEditMode } from "../../modules/redux/selectors/itemSelectors";
 import { RootState, useAppDispatch } from "../../modules/redux/store";
 import { Colors } from "../../utils/colors";
@@ -30,6 +31,7 @@ const ItemsContent: FC<ItemsContentProps> = ({ id, name, barcode, category, quan
     const style = getStyle();
     const dispatch = useAppDispatch();
     const isEditMode = useSelector(selectIsEditMode);
+    const [isShowCheckBox, setIsShowCheckBox] = useState(false);
     const { isSelected, selectedCount, firstSelectedItem } = useSelector((state: RootState) => {
         return {
             firstSelectedItem: state.itemsSlicer.selectedItems[0],
@@ -40,15 +42,9 @@ const ItemsContent: FC<ItemsContentProps> = ({ id, name, barcode, category, quan
 
     const pressableRef = useRef(null);
 
-    const onLongPress = ({ nativeEvent }: any) => {
-        if (isEditMode) {
-            return;
-        }
-        dispatch(setIsEditMode(true));
-        dispatch(addItemId({ index: itemIndex, Id: id }));
-    };
 
-    const onPressItem = ({ nativeEvent: { shiftKey } }: any) => {
+    const onPressItem = ({ nativeEvent }: any) => {
+        const { shiftKey } = nativeEvent;
         if (isEditMode) {
             if (isSelected && selectedCount === 1) {
                 dispatch(setIsEditMode(false));
@@ -58,11 +54,10 @@ const ItemsContent: FC<ItemsContentProps> = ({ id, name, barcode, category, quan
                 selectBulk(firstSelectedItemIndex, itemIndex);
             }
             else {
-                dispatch(addItemId({ index: itemIndex, Id: id }));
+                dispatch(addItemId({ index: itemIndex, Id: id, totalPrice }));
             }
         };
     };
-
     const RenderColumnContent: FC<{ content: string | number; id: number; }> = ({ content, id }) => {
         return (
             <>
@@ -75,22 +70,66 @@ const ItemsContent: FC<ItemsContentProps> = ({ id, name, barcode, category, quan
         );
     };
 
+    const onCheckBoxValueChange = () => {
+        dispatch(addItemId({ index: itemIndex, Id: id, totalPrice }));
+        if (isEditMode && isSelected && selectedCount === 1) {
+            dispatch(setIsEditMode(false));
+        } else {
+            dispatch(setIsEditMode(true));
+        }
+    };
+
+
+    const renderCheckBox = useMemo(() => {
+        if (isShowCheckBox || isEditMode) {
+            return (
+                <View style={style.checkBoxContainer} key={id}>
+                    <CheckBox
+                        value={isSelected}
+                        tintColor={Colors.CARD_HEADER_COLOR}
+                        onCheckColor={Colors.METALLIC_GOLD}
+                        onTintColor={Colors.CARD_HEADER_COLOR}
+                        onFillColor={Colors.CARD_HEADER_COLOR}
+                        onValueChange={onCheckBoxValueChange}
+                        key={id}
+                    />
+                </View>
+            );
+        } else {
+            return null;
+        }
+
+    }, [isSelected, isShowCheckBox, isEditMode, selectedCount]);
+
+    const rowData = useMemo(() => [
+        name,
+        description,
+        barcode,
+        category,
+        color,
+        unit,
+        quantity,
+        currency.format(stockPrice),
+        currency.format(totalPrice)
+    ], [name, description, barcode, category, color, quantity, unit, stockPrice, totalPrice]);
+
     const renderRow = useMemo(() => {
-        return [name, description, barcode, category, color, quantity, unit, currency.format(stockPrice), currency.format(totalPrice)].map((content, i) => {
+        return rowData.map((content, i) => {
             return <RenderColumnContent content={content} id={id + i} key={i} />;
         });
 
-    }, [name, barcode, category, quantity, unit, totalPrice, stockPrice, color, description]);
+    }, [rowData]);
 
     return (
         <>
             <CustomPressable ref={pressableRef} key={id}
-                onLongPress={onLongPress}
                 onPress={onPressItem}
-                style={[{ backgroundColor: isSelected ? Colors.OLD_GOLD : Colors.FLORAL_WHITE }, style.rowItem]}
-                pressedStyle={{ backgroundColor: Colors.OLD_GOLD }}
+                style={[{ backgroundColor: isSelected ? Colors.CARD_COLOR : Colors.FLORAL_WHITE }, style.rowItem]}
+                onMouseEnter={() => setIsShowCheckBox(true)}
+                onMouseLeave={() => setIsShowCheckBox(false)}
                 onHoverOpacity
             >
+                {renderCheckBox}
                 {renderRow}
             </CustomPressable>
         </>

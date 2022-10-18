@@ -1,19 +1,20 @@
 import React, { FC, useMemo, useRef } from 'react';
 import { Text, View } from 'react-native';
-import { Colors } from 'react-native/Libraries/NewAppScreen';
 import { shallowEqual, useSelector } from 'react-redux';
+import { ClearIcon, FilterByIcon } from '../../assets/icons/searchContainerIcons';
 import CustomPicker from '../../components/customPicker';
 import CustomPressable from '../../components/customPressable';
 import { InputItem } from '../../components/inputItem';
 import { useGetItemInputsQuery } from '../../modules/api/apiSlice';
 import { clearFilters, setFilterByParams, setSelectedWithLabel } from '../../modules/redux/filterSlicer';
-import { setQueryParams } from '../../modules/redux/querySlicer';
+import { setItemQueryParams } from '../../modules/redux/itemQuerySlicer';
 import { selectFilterByForPicker, selectSelectedWithLabel } from '../../modules/redux/selectors/filterSelector';
-import { useAppDispatch } from '../../modules/redux/store';
+import { RootState, useAppDispatch } from '../../modules/redux/store';
 import { FilterParamskey } from '../../types/ItemsQuery';
+import { Colors } from '../../utils/colors';
 import FilterItem from './component/filterItems';
 import { getStyle } from './styles';
-
+import RNprint from 'react-native-print';
 
 
 
@@ -25,6 +26,7 @@ interface ISearchContainer {
 const SearchContainer: FC<ISearchContainer> = ({ searchValue }) => {
     const style = getStyle();
     const dispatch = useAppDispatch();
+    const url = useSelector((state: RootState) => state.appStateSlicer.url);
     const pickerFilterParams = useSelector(selectFilterByForPicker, shallowEqual);
     const selectedWithLabel = useSelector(selectSelectedWithLabel, shallowEqual);
     const searchInputRef = useRef(null);
@@ -36,11 +38,9 @@ const SearchContainer: FC<ISearchContainer> = ({ searchValue }) => {
         pollingInterval: 5000
     });
 
-
     const onInputvalueChange = (text: string) => {
-        dispatch(setQueryParams({ search: text, page: 1 }));
+        dispatch(setItemQueryParams({ search: text, page: 1 }));
     };
-
 
     const onSelectIdForFilter = (selected: { id: number; label: string; parent: FilterParamskey; }) => {
         dispatch(setSelectedWithLabel(selected));
@@ -52,16 +52,37 @@ const SearchContainer: FC<ISearchContainer> = ({ searchValue }) => {
 
     }, [searchValue]);
 
+    const inWaitAnotherData = [{ title: 'location', waitsForDtokey: 'storeId', waitsForTitle: 'store' }];
+
 
     const renderFilterByPickers = useMemo(() => {
         if (dataForFilterBy) {
             const titleArray = Object.keys(dataForFilterBy);
             if (titleArray.length) {
                 return titleArray.map((title, index) => {
+                    let data = dataForFilterBy[title];
+                    const waitsFor = inWaitAnotherData.find(item => item.title === title)?.waitsForDtokey;
+                    const waitsForTitle = inWaitAnotherData.find(item => item.title === title)?.waitsForTitle;
+                    let isDisabled = !!waitsFor?.length;
+                    const requiredDataIds = !!waitsFor && pickerFilterParams[waitsFor as keyof typeof pickerFilterParams];
+                    if (requiredDataIds.length) {
+                        data = dataForFilterBy[title]?.filter(item => requiredDataIds.includes(Number((item[waitsFor] || item[waitsFor.toLowerCase()]))));
+                        isDisabled = false;
+                    }
                     const parent = `${title}Id` as keyof typeof pickerFilterParams;
                     const selectedIds = pickerFilterParams[parent];
-                    const data = dataForFilterBy[title];
-                    return < CustomPicker title={title} data={data} onSelect={onSelectIdForFilter} selectedIds={selectedIds} parent={parent} key={index} />;
+                    return < CustomPicker
+                        isDataSearchEnabled
+                        title={title}
+                        data={data}
+                        onSelect={onSelectIdForFilter}
+                        selectedIds={selectedIds}
+                        parent={parent}
+                        key={index}
+                        buttonStyle={style.pickerButtonStyle}
+                        requiredText={`Please select ${waitsForTitle} first`.toUpperCase()}
+                        isDisabled={isDisabled}
+                    />;
                 });
 
             }
@@ -69,13 +90,13 @@ const SearchContainer: FC<ISearchContainer> = ({ searchValue }) => {
             return null;
         }
 
-    }, [dataForFilterBy, pickerFilterParams]);
+    }, [dataForFilterBy, pickerFilterParams, inWaitAnotherData]);
 
 
 
-    const clearFiler = () => {
+    const clearFiler = async () => {
         dispatch(clearFilters());
-        dispatch(setQueryParams({ search: '', page: 1 }));
+        dispatch(setItemQueryParams({ search: '', page: 1 }));
     };
 
 
@@ -99,26 +120,26 @@ const SearchContainer: FC<ISearchContainer> = ({ searchValue }) => {
 
     return (
         <View style={style.container}>
+            <View style={style.filterItemsContainer}>
+                {renderFilterItems}
+            </View>
             <View style={style.search}>
-                <View style={{ flex: 1, paddingTop: 15 }}>
+                <View style={{ flex: 1 }}>
                     {renderSearch}
                 </View>
             </View>
-            <View style={{ flexDirection: 'row', paddingLeft: 17, marginVertical: 2 }}>
-                {renderFilterItems}
-            </View>
             <View style={style.sortBy}>
-                <Text style={style.filterByText}>
-                    {'Filter By:'}
-                </Text>
+                <View style={style.filterByIconContainer} tooltip={'Filters'} >
+                    <FilterByIcon size={20} color={Colors.DEFAULT_TEXT_COLOR} />
+                </View>
                 {renderFilterByPickers}
                 <CustomPressable onPress={clearFiler}
                     onHoverOpacity
-                    style={{ justifyContent: 'center', alignItems: 'center', marginLeft: 10 }}
+                    style={style.clearButtonContainer}
                 >
-                    <Text style={style.clearText}>
-                        {'Clear'}
-                    </Text>
+                    <View style={style.clearText} tooltip={'Clear Filters'}  >
+                        <ClearIcon size={20} color={Colors.METALLIC_GOLD} />
+                    </View>
                 </CustomPressable>
             </View>
         </View>

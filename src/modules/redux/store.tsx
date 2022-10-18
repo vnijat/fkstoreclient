@@ -1,26 +1,30 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/dist/query';
 import { useDispatch } from 'react-redux';
-import { inventoryApi } from '../api/apiSlice';
+import { InventoryApi } from '../api/apiSlice';
 import appStateSlicer from './appStateSlicer';
-import itemsSlicer from './ItemsSlicer';
+import itemsSlicer from './itemsSlicer';
 import menuSlicer from './menuSlicer';
-import querySlicer from './querySlicer';
+import itemQuerySlicer from './itemQuerySlicer';
 import filterSlicer from './filterSlicer';
 import itemOptions from './itemOptions';
+import clientQuery from './clientsQuerySlicer';
+import clientSlicer from './clientsSlicer';
 
 export const store = configureStore({
     reducer: {
-        querySlicer,
+        itemQuerySlicer,
         menuSlicer,
         appStateSlicer,
         itemsSlicer,
         filterSlicer,
         itemOptions,
-        [inventoryApi.reducerPath]: inventoryApi.reducer
+        clientQuery,
+        clientSlicer,
+        [InventoryApi.reducerPath]: InventoryApi.reducer
     },
     middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware().concat(inventoryApi.middleware),
+        getDefaultMiddleware().concat(InventoryApi.middleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

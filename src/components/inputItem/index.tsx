@@ -1,3 +1,4 @@
+import { assertAccessor } from '@babel/types';
 import { Picker } from '@react-native-picker/picker';
 import React, { FC, memo, useMemo, useState } from 'react';
 import { View, TextInput, Text } from 'react-native';
@@ -12,8 +13,8 @@ interface IInputItem {
   inputTitle?: string;
   isNumeric?: boolean;
   placeHolder?: string;
-  width: number;
-  height: number;
+  width?: number;
+  height?: number;
   maxLength?: number;
   isMultiLine?: boolean;
   inputRef?: (r: any) => {};
@@ -21,15 +22,18 @@ interface IInputItem {
   inputValue: string;
   id?: number;
   selectable?: boolean;
-  selectableData?: { label: string; id: number; }[];
+  selectableData?: Array<IsingelSelectData & { id?: number; }>;
   isErorr?: boolean;
   titleColor?: string;
   isSearch?: boolean;
   backgroundColor?: string;
-  isHaveAddButton?: boolean;
   addButtonTitle?: string;
-  pickerDataKeyName: string;
+  pickerDataKeyName?: string;
   isPickerAddButton?: boolean;
+  isPickerSearchEnabled?: boolean;
+  isPickerItemEditable?: boolean;
+  isDisabled?: boolean;
+  requiredText?: string;
 }
 
 export const InputItem: FC<IInputItem> = memo(
@@ -51,10 +55,13 @@ export const InputItem: FC<IInputItem> = memo(
     titleColor,
     isSearch,
     backgroundColor,
-    isHaveAddButton,
     addButtonTitle,
     pickerDataKeyName,
-    isPickerAddButton
+    isPickerAddButton,
+    isPickerSearchEnabled,
+    isPickerItemEditable,
+    isDisabled,
+    requiredText
   }) => {
     const style = useMemo(
       () => getStyle(height, width, isErorr, titleColor, backgroundColor),
@@ -65,7 +72,6 @@ export const InputItem: FC<IInputItem> = memo(
       () => !isFocused && isSearch && !inputValue.length,
       [isFocused, isSearch, inputValue],
     );
-
     const onChangeText = (text: string) => {
       const isNum = regExPatterns.IS_NUMERIC;
       if (isNumeric) {
@@ -89,14 +95,13 @@ export const InputItem: FC<IInputItem> = memo(
 
     const dataForPicker = useMemo(() => {
       if (selectableData?.length) {
-        return selectableData.map(({ id, label }) => ({ value: id, label }));
+        const singleSelectData = selectableData.map((item) => (item.id ? { value: item.id, label: item.label } : item));
+        return singleSelectData as IsingelSelectData[];
       } else {
         return [];
       }
-    }, [selectableData?.length]);
+    }, [selectableData]);
 
-
-    
     const renderCustomPicker = useMemo(() => {
       return (<>
         < CustomPicker
@@ -107,13 +112,32 @@ export const InputItem: FC<IInputItem> = memo(
           isAddButton={isPickerAddButton}
           buttonStyle={style.pickerButtonStyle}
           itemStyle={style.pickerItemStyle}
-          selectedItemStyle={[style.pickerItemStyle, { backgroundColor: Colors.METALLIC_GOLD }]}
+          selectedItemStyle={[style.pickerItemStyle, { backgroundColor: Colors.CARD_HEADER_COLOR }]}
           singleSelectMode
+          isEditable={isPickerItemEditable}
+          isDataSearchEnabled={isPickerSearchEnabled}
+          isDisabled={isDisabled}
+          requiredText={requiredText}
         />
       </>
       );
-    }, [inputValue, dataForPicker.length, isErorr, isPickerAddButton, pickerDataKeyName]);
+    }, [inputValue, dataForPicker.length, isErorr, isPickerAddButton, pickerDataKeyName, isPickerSearchEnabled, isPickerItemEditable, onValueChange, isDisabled]);
 
+
+    const renderTextInput = useMemo(() => {
+      return (
+        <TextInput
+          key={id}
+          style={style.textInput}
+          onChangeText={onChangeText}
+          value={inputValue}
+          placeholder={placeHolder}
+          multiline={isMultiLine}
+          maxLength={maxLength}
+          onFocus={onFocus}
+          onBlur={onBlur}
+        />);
+    }, [id, onChangeText, inputValue, placeHolder, isMultiLine, maxLength, onFocus, onBlur]);
 
     return (
       <View style={{ margin: 5 }}>
@@ -125,18 +149,7 @@ export const InputItem: FC<IInputItem> = memo(
           :
           (
             <View style={{ justifyContent: 'center' }}>
-              <TextInput
-                key={id}
-                style={style.textInput}
-                ref={r => inputRef && inputRef(r)}
-                onChangeText={onChangeText}
-                value={inputValue}
-                placeholder={placeHolder}
-                multiline={isMultiLine}
-                maxLength={maxLength}
-                onFocus={onFocus}
-                onBlur={onBlur}
-              />
+              {renderTextInput}
               {isShowMagnify && (
                 <View
                   style={style.magnify}>

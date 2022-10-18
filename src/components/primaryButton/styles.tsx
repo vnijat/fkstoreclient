@@ -1,11 +1,11 @@
 import { StyleSheet } from 'react-native';
 
-export const getStyle = (textColor?: string, buttonColor?: string) => {
+export const getStyle = (textColor?: string, buttonColor?: string, disabled?: boolean) => {
     const style = StyleSheet.create({
         buttonContainer: {
             paddingVertical: 5,
             paddingHorizontal: 5,
-            backgroundColor: buttonColor || '#455A64',
+            backgroundColor: disabled ? 'grey' : (buttonColor || '#455A64'),
             justifyContent: 'center',
             alignItems: 'center'
         },

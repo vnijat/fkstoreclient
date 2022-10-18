@@ -8,9 +8,12 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid>
+    <Canvas x:Name="RNPrintCanvas" Opacity="0" />
     <react:ReactRootView 
         x:Name="ReactRootView"
         ComponentName="fkstoreclient"
         Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
         MinHeight="400"/>
+        </Grid>
 </Page>

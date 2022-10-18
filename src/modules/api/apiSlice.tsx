@@ -42,6 +42,14 @@ export const InventoryApi = createApi({
             },
             invalidatesTags: ['items']
         }),
+        getItemQrCode: build.query<undefined, number>({
+            query: (id) => {
+                return {
+                    url: `/items/qr/${id}`,
+                };
+            },
+            providesTags: ['qrCode']
+        }),
         addItem: build.mutation<undefined, any>({
             query: (body) => {
                 return {
@@ -63,7 +71,7 @@ export const InventoryApi = createApi({
             invalidatesTags: ['items']
         }),
     }),
-    tagTypes: ['items', 'itemInputs', 'itemOptions', 'clients']
+    tagTypes: ['items', 'itemInputs', 'itemOptions', 'clients', 'qrCode']
 });
 
 export const {
@@ -71,5 +79,6 @@ export const {
     useDeleteManyItemsMutation,
     useAddItemMutation,
     useGetItemInputsQuery,
-    useEditItemMutation
+    useEditItemMutation,
+    useGetItemQrCodeQuery
 } = InventoryApi;

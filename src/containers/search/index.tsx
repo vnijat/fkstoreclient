@@ -9,12 +9,12 @@ import { useGetItemInputsQuery } from '../../modules/api/apiSlice';
 import { clearFilters, setFilterByParams, setSelectedWithLabel } from '../../modules/redux/filterSlicer';
 import { setItemQueryParams } from '../../modules/redux/itemQuerySlicer';
 import { selectFilterByForPicker, selectSelectedWithLabel } from '../../modules/redux/selectors/filterSelector';
-import { useAppDispatch } from '../../modules/redux/store';
+import { RootState, useAppDispatch } from '../../modules/redux/store';
 import { FilterParamskey } from '../../types/ItemsQuery';
 import { Colors } from '../../utils/colors';
 import FilterItem from './component/filterItems';
 import { getStyle } from './styles';
-
+import RNprint from 'react-native-print';
 
 
 
@@ -26,6 +26,7 @@ interface ISearchContainer {
 const SearchContainer: FC<ISearchContainer> = ({ searchValue }) => {
     const style = getStyle();
     const dispatch = useAppDispatch();
+    const url = useSelector((state: RootState) => state.appStateSlicer.url);
     const pickerFilterParams = useSelector(selectFilterByForPicker, shallowEqual);
     const selectedWithLabel = useSelector(selectSelectedWithLabel, shallowEqual);
     const searchInputRef = useRef(null);
@@ -93,7 +94,7 @@ const SearchContainer: FC<ISearchContainer> = ({ searchValue }) => {
 
 
 
-    const clearFiler = () => {
+    const clearFiler = async () => {
         dispatch(clearFilters());
         dispatch(setItemQueryParams({ search: '', page: 1 }));
     };

@@ -2,11 +2,12 @@ import React, { memo, useMemo } from "react";
 import { FlatList, View } from "react-native";
 import ClientCard from "../../../../containers/clientCard";
 import { ClientType } from "../../../../enums/clientType";
+import { Client } from "../../../../types/clientsQuery";
 import { Colors } from "../../../../utils/colors";
 import { getStyle } from "./styles";
 
 interface IClientList {
-    data: any;
+    data: Client[];
 
 }
 
@@ -38,6 +39,7 @@ const ClientList = ({ data }: IClientList) => {
                     } = item;
                     const type = item.type as ClientType;
                     return (<ClientCard
+                        key={`${firstName}-${item.id}`}
                         {...{
                             firstName,
                             lastName,

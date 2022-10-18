@@ -159,7 +159,7 @@ const CustomPicker = ({
         return (
             <View style={itemStyle || (singleSelectMode ? style.singleSelectItem : style.multipleSelectItem)}>
                 <Text style={{ color: Colors.DEFAULT_TEXT_COLOR }}>
-                    {(isDataSearchEnabled && searchText.length) ? 'not found' : 'no data'}
+                    {(isDataSearchEnabled && searchText.trim().length) ? 'not found' : 'no data'}
                 </Text>
             </View>
         );
@@ -171,9 +171,9 @@ const CustomPicker = ({
 
 
     const isShowableExited = useMemo(() => {
-        const itemLength = getFilteredData?.length || multipleSelectData?.length || singleSelectData?.length || 0;
+        const itemLength = (searchText.trim().length && !getFilteredData?.length) ? 0 : (getFilteredData?.length || multipleSelectData?.length || singleSelectData?.length);
         return itemLength > 3;
-    }, [multipleSelectData?.length, singleSelectData?.length, getFilteredData?.length]);
+    }, [multipleSelectData?.length, singleSelectData?.length, getFilteredData?.length, searchText]);
 
     const renderMultipleSelectItem = useMemo(
         () =>

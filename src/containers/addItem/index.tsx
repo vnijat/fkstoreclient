@@ -115,9 +115,9 @@ const AddItemСontainer: FC<AddItemProps> = ({ }) => {
   useEffect(() => {
     if (isItemForEdit) {
       setItemForEdit(itemForPosting);
-    }
+    } 
   }, [isItemForEdit]);
-  console.log("asdad", AddItemСontainer.displayName);
+  
   const onPressSave = async () => {
     try {
       const response = await apiEditItem(itemForPosting);

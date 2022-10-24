@@ -1,6 +1,6 @@
 // Need to use the React-specific entry point to import createApi
 import { BaseQueryFn, createApi, FetchArgs, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
-import { itemQueryParams, ItemResponse } from '../../types/ItemsQuery';
+import { itemQueryParams, ItemResponse, itemResponseFull } from '../../types/ItemsQuery';
 import { RootState } from '../redux/store';
 
 // Define a service using a base URL and expected endpoints
@@ -19,8 +19,16 @@ export const InventoryApi = createApi({
             providesTags: ['items'],
             query: (filter) => {
                 return {
-                    url: '/items/',
+                    url: '/item/all',
                     params: filter,
+                };
+            },
+        }),
+        getItem: build.query<itemResponseFull, number | undefined>({
+            providesTags: ['item'],
+            query: (id) => {
+                return {
+                    url: `/item/full/${id}`,
                 };
             },
         }),
@@ -28,14 +36,14 @@ export const InventoryApi = createApi({
             providesTags: ['itemInputs'],
             query: () => {
                 return {
-                    url: '/items/inputs'
+                    url: '/item/inputs'
                 };
             }
         }),
         deleteManyItems: build.mutation<undefined, { Ids: number[]; }>({
             query: (Ids) => {
                 return {
-                    url: '/items/',
+                    url: '/item/',
                     body: Ids,
                     method: 'DELETE'
                 };
@@ -45,7 +53,7 @@ export const InventoryApi = createApi({
         getItemQrCode: build.query<undefined, number>({
             query: (id) => {
                 return {
-                    url: `/items/qr/${id}`,
+                    url: `/item/qr/${id}`,
                 };
             },
             providesTags: ['qrCode']
@@ -53,7 +61,7 @@ export const InventoryApi = createApi({
         addItem: build.mutation<undefined, any>({
             query: (body) => {
                 return {
-                    url: '/items/',
+                    url: '/item/',
                     body: body,
                     method: 'POST'
                 };
@@ -62,16 +70,16 @@ export const InventoryApi = createApi({
         }),
         editItem: build.mutation<undefined, any>({
             query: (body) => {
-                return {
-                    url: `/items/${body.id}`,
+                return {    
+                    url: `/item/${body.id}`,
                     body: body,
                     method: 'PATCH'
                 };
             },
-            invalidatesTags: ['items']
+            invalidatesTags: ['items', 'item']
         }),
     }),
-    tagTypes: ['items', 'itemInputs', 'itemOptions', 'clients', 'qrCode']
+    tagTypes: ['items', 'itemInputs', 'itemOptions', 'clients', 'qrCode', 'item']
 });
 
 export const {
@@ -80,5 +88,6 @@ export const {
     useAddItemMutation,
     useGetItemInputsQuery,
     useEditItemMutation,
-    useGetItemQrCodeQuery
+    useGetItemQrCodeQuery,
+    useGetItemQuery
 } = InventoryApi;

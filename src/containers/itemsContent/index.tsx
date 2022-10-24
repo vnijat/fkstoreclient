@@ -3,9 +3,10 @@ import React, { FC, useMemo, useRef, useState } from "react";
 import { Image, Pressable, Text, View } from "react-native";
 import { useSelector } from "react-redux";
 import CustomPressable from "../../components/customPressable";
-import { addItemId, setIsEditMode } from "../../modules/redux/itemsSlicer";
+import { addItemId, setIsEditMode, setIsShowItemModal, setItemIdForFullResponse } from "../../modules/redux/itemsSlicer";
 import { selectIsEditMode } from "../../modules/redux/selectors/itemSelectors";
 import { RootState, useAppDispatch } from "../../modules/redux/store";
+import { Barcode, Category, Color, Unit } from "../../types/ItemsQuery";
 import { Colors } from "../../utils/colors";
 import { currency } from "../../utils/currency";
 import { getStyle } from "./styles";
@@ -15,15 +16,15 @@ interface ItemsContentProps {
     id: number;
     name: string;
     description: string;
-    barcode: string;
-    category: string;
+    barcode: Barcode;
+    category: Category;
     quantity: number;
-    unit: string;
+    unit: Unit;
     totalPrice: number;
     stockPrice: number;
     itemIndex: number;
     lastItem: number | undefined;
-    color: string;
+    color: Color;
     selectBulk: Function;
 }
 
@@ -56,7 +57,10 @@ const ItemsContent: FC<ItemsContentProps> = ({ id, name, barcode, category, quan
             else {
                 dispatch(addItemId({ index: itemIndex, Id: id, totalPrice }));
             }
-        };
+        } else {
+            dispatch(setIsShowItemModal(true));
+            dispatch(setItemIdForFullResponse(id));
+        }
     };
     const RenderColumnContent: FC<{ content: string | number; id: number; }> = ({ content, id }) => {
         return (
@@ -104,11 +108,11 @@ const ItemsContent: FC<ItemsContentProps> = ({ id, name, barcode, category, quan
     const rowData = useMemo(() => [
         name,
         description,
-        barcode,
-        category,
-        color,
-        unit,
-        quantity,
+        barcode.code,
+        category.title,
+        color.name,
+        unit.name,
+        `${quantity} (${unit.symbol})`,
         currency.format(stockPrice),
         currency.format(totalPrice)
     ], [name, description, barcode, category, color, quantity, unit, stockPrice, totalPrice]);

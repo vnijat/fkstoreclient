@@ -30,6 +30,7 @@ const SearchContainer: FC<ISearchContainer> = ({ searchValue }) => {
     const pickerFilterParams = useSelector(selectFilterByForPicker, shallowEqual);
     const selectedWithLabel = useSelector(selectSelectedWithLabel, shallowEqual);
     const searchInputRef = useRef(null);
+    const isHasFitlerParams = useMemo(() => Object.values(pickerFilterParams).some((item) => item.length), [pickerFilterParams]);
     const { data: dataForFilterBy } = useGetItemInputsQuery(undefined, {
         selectFromResult: ({ data }) => ({
             data
@@ -95,8 +96,10 @@ const SearchContainer: FC<ISearchContainer> = ({ searchValue }) => {
 
 
     const clearFiler = async () => {
-        dispatch(clearFilters());
-        dispatch(setItemQueryParams({ search: '', page: 1 }));
+        if (isHasFitlerParams || searchValue.trim().length) {
+            dispatch(clearFilters());
+            dispatch(setItemQueryParams({ search: '', page: 1 }));
+        }
     };
 
 

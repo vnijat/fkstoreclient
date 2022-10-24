@@ -2,6 +2,7 @@ import React, { FC, useEffect, useMemo, useState } from 'react';
 import { View, Alert } from 'react-native';
 import { shallowEqual, useSelector } from 'react-redux';
 import ItemListTable from '../../containers/itemList';
+import ItemModal from '../../containers/itemModal';
 import PaginationContainer from '../../containers/paginationContainer';
 import ListFooter from '../../containers/paginationContainer';
 import SearchContainer from '../../containers/search';
@@ -72,6 +73,7 @@ export const ItemsView: FC<any> = ({ navigation }) => {
 
   return (
     <View style={style.container}>
+      <ItemModal itemsData={queryData?.items!} />
       <View style={{ flex: 0.9, backgroundColor: Colors.BACKGROUND_COLOR }}>
         <View style={{ flex: 0.2, backgroundColor: Colors.CARD_COLOR }}>
           {renderSearchContainer}

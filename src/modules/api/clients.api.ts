@@ -23,8 +23,35 @@ export const ClientsApi = InventoryApi.injectEndpoints({
         };
       },
     }),
+    deleteClient: build.mutation<undefined, number>({
+      invalidatesTags: ['clients'],
+      query: clientId => {
+        return {
+          url: `/client/${clientId}`,
+          method: 'DELETE',
+        };
+      },
+    }),
+    editClient: build.mutation<
+      ClientsResponse,
+      {body: AddClient; clientId: number}
+    >({
+      invalidatesTags: ['clients'],
+      query: ({body, clientId}) => {
+        return {
+          url: `/client/${clientId}`,
+          body: body,
+          method: 'PATCH',
+        };
+      },
+    }),
   }),
   overrideExisting: true,
 });
 
-export const {useGetClientsQuery, useAddClientMutation} = ClientsApi;
+export const {
+  useGetClientsQuery,
+  useAddClientMutation,
+  useDeleteClientMutation,
+  useEditClientMutation,
+} = ClientsApi;

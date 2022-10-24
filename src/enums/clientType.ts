@@ -1,5 +1,5 @@
 export enum ClientType {
-    CORPORATE = 'corporate',
-    INDIVIDUAL = 'individual',
-  }
-  
+  CORPORATE = 'corporate',
+  INDIVIDUAL = 'individual',
+  VIP = 'vip',
+}

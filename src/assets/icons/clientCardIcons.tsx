@@ -58,6 +58,12 @@ export const ShowIcon = ({ size, color }: IICON) => {
     );
 };
 
+export const VipIcon = ({ size, color }: IICON) => {
+    return (
+        <Icon name="star" size={size} color={color} />
+    );
+};
+
 
 
 

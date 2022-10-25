@@ -20,7 +20,7 @@ import CustomPressable from '../customPressable';
 import { InputItem } from '../inputItem';
 import { PrimaryButton } from '../primaryButton';
 import { getStyle } from './style';
-import { addItemOption, setIsOptionForEdit } from "../../modules/redux/itemOptions";
+import { addItemOption, setIsOpenOptionModal, setIsOptionForEdit, setOptionNameForModal } from "../../modules/redux/itemOptions";
 
 export interface IsingelSelectData {
     label?: string;
@@ -83,7 +83,6 @@ const CustomPicker = ({
     const style = getStyle();
     const dispatch = useAppDispatch();
     const [isShowContent, setShowContent] = useState(false);
-    const [isShowAddNewModal, setisShowAddNewModal] = useState(false);
     const [isShowEditButton, setIsshowEditButton] = useState<Array<{ id: number, isHover: boolean; }>>([]);
     const [searchText, setSearchText] = useState('');
     const buttonRef = useRef(null);
@@ -151,8 +150,9 @@ const CustomPicker = ({
         if (dataKeyName && dataForEdit) {
             dispatch(addItemOption({ [`${dataKeyName}`]: dataForEdit }));
             dispatch(setIsOptionForEdit(true));
+            dispatch(setOptionNameForModal(dataKeyName));
         }
-        setisShowAddNewModal(true);
+        dispatch(setIsOpenOptionModal(true));
     };
 
     const renerListEmptyComponent = () => {
@@ -227,11 +227,7 @@ const CustomPicker = ({
 
     const onPressAddButton = () => {
         setShowContent(false);
-        setisShowAddNewModal(true);
-
-    };
-    const closeAddOptionsModal = () => {
-        setisShowAddNewModal(false);
+        dispatch(setIsOpenOptionModal(true));
     };
 
     const singleSelectedTitle = useMemo(() => {
@@ -290,8 +286,6 @@ const CustomPicker = ({
 
     return (
         <>
-            {(isAddButton || isEditable) && < AddOptionsModal closeModal={closeAddOptionsModal} isShowModal={isShowAddNewModal} optionName={dataKeyName} />
-            }
             <View>
                 {renderCounter}
                 <CustomPressable

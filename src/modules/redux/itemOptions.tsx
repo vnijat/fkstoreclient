@@ -1,4 +1,5 @@
 import { ActionCreator, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { act } from 'react-test-renderer';
 import { AddBarcode } from '../../types/barcode';
 import { AddCategory } from '../../types/category';
 import { AddColor } from '../../types/color';
@@ -20,13 +21,16 @@ export interface IItemOptions {
         barcode?: AddBarcode;
     },
     isOptionForEdit: boolean;
+    isOpenOptionModal: boolean;
+    optionNameForModal?: keyof IItemOptions['options'];
 }
 
 const initialState = {
     options: {
 
     },
-    isOptionForEdit: false
+    isOptionForEdit: false,
+    isOpenOptionModal: false,
 } as IItemOptions;
 
 const itemOptions = createSlice({
@@ -41,10 +45,16 @@ const itemOptions = createSlice({
         },
         setIsOptionForEdit: (state, action: PayloadAction<boolean>) => {
             state.isOptionForEdit = action.payload;
+        },
+        setIsOpenOptionModal: (state, action: PayloadAction<boolean>) => {
+            state.isOpenOptionModal = action.payload;
+        },
+        setOptionNameForModal: (state, action: PayloadAction<keyof IItemOptions['options']>) => {
+            state.optionNameForModal = action.payload;
         }
 
     },
 });
 
-export const { addItemOption, clearItemOptions, setIsOptionForEdit } = itemOptions.actions;
+export const { addItemOption, clearItemOptions, setIsOptionForEdit, setIsOpenOptionModal, setOptionNameForModal } = itemOptions.actions;
 export default itemOptions.reducer;

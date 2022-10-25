@@ -6,7 +6,7 @@ import { InputsConfig } from "../../types/inputsconfig";
 import { InputItem } from "../../components/inputItem";
 import { shallowEqual, useSelector } from "react-redux";
 import { RootState, useAppDispatch } from "../../modules/redux/store";
-import { addItemOption, clearItemOptions, setIsOptionForEdit } from "../../modules/redux/itemOptions";
+import { addItemOption, clearItemOptions, setIsOpenOptionModal, setIsOptionForEdit } from "../../modules/redux/itemOptions";
 import { getStyle } from "./styles";
 import { PrimaryButton } from "../../components/primaryButton";
 import HELP from "../../services/helpers";
@@ -16,21 +16,19 @@ import CustomModal from "../../components/customModal";
 import { useToast } from "react-native-rooster";
 
 interface IaddOptionsModal {
-    isShowModal: boolean;
-    closeModal: () => void;
-    optionName: keyof typeof inputsForItemOptions;
 }
 
 
-const AddOptionsModal = ({ isShowModal, closeModal, optionName }: IaddOptionsModal) => {
+const AddOptionsModal = ({ }: IaddOptionsModal) => {
     const style = getStyle();
     const dispatch = useAppDispatch();
     const { addToast } = useToast();
-    const optionDataForPost = useSelector((state: RootState) => state.itemOptions.options[optionName], shallowEqual);
-    const options = useSelector((state: RootState) => state.itemOptions.options, shallowEqual);
+    const isShowModal = useSelector((state: RootState) => state.itemOptions.isOpenOptionModal);
+    const optionName = useSelector((state: RootState) => state.itemOptions.optionNameForModal);
+    const optionDataForPost = useSelector((state: RootState) => state.itemOptions.options[optionName!], shallowEqual);
     const isOptionForEdit = useSelector((state: RootState) => state.itemOptions.isOptionForEdit);
-    const optionsInputData: InputsConfig[] = inputsForItemOptions[optionName];
     const [tempOptionDataForEdit, settempDataForOptionEdit] = useState({});
+    const optionsInputData: InputsConfig[] | undefined = useMemo(() => optionName && inputsForItemOptions[optionName], [optionName]);
     const [errorMessage, setErrorMessages] = useState<{ [key: string]: string[]; }>({});
     const { currentData: ItemInputsData } = useGetItemInputsQuery(undefined, {
         selectFromResult: ({ isLoading, isUninitialized, error, currentData }) => ({
@@ -62,7 +60,7 @@ const AddOptionsModal = ({ isShowModal, closeModal, optionName }: IaddOptionsMod
                 return { ...prev };
             });
         dispatch(
-            addItemOption({ [optionName]: { ...optionDataForPost, [objectKey]: inputValue } }),
+            addItemOption({ [optionName!]: { ...optionDataForPost, [objectKey]: inputValue } }),
         );
     };
 
@@ -83,7 +81,7 @@ const AddOptionsModal = ({ isShowModal, closeModal, optionName }: IaddOptionsMod
                         selectableDataKey
                     } = config;
                     const inputValue: string = (optionDataForPost && Object.keys(optionDataForPost!).length) ? optionDataForPost[dtoKey] : '';
-                    const dataForPicker = selectable && ItemInputsData ? ItemInputsData[selectableDataKey ? selectableDataKey : optionName] : [];
+                    const dataForPicker = selectable && ItemInputsData ? ItemInputsData[selectableDataKey ? selectableDataKey : optionName!] : [];
                     const isError = !!errorMessage[dtoKey!]?.length;
                     return (
                         <InputItem
@@ -123,7 +121,7 @@ const AddOptionsModal = ({ isShowModal, closeModal, optionName }: IaddOptionsMod
     const onPressReset = () => {
         if (isOptionForEdit) {
             dispatch(
-                addItemOption({ [optionName]: tempOptionDataForEdit }),
+                addItemOption({ [optionName!]: tempOptionDataForEdit }),
             );
         } else {
             setErrorMessages({});
@@ -132,7 +130,7 @@ const AddOptionsModal = ({ isShowModal, closeModal, optionName }: IaddOptionsMod
     };
 
     const sendPost = async (): Promise<any> => {
-        return await dispatch(ItemOptionsApi.endpoints.addOption.initiate({ optionName, body: optionDataForPost }));
+        return await dispatch(ItemOptionsApi.endpoints.addOption.initiate({ optionName: optionName!, body: optionDataForPost }));
     };
 
 
@@ -177,14 +175,14 @@ const AddOptionsModal = ({ isShowModal, closeModal, optionName }: IaddOptionsMod
         setErrorMessages({});
         clearInputs();
         settempDataForOptionEdit({});
+        dispatch(setIsOpenOptionModal(false));
         dispatch(setIsOptionForEdit(false));
-        closeModal();
     };
 
     const onPressSave = async () => {
         const { id, ...body } = optionDataForPost;
         try {
-            const response = await dispatch(ItemOptionsApi.endpoints.editOption.initiate({ id: id, optionName, body: body }));
+            const response = await dispatch(ItemOptionsApi.endpoints.editOption.initiate({ id: id, optionName: optionName!, body: body }));
             if (response.error) {
                 throw response.error;
             }
@@ -212,7 +210,7 @@ const AddOptionsModal = ({ isShowModal, closeModal, optionName }: IaddOptionsMod
         >
             <View style={{ flex: 1 }}>
                 <Text style={style.headerText}>
-                    {`${optionName.toUpperCase()}`}
+                    {`${optionName?.toUpperCase()}`}
                 </Text>
                 <View style={style.contentContainer}>
                     {renderInputs}

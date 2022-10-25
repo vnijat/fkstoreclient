@@ -6,7 +6,7 @@ export const ItemOptionsApi = InventoryApi.injectEndpoints({
     addOption: build.mutation<
       undefined,
       {
-        optionName: string;
+        optionName: keyof IItemOptions['options'];
         body: IItemOptions['options'][keyof IItemOptions['options']];
       }
     >({
@@ -23,7 +23,7 @@ export const ItemOptionsApi = InventoryApi.injectEndpoints({
       undefined,
       {
         id: number;
-        optionName: string;
+        optionName: keyof IItemOptions['options'] | undefined;
         body: IItemOptions['options'][keyof IItemOptions['options']];
       }
     >({
@@ -36,7 +36,10 @@ export const ItemOptionsApi = InventoryApi.injectEndpoints({
       },
       invalidatesTags: ['itemInputs', 'itemOptions', 'items'],
     }),
-    getOption: build.query<undefined, any | {optionName: string; id: number}>({
+    getOption: build.query<
+      undefined,
+      any | {optionName: keyof IItemOptions['options']; id: number}
+    >({
       providesTags: ['itemOptions'],
       query: ({optionName, id}) => {
         return {

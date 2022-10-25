@@ -228,6 +228,7 @@ const CustomPicker = ({
     const onPressAddButton = () => {
         setShowContent(false);
         dispatch(setIsOpenOptionModal(true));
+        dispatch(setOptionNameForModal(dataKeyName!));
     };
 
     const singleSelectedTitle = useMemo(() => {

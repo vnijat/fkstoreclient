@@ -7,7 +7,7 @@ import { ItemForPostDefaults } from '../../utils/defaults';
 
 
 
-interface IfilterSlicerInterface {
+export interface IfilterSlicerInterface {
     filterByParams: {
         barcodeId: number[];
         categoryId: number[];

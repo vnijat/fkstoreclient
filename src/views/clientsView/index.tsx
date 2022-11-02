@@ -36,7 +36,7 @@ export const ClientsView = ({ navigation }: IClientsViewProps) => {
         <>
             <AddClient />
             <View style={style.container}>
-                <View style={{ backgroundColor: Colors.CARD_HEADER_COLOR, flex: 0.2 }}>
+                <View style={{ backgroundColor: Colors.CARD_COLOR, flex: 0.2 }}>
                     <ClientListHeader
                         searchValue={selectClientsQueryParams?.search ?? ''}
                         clientTypeValue={queryData?.type as ClientType & 'all'}

@@ -1,6 +1,10 @@
-export enum ProjectStatus {
-    DECLINED = 'declined',
-    INPROGRESS = 'in progress',
-    COMPLETED = 'completed',
-  }
-  
+interface AddClientProject {
+  title: string;
+  description?: string;
+  price?: number;
+  paid?: number;
+  clientId?: number;
+  deadline?: Date;
+}
+
+export type {AddClientProject};

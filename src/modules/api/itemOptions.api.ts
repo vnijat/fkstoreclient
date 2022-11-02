@@ -34,7 +34,7 @@ export const ItemOptionsApi = InventoryApi.injectEndpoints({
           method: 'PATCH',
         };
       },
-      invalidatesTags: ['itemInputs', 'itemOptions', 'items'],
+      invalidatesTags: ['itemInputs', 'itemOptions', 'items', 'item'],
     }),
     getOption: build.query<
       undefined,

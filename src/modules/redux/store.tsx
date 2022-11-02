@@ -10,18 +10,22 @@ import filterSlicer from './filterSlicer';
 import itemOptions from './itemOptions';
 import clientQuery from './clientsQuerySlicer';
 import clientSlicer from './clientsSlicer';
+import projectQuery from './projectQuerySlicer';
+import projectSlicer from './projectSlicer';
 
 export const store = configureStore({
     reducer: {
-        itemQuerySlicer,
-        menuSlicer,
+        [InventoryApi.reducerPath]: InventoryApi.reducer,
         appStateSlicer,
+        menuSlicer,
+        itemQuerySlicer,
         itemsSlicer,
-        filterSlicer,
         itemOptions,
+        filterSlicer,
         clientQuery,
         clientSlicer,
-        [InventoryApi.reducerPath]: InventoryApi.reducer
+        projectQuery,
+        projectSlicer,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware().concat(InventoryApi.middleware),

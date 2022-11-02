@@ -7,8 +7,8 @@ export const getStyle = () => {
             height: 30,
             flexDirection: 'row',
             justifyContent: 'space-evenly',
-            paddingLeft: 36
-            
+            paddingLeft: 5
+
         },
         columnContainer: {
             justifyContent: 'center',
@@ -18,7 +18,8 @@ export const getStyle = () => {
             color: Colors.DEFAULT_TEXT_COLOR,
             fontWeight: '700',
             fontSize: 10,
-        }
+        },
+
     });
 
     return style;

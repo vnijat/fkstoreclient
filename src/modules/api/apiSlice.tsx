@@ -70,7 +70,7 @@ export const InventoryApi = createApi({
         }),
         editItem: build.mutation<undefined, any>({
             query: (body) => {
-                return {    
+                return {
                     url: `/item/${body.id}`,
                     body: body,
                     method: 'PATCH'
@@ -79,7 +79,15 @@ export const InventoryApi = createApi({
             invalidatesTags: ['items', 'item']
         }),
     }),
-    tagTypes: ['items', 'itemInputs', 'itemOptions', 'clients', 'qrCode', 'item']
+    tagTypes: [
+        'items',
+        'itemInputs',
+        'itemOptions',
+        'clients',
+        'qrCode',
+        'item',
+        'projects'
+    ]
 });
 
 export const {

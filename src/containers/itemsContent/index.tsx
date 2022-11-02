@@ -26,9 +26,10 @@ interface ItemsContentProps {
     lastItem: number | undefined;
     color: Color;
     selectBulk: Function;
+    purchasePrice: number;
 }
 
-const ItemsContent: FC<ItemsContentProps> = ({ id, name, barcode, category, quantity, unit, totalPrice, stockPrice, itemIndex, lastItem, selectBulk, color, description }) => {
+const ItemsContent: FC<ItemsContentProps> = ({ id, name, barcode, category, quantity, unit, totalPrice, stockPrice, itemIndex, lastItem, selectBulk, color, description, purchasePrice }) => {
     const style = getStyle();
     const dispatch = useAppDispatch();
     const isEditMode = useSelector(selectIsEditMode);
@@ -85,9 +86,9 @@ const ItemsContent: FC<ItemsContentProps> = ({ id, name, barcode, category, quan
 
 
     const renderCheckBox = useMemo(() => {
-        if (isShowCheckBox || isEditMode) {
-            return (
-                <View style={style.checkBoxContainer} key={id}>
+        return (
+            <View style={style.checkBoxContainer} key={id}>
+                {isShowCheckBox || isEditMode ?
                     <CheckBox
                         value={isSelected}
                         tintColor={Colors.CARD_HEADER_COLOR}
@@ -96,24 +97,20 @@ const ItemsContent: FC<ItemsContentProps> = ({ id, name, barcode, category, quan
                         onFillColor={Colors.CARD_HEADER_COLOR}
                         onValueChange={onCheckBoxValueChange}
                         key={id}
-                    />
-                </View>
-            );
-        } else {
-            return null;
-        }
-
+                    /> : null}
+            </View>
+        );
     }, [isSelected, isShowCheckBox, isEditMode, selectedCount]);
 
     const rowData = useMemo(() => [
-        name,
-        description,
+        name.toUpperCase(),
+        description.toUpperCase(),
         barcode.code,
-        category.title,
-        color.name,
-        unit.name,
-        `${quantity} (${unit.symbol})`,
-        currency.format(stockPrice),
+        category.title.toUpperCase(),
+        color.name.toUpperCase(),
+        unit.name.toUpperCase(),
+        quantity,
+        currency.format(purchasePrice),
         currency.format(totalPrice)
     ], [name, description, barcode, category, color, quantity, unit, stockPrice, totalPrice]);
 

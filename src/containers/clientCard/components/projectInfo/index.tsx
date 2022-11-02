@@ -1,7 +1,7 @@
 import React, { memo, useState } from "react";
 import { Text, View } from "react-native";
 import CustomPressable from "../../../../components/customPressable";
-import { ProjectStatus } from "../../../../types/project";
+import { ProjectStatus } from "../../../../enums/projectStatus";
 import { Colors } from "../../../../utils/colors";
 import { CompletedIcon, DeclinedIcon, InProgressIcon, ShowIcon, TotalProjcetsIcon } from "../../../assets/icons/clientCardIcons";
 

@@ -61,7 +61,7 @@ export const InputItem: FC<IInputItem> = memo(
     isPickerSearchEnabled,
     isPickerItemEditable,
     isDisabled,
-    requiredText
+    requiredText,
   }) => {
     const style = useMemo(
       () => getStyle(height, width, isErorr, titleColor, backgroundColor),
@@ -121,7 +121,7 @@ export const InputItem: FC<IInputItem> = memo(
         />
       </>
       );
-    }, [inputValue, dataForPicker.length, isErorr, isPickerAddButton, pickerDataKeyName, isPickerSearchEnabled, isPickerItemEditable, onValueChange, isDisabled]);
+    }, [inputValue, dataForPicker.length, isErorr, isPickerItemEditable, isDisabled]);
 
 
     const renderTextInput = useMemo(() => {

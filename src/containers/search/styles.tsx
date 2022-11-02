@@ -5,7 +5,7 @@ export const getStyle = () => {
     const style = StyleSheet.create({
         container: {
             marginBottom: 10,
-            justifyContent: 'space-between'
+            justifyContent: 'space-between',
         },
         search: {
             paddingHorizontal: 20,
@@ -18,7 +18,7 @@ export const getStyle = () => {
             marginBottom: 10,
             alignItems: 'center',
             flexWrap: 'wrap',
-            paddingLeft: 17
+            paddingLeft: 17,
         },
         filterByText: {
             color: Colors.DEFAULT_TEXT_COLOR,

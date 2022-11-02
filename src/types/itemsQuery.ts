@@ -75,6 +75,7 @@ interface Item extends Common {
   store: Store;
   color: Color;
   totalPrice: number;
+  outOfStock: boolean;
 }
 
 interface itemResponseFull extends Omit<Item, 'category'> {
@@ -86,6 +87,8 @@ interface ItemResponse {
   items: Item[];
   itemsCount: number;
   meta: Imeta;
+  orderBy: {sort: string; order: Order};
+  sumTotal: number;
 }
 
 export type {

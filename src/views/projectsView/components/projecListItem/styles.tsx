@@ -1,11 +1,12 @@
 import { StyleSheet } from 'react-native';
-import { Colors } from '../../utils/colors';
+import { Colors } from '../../../../utils/colors';
 
 export const getStyle = () => {
     const style = StyleSheet.create({
         container: {
-            backgroundColor: Colors.BACKGROUND_COLOR,
             flex: 1,
+            backgroundColor: Colors.BACKGROUND_COLOR,
+            // alignItems: 'center'
         },
         columContent: {
             height: "100%",
@@ -27,20 +28,10 @@ export const getStyle = () => {
             borderRadius: 3,
             flex: 1,
             justifyContent: 'space-evenly',
-            // alignItems: 'center',
             paddingLeft: 5,
-            marginVertical: 1
+            marginVertical: 1,
+            backgroundColor: Colors.CARD_COLOR
         },
-        checkBoxContainer: {
-            justifyContent: 'center',
-            alignContent: 'center',
-            alignItems: 'center',
-            width: 30,
-            height: 30,
-            alignSelf: 'center',
-            marginRight: 1,
-            paddingLeft:11
-        }
     });
 
     return style;

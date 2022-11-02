@@ -110,7 +110,7 @@ const ItemListTable: FC<IItemListTable> = ({ data, isLoading }) => {
                     <ActivityIndicator color={Colors.OLD_GOLD} />
                 </View>
                 : <FlatList
-                    style={{ flex: 1, backgroundColor: Colors.BACKGROUND_COLOR, margin: 5 }}
+                    style={{ flex: 1, backgroundColor: Colors.BACKGROUND_COLOR }}
                     data={data}
                     keyExtractor={(item) => item.id.toString()}
                     renderItem={({ item, index }) => {
@@ -124,6 +124,7 @@ const ItemListTable: FC<IItemListTable> = ({ data, isLoading }) => {
                             quantity,
                             pricePerUnit,
                             totalPrice,
+                            purchasePrice,
                             id } = item;
                         return (
                             <ItemsContent
@@ -139,8 +140,8 @@ const ItemListTable: FC<IItemListTable> = ({ data, isLoading }) => {
                                 color={color}
                                 quantity={Number(quantity)}
                                 unit={unit}
-                                // purchasePrice={Number(purchasePrice)}
-                                stockPrice={Number(pricePerUnit)}
+                                purchasePrice={Number(purchasePrice)}
+                                // stockPrice={Number(pricePerUnit)}
                                 totalPrice={totalPrice}
                             />
 

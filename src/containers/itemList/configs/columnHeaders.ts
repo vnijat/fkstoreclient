@@ -12,6 +12,6 @@ export const columnHeaders: IColumnHeader[] = [
   {title: 'Color', dtoKey: 'color'},
   {title: 'Unit', dtoKey: 'unit'},
   {title: 'Quantity', dtoKey: 'quantity', sortable: true},
-  {title: 'Price Per Unit', dtoKey: 'pricePerUnit', sortable: true},
+  {title: 'Purchase Price Per Unit', dtoKey: 'purchasePrice', sortable: true},
   {title: 'Total Price', dtoKey: 'totalPrice', sortable: true},
 ];

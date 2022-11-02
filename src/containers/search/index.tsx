@@ -1,4 +1,4 @@
-import React, { FC, useMemo, useRef } from 'react';
+import React, { FC, useMemo, useRef, useState } from 'react';
 import { Text, View } from 'react-native';
 import { shallowEqual, useSelector } from 'react-redux';
 import { ClearIcon, FilterByIcon } from '../../assets/icons/searchContainerIcons';
@@ -15,17 +15,22 @@ import { Colors } from '../../utils/colors';
 import FilterItem from './component/filterItems';
 import { getStyle } from './styles';
 import RNprint from 'react-native-print';
+import { currency } from '../../utils/currency';
+import FilterModal from '../filterModal';
 
 
 
 interface ISearchContainer {
     searchValue: string;
+    overallPrice: number;
 }
 
 
-const SearchContainer: FC<ISearchContainer> = ({ searchValue }) => {
+const SearchContainer: FC<ISearchContainer> = ({ searchValue, overallPrice }) => {
     const style = getStyle();
     const dispatch = useAppDispatch();
+    const filterByButtonRef = useRef(null);
+    const [isShowFilterModal, setIsShowFilterModal] = useState(false);
     const url = useSelector((state: RootState) => state.appStateSlicer.url);
     const pickerFilterParams = useSelector(selectFilterByForPicker, shallowEqual);
     const selectedWithLabel = useSelector(selectSelectedWithLabel, shallowEqual);
@@ -121,8 +126,19 @@ const SearchContainer: FC<ISearchContainer> = ({ searchValue }) => {
     }, [selectedWithLabel.length]);
 
 
+
+    const onPressFilterBy = () => {
+        setIsShowFilterModal(true);
+    };
+
+    const onCloseFilterModal = () => {
+        setIsShowFilterModal(false);
+    };
+
+
     return (
         <View style={style.container}>
+            <FilterModal isOpen={isShowFilterModal} ref={filterByButtonRef} onClose={onCloseFilterModal} />
             <View style={style.filterItemsContainer}>
                 {renderFilterItems}
             </View>
@@ -133,7 +149,9 @@ const SearchContainer: FC<ISearchContainer> = ({ searchValue }) => {
             </View>
             <View style={style.sortBy}>
                 <View style={style.filterByIconContainer} tooltip={'Filters'} >
-                    <FilterByIcon size={20} color={Colors.DEFAULT_TEXT_COLOR} />
+                    <CustomPressable onPress={onPressFilterBy} onHoverOpacity ref={filterByButtonRef}>
+                        <FilterByIcon size={20} color={Colors.DEFAULT_TEXT_COLOR} />
+                    </CustomPressable>
                 </View>
                 {renderFilterByPickers}
                 <CustomPressable onPress={clearFiler}
@@ -144,6 +162,14 @@ const SearchContainer: FC<ISearchContainer> = ({ searchValue }) => {
                         <ClearIcon size={20} color={Colors.METALLIC_GOLD} />
                     </View>
                 </CustomPressable>
+                <View style={{ justifyContent: 'center', position: 'absolute', right: 30 }}>
+                    <Text style={{ color: Colors.DEFAULT_TEXT_COLOR, fontSize: 12, fontWeight: '700' }}>
+                        {`OVERALL PRICE : `}
+                        <Text style={{ color: Colors.METALLIC_GOLD }}>
+                            {currency.format(overallPrice)}
+                        </Text>
+                    </Text>
+                </View>
             </View>
         </View>
 

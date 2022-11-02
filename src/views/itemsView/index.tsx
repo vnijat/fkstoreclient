@@ -33,7 +33,6 @@ export const ItemsView: FC<any> = ({ navigation }) => {
     ),
     pollingInterval: 5000
   });
-
   useEffect(() => {
     dispatch(setItemQueryParams({ ...queryFilterParams, page: 1 }));
   }, [queryFilterParams]);
@@ -68,7 +67,7 @@ export const ItemsView: FC<any> = ({ navigation }) => {
 
 
 
-  const renderSearchContainer = useMemo(() => <SearchContainer searchValue={selectQueryParams.search || ''} />, [selectQueryParams.search]);
+  const renderSearchContainer = useMemo(() => <SearchContainer searchValue={selectQueryParams.search || ''} overallPrice={queryData?.sumTotal ?? 0} />, [selectQueryParams.search, queryData?.sumTotal]);
 
 
   return (

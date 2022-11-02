@@ -44,6 +44,7 @@ const MultipleSelectItem = ({ isSelected, index, label, id, nestedData, indent, 
     const isHasNestedData = !!nestedData?.length;
     const rotate = isShowNested ? '90deg' : '0deg';
     const nestedIds = HELP.getNestedCategoriesIds(nestedData ?? []);
+    const nestedCategoriesForSelect = HELP.getNestedCategoriesForSelect(nestedData ?? []);
     const nestedSelectedCount = useMemo(() => (nestedIds.length && selectedIds?.filter(id => nestedIds.includes(id)).length) ?? 0, [selectedIds]);
     const onPressItem = () => {
         if (isHasNestedData) {
@@ -70,6 +71,16 @@ const MultipleSelectItem = ({ isSelected, index, label, id, nestedData, indent, 
 
 
 
+    const onCheckBoxSelect = () => {
+        if (isHasNestedData && !isShowNested && ((!isSelected && nestedIds.every(id => !selectedIds?.includes(id))) || (isSelected && nestedIds.every(id => selectedIds?.includes(id))))) {
+            onSelect && onSelect({ id, label, parent: parent! });
+            nestedCategoriesForSelect.forEach(({ id, label }) => onSelect && onSelect({ id, label, parent: parent! }));
+        } else {
+            onSelect && onSelect({ id, label, parent: parent! });
+        }
+    };
+
+
     return (<>
         <CustomPressable
             style={[{ paddingLeft: indent }, (isSelected && selectedItemStyle) ? selectedItemStyle : (itemStyle || style.multipleSelectItem)]}
@@ -80,9 +91,7 @@ const MultipleSelectItem = ({ isSelected, index, label, id, nestedData, indent, 
             <CheckBox
                 value={isSelected}
                 tintColor={Colors.CARD_COLOR}
-                onValueChange={() =>
-                    onSelect && onSelect({ id, label, parent: parent! })
-                }
+                onValueChange={onCheckBoxSelect}
                 onCheckColor={Colors.CARD_HEADER_COLOR}
                 onTintColor={Colors.CARD_HEADER_COLOR}
                 onFillColor={Colors.CULTURED}
@@ -102,7 +111,7 @@ const MultipleSelectItem = ({ isSelected, index, label, id, nestedData, indent, 
         {isShowNested && nestedData?.map((item: IMultipleSelectData, index: number) => {
             const { id, label } = item;
             const isSelected = !!selectedIds?.includes(id);
-            return <MultipleSelectItem {...{ id, index, label, isSelected, selectedIds, selectedItemStyle, selectedItemTextStyle, onSelect, parent, itemStyle, itemTextStyle }} nestedData={item?.nested ?? []} key={`${id}-${index}`} indent={indent + 5} />;
+            return <MultipleSelectItem {...{ id, index, label, isSelected, selectedIds, selectedItemStyle, selectedItemTextStyle, onSelect, parent, itemTextStyle }} nestedData={item?.nested ?? []} key={`${id}-${index}`} indent={indent + 5} itemStyle={[style.multipleSelectItem, { margin: 0, borderLeftWidth: 1, borderColor: Colors.METALLIC_GOLD }]} />;
         })
         }
     </>

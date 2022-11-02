@@ -58,6 +58,18 @@ const getNestedCategoriesIds = (tree: IMultipleSelectData[]) => {
 
 };
 
+const getNestedCategoriesForSelect = (tree: IMultipleSelectData[]) => {
+    return tree?.reduce((acc, curr) => {
+        const { nested, id, label, } = curr;
+        if (nested?.length) {
+            acc = acc.concat(getNestedCategoriesForSelect(nested));
+        }
+        acc.push({ id, label });
+        return acc;
+    }, [] as IMultipleSelectData[]);
+
+};
+
 
 const flatNestedCategories = (tree: ImultipleSelectItem[]) => {
     return tree?.reduce((acc, curr) => {
@@ -78,7 +90,8 @@ const HELP = {
     modifyItemForEdit,
     alertPromise,
     flatNestedCategories,
-    getNestedCategoriesIds
+    getNestedCategoriesIds,
+    getNestedCategoriesForSelect
 };
 
 export default HELP;

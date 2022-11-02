@@ -1,10 +1,10 @@
 import React, { FC, useMemo } from 'react';
 import { Text, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
-import CustomPicker from '../../../../components/customPicker';
 import CustomPressable from '../../../../components/customPressable';
 import { Imeta } from '../../../../types/common/common';
 import { Colors } from '../../../../utils/colors';
+import CustomPicker from '../../../customPicker';
 
 import { IpaginationTakeOptions, paginationTakeOptions } from './configs';
 import { getStyle } from './styles';

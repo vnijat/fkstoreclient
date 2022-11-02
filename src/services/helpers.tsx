@@ -1,4 +1,6 @@
 import { Alert } from "react-native";
+import { ImultipleSelectItem } from "../components/customPicker";
+import { IMultipleSelectData } from "../containers/customPicker/components/multipleSelectItem";
 import { Item } from "../types/ItemsQuery";
 
 const modifieErrorMessage = (error: any) => {
@@ -44,6 +46,29 @@ const alertPromise = (title: string, message: string) => {
 };
 
 
+const getNestedCategoriesIds = (tree: IMultipleSelectData[]) => {
+    return tree?.reduce((acc, curr) => {
+        const { nested, id } = curr;
+        if (nested?.length) {
+            acc = acc.concat(getNestedCategoriesIds(nested));
+        }
+        acc.push(id);
+        return acc;
+    }, [] as number[]);
+
+};
+
+
+const flatNestedCategories = (tree: ImultipleSelectItem[]) => {
+    return tree?.reduce((acc, curr) => {
+        const { nested, ...rest } = curr;
+        if (nested?.length) {
+            acc = acc.concat(flatNestedCategories(nested));
+        }
+        acc.push(rest);
+        return acc;
+    }, [] as ImultipleSelectItem[]);
+};
 
 
 
@@ -51,7 +76,9 @@ const alertPromise = (title: string, message: string) => {
 const HELP = {
     modifieErrorMessage,
     modifyItemForEdit,
-    alertPromise
+    alertPromise,
+    flatNestedCategories,
+    getNestedCategoriesIds
 };
 
 export default HELP;

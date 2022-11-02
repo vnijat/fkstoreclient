@@ -3,9 +3,10 @@ import { Picker } from '@react-native-picker/picker';
 import React, { FC, memo, useMemo, useState } from 'react';
 import { View, TextInput, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
+import CustomPicker, { IsingelSelectData } from '../../containers/customPicker';
+import HELP from '../../services/helpers';
 import { Colors } from '../../utils/colors';
 import { regExPatterns } from '../../utils/validation';
-import CustomPicker, { IsingelSelectData } from '../customPicker';
 import CustomPressable from '../customPressable';
 import { getStyle } from './styles';
 
@@ -95,7 +96,7 @@ export const InputItem: FC<IInputItem> = memo(
 
     const dataForPicker = useMemo(() => {
       if (selectableData?.length) {
-        const singleSelectData = selectableData.map((item) => (item.id ? { value: item.id, label: item.label } : item));
+        const singleSelectData = HELP.flatNestedCategories(selectableData).map((item) => (item.id ? { value: item.id, label: item.label } : item));
         return singleSelectData as IsingelSelectData[];
       } else {
         return [];

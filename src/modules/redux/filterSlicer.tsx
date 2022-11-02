@@ -45,8 +45,7 @@ const filterSlicer = createSlice({
     reducers: {
         setFilterByParams: (state, action: PayloadAction<{ parent: FilterParamskey; id: number; }>) => {
             const { parent, id } = action.payload;
-
-            const isExist = state.filterByParams[parent].includes(id);
+            const isExist = state.filterByParams[parent]?.includes(id);
             if (isExist) {
                 state.filterByParams[parent] = state.filterByParams[parent]?.filter(currID => currID !== id);
             } else {

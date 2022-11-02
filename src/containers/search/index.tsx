@@ -2,7 +2,6 @@ import React, { FC, useMemo, useRef, useState } from 'react';
 import { Text, View } from 'react-native';
 import { shallowEqual, useSelector } from 'react-redux';
 import { ClearIcon, FilterByIcon } from '../../assets/icons/searchContainerIcons';
-import CustomPicker from '../../components/customPicker';
 import CustomPressable from '../../components/customPressable';
 import { InputItem } from '../../components/inputItem';
 import { useGetItemInputsQuery } from '../../modules/api/apiSlice';
@@ -17,6 +16,7 @@ import { getStyle } from './styles';
 import RNprint from 'react-native-print';
 import { currency } from '../../utils/currency';
 import FilterModal from '../filterModal';
+import CustomPicker from '../customPicker';
 
 
 

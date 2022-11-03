@@ -36,6 +36,7 @@ const ClientList = ({ data }: IClientList) => {
                         totalProjects,
                         phone,
                         email,
+                        id
                     } = item;
                     const type = item.type as ClientType;
                     return (<ClientCard
@@ -51,6 +52,7 @@ const ClientList = ({ data }: IClientList) => {
                             type,
                             phone,
                             email,
+                            id
                         }} />);
                 }}
             />

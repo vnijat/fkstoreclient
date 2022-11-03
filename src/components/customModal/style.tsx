@@ -1,20 +1,10 @@
 import { StyleSheet } from 'react-native';
 import { Colors } from '../../utils/colors';
 
-export const getStyle = (textColor?: string, buttonColor?: string, disabled?: boolean) => {
+export const getStyle = (width?: number) => {
     const style = StyleSheet.create({
-        buttonContainer: {
-            paddingVertical: 5,
-            paddingHorizontal: 5,
-            backgroundColor: disabled ? 'grey' : (buttonColor || '#455A64'),
-            justifyContent: 'center',
-            alignItems: 'center'
-        },
-        title: {
-            color: textColor || '#FFF'
-        },
         modalContent: {
-            width: 500,
+            width: width || 500,
             paddingVertical: 10,
             backgroundColor: Colors.CARD_COLOR,
             borderRadius: 3,

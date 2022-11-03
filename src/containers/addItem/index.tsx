@@ -115,9 +115,9 @@ const AddItemСontainer: FC<AddItemProps> = ({ }) => {
   useEffect(() => {
     if (isItemForEdit) {
       setItemForEdit(itemForPosting);
-    } 
+    }
   }, [isItemForEdit]);
-  
+
   const onPressSave = async () => {
     try {
       const response = await apiEditItem(itemForPosting);
@@ -156,7 +156,7 @@ const AddItemСontainer: FC<AddItemProps> = ({ }) => {
           dtoKey,
           selectableDataKey
         } = config;
-        const inputValue: string = itemForPosting[dtoKey as keyof AddItemInterface] ?? (selectable ? '0' : '');
+        const inputValue: string = itemForPosting[dtoKey as keyof AddItemInterface] ?? '';
         const selectableData = selectable && inputsData ? (!!requiredDataName ? inputsData[selectableDataKey!!]?.filter((data: { [key: string]: any; }) => (data?.[requiredDataDtoKey!!] ? data?.[requiredDataDtoKey!!] : data?.[requiredDataDtoKey?.toLowerCase()!!]) == itemForPosting[requiredDataDtoKey as keyof AddItemInterface]) : inputsData[selectableDataKey!!]) : [];
         const isError = !!errorMessage[dtoKey!!]?.length;
         const pickerDataKeyName = selectable ? selectableDataKey : '';

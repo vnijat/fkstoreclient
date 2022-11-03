@@ -1,4 +1,4 @@
-import React, { memo, useMemo, useRef, useState } from "react";
+import React, { memo, useEffect, useMemo, useRef, useState } from "react";
 import { Text, View, Alert } from "react-native";
 import { Colors } from "../../utils/colors";
 import { InputItem } from "../../components/inputItem";
@@ -9,26 +9,26 @@ import { getStyle } from "./styles";
 import { PrimaryButton } from "../../components/primaryButton";
 import HELP from "../../services/helpers";
 import { useToast } from "react-native-rooster";
-import { clearClientForPost, setClientForPost } from "../../modules/redux/clientsSlicer";
+import { clearClientForPost, setClientForPost, setIsClientForEdit, setIsShowClientModal } from "../../modules/redux/clientsSlicer";
 import { clientInputs } from "./configs/clientInput";
 import { AddClient } from "../../types/client";
-import { ClientsApi } from "../../modules/api/clients.api";
+import { ClientsApi, useEditClientMutation } from "../../modules/api/clients.api";
 import CustomModal from "../../components/customModal";
 
 interface IaddClient {
-    isShowModal: boolean;
-    closeModal: () => void;
 }
 
 
-const AddClientModal = ({ isShowModal, closeModal }: IaddClient) => {
+const AddClientModal = ({ }: IaddClient) => {
     const style = getStyle();
     const dispatch = useAppDispatch();
     const { addToast } = useToast();
-    const clientDataForPost = useSelector((state: RootState) => state.clientSlicer.clientForPost, shallowEqual);
+    const [apiEditClient] = useEditClientMutation();
+    const isShowClientModal = useSelector((state: RootState) => state.clientSlicer.isShowClientModal);
+    const clientDataForPost = useSelector((state: RootState) => state.clientSlicer.clientForPost);
+    const isClientForEdit = useSelector((state: RootState) => state.clientSlicer.isClientForEdit);
     const [tempOptionDataForEdit, settempDataForOptionEdit] = useState<AddClient>();
     const [errorMessage, setErrorMessages] = useState<{ [key: string]: string[]; }>({});
-    const isClientForEdit = false;
     const inputRef = useRef<any>([]);
 
 
@@ -37,8 +37,7 @@ const AddClientModal = ({ isShowModal, closeModal }: IaddClient) => {
         objectKey: string,
         selectableInput?: boolean,
     ) => {
-        !!inputValue.length &&
-            errorMessage[objectKey] &&
+        errorMessage[objectKey] &&
             setErrorMessages(prev => {
                 delete prev[objectKey];
                 return { ...prev };
@@ -47,9 +46,10 @@ const AddClientModal = ({ isShowModal, closeModal }: IaddClient) => {
             setClientForPost({ ...clientDataForPost, [objectKey]: inputValue }),
         );
     };
+
     const renderInputs = useMemo(() => {
         {
-            if (isShowModal) {
+            if (isShowClientModal) {
                 return clientInputs.map((config, id) => {
                     const {
                         title,
@@ -97,7 +97,7 @@ const AddClientModal = ({ isShowModal, closeModal }: IaddClient) => {
             }
 
         }
-    }, [errorMessage, isShowModal, clientDataForPost]);
+    }, [errorMessage, isShowClientModal, clientDataForPost]);
 
     const clearInputs = () => {
         dispatch(clearClientForPost());
@@ -118,7 +118,6 @@ const AddClientModal = ({ isShowModal, closeModal }: IaddClient) => {
         return await dispatch(ClientsApi.endpoints.addClient.initiate(clientDataForPost));
     };
 
-
     const errorAlert = (status: string, message: string) => {
         Alert.alert(`Conflict Status Code  ${status}`, message, [
             {
@@ -126,6 +125,20 @@ const AddClientModal = ({ isShowModal, closeModal }: IaddClient) => {
                 onPress: () => { }
             },
         ]);
+    };
+
+    useEffect(() => {
+        if (isClientForEdit) {
+            settempDataForOptionEdit(clientDataForPost);
+        }
+    }, [isClientForEdit]);
+
+    const onCloseClientModal = async () => {
+        dispatch(setIsShowClientModal(false));
+        setErrorMessages({});
+        clearInputs();
+        settempDataForOptionEdit(undefined);
+        dispatch(setIsClientForEdit(false));
     };
 
 
@@ -140,7 +153,7 @@ const AddClientModal = ({ isShowModal, closeModal }: IaddClient) => {
                 message: `new Client added`.toUpperCase(),
                 title: "Success"
             });
-            onCloseAddOptionModal();
+            onCloseClientModal();
         } catch (error) {
             console.log(`AddClientModal=>onPressAdd=>Eerror==>>`, error);
             if (error?.status === 400) {
@@ -155,47 +168,43 @@ const AddClientModal = ({ isShowModal, closeModal }: IaddClient) => {
         }
     };
 
-
-    const onCloseAddOptionModal = async () => {
-        setErrorMessages({});
-        clearInputs();
-        settempDataForOptionEdit({});
-        dispatch(setIsOptionForEdit(false));
-        closeModal();
-    };
-
     const onPressSave = async () => {
-        // const { id, ...body } = optionDataForPost;
-        // try {
-        //     const response = await dispatch(ItemOptionsApi.endpoints.editOption.initiate({ id: id, optionName, body: body }));
-        //     if (response.error) {
-        //         throw response.error;
-        //     }
-        //     onCloseAddOptionModal();
-        // } catch (error) {
-        //     console.log("onPressSave==erorr>>", error);
-        //     if (error?.status === 400) {
-        //         setErrorMessages(HELP.modifieErrorMessage(error));
-        //     }
-        //     else {
-        //         if (error?.data.message) {
-        //             errorAlert(error?.status, error?.data.message);
-        //         }
-        //     }
+        const { id, ...body } = clientDataForPost;
+        try {
+            const response = await apiEditClient({ body, clientId: id! });
+            if (response.error) {
+                throw response.error;
+            }
+            onCloseClientModal();
+            await addToast({
+                type: 'success',
+                message: `${response.data.message}`.toUpperCase(),
+                title: "Success"
+            });
+        } catch (error) {
+            console.log("onPressSave==erorr>>", error);
+            if (error?.status === 400) {
+                setErrorMessages(HELP.modifieErrorMessage(error));
+            }
+            else {
+                if (error?.data.message) {
+                    errorAlert(error?.status, error?.data.message);
+                }
+            }
 
-        // }
+        }
     };
 
 
     return (
         <CustomModal
-            closeModal={onCloseAddOptionModal}
-            isShowModal={isShowModal}
+            closeModal={onCloseClientModal}
+            isShowModal={isShowClientModal}
             isDissmissEnabled={true}
         >
             <View style={{ flex: 1 }}>
                 <Text style={style.headerText}>
-                    {`Add Client`}
+                    {`Client`}
                 </Text>
                 <View style={style.contentContainer}>
                     {renderInputs}

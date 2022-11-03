@@ -18,6 +18,7 @@ import { Colors } from "../../utils/colors";
 import { currency } from "../../utils/currency";
 import ItemsContent from "../itemsContent";
 import { getStyle } from "./style";
+import HELP from "../../services/helpers";
 
 
 interface IItemListTable {
@@ -41,7 +42,7 @@ const ItemListTable: FC<IItemListTable> = ({ data, isLoading }) => {
         };
     });
     const selectBulk = useCallback((from: number, to: number) => selectMany(from, to, data!, dispatch, addItemId), [data]);
-  
+
 
     const cancelEdit = () => {
         dispatch(clearSelectedItems());
@@ -55,34 +56,20 @@ const ItemListTable: FC<IItemListTable> = ({ data, isLoading }) => {
         dispatch(setItemQueryParams({ page: 1, search: '' }));
     };
 
-    const cancelDeletion = () => { };
 
-    const deleteItem = () => Alert.alert('do you want to delete Items?', 'you cant recover deletet Items!', [
-        { onPress: cancelDeletion },
-        { text: 'Cancel', onPress: cancelDeletion, style: 'cancel' },
-        { text: 'Yes', onPress: aproveDeletion, style: 'destructive' }
-    ]);
-
-
-    const modifySelectedForEdit = () => {
-        const itemForPost: any = {};
-        const selectedItem: Item = data.filter(item => item.id === selectedItemsID[0])[0];
-        dispatch(setIsItemForEdit(true));
-        for (let key in selectedItem) {
-            const objectValue = selectedItem[key as keyof Item];
-            const isObject = objectValue && typeof objectValue === 'object';
-            if (isObject) {
-                itemForPost[`${key}Id`] = objectValue.id.toString();
-            } else {
-                itemForPost[key] = isNaN(Number(objectValue)) ? objectValue : Number(objectValue).toString();
-            }
+    const deleteItem = async () => {
+        try {
+            await HELP.alertPromise('do you want to delete Items?', 'you cant recover deletet Items!');
+            aproveDeletion();
+        } catch (erorr) {
+            console.log("deleteItem=>", erorr);
         }
-        return itemForPost;
+
     };
 
-
     const onPressEdit = () => {
-        const itemForPost = modifySelectedForEdit();
+        const itemForPost = HELP.modifyItemForEdit(data, selectedItemsID[0]);
+        dispatch(setIsItemForEdit(true));
         dispatch(setItemForPost(itemForPost));
         cancelEdit();
         navigation.navigate('AddItem');
@@ -123,7 +110,7 @@ const ItemListTable: FC<IItemListTable> = ({ data, isLoading }) => {
                     <ActivityIndicator color={Colors.OLD_GOLD} />
                 </View>
                 : <FlatList
-                    style={{ flex: 1, backgroundColor: Colors.BACKGROUND_COLOR, margin: 5 }}
+                    style={{ flex: 1, backgroundColor: Colors.BACKGROUND_COLOR }}
                     data={data}
                     keyExtractor={(item) => item.id.toString()}
                     renderItem={({ item, index }) => {
@@ -137,6 +124,7 @@ const ItemListTable: FC<IItemListTable> = ({ data, isLoading }) => {
                             quantity,
                             pricePerUnit,
                             totalPrice,
+                            purchasePrice,
                             id } = item;
                         return (
                             <ItemsContent
@@ -147,13 +135,13 @@ const ItemListTable: FC<IItemListTable> = ({ data, isLoading }) => {
                                 selectBulk={selectBulk}
                                 name={name}
                                 description={description}
-                                barcode={barcode?.code!}
-                                category={category?.title!}
-                                color={color?.name}
+                                barcode={barcode}
+                                category={category}
+                                color={color}
                                 quantity={Number(quantity)}
-                                unit={unit?.name}
-                                // purchasePrice={Number(purchasePrice)}
-                                stockPrice={Number(pricePerUnit)}
+                                unit={unit}
+                                purchasePrice={Number(purchasePrice)}
+                                // stockPrice={Number(pricePerUnit)}
                                 totalPrice={totalPrice}
                             />
 

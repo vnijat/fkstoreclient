@@ -7,6 +7,8 @@ interface ItemsSlicerInterface {
     isEditMode: boolean;
     itemforPost: AddItemInterface;
     isItemForEdit: boolean;
+    isShowItemModal: boolean;
+    itemIdForFullResponse?: number;
 }
 
 const initialState = {
@@ -15,7 +17,9 @@ const initialState = {
     itemforPost: {
         ...ItemForPostDefaults
     },
-    isItemForEdit: false
+    isItemForEdit: false,
+    isShowItemModal: false,
+    itemIdForFullResponse: undefined
 } as ItemsSlicerInterface;
 
 const itemsSlicer = createSlice({
@@ -49,8 +53,24 @@ const itemsSlicer = createSlice({
         setItemForPost: (state, action: PayloadAction<{ [key: string]: any; }>) => {
             Object.assign(state.itemforPost, action.payload);
         },
+        setIsShowItemModal: (state, action: PayloadAction<boolean>) => {
+            state.isShowItemModal = action.payload;
+        },
+        setItemIdForFullResponse: (state, action: PayloadAction<number>) => {
+            state.itemIdForFullResponse = action.payload;
+        },
     },
 });
 
-export const { addItemId, setIsEditMode, clearSelectedItems, setItemForPost, setItemValueForPost, clearItemForPosting, setIsItemForEdit } = itemsSlicer.actions;
+export const {
+    addItemId,
+    setIsEditMode,
+    setItemForPost,
+    setIsItemForEdit,
+    setIsShowItemModal,
+    clearSelectedItems,
+    setItemValueForPost,
+    clearItemForPosting,
+    setItemIdForFullResponse,
+} = itemsSlicer.actions;
 export default itemsSlicer.reducer;

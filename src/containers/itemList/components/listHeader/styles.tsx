@@ -7,18 +7,17 @@ export const getStyle = () => {
             height: 30,
             flexDirection: 'row',
             justifyContent: 'space-evenly',
-            alignItems: 'center',
-            // backgroundColor: Colors.FLORAL_WHITE
+            paddingLeft: 36
+            
         },
         columnContainer: {
             justifyContent: 'center',
-            alignItems: 'center',
             flex: 1,
         },
         columnText: {
             color: Colors.DEFAULT_TEXT_COLOR,
             fontWeight: '700',
-            fontSize: 10
+            fontSize: 10,
         }
     });
 

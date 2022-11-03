@@ -16,19 +16,22 @@ import { ItemOptionsApi } from '../../modules/api/itemOptions.api';
 import { useAppDispatch } from '../../modules/redux/store';
 import { FilterParamskey } from '../../types/ItemsQuery';
 import { Colors } from '../../utils/colors';
-import CustomPressable from '../customPressable';
-import { InputItem } from '../inputItem';
-import { PrimaryButton } from '../primaryButton';
 import { getStyle } from './style';
-import { addItemOption, setIsOptionForEdit } from "../../modules/redux/itemOptions";
+import { addItemOption, setIsOpenOptionModal, setIsOptionForEdit, setOptionNameForModal } from "../../modules/redux/itemOptions";
+import HELP from '../../services/helpers';
+import { InputItem } from '../../components/inputItem';
+import CustomPressable from '../../components/customPressable';
+import { PrimaryButton } from '../../components/primaryButton';
+import MultipleSelectItem, { IMultipleSelectData } from './components/multipleSelectItem';
 
 export interface IsingelSelectData {
     label?: string;
     value?: number | string;
 }
 
+
 interface ICustomPicker {
-    data?: Array<{ id: number; label: string; }>;
+    data?: Array<IMultipleSelectData>;
     title?: string;
     onSelect?: (selected: {
         id: number;
@@ -83,7 +86,6 @@ const CustomPicker = ({
     const style = getStyle();
     const dispatch = useAppDispatch();
     const [isShowContent, setShowContent] = useState(false);
-    const [isShowAddNewModal, setisShowAddNewModal] = useState(false);
     const [isShowEditButton, setIsshowEditButton] = useState<Array<{ id: number, isHover: boolean; }>>([]);
     const [searchText, setSearchText] = useState('');
     const buttonRef = useRef(null);
@@ -92,14 +94,12 @@ const CustomPicker = ({
     const getFilteredData = useMemo(() => {
         let filteredData;
         if (isDataSearchEnabled && searchText.trim().length) {
-            const dataForfilter = singleSelectMode ? singleSelectData : multipleSelectData;
+            const dataForfilter = singleSelectMode ? singleSelectData : HELP.flatNestedCategories(multipleSelectData!);
             const regEx = new RegExp(searchText.trim(), 'i');
             filteredData = dataForfilter?.filter((data: { label: string; }) => regEx.test(data.label.trim()));
         }
         return filteredData;
     }, [searchText, singleSelectMode, singleSelectData, multipleSelectData, isDataSearchEnabled]);
-
-
 
     const onPress = () => {
         if (isDisabled) {
@@ -151,8 +151,9 @@ const CustomPicker = ({
         if (dataKeyName && dataForEdit) {
             dispatch(addItemOption({ [`${dataKeyName}`]: dataForEdit }));
             dispatch(setIsOptionForEdit(true));
+            dispatch(setOptionNameForModal(dataKeyName));
         }
-        setisShowAddNewModal(true);
+        dispatch(setIsOpenOptionModal(true));
     };
 
     const renerListEmptyComponent = () => {
@@ -175,45 +176,98 @@ const CustomPicker = ({
         return itemLength > 3;
     }, [multipleSelectData?.length, singleSelectData?.length, getFilteredData?.length, searchText]);
 
+
+
+    // const MultipleSelectItem = ({ isSelected, index, label, id, isShowEdit, nested, indent }: { isSelected: boolean; index: number; label: string; id: number; isShowEdit: boolean; nested?: ImultipleSelectItem[]; indent: number; }) => {
+    //     const [isShowNested, setIsshowNested] = useState(false);
+    //     const isHasNestedData = !!nested?.length;
+    //     const rotate = isShowNested ? '90deg' : '0deg';
+    //     const nestedIds = HELP.getNestedCategoriesIds(nested ?? []);
+    //     const nestedSelectedCount = (nestedIds.length && selectedIds?.filter(id => nestedIds.includes(id)).length) ?? 0;
+    //     const onPressItem = () => {
+    //         if (isHasNestedData) {
+    //             setIsshowNested(!isShowNested);
+    //         } else {
+    //             onSelect && onSelect({ id, label, parent: parent! });
+    //         }
+    //     };
+
+    //     return (<>
+    //         {(nestedSelectedCount > 0) &&
+    //             <View
+    //                 style={style.counter}>
+    //                 <Text
+    //                     style={style.counterText}>
+    //                     {selectedIds?.length}
+    //                 </Text>
+    //             </View>}
+    //         <CustomPressable
+    //             style={[{ paddingLeft: indent }, (isSelected && selectedItemStyle) ? selectedItemStyle : (itemStyle || style.multipleSelectItem)]}
+    //             key={`${index}-${label}`}
+    //             onPress={onPressItem}
+    //             onMouseEnter={() => onMouseEnter(index)}
+    //             onMouseLeave={() => onMouseLeave(index)}
+    //             onHoverOpacity>
+    //             <CheckBox
+    //                 value={isSelected}
+    //                 tintColor={Colors.CARD_COLOR}
+    //                 onValueChange={() =>
+    //                     onSelect && onSelect({ id, label, parent: parent! })
+    //                 }
+    //                 onCheckColor={Colors.CARD_HEADER_COLOR}
+    //                 onTintColor={Colors.CARD_HEADER_COLOR}
+    //                 onFillColor={Colors.CULTURED}
+    //             />
+    //             <Text
+    //                 style={[(isSelected && selectedItemTextStyle) ? selectedItemTextStyle : (itemTextStyle || { fontSize: 12, color: Colors.DEFAULT_TEXT_COLOR })]}
+    //                 key={`${label}`}>
+    //                 {label}
+    //             </Text>
+    //             {isHasNestedData &&
+    //                 <View style={{ transform: [{ rotate }] }}>
+    //                     <Icon name={'chevron-small-right'} size={24} color={Colors.METALLIC_GOLD} />
+    //                 </View>
+    //             }
+    //             {isEditable && isShowEdit &&
+    //                 <CustomPressable onPress={onPressEdit} key={`${index}-${item.label}`}>
+    //                     <Icon size={14} color={Colors.METALLIC_GOLD} name={'cog'} key={`${index}-${item.label}`} />
+    //                 </CustomPressable>
+    //             }
+    //         </CustomPressable>
+    //         {
+    //             isShowNested && isHasNestedData && nested.map((item: ImultipleSelectItem, index) => {
+    //                 const { id, label } = item;
+    //                 const isSelected = !!selectedIds?.includes(id);
+    //                 const isShowEdit = isShowEditButton.some(item => item.id === index);
+    //                 return <MultipleSelectItem {...{ id, index, label, isSelected, isShowEdit }} nested={item.nested} key={`${id}-${index}`} indent={indent + 5} />;
+    //             })
+    //         }
+    //     </>
+
+    //     );
+
+    // };
+
+
     const renderMultipleSelectItem = useMemo(
         () =>
-            ({ item, index }: { item: { id: number; label: string; }; index: number; }) => {
+            ({ item, index }: { item: IMultipleSelectData; index: number; }) => {
                 const { id, label } = item;
-                const isSelected = selectedIds?.includes(id);
-                const isShowEdit = isShowEditButton.some(item => item.id === index);
+                const isSelected = !!selectedIds?.includes(id);
+                // const nestedIds = item.nested?.length ? HELP.getNestedCategoriesIds(item.nested) : [];
                 return (
-                    <CustomPressable
-                        style={[(isSelected && selectedItemStyle) ? selectedItemStyle : (itemStyle || style.multipleSelectItem)]}
-                        key={`${index}-${label}`}
-                        onPress={() => onSelect && onSelect({ id, label, parent: parent! })}
-                        onMouseEnter={() => onMouseEnter(index)}
-                        onMouseLeave={() => onMouseLeave(index)}
-                        onHoverOpacity>
-                        <CheckBox
-                            value={isSelected}
-                            tintColor={Colors.CARD_COLOR}
-                            onValueChange={() =>
-                                onSelect && onSelect({ id, label, parent: parent! })
-                            }
-                            onCheckColor={Colors.CARD_HEADER_COLOR}
-                            onTintColor={Colors.CARD_HEADER_COLOR}
-                            onFillColor={Colors.CULTURED}
-                        />
-                        <Text
-                            style={[(isSelected && selectedItemTextStyle) ? selectedItemTextStyle : (itemTextStyle || { fontSize: 12, color: Colors.DEFAULT_TEXT_COLOR })]}
-                            key={`${label}`}>
-                            {label}
-                        </Text>
-                        {isEditable && isShowEdit &&
-                            <CustomPressable onPress={onPressEdit} key={`${index}-${item.label}`}>
-                                <Icon size={14} color={Colors.METALLIC_GOLD} name={'cog'} key={`${index}-${item.label}`} />
-                            </CustomPressable>
-                        }
-                    </CustomPressable>
+                    <>
+                        <MultipleSelectItem {...{ id, index, label, isSelected, itemStyle, itemTextStyle, selectedIds, parent, selectedItemStyle, selectedItemTextStyle, onSelect }} nestedData={item?.nested} key={`${id}-${index}`} indent={0} />
+                    </>
                 );
             },
-        [selectedIds, multipleSelectData?.length, parent, itemStyle, selectedItemStyle, itemTextStyle, selectedItemTextStyle, isShowEditButton.length],
+        [selectedIds, multipleSelectData?.length, parent, itemStyle, isShowEditButton.length]
     );
+
+
+
+
+
 
     const onPressSingleItem = (item: IsingelSelectData) => {
         const { label, value } = item;
@@ -227,11 +281,8 @@ const CustomPicker = ({
 
     const onPressAddButton = () => {
         setShowContent(false);
-        setisShowAddNewModal(true);
-
-    };
-    const closeAddOptionsModal = () => {
-        setisShowAddNewModal(false);
+        dispatch(setIsOpenOptionModal(true));
+        dispatch(setOptionNameForModal(dataKeyName!));
     };
 
     const singleSelectedTitle = useMemo(() => {
@@ -247,24 +298,26 @@ const CustomPicker = ({
                 const isSelected = item?.value == singleSelected;
                 const isShowEdit = isShowEditButton.some(item => item.id === index);
                 return (
-                    <CustomPressable
-                        style={[(isSelected && selectedItemStyle) ? selectedItemStyle : (itemStyle || [style.singleSelectItem, { backgroundColor: isSelected ? Colors.CARD_HEADER_COLOR : 'transparent' }])]}
-                        key={`${index}`}
-                        onPress={() => onPressSingleItem(item)}
-                        onMouseEnter={() => onMouseEnter(index)}
-                        onMouseLeave={() => onMouseLeave(index)}
-                        onHoverOpacity>
-                        <Text
-                            style={[(isSelected && selectedItemTextStyle) ? selectedItemTextStyle : (itemTextStyle || { fontSize: 12, color: Colors.DEFAULT_TEXT_COLOR })]}
-                            key={`${index}`}>
-                            {item?.label}
-                        </Text>
-                        {isEditable && isShowEdit &&
-                            <CustomPressable onPress={() => onPressEdit(item.value)} key={`${index}-${item.label}`}>
-                                <Icon size={14} color={Colors.METALLIC_GOLD} name={'cog'} key={`${index}-${item.label}`} />
-                            </CustomPressable>
-                        }
-                    </CustomPressable >
+                    <>
+                        <CustomPressable
+                            style={[(isSelected && selectedItemStyle) ? selectedItemStyle : (itemStyle || [style.singleSelectItem, { backgroundColor: isSelected ? Colors.CARD_HEADER_COLOR : 'transparent' }])]}
+                            key={`${index}`}
+                            onPress={() => onPressSingleItem(item)}
+                            onMouseEnter={() => onMouseEnter(index)}
+                            onMouseLeave={() => onMouseLeave(index)}
+                            onHoverOpacity>
+                            <Text
+                                style={[(isSelected && selectedItemTextStyle) ? selectedItemTextStyle : (itemTextStyle || { fontSize: 12, color: Colors.DEFAULT_TEXT_COLOR })]}
+                                key={`${index}`}>
+                                {item?.label}
+                            </Text>
+                            {isEditable && isShowEdit &&
+                                <CustomPressable onPress={() => onPressEdit(item.value)} key={`${index}-${item.label}`}>
+                                    <Icon size={14} color={Colors.METALLIC_GOLD} name={'cog'} key={`${index}-${item.label}`} />
+                                </CustomPressable>
+                            }
+                        </CustomPressable >
+                    </>
                 );
             },
         [singleSelected, singleSelectData?.length, itemStyle, selectedItemStyle, itemTextStyle, selectedItemTextStyle, isEditable, isShowEditButton.length, isDisabled]
@@ -290,8 +343,6 @@ const CustomPicker = ({
 
     return (
         <>
-            {(isAddButton || isEditable) && < AddOptionsModal closeModal={closeAddOptionsModal} isShowModal={isShowAddNewModal} optionName={dataKeyName} />
-            }
             <View>
                 {renderCounter}
                 <CustomPressable
@@ -316,7 +367,7 @@ const CustomPicker = ({
                 onDismiss={onDismiss}
                 showMode={'transient-with-dismiss-on-pointer-move-away'}
             >
-                <View style={{ flex: 1, justifyContent: 'space-between', minWidth: 90 }}>
+                <View style={{ flex: 1, justifyContent: 'space-between', minWidth: 200 }}>
                     {isDataSearchEnabled
                         &&
                         <View style={{ backgroundColor: Colors.FLORAL_WHITE }}>

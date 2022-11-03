@@ -8,7 +8,6 @@ export const getStyle = () => {
             flexDirection: 'row',
             justifyContent: 'space-evenly',
             alignItems: 'center',
-            // backgroundColor: Colors.FLORAL_WHITE
         },
         columnContainer: {
             justifyContent: 'center',
@@ -35,16 +34,12 @@ export const getStyle = () => {
             backgroundColor: 'transparent'
         },
         counter: {
-            position: 'absolute',
             width: 18,
             height: 18,
             borderRadius: 100,
             backgroundColor: Colors.METALLIC_GOLD,
             justifyContent: 'center',
             alignItems: 'center',
-            top: -5,
-            right: -1,
-            zIndex: 2,
         },
         counterText: {
             color: Colors.FLORAL_WHITE,
@@ -54,23 +49,13 @@ export const getStyle = () => {
         },
         multipleSelectItem: {
             height: 30,
-            maxWidth: 200,
             minWidth: 100,
             margin: 1,
-            marginHorizontal: 5,
+            paddingHorizontal: 5,
             flexDirection: 'row',
             alignItems: 'center',
             backgroundColor: 'transparent',
         },
-        singleSelectItem: {
-            height: 30,
-            flexDirection: 'row',
-            minWidth: 100,
-            maxWidth: 200,
-            alignItems: 'center',
-            paddingHorizontal: 5,
-            justifyContent: 'space-between'
-        }
     });
 
     return style;

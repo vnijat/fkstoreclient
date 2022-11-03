@@ -10,30 +10,36 @@ export const getStyle = () => {
         columContent: {
             height: "100%",
             minHeight: 50,
+            maxHeight: 80,
             alignItems: 'center',
-            justifyContent: 'center',
             flex: 1,
             flexDirection: 'row',
-            padding: 3,
 
         },
         columContentText: {
             color: Colors.DEFAULT_TEXT_COLOR,
             fontSize: 13,
-            fontWeight:'400'
+            fontWeight: '400',
+            maxWidth: 100
         },
         rowItem: {
-            margin: 1,
             flexDirection: 'row',
             borderRadius: 3,
             flex: 1,
             justifyContent: 'space-evenly',
-            alignItems: 'center'
+            // alignItems: 'center',
+            paddingLeft: 5,
+            marginVertical: 1
         },
         checkBoxContainer: {
-            position: 'absolute',
-            left: 10,
             justifyContent: 'center',
+            alignContent: 'center',
+            alignItems: 'center',
+            width: 30,
+            height: 30,
+            alignSelf: 'center',
+            marginRight: 1,
+            paddingLeft:11
         }
     });
 

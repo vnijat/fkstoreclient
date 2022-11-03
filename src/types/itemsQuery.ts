@@ -18,7 +18,7 @@ interface itemQueryParams {
 }
 
 type queryFilterByParam = Omit<
-itemQueryParams,
+  itemQueryParams,
   'page' | 'search' | 'take' | 'sort' | 'order'
 >;
 
@@ -61,8 +61,12 @@ interface Color extends Common {
   items?: Item[];
 }
 
-interface Item {
-  id: number;
+interface Label extends Common {
+  name: string;
+  skuCode: string;
+}
+
+interface Item extends Common {
   name: string;
   description: string;
   purchasePrice: number;
@@ -70,20 +74,27 @@ interface Item {
   quantity: number;
   unit: Unit;
   supplier: Supplier;
-  createdAt: Date;
-  updatedAt: Date;
   barcode: Barcode;
   category: Category;
   location: Location;
   store: Store;
   color: Color;
   totalPrice: number;
+  outOfStock: boolean;
+  label: Label;
+}
+
+interface itemResponseFull extends Omit<Item, 'category'> {
+  qrCode: Buffer;
+  category: 'string';
 }
 
 interface ItemResponse {
   items: Item[];
   itemsCount: number;
   meta: Imeta;
+  orderBy: {sort: string; order: Order};
+  sumTotal: number;
 }
 
 export type {
@@ -92,4 +103,9 @@ export type {
   Item,
   queryFilterByParam,
   FilterParamskey,
+  Unit,
+  Barcode,
+  Color,
+  Category,
+  itemResponseFull,
 };

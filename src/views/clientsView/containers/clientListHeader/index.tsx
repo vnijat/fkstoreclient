@@ -2,14 +2,15 @@ import React, { memo, useMemo, useState } from "react";
 import { View } from "react-native";
 import Icon from "react-native-vector-icons/Entypo";
 import { Text } from "react-native-windows";
-import CustomPicker, { IsingelSelectData } from "../../../../components/customPicker";
 import CustomPressable from "../../../../components/customPressable";
 import { InputItem } from "../../../../components/inputItem";
 import AddClientModal from "../../../../containers/addClient";
+import CustomPicker, { IsingelSelectData } from "../../../../containers/customPicker";
 import { ClientSort } from "../../../../enums/clientSort";
 import { ClientType } from "../../../../enums/clientType";
 import { Order } from "../../../../enums/order.enum";
 import { setClientsQueryParams } from "../../../../modules/redux/clientsQuerySlicer";
+import { setIsShowClientModal } from "../../../../modules/redux/clientsSlicer";
 import { useAppDispatch } from "../../../../modules/redux/store";
 import { Colors } from "../../../../utils/colors";
 import { getStyle } from "./styles";
@@ -25,15 +26,11 @@ interface IClinetListHeader {
 const ClientListHeader = ({ searchValue, clientTypeValue, orderBy }: IClinetListHeader) => {
     const style = useMemo(() => getStyle(), []);
     const dispatch = useAppDispatch();
-    const [isOpenAddClientModal, setOpenAddClientModal] = useState(false);
 
     const onPressAddClient = () => {
-        setOpenAddClientModal(true);
+        dispatch(setIsShowClientModal(true));
     };
 
-    const onCloseModal = () => {
-        setOpenAddClientModal(false);
-    };
 
     const onSearch = (text: string) => {
         dispatch(setClientsQueryParams({ page: 1, search: text.trim() }));
@@ -81,9 +78,9 @@ const ClientListHeader = ({ searchValue, clientTypeValue, orderBy }: IClinetList
                 { title: 'Client Type', onSelect: onSelectType, selected: clientTypeValue, selectedData: clientType, isOrder: false },
                 { title: 'Sort By', onSelect: onSelectSortBy, selected: orderBy?.sort, selectedData: clientSortData, isOrder: true },
             ];
-        return data.map(({ title, onSelect, selected, selectedData, isOrder }) => {
+        return data.map(({ title, onSelect, selected, selectedData, isOrder }, index) => {
             return (
-                <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 10 }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 10 }} key={index}>
                     <Text style={{ color: Colors.DEFAULT_TEXT_COLOR }}>
                         {title.toLowerCase()}
                     </Text>
@@ -106,7 +103,6 @@ const ClientListHeader = ({ searchValue, clientTypeValue, orderBy }: IClinetList
 
     return (
         <>
-            <AddClientModal isShowModal={isOpenAddClientModal} closeModal={onCloseModal} />
             <View style={{ flex: 1 }}>
                 <View style={{ flex: 0.6, flexDirection: 'row' }}>
                     <View style={{ flex: 0.3, justifyContent: 'center', paddingLeft: 10 }}>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo, useMemo } from "react";
 import { View } from "react-native";
 import { Popup, } from "react-native-windows";
 import CustomPressable from "../../components/customPressable";
@@ -11,18 +11,19 @@ interface IaddOptionsModal {
     closeModal: () => void;
     isDissmissEnabled: boolean;
     children?: React.ReactNode;
+    width?: number;
 
 }
 
 
-const CustomModal = ({ children, isShowModal, closeModal, isDissmissEnabled }: IaddOptionsModal) => {
-    const style = getStyle();
+const CustomModal = ({ children, isShowModal, closeModal, isDissmissEnabled, width }: IaddOptionsModal) => {
+    const style = useMemo(() => getStyle(width), [width]);
 
     return (
         <Popup
             isOpen={isShowModal}
-            onDismiss={closeModal}
-            isLightDismissEnabled={isDissmissEnabled || true}
+            // onDismiss={closeModal}
+        // isLightDismissEnabled={isDissmissEnabled}
         >
             <View style={{ flex: 1 }}>
                 <CustomPressable onHoverOpacity onPress={closeModal} style={style.closeButton}>
@@ -38,4 +39,4 @@ const CustomModal = ({ children, isShowModal, closeModal, isDissmissEnabled }: I
 
 };
 
-export default CustomModal;
+export default memo(CustomModal);

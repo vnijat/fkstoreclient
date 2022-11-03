@@ -5,14 +5,15 @@ import { AddClient } from '../../types/client';
 interface IclientSlicer {
     clientForPost: AddClient;
     isClientForEdit: boolean;
+    isShowClientModal: boolean;
 }
 
 
 
 const initialState = {
     clientForPost: {},
-    isClientForEdit: false
-
+    isClientForEdit: false,
+    isShowClientModal: false
 } as IclientSlicer;
 
 const clientSlicer = createSlice({
@@ -28,8 +29,11 @@ const clientSlicer = createSlice({
         setIsClientForEdit: (state, action: PayloadAction<boolean>) => {
             state.isClientForEdit = action.payload;
         },
+        setIsShowClientModal: (state, action: PayloadAction<boolean>) => {
+            state.isShowClientModal = action.payload;
+        },
     }
 });
 
-export const { setClientForPost, clearClientForPost, setIsClientForEdit } = clientSlicer.actions;
+export const { setClientForPost, clearClientForPost, setIsClientForEdit, setIsShowClientModal } = clientSlicer.actions;
 export default clientSlicer.reducer;

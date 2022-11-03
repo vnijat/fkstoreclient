@@ -61,6 +61,11 @@ interface Color extends Common {
   items?: Item[];
 }
 
+interface Label extends Common {
+  name: string;
+  skuCode: string;
+}
+
 interface Item extends Common {
   name: string;
   description: string;
@@ -76,6 +81,7 @@ interface Item extends Common {
   color: Color;
   totalPrice: number;
   outOfStock: boolean;
+  label: Label;
 }
 
 interface itemResponseFull extends Omit<Item, 'category'> {

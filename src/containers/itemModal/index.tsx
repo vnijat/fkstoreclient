@@ -34,7 +34,7 @@ const ItemModal = ({ itemsData }: IItemModal) => {
         })
     });
 
-    
+
     const onCloseModal = () => {
         dispatch(setIsShowItemModal(false));
     };
@@ -80,6 +80,9 @@ const ItemModal = ({ itemsData }: IItemModal) => {
                             <View style={{ flex: 1, justifyContent: 'center' }}>
                                 <Text style={{ alignSelf: 'center', color: Colors.DEFAULT_TEXT_COLOR }}>
                                     {`Barcode: ${data?.barcode.code}`}
+                                </Text>
+                                <Text style={{ alignSelf: 'center', color: Colors.DEFAULT_TEXT_COLOR, fontSize: 14, fontWeight: '700' }}>
+                                    {!!data?.label.name.length && `Label: ${data?.label.name}`}
                                 </Text>
                                 <Image source={{ uri: `data:image/png;base64,${data?.qrCode}` }} resizeMode={'contain'} style={{ flex: 1, justifyContent: 'center', }} />
                                 <Text style={{ alignSelf: 'center', color: Colors.DEFAULT_TEXT_COLOR }}>

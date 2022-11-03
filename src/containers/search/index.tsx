@@ -138,7 +138,7 @@ const SearchContainer: FC<ISearchContainer> = ({ searchValue, overallPrice }) =>
 
     return (
         <View style={style.container}>
-            <FilterModal isOpen={isShowFilterModal} ref={filterByButtonRef} onClose={onCloseFilterModal} />
+            {/* <FilterModal isOpen={isShowFilterModal} ref={filterByButtonRef} onClose={onCloseFilterModal} /> */}
             <View style={style.filterItemsContainer}>
                 {renderFilterItems}
             </View>
@@ -149,9 +149,9 @@ const SearchContainer: FC<ISearchContainer> = ({ searchValue, overallPrice }) =>
             </View>
             <View style={style.sortBy}>
                 <View style={style.filterByIconContainer} tooltip={'Filters'} >
-                    <CustomPressable onPress={onPressFilterBy} onHoverOpacity ref={filterByButtonRef}>
+                    {/* <CustomPressable onPress={onPressFilterBy} onHoverOpacity ref={filterByButtonRef}> */}
                         <FilterByIcon size={20} color={Colors.DEFAULT_TEXT_COLOR} />
-                    </CustomPressable>
+                    {/* </CustomPressable> */}
                 </View>
                 {renderFilterByPickers}
                 <CustomPressable onPress={clearFiler}

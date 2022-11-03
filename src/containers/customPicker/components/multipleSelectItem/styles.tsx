@@ -51,7 +51,7 @@ export const getStyle = () => {
             height: 30,
             minWidth: 100,
             margin: 1,
-            marginHorizontal: 5,
+            paddingHorizontal: 5,
             flexDirection: 'row',
             alignItems: 'center',
             backgroundColor: 'transparent',

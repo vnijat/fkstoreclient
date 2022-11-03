@@ -46,6 +46,10 @@ const MultipleSelectItem = ({ isSelected, index, label, id, nestedData, indent, 
     const nestedIds = HELP.getNestedCategoriesIds(nestedData ?? []);
     const nestedCategoriesForSelect = HELP.getNestedCategoriesForSelect(nestedData ?? []);
     const nestedSelectedCount = useMemo(() => (nestedIds.length && selectedIds?.filter(id => nestedIds.includes(id)).length) ?? 0, [selectedIds]);
+    const isEveryNestedSelected = nestedIds.every(id => selectedIds?.includes(id));
+    const isEveryNestedUnselected = nestedIds.every(id => !selectedIds?.includes(id));
+
+
     const onPressItem = () => {
         if (isHasNestedData) {
             setIsshowNested(!isShowNested);
@@ -69,10 +73,8 @@ const MultipleSelectItem = ({ isSelected, index, label, id, nestedData, indent, 
         }
     }, [nestedSelectedCount, isShowNested]);
 
-
-
     const onCheckBoxSelect = () => {
-        if (isHasNestedData && !isShowNested && ((!isSelected && nestedIds.every(id => !selectedIds?.includes(id))) || (isSelected && nestedIds.every(id => selectedIds?.includes(id))))) {
+        if (isHasNestedData && !isShowNested && ((!isSelected && isEveryNestedUnselected) || (isSelected && isEveryNestedSelected))) {
             onSelect && onSelect({ id, label, parent: parent! });
             nestedCategoriesForSelect.forEach(({ id, label }) => onSelect && onSelect({ id, label, parent: parent! }));
         } else {
@@ -83,7 +85,7 @@ const MultipleSelectItem = ({ isSelected, index, label, id, nestedData, indent, 
 
     return (<>
         <CustomPressable
-            style={[{ paddingLeft: indent }, (isSelected && selectedItemStyle) ? selectedItemStyle : (itemStyle || style.multipleSelectItem)]}
+            style={[{ marginLeft: indent }, (isSelected && selectedItemStyle) ? selectedItemStyle : (itemStyle || style.multipleSelectItem)]}
             key={`${index}-${label}`}
             onPress={onPressItem}
             onHoverOpacity

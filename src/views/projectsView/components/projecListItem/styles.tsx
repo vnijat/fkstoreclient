@@ -21,7 +21,7 @@ export const getStyle = () => {
             color: Colors.DEFAULT_TEXT_COLOR,
             fontSize: 13,
             fontWeight: '400',
-            maxWidth: 100
+            maxWidth: 150
         },
         rowItem: {
             flexDirection: 'row',
@@ -32,6 +32,15 @@ export const getStyle = () => {
             marginVertical: 1,
             backgroundColor: Colors.CARD_COLOR
         },
+        clientIconContainer: {
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginRight: 5,
+            width: 40,
+            height: 40,
+            borderRadius: 40,
+            backgroundColor: Colors.CARD_HEADER_COLOR
+        }
     });
 
     return style;

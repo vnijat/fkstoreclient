@@ -1,5 +1,5 @@
 interface InputsConfig {
-  dtoKey?: string;
+  dtoKey: string;
   title?: string;
   isNumeric?: boolean;
   maxLength?: number;

@@ -1,17 +1,15 @@
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { FC } from 'react';
-import { Button, FlatList, Pressable, Text, View } from 'react-native';
-import { shallowEqual, useSelector } from 'react-redux';
-import AddClient from '../../containers/addClient';
+import { View } from 'react-native';
+import { useSelector } from 'react-redux';
 import PaginationContainer from '../../containers/paginationContainer';
 import { ClientType } from '../../enums/clientType';
-import { ClientDataMock } from '../../mocks/clientsData';
 import { useGetClientsQuery } from '../../modules/api/clients.api';
 import { setClientsQueryParams } from '../../modules/redux/clientsQuerySlicer';
-import { setIsShowClientModal } from '../../modules/redux/clientsSlicer';
-import { RootState, useAppDispatch } from '../../modules/redux/store';
+import { RootState } from '../../modules/redux/store';
 import { Colors } from '../../utils/colors';
 import ClientList from './components/clientList';
+import AddEditClientModal from './containers/addEditClientModal';
 import ClientListHeader from './containers/clientListHeader';
 import { getStyle } from './styles';
 
@@ -34,7 +32,7 @@ export const ClientsView = ({ navigation }: IClientsViewProps) => {
 
     return (
         <>
-            <AddClient />
+            <AddEditClientModal />
             <View style={style.container}>
                 <View style={{ backgroundColor: Colors.CARD_COLOR, flex: 0.2 }}>
                     <ClientListHeader

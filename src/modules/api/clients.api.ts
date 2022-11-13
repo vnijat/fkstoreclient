@@ -32,14 +32,11 @@ export const ClientsApi = InventoryApi.injectEndpoints({
         };
       },
     }),
-    editClient: build.mutation<
-      ClientsResponse,
-      {body: AddClient; clientId: number}
-    >({
+    editClient: build.mutation<ClientsResponse, {body: AddClient; id: number}>({
       invalidatesTags: ['clients'],
-      query: ({body, clientId}) => {
+      query: ({body, id}) => {
         return {
-          url: `/client/${clientId}`,
+          url: `/client/${id}`,
           body: body,
           method: 'PATCH',
         };

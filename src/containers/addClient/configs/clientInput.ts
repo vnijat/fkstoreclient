@@ -10,6 +10,7 @@ const clientInputs: InputsConfig[] = [
     placeHolder: 'Company Name',
     height: 35,
     multiLine: false,
+    width: 470,
   },
   {
     title: 'First Name',
@@ -19,6 +20,7 @@ const clientInputs: InputsConfig[] = [
     placeHolder: 'First Name',
     height: 35,
     multiLine: false,
+    width: 230,
   },
   {
     title: 'Last Name',
@@ -28,6 +30,27 @@ const clientInputs: InputsConfig[] = [
     placeHolder: 'Last Name',
     height: 35,
     multiLine: false,
+    width: 230,
+  },
+  {
+    title: 'Email',
+    dtoKey: 'email',
+    isNumeric: false,
+    placeHolder: 'Email',
+    maxLength: 200,
+    height: 35,
+    multiLine: false,
+    width: 230,
+  },
+  {
+    title: 'Phone',
+    dtoKey: 'phone',
+    isNumeric: false,
+    placeHolder: 'Phone',
+    maxLength: 200,
+    height: 35,
+    multiLine: false,
+    width: 230,
   },
   {
     title: 'Client Type',
@@ -41,24 +64,6 @@ const clientInputs: InputsConfig[] = [
       label: type,
       value: type,
     })),
-  },
-  {
-    title: 'Email',
-    dtoKey: 'email',
-    isNumeric: false,
-    placeHolder: 'Email',
-    maxLength: 200,
-    height: 35,
-    multiLine: false,
-  },
-  {
-    title: 'Phone',
-    dtoKey: 'phone',
-    isNumeric: false,
-    placeHolder: 'Phone',
-    maxLength: 200,
-    height: 35,
-    multiLine: false,
   },
 ];
 

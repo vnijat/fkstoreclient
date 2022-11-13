@@ -23,7 +23,6 @@ export const DrawerNavigation: FC<any> = () => {
             <Drawer.Screen name="Projects" component={ProjectsView} />
             <Drawer.Screen name="Orders" component={OrderView} />
             <Drawer.Screen name="Purchases" component={PurchaseView} />
-            <Drawer.Screen name="AddItem" component={AddItemView} />
         </Drawer.Navigator>
     );
 };

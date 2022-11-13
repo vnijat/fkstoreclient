@@ -7,6 +7,7 @@ import { useGetProjectsQuery } from '../../modules/api/projects.api';
 import { setProjectsQueryParams } from '../../modules/redux/projectQuerySlicer';
 import { RootState, useAppDispatch } from '../../modules/redux/store';
 import { Colors } from '../../utils/colors';
+import ClientInfoModal from './components/clientInfoModal';
 import ProjectList from './components/projectList';
 import ProjectSearch from './components/projectSearch';
 import { getStyle } from './styles';
@@ -31,6 +32,7 @@ const ProjectsView = ({ navigation }: IProjectsView) => {
 
     return (
         <View style={style.container}>
+            <ClientInfoModal/>
             <View style={{ flex: 1, paddingLeft: 90, paddingRight: 15, paddingVertical: 30 }}>
                 <View style={{ flex: 0.2 }}>
                     <ProjectSearch searchValue={projectsQueryParams.search ?? ''} />

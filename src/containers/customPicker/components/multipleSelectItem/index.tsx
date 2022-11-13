@@ -74,7 +74,7 @@ const MultipleSelectItem = ({ isSelected, index, label, id, nestedData, indent, 
     }, [nestedSelectedCount, isShowNested]);
 
     const onCheckBoxSelect = () => {
-        if (isHasNestedData && !isShowNested && ((!isSelected && isEveryNestedUnselected) || (isSelected && isEveryNestedSelected))) {
+        if (isHasNestedData && ((!isSelected && isEveryNestedUnselected) || (isSelected && isEveryNestedSelected))) {
             onSelect && onSelect({ id, label, parent: parent! });
             nestedCategoriesForSelect.forEach(({ id, label }) => onSelect && onSelect({ id, label, parent: parent! }));
         } else {

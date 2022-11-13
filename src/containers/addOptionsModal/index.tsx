@@ -6,7 +6,7 @@ import { InputsConfig } from "../../types/inputsconfig";
 import { InputItem } from "../../components/inputItem";
 import { shallowEqual, useSelector } from "react-redux";
 import { RootState, useAppDispatch } from "../../modules/redux/store";
-import { addItemOption, clearItemOptions, setIsOpenOptionModal, setIsOptionForEdit } from "../../modules/redux/itemOptions";
+import { addItemOption, clearItemOptions, IItemOptions, setIsOpenOptionModal, setIsOptionForEdit } from "../../modules/redux/itemOptions";
 import { getStyle } from "./styles";
 import { PrimaryButton } from "../../components/primaryButton";
 import HELP from "../../services/helpers";
@@ -27,7 +27,7 @@ const AddOptionsModal = ({ }: IaddOptionsModal) => {
     const optionName = useSelector((state: RootState) => state.itemOptions.optionNameForModal);
     const optionDataForPost = useSelector((state: RootState) => state.itemOptions.options[optionName!], shallowEqual);
     const isOptionForEdit = useSelector((state: RootState) => state.itemOptions.isOptionForEdit);
-    const [tempOptionDataForEdit, settempDataForOptionEdit] = useState({});
+    const [tempOptionDataForEdit, settempDataForOptionEdit] = useState<IItemOptions['options'][keyof IItemOptions['options']]>();
     const optionsInputData: InputsConfig[] | undefined = useMemo(() => optionName && inputsForItemOptions[optionName], [optionName]);
     const [errorMessage, setErrorMessages] = useState<{ [key: string]: string[]; }>({});
     const { currentData: ItemInputsData } = useGetItemInputsQuery(undefined, {
@@ -39,12 +39,11 @@ const AddOptionsModal = ({ }: IaddOptionsModal) => {
         pollingInterval: 5000,
     });
 
-
     useEffect(() => {
-        if (isShowModal && isOptionForEdit && optionDataForPost) {
+        if (isOptionForEdit) {
             settempDataForOptionEdit(optionDataForPost);
         }
-    }, [isShowModal]);
+    }, [isOptionForEdit, isShowModal]);
 
 
     const inputRef = useRef<any>([]);
@@ -60,7 +59,7 @@ const AddOptionsModal = ({ }: IaddOptionsModal) => {
                 return { ...prev };
             });
         dispatch(
-            addItemOption({ [optionName!]: { ...optionDataForPost, [objectKey]: inputValue } }),
+            addItemOption({ optionName: optionName!, value: { [objectKey]: inputValue } }),
         );
     };
 
@@ -119,9 +118,9 @@ const AddOptionsModal = ({ }: IaddOptionsModal) => {
     };
 
     const onPressReset = () => {
-        if (isOptionForEdit) {
+        if (!!tempOptionDataForEdit) {
             dispatch(
-                addItemOption({ [optionName!]: tempOptionDataForEdit }),
+                addItemOption({ optionName: optionName!, value: tempOptionDataForEdit as { [key: string]: string | number; } }),
             );
         } else {
             setErrorMessages({});
@@ -174,7 +173,7 @@ const AddOptionsModal = ({ }: IaddOptionsModal) => {
     const onCloseAddOptionModal = async () => {
         setErrorMessages({});
         clearInputs();
-        settempDataForOptionEdit({});
+        settempDataForOptionEdit(undefined);
         dispatch(setIsOpenOptionModal(false));
         dispatch(setIsOptionForEdit(false));
     };
@@ -186,6 +185,12 @@ const AddOptionsModal = ({ }: IaddOptionsModal) => {
             if (response.error) {
                 throw response.error;
             }
+            await addToast({
+                type: 'success',
+                message: `${optionName} updated`.toUpperCase(),
+                title: "Success"
+            });
+
             onCloseAddOptionModal();
         } catch (error) {
             console.log("onPressSave==erorr>>", error);
@@ -225,7 +230,7 @@ const AddOptionsModal = ({ }: IaddOptionsModal) => {
                         height={30}
                         width={80}
                     />
-                    {isOptionForEdit ?
+                    {!!tempOptionDataForEdit ?
                         <PrimaryButton
                             title={'Save'}
                             onPress={onPressSave}

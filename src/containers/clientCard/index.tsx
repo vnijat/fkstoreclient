@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { Text, View } from 'react-native';
-import { CorporateClientIcon, EmailIcon, IndividualClientIcon, PhoneIcon, VipIcon } from '../../assets/icons/clientCardIcons';
+import { EmailIcon, PhoneIcon } from '../../assets/icons/clientCardIcons';
 import { ClientType } from '../../enums/clientType';
 import { IICON } from '../../types/icon';
 import { Colors } from '../../utils/colors';
@@ -11,14 +11,15 @@ import ProjectInfo from './components/projectInfo';
 import Icon from 'react-native-vector-icons/Entypo';
 import ActionModal from './components/actionModal';
 import CustomPressable from '../../components/customPressable';
-import { useAppDispatch } from '../../modules/redux/store';
+import { RootState, useAppDispatch } from '../../modules/redux/store';
 import { useDeleteClientMutation } from '../../modules/api/clients.api';
 import { useToast } from 'react-native-rooster';
 import HELP from '../../services/helpers';
 import { setClientForPost, setIsClientForEdit, setIsShowClientModal } from '../../modules/redux/clientsSlicer';
+import { useSelector } from 'react-redux';
 
 interface IClientCard {
-    id: number,
+    id: number | string;
     companyName?: string,
     firstName?: string,
     lastName?: string,
@@ -29,6 +30,7 @@ interface IClientCard {
     type: ClientType;
     email?: string;
     phone?: string;
+    withAction?: boolean;
 }
 
 const ClientCard = ({
@@ -42,9 +44,11 @@ const ClientCard = ({
     type,
     phone,
     email,
-    id
+    id,
+    withAction = true
 }: IClientCard) => {
     const style = getStyle();
+    const isClientModalOpen = useSelector((state: RootState) => state.clientSlicer.isShowClientModal);
     const dispatch = useAppDispatch();
     const [apiDeleteClient] = useDeleteClientMutation();
     const { addToast } = useToast();
@@ -53,29 +57,8 @@ const ClientCard = ({
         size: 22,
         color: Colors.CARD_HEADER_COLOR
     };
-    const ClientTypeIconOptions: IICON = {
-        size: 50,
-        color: Colors.CARD_COLOR
-    };
 
-    const IconVip = () => {
-        return (
-            <View style={{ alignItems: 'center' }}>
-                <VipIcon {...ClientTypeIconOptions} />
-                <Text style={style.iconVipText}>{'VIP'}</Text>
-            </View>
-        );
-    };
-
-    const clientTypeIcon = {
-        [ClientType.INDIVIDUAL]: <IndividualClientIcon {...ClientTypeIconOptions} />,
-        [ClientType.CORPORATE]: <CorporateClientIcon {...ClientTypeIconOptions} />,
-        [ClientType.VIP]: <IconVip />
-    };
-
-    const renderClientIcon = useMemo(() => {
-        return clientTypeIcon[type];
-    }, [type]);
+    const renderClientIcon = useMemo(() => type && HELP.getClientTypeIcons(type), [type]);
 
     const clientInfo = [
         { value: phone && parsePhoneNumber(phone, 'AZ').format('INTERNATIONAL'), icon: <PhoneIcon {...infoIconOptions} /> },
@@ -86,11 +69,11 @@ const ClientCard = ({
         dispatch(setIsClientForEdit(true));
         dispatch(setClientForPost({
             id,
-            companyName,
-            firstName,
-            lastName,
-            phone: phone || '',
-            email: email || '',
+            companyName: companyName ?? '',
+            firstName: firstName ?? '',
+            lastName: lastName ?? '',
+            phone: phone ?? '',
+            email: email ?? '',
             type,
         }));
         dispatch(setIsShowClientModal(true));
@@ -113,27 +96,27 @@ const ClientCard = ({
 
     return (
         <View style={style.cardContainer}>
-            <View style={style.actionButton}>
+            {withAction && <View style={style.actionButton}>
                 <ActionModal pressableComponent={<Icon name={'dots-three-vertical'} color={Colors.METALLIC_GOLD} size={18} />
                 }>
                     <View style={style.actionContent}>
-                        <CustomPressable onPress={onPressEdit} onHoverOpacity style={style.actionItemButton}>
+                        <CustomPressable onPress={onPressEdit} onHoverOpacity style={style.actionItemButton} disabled={isClientModalOpen}>
                             <Text style={style.actionItemText} >
                                 {'EDIT'}
                             </Text>
                         </CustomPressable>
-                        <CustomPressable onPress={onPressDelete} onHoverOpacity style={style.actionItemButton}>
+                        <CustomPressable onPress={onPressDelete} onHoverOpacity style={style.actionItemButton} disabled={isClientModalOpen}>
                             <Text style={style.actionItemText} >
                                 {'DELETE'}
                             </Text>
                         </CustomPressable>
                     </View>
                 </ActionModal>
-            </View>
+            </View>}
             <View style={style.cardContent}>
 
                 <View style={style.cardHeader}>
-                    <View style={style.iconContainer}>
+                    <View style={style.iconContainer} tooltip={type}>
                         {renderClientIcon}
                     </View>
                     <View style={style.clientInfo}>

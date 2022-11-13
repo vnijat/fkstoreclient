@@ -1,7 +1,12 @@
-import { Alert } from "react-native";
-import { ImultipleSelectItem } from "../components/customPicker";
+import React from "react";
+import { Alert, Text, View, StyleSheet } from "react-native";
+import { CompletedIcon, CorporateClientIcon, DeclinedIcon, IndividualClientIcon, InProgressIcon, VipIcon } from "../assets/icons/clientCardIcons";
 import { IMultipleSelectData } from "../containers/customPicker/components/multipleSelectItem";
+import { ClientType } from "../enums/clientType";
+import { ProjectStatus } from "../enums/projectStatus";
+import { IICON } from "../types/icon";
 import { Item } from "../types/ItemsQuery";
+import { Colors } from "../utils/colors";
 
 const modifieErrorMessage = (error: any) => {
     return error.data.message.reduce((errorObject: { [key: string]: string[]; }, message: string,) => {
@@ -71,7 +76,7 @@ const getNestedCategoriesForSelect = (tree: IMultipleSelectData[]) => {
 };
 
 
-const flatNestedCategories = (tree: ImultipleSelectItem[]) => {
+const flatNestedCategories = (tree: IMultipleSelectData[]) => {
     return tree?.reduce((acc, curr) => {
         const { nested, ...rest } = curr;
         if (nested?.length) {
@@ -79,10 +84,47 @@ const flatNestedCategories = (tree: ImultipleSelectItem[]) => {
         }
         acc.push(rest);
         return acc;
-    }, [] as ImultipleSelectItem[]);
+    }, [] as IMultipleSelectData[]);
+};
+
+const getClientTypeIcons = (type: ClientType, size?: number, color?: string) => {
+    const style = StyleSheet.create({
+        iconVipText: {
+            fontSize: size ? (size * 0.2 | 0) : 10,
+            fontWeight: '700',
+            position: 'absolute',
+            top: size ? size / 2 : 22,
+            color: Colors.METALLIC_GOLD
+        }
+    });
+
+    const ClientTypeIconOptions: IICON = {
+        size: size || 50,
+        color: color || Colors.CARD_COLOR
+    };
+
+    const IconVip = () => {
+        return (
+            <VipIcon {...ClientTypeIconOptions} />
+        );
+    };
+    const clientTypeIcon = {
+        [ClientType.INDIVIDUAL]: <IndividualClientIcon {...ClientTypeIconOptions} />,
+        [ClientType.CORPORATE]: <CorporateClientIcon {...ClientTypeIconOptions} />,
+        [ClientType.VIP]: <IconVip />
+    };
+    return clientTypeIcon[type];
 };
 
 
+const getProjectStatusIcons = (status: ProjectStatus, size?: number, color?: string) => {
+    const icons = {
+        [ProjectStatus.INPROGRESS]: <InProgressIcon size={size || 30} color={color || Colors.METALLIC_GOLD} />,
+        [ProjectStatus.COMPLETED]: <CompletedIcon size={size || 30} color={color || Colors.METALLIC_GOLD} />,
+        [ProjectStatus.DECLINED]: <DeclinedIcon size={size || 30} color={color || Colors.METALLIC_GOLD} />
+    };
+    return icons[status];
+};
 
 
 const HELP = {
@@ -91,7 +133,9 @@ const HELP = {
     alertPromise,
     flatNestedCategories,
     getNestedCategoriesIds,
-    getNestedCategoriesForSelect
+    getNestedCategoriesForSelect,
+    getClientTypeIcons,
+    getProjectStatusIcons
 };
 
 export default HELP;

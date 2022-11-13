@@ -68,10 +68,10 @@ export const InventoryApi = createApi({
             },
             invalidatesTags: ['items']
         }),
-        editItem: build.mutation<undefined, any>({
-            query: (body) => {
+        editItem: build.mutation<undefined, { body: any; id: number; }>({
+            query: ({ body, id }) => {
                 return {
-                    url: `/item/${body.id}`,
+                    url: `/item/${id}`,
                     body: body,
                     method: 'PATCH'
                 };

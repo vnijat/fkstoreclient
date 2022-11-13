@@ -20,7 +20,7 @@ const clientSlicer = createSlice({
     name: 'clientSlicer',
     initialState,
     reducers: {
-        setClientForPost: (state, action: PayloadAction<AddClient>) => {
+        setClientForPost: (state, action: PayloadAction<{ [key: string]: string | number; } | AddClient>) => {
             Object.assign(state.clientForPost, action.payload);
         },
         clearClientForPost: (state) => {

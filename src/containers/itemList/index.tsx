@@ -8,7 +8,7 @@ import { ListHeader } from "./components/listHeader";
 import { PrimaryButton } from "../../components/primaryButton";
 import RowItem from "../../components/rowItem";
 import { useDeleteManyItemsMutation } from "../../modules/api/apiSlice";
-import { addItemId, clearSelectedItems, setIsEditMode, setIsItemForEdit, setItemForPost } from "../../modules/redux/itemsSlicer";
+import { addItemId, clearSelectedItems, setIsEditMode, setIsItemForEdit, setIsShowAddEditModal, setIsShowItemModal, setItemForPost } from "../../modules/redux/itemsSlicer";
 import { setItemQueryParams } from "../../modules/redux/itemQuerySlicer";
 import { selectIsEditMode } from "../../modules/redux/selectors/itemSelectors";
 import { RootState, useAppDispatch } from "../../modules/redux/store";
@@ -71,8 +71,8 @@ const ItemListTable: FC<IItemListTable> = ({ data, isLoading }) => {
         const itemForPost = HELP.modifyItemForEdit(data, selectedItemsID[0]);
         dispatch(setIsItemForEdit(true));
         dispatch(setItemForPost(itemForPost));
+        dispatch(setIsShowAddEditModal(true));
         cancelEdit();
-        navigation.navigate('AddItem');
     };
 
 

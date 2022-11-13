@@ -1,10 +1,9 @@
-import React, { memo, useEffect, useMemo, useRef, useState } from "react";
+import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Text, View, Alert } from "react-native";
 import { Colors } from "../../utils/colors";
 import { InputItem } from "../../components/inputItem";
 import { shallowEqual, useSelector } from "react-redux";
 import { RootState, useAppDispatch } from "../../modules/redux/store";
-import { setIsOptionForEdit } from "../../modules/redux/itemOptions";
 import { getStyle } from "./styles";
 import { PrimaryButton } from "../../components/primaryButton";
 import HELP from "../../services/helpers";
@@ -43,9 +42,10 @@ const AddClientModal = ({ }: IaddClient) => {
                 return { ...prev };
             });
         dispatch(
-            setClientForPost({ ...clientDataForPost, [objectKey]: inputValue }),
+            setClientForPost({ [objectKey]: inputValue }),
         );
     };
+
 
     const renderInputs = useMemo(() => {
         {
@@ -104,7 +104,7 @@ const AddClientModal = ({ }: IaddClient) => {
     };
 
     const onPressReset = () => {
-        if (isClientForEdit) {
+        if (!!tempOptionDataForEdit) {
             dispatch(
                 setClientForPost(tempOptionDataForEdit!),
             );
@@ -133,7 +133,7 @@ const AddClientModal = ({ }: IaddClient) => {
         }
     }, [isClientForEdit]);
 
-    const onCloseClientModal = async () => {
+    const onCloseClientModal = () => {
         dispatch(setIsShowClientModal(false));
         setErrorMessages({});
         clearInputs();
@@ -200,7 +200,7 @@ const AddClientModal = ({ }: IaddClient) => {
         <CustomModal
             closeModal={onCloseClientModal}
             isShowModal={isShowClientModal}
-            isDissmissEnabled={true}
+            isDissmissEnabled={false}
         >
             <View style={{ flex: 1 }}>
                 <Text style={style.headerText}>
@@ -219,7 +219,7 @@ const AddClientModal = ({ }: IaddClient) => {
                         height={30}
                         width={80}
                     />
-                    {isClientForEdit ?
+                    {!!tempOptionDataForEdit ?
                         <PrimaryButton
                             title={'Save'}
                             onPress={onPressSave}

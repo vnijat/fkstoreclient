@@ -1,4 +1,4 @@
-import { useFocusEffect, useIsFocused, useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Text, View } from 'react-native';
@@ -106,8 +106,7 @@ const AddItemСontainer: FC<AddItemProps> = ({ }) => {
       });
     dispatch(
       setItemValueForPost({
-        key: objectKey,
-        value: inputValue,
+        [objectKey]: inputValue,
       }),
     );
   };

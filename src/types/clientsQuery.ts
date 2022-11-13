@@ -17,7 +17,7 @@ interface Client extends Common {
   firstName: string;
   lastName: string;
   description: string;
-  phone: string | null;
+  phone: string
   email: string;
   type: ClientType;
   projectsInProgress: number;

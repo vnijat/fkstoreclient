@@ -11,6 +11,7 @@ import { setItemQueryParams } from '../../modules/redux/itemQuerySlicer';
 import { selectFilterbyForQuery } from '../../modules/redux/selectors/filterSelector';
 import { RootState, useAppDispatch } from '../../modules/redux/store';
 import { Colors } from '../../utils/colors';
+import AddEditItemModal from './components/addEditItemModal';
 import { getStyle } from './styles';
 
 // import countries from 'i18n-iso-countries';
@@ -72,6 +73,7 @@ export const ItemsView: FC<any> = ({ navigation }) => {
 
   return (
     <View style={style.container}>
+      <AddEditItemModal />
       <ItemModal itemsData={queryData?.items!} />
       <View style={{ flex: 0.9, backgroundColor: Colors.BACKGROUND_COLOR }}>
         <View style={{ flex: 0.2, backgroundColor: Colors.CARD_COLOR }}>

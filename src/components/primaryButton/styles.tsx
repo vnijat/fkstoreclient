@@ -10,7 +10,8 @@ export const getStyle = (textColor?: string, buttonColor?: string, disabled?: bo
             alignItems: 'center'
         },
         title: {
-            color: textColor || '#FFF'
+            color: disabled ? '#FFF' : textColor || '#FFF',
+            opacity: disabled ? 0.3 : 1
         }
 
     });

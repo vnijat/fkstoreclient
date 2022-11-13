@@ -1,5 +1,3 @@
-import { assertAccessor } from '@babel/types';
-import { Picker } from '@react-native-picker/picker';
 import React, { FC, memo, useMemo, useState } from 'react';
 import { View, TextInput, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
@@ -7,7 +5,6 @@ import CustomPicker, { IsingelSelectData } from '../../containers/customPicker';
 import HELP from '../../services/helpers';
 import { Colors } from '../../utils/colors';
 import { regExPatterns } from '../../utils/validation';
-import CustomPressable from '../customPressable';
 import { getStyle } from './styles';
 
 interface IInputItem {
@@ -35,6 +32,9 @@ interface IInputItem {
   isPickerItemEditable?: boolean;
   isDisabled?: boolean;
   requiredText?: string;
+  pickerOnPressEditButton?: (dataId: number, dataKeyName?: string) => void;
+  pickerOnPressAddButton?: (dataKeyName: string) => void;
+  disablePickerActionButtons?: boolean;
 }
 
 export const InputItem: FC<IInputItem> = memo(
@@ -63,6 +63,9 @@ export const InputItem: FC<IInputItem> = memo(
     isPickerItemEditable,
     isDisabled,
     requiredText,
+    pickerOnPressEditButton,
+    pickerOnPressAddButton,
+    disablePickerActionButtons
   }) => {
     const style = useMemo(
       () => getStyle(height, width, isErorr, titleColor, backgroundColor),
@@ -119,10 +122,13 @@ export const InputItem: FC<IInputItem> = memo(
           isDataSearchEnabled={isPickerSearchEnabled}
           isDisabled={isDisabled}
           requiredText={requiredText}
+          onPressEditButton={pickerOnPressEditButton}
+          onPressAddButton={pickerOnPressAddButton}
+          disablePickerActionButtons={disablePickerActionButtons}
         />
       </>
       );
-    }, [inputValue, dataForPicker.length, isErorr, isPickerItemEditable, isDisabled]);
+    }, [inputValue, dataForPicker, isErorr, isPickerItemEditable, isDisabled, disablePickerActionButtons]);
 
 
     const renderTextInput = useMemo(() => {

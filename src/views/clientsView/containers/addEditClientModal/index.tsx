@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { clientInputs } from "../../../../containers/addClient/configs/clientInput";
+import { clientInputs } from "../../../../configs/clientInputConfigs";
 import AddEditModal from "../../../../containers/addEditModal";
 import { useAddClientMutation, useEditClientMutation } from "../../../../modules/api/clients.api";
 import { clearClientForPost, setClientForPost, setIsClientForEdit, setIsShowClientModal } from "../../../../modules/redux/clientsSlicer";

@@ -22,8 +22,8 @@ const CustomModal = ({ children, isShowModal, closeModal, isDissmissEnabled, wid
     return (
         <Popup
             isOpen={isShowModal}
-            // onDismiss={closeModal}
-        // isLightDismissEnabled={isDissmissEnabled}
+            onDismiss={closeModal}
+            isLightDismissEnabled={isDissmissEnabled ?? false}
         >
             <View style={{ flex: 1 }}>
                 <CustomPressable onHoverOpacity onPress={closeModal} style={style.closeButton}>

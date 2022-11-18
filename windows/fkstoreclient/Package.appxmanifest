@@ -9,7 +9,7 @@
   <Identity
     Name="480eb102-e22b-422b-9fea-56f15468e48f"
     Publisher="CN=neejee"
-    Version="1.1.0.0" />
+    Version="1.1.2.0" />
 
   <mp:PhoneIdentity PhoneProductId="480eb102-e22b-422b-9fea-56f15468e48f" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
@@ -38,7 +38,7 @@
         Square44x44Logo="Assets\Square44x44Logo.png"
         Description="fkstoreclient"
         BackgroundColor="transparent">
-        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png"/>
+        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" Square71x71Logo="Assets\SmallTile.png" Square310x310Logo="Assets\LargeTile.png"/>
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
       </uap:VisualElements>
     </Application>

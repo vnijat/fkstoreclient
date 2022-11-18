@@ -114,37 +114,14 @@ const ItemListTable: FC<IItemListTable> = ({ data, isLoading }) => {
                     data={data}
                     keyExtractor={(item) => item.id.toString()}
                     renderItem={({ item, index }) => {
-                        const {
-                            name,
-                            description,
-                            barcode,
-                            category,
-                            color,
-                            unit,
-                            quantity,
-                            pricePerUnit,
-                            totalPrice,
-                            purchasePrice,
-                            id } = item;
                         return (
                             <ItemsContent
-                                key={id + index}
-                                id={id}
+                                data={item}
+                                key={item.id + index}
+                                id={item.id}
                                 itemIndex={index}
-                                lastItem={(data?.length ?? 1) - 1}
                                 selectBulk={selectBulk}
-                                name={name}
-                                description={description}
-                                barcode={barcode}
-                                category={category}
-                                color={color}
-                                quantity={Number(quantity)}
-                                unit={unit}
-                                purchasePrice={Number(purchasePrice)}
-                                // stockPrice={Number(pricePerUnit)}
-                                totalPrice={totalPrice}
                             />
-
                         );
                     }}
                 />

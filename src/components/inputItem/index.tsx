@@ -35,6 +35,7 @@ interface IInputItem {
   pickerOnPressEditButton?: (dataId: number, dataKeyName?: string) => void;
   pickerOnPressAddButton?: (dataKeyName: string) => void;
   disablePickerActionButtons?: boolean;
+  errorDetail?: string;
 }
 
 export const InputItem: FC<IInputItem> = memo(
@@ -65,7 +66,8 @@ export const InputItem: FC<IInputItem> = memo(
     requiredText,
     pickerOnPressEditButton,
     pickerOnPressAddButton,
-    disablePickerActionButtons
+    disablePickerActionButtons,
+    errorDetail
   }) => {
     const style = useMemo(
       () => getStyle(height, width, isErorr, titleColor, backgroundColor),
@@ -76,6 +78,8 @@ export const InputItem: FC<IInputItem> = memo(
       () => !isFocused && isSearch && !inputValue.length,
       [isFocused, isSearch, inputValue],
     );
+    const errorMessage = useMemo(() => isErorr ? errorDetail : inputTitle, [isErorr, errorDetail]);
+
     const onChangeText = (text: string) => {
       const isNum = regExPatterns.IS_NUMERIC;
       if (isNumeric) {
@@ -145,9 +149,9 @@ export const InputItem: FC<IInputItem> = memo(
           onBlur={onBlur}
         />);
     }, [id, onChangeText, inputValue, placeHolder, isMultiLine, maxLength, onFocus, onBlur]);
-
+    
     return (
-      <View style={{ margin: 5 }}>
+      <View style={{ margin: 5 }} tooltip={errorMessage}>
         {!!inputTitle && (
           <Text style={style.inputTitle}>{`${inputTitle?.toUpperCase()} ${isErorr ? '*' : ''
             } `}</Text>
@@ -155,7 +159,7 @@ export const InputItem: FC<IInputItem> = memo(
         {selectable ? renderCustomPicker
           :
           (
-            <View style={{ justifyContent: 'center' }}>
+            <View style={{ justifyContent: 'center' }} >
               {renderTextInput}
               {isShowMagnify && (
                 <View

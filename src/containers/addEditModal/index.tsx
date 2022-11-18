@@ -84,6 +84,15 @@ const AddEditModal = ({
     const inputRef = useRef<any>([]);
 
 
+    useEffect(() => {
+        if (isDataForEdit) {
+            settempDataForEdit(dataForRequest);
+            setIsDataForEdit && setIsDataForEdit(false);
+        }
+    }, [isDataForEdit]);
+
+
+
     const setClientDataForPost = (
         inputValue: string,
         objectKey: string,
@@ -95,6 +104,7 @@ const AddEditModal = ({
             });
         setDataForRequest({ [objectKey]: inputValue });
     };
+
 
 
     const renderInputs = useMemo(() => {
@@ -123,6 +133,7 @@ const AddEditModal = ({
                     const dataForPicker = selectable ? (isEnum ? dataForPickerFromEnum : dataForPickerFromServer) : [];
                     const pickerDataKeyName = selectable ? selectableDataKey : '';
                     const isError = !!errorMessage[dtoKey!]?.length;
+                    const errorDetail = isError ? (selectable ? `Please pick ${title}` : errorMessage[dtoKey!].map(t => `*${t}`).join('\n')) : undefined;
                     const disabled = (!!requiredDataName && !!requiredDataDtoKey) && !dataForRequest[requiredDataDtoKey];
                     return (
                         <InputItem
@@ -152,6 +163,7 @@ const AddEditModal = ({
                             isDisabled={disabled}
                             isPickerSearchEnabled={isPickerSearchEnabled}
                             disablePickerActionButtons={disablePickerActionButtons}
+                            errorDetail={errorDetail}
                         />
 
                     );
@@ -184,12 +196,7 @@ const AddEditModal = ({
             },
         ]);
     };
-
-    useEffect(() => {
-        if (isDataForEdit) {
-            settempDataForEdit(dataForRequest);
-        }
-    }, [isDataForEdit, isShowModal]);
+  
 
     const onCloseModal = () => {
         setIsShowModal(false);
@@ -198,7 +205,6 @@ const AddEditModal = ({
         settempDataForEdit(undefined);
         setIsDataForEdit && setIsDataForEdit(false);
     };
-
 
     const onPressAdd = async () => {
         try {
@@ -215,7 +221,9 @@ const AddEditModal = ({
         } catch (error) {
             console.log(`OnpressAdd=>onPressAdd=>Err==>>`, error);
             if (error?.status === 400) {
+                console.log("------->>>", error, HELP.modifieErrorMessage(error));
                 setErrorMessages(HELP.modifieErrorMessage(error));
+
             }
             else {
                 if (error?.data.message) {

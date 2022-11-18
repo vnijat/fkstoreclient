@@ -30,6 +30,7 @@ export const getStyle = (height: number, width: number, isErorr?: boolean, title
             borderBottomWidth: 1,
             borderColor: Colors.CARD_COLOR,
             backgroundColor: backgroundColor || Colors.CARD_HEADER_COLOR,
+            color: Colors.DEFAULT_TEXT_COLOR
         },
         magnify: {
             position: 'absolute',

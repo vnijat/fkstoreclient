@@ -1,14 +1,14 @@
 import React from "react";
-import { shallowEqual, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
+import { inputsConfig } from "../../../../configs/ItemInputConfigs";
 import AddEditModal from "../../../../containers/addEditModal";
-import { inputsConfig } from "../../../../containers/addItem/configs";
-import AddOptionsModal from "../../../../containers/addOptionsModal";
 import { useAddItemMutation, useEditItemMutation, useGetItemInputsQuery } from "../../../../modules/api/apiSlice";
-import { ItemOptionsApi, useGetOptionQuery } from "../../../../modules/api/itemOptions.api";
+import { ItemOptionsApi } from "../../../../modules/api/itemOptions.api";
 import { addItemOption, IItemOptions, setIsOpenOptionModal, setIsOptionForEdit, setOptionNameForModal } from "../../../../modules/redux/itemOptions";
 import { clearItemForPosting, setIsItemForEdit, setIsShowAddEditModal, setItemForPost } from "../../../../modules/redux/itemsSlicer";
 import { RootState, useAppDispatch } from "../../../../modules/redux/store";
 import { AddItemInterface } from "../../../../types/Item";
+import AddEditItemOptionsModal from "../addEditItemOptionsModal";
 
 
 
@@ -19,7 +19,6 @@ const AddEditItemModal = () => {
     const dispatch = useAppDispatch();
     const isItemForEdit = useSelector((state: RootState) => state.itemsSlicer.isItemForEdit);
     const isShowItemModal = useSelector((state: RootState) => state.itemsSlicer.isShowAddEditModal);
-    const isShowOptionModal = useSelector((state: RootState) => state.itemOptions.isOpenOptionModal);
     const [apiAdditem] = useAddItemMutation();
     const [apiEditItem] = useEditItemMutation();
 
@@ -62,8 +61,8 @@ const AddEditItemModal = () => {
     const pickerOnPressEditButton = async (dataId: number, dataKeyName?: string) => {
         const dataForEdit = await getOptionData(dataId, dataKeyName!);
         dispatch(addItemOption({ optionName: dataKeyName! as keyof IItemOptions['options'], value: dataForEdit }));
-        dispatch(setIsOptionForEdit(true));
         dispatch(setOptionNameForModal(dataKeyName! as keyof IItemOptions['options']));
+        dispatch(setIsOptionForEdit(true));
         dispatch(setIsOpenOptionModal(true));
     };
     const setIsShowModal = (data: boolean) => {
@@ -74,7 +73,7 @@ const AddEditItemModal = () => {
 
     return (
         <>
-            < AddOptionsModal />
+            < AddEditItemOptionsModal />
             <AddEditModal
                 isDataForEdit={isItemForEdit}
                 dataForRequest={itemForPosting}
@@ -93,7 +92,6 @@ const AddEditItemModal = () => {
                 isPickerAddButton
                 isPickerSearchEnabled
                 isShowModal={isShowItemModal}
-                disablePickerActionButtons={isShowOptionModal}
             />
         </>
     );

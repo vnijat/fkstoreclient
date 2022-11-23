@@ -40,7 +40,7 @@ export const InventoryApi = createApi({
                 };
             }
         }),
-        deleteManyItems: build.mutation<undefined, { Ids: number[]; }>({
+        deleteManyItems: build.mutation<undefined, number[]>({
             query: (Ids) => {
                 return {
                     url: '/item/',
@@ -86,7 +86,8 @@ export const InventoryApi = createApi({
         'clients',
         'qrCode',
         'item',
-        'projects'
+        'projects',
+        'clientForPicker'
     ]
 });
 

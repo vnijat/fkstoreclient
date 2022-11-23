@@ -50,6 +50,7 @@ const AddEditClientModal = ({ }: IAddEditClientModal) => {
                 setIsDataForEdit={setIsDataForEdit}
                 dataTitle={'CLIENT'}
                 isShowModal={isShowClientModal}
+                isPickerSearchEnabled
             />
         </>
     );

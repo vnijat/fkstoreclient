@@ -1,3 +1,4 @@
+import CheckBox from '@react-native-community/checkbox';
 import React, { FC, memo, useMemo, useState } from 'react';
 import { View, TextInput, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
@@ -16,8 +17,8 @@ interface IInputItem {
   maxLength?: number;
   isMultiLine?: boolean;
   inputRef?: (r: any) => {};
-  setValue: (text: string) => void;
-  inputValue: string;
+  setValue: (text: string | boolean) => void;
+  inputValue: string | boolean;
   id?: number;
   selectable?: boolean;
   selectableData?: Array<IsingelSelectData & { id?: number; }>;
@@ -36,6 +37,7 @@ interface IInputItem {
   pickerOnPressAddButton?: (dataKeyName: string) => void;
   disablePickerActionButtons?: boolean;
   errorDetail?: string;
+  isCheckBox?: boolean;
 }
 
 export const InputItem: FC<IInputItem> = memo(
@@ -67,7 +69,8 @@ export const InputItem: FC<IInputItem> = memo(
     pickerOnPressEditButton,
     pickerOnPressAddButton,
     disablePickerActionButtons,
-    errorDetail
+    errorDetail,
+    isCheckBox
   }) => {
     const style = useMemo(
       () => getStyle(height, width, isErorr, titleColor, backgroundColor),
@@ -87,6 +90,10 @@ export const InputItem: FC<IInputItem> = memo(
       } else {
         setValue(text);
       }
+    };
+
+    const onCheckBoxValueChange = () => {
+      setValue(!inputValue);
     };
 
     const onValueChange = (item: IsingelSelectData) => {
@@ -136,26 +143,55 @@ export const InputItem: FC<IInputItem> = memo(
 
 
     const renderTextInput = useMemo(() => {
-      return (
-        <TextInput
-          key={id}
-          style={style.textInput}
-          onChangeText={onChangeText}
-          value={inputValue}
-          placeholder={placeHolder}
-          multiline={isMultiLine}
-          maxLength={maxLength}
-          onFocus={onFocus}
-          onBlur={onBlur}
-        />);
-    }, [id, onChangeText, inputValue, placeHolder, isMultiLine, maxLength, onFocus, onBlur]);
-    
+      if (!isCheckBox) {
+        return (
+          <TextInput
+            key={id}
+            style={style.textInput}
+            onChangeText={onChangeText}
+            value={inputValue}
+            placeholder={placeHolder}
+            multiline={isMultiLine}
+            maxLength={maxLength}
+            onFocus={onFocus}
+            onBlur={onBlur}
+          />);
+      } else {
+        return null;
+      }
+
+    }, [id, onChangeText, inputValue, placeHolder, isMultiLine, maxLength, onFocus, onBlur, isCheckBox]);
+
+
+
+
+    const chekBoxInput = useMemo(() => {
+      if (isCheckBox) {
+        return (
+          <CheckBox
+            value={!!inputValue}
+            tintColor={Colors.CARD_COLOR}
+            onValueChange={onCheckBoxValueChange}
+            onCheckColor={Colors.CARD_HEADER_COLOR}
+            onTintColor={Colors.CARD_HEADER_COLOR}
+            onFillColor={Colors.CULTURED}
+          />
+        );
+      } else {
+        return null;
+      }
+    }, [isCheckBox, inputValue]);
+
+
+
     return (
       <View style={{ margin: 5 }} tooltip={errorMessage}>
         {!!inputTitle && (
           <Text style={style.inputTitle}>{`${inputTitle?.toUpperCase()} ${isErorr ? '*' : ''
             } `}</Text>
-        )}
+        )
+        }
+        {chekBoxInput}
         {selectable ? renderCustomPicker
           :
           (

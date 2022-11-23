@@ -50,7 +50,7 @@ const ItemListTable: FC<IItemListTable> = ({ data, isLoading }) => {
     };
 
     const aproveDeletion = () => {
-        apiDeleteItems({ Ids: selectedItemsID });
+        apiDeleteItems(selectedItemsID);
         dispatch(clearSelectedItems());
         dispatch(setIsEditMode(false));
         dispatch(setItemQueryParams({ page: 1, search: '' }));

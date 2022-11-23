@@ -22,9 +22,19 @@ export const ProjectsApi = InventoryApi.injectEndpoints({
     addProject: build.mutation<Project, AddClientProject>({
       query: body => {
         return {
-          url: '/client/projects/all',
+          url: '/client/project/',
           body: body,
           method: 'POST',
+        };
+      },
+      invalidatesTags: ['projects'],
+    }),
+    editProject: build.mutation<Project, {id: number; body: AddClientProject}>({
+      query: ({id, body}) => {
+        return {
+          url: `/client/project/${id}`,
+          body: body,
+          method: 'PATCH',
         };
       },
       invalidatesTags: ['projects'],
@@ -33,4 +43,8 @@ export const ProjectsApi = InventoryApi.injectEndpoints({
   overrideExisting: true,
 });
 
-export const {useGetProjectsQuery} = ProjectsApi;
+export const {
+  useGetProjectsQuery,
+  useAddProjectMutation,
+  useEditProjectMutation,
+} = ProjectsApi;

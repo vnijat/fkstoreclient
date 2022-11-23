@@ -9,6 +9,8 @@ import CustomModal from "../../components/customModal";
 import { getStyle } from "./styles";
 import { InputsConfig } from "../../types/inputsconfig";
 import { IsingelSelectData } from "../customPicker";
+import TableInput from "../tableInput";
+import { RowDataType } from "../tableInput/types";
 
 interface IAddEditModal {
     /**  Pass Function For Post data to Api*/
@@ -54,6 +56,8 @@ interface IAddEditModal {
         * Data Add button and Data Edit button
         */
     disablePickerActionButtons?: boolean;
+
+    modalWidth?: number;
 }
 
 
@@ -75,7 +79,8 @@ const AddEditModal = ({
     clearDataForRequest,
     isPickerSearchEnabled,
     setIsDataForEdit,
-    disablePickerActionButtons
+    disablePickerActionButtons,
+    modalWidth
 }: IAddEditModal) => {
     const style = getStyle();
     const { addToast } = useToast();
@@ -94,7 +99,7 @@ const AddEditModal = ({
 
 
     const setClientDataForPost = (
-        inputValue: string,
+        inputValue: string | RowDataType[] | boolean,
         objectKey: string,
     ) => {
         errorMessage[objectKey] &&
@@ -125,9 +130,12 @@ const AddEditModal = ({
                         isEnum,
                         enumData,
                         requiredDataName,
-                        requiredDataDtoKey
+                        requiredDataDtoKey,
+                        isTableInput,
+                        tableConfig,
+                        isCheckBox
                     } = config;
-                    const inputValue: string = dataForRequest[dtoKey!] || '';
+                    const inputValue: string | boolean = dataForRequest[dtoKey!] || '';
                     const dataForPickerFromServer = (selectableData && selectableDataKey) ? (!!requiredDataName ? selectableData[selectableDataKey]?.filter((data: { [key: string]: any; }) => (data?.[requiredDataDtoKey!!] ? data?.[requiredDataDtoKey!!] : data?.[requiredDataDtoKey?.toLowerCase()!!]) == dataForRequest[requiredDataDtoKey!]) : selectableData[selectableDataKey]) : [];
                     const dataForPickerFromEnum = isEnum ? enumData : [];
                     const dataForPicker = selectable ? (isEnum ? dataForPickerFromEnum : dataForPickerFromServer) : [];
@@ -135,38 +143,53 @@ const AddEditModal = ({
                     const isError = !!errorMessage[dtoKey!]?.length;
                     const errorDetail = isError ? (selectable ? `Please pick ${title}` : errorMessage[dtoKey!].map(t => `*${t}`).join('\n')) : undefined;
                     const disabled = (!!requiredDataName && !!requiredDataDtoKey) && !dataForRequest[requiredDataDtoKey];
-                    return (
-                        <InputItem
-                            inputTitle={title}
-                            key={id}
-                            isNumeric={isNumeric}
-                            placeHolder={placeHolder}
-                            width={width}
-                            height={height}
-                            isMultiLine={multiLine}
-                            maxLength={maxLength}
-                            inputRef={r => (inputRef.current[id] = r)}
-                            inputValue={inputValue}
-                            setValue={inputValue =>
-                                setClientDataForPost(inputValue, dtoKey)
-                            }
-                            id={id}
-                            isPickerAddButton={isPickerAddButton}
-                            isPickerItemEditable={isPickerItemEditable}
-                            pickerOnPressAddButton={pickerOnPressAddButton}
-                            pickerOnPressEditButton={pickerOnPressEditButton}
-                            selectable={selectable}
-                            selectableData={dataForPicker}
-                            isErorr={isError}
-                            pickerDataKeyName={pickerDataKeyName}
-                            titleColor={Colors.METALLIC_GOLD}
-                            isDisabled={disabled}
-                            isPickerSearchEnabled={isPickerSearchEnabled}
-                            disablePickerActionButtons={disablePickerActionButtons}
-                            errorDetail={errorDetail}
-                        />
+                    if (isTableInput) {
+                        return (
+                            <View style={{ width: 460, height: 200 }} key={`${title}`}>
+                                <View style={{ flexDirection: 'row', justifyContent: 'center', marginVertical: 3 }}>
+                                    <Text style={{ color: Colors.DEFAULT_TEXT_COLOR, textAlign: 'center' }}>
+                                        {`${title}`.toUpperCase()}
+                                    </Text>
+                                </View>
+                                <TableInput getNewTableData={(data: RowDataType[]) => setClientDataForPost(data, dtoKey)} tableData={dataForRequest[dtoKey!] ?? []} tableConfig={tableConfig ?? []} />
+                            </View>
+                        );
+                    }
+                    else {
+                        return (
+                            <InputItem
+                                inputTitle={title}
+                                key={id}
+                                isNumeric={isNumeric}
+                                placeHolder={placeHolder}
+                                width={width}
+                                height={height}
+                                isMultiLine={multiLine}
+                                maxLength={maxLength}
+                                inputRef={r => (inputRef.current[id] = r)}
+                                inputValue={inputValue}
+                                setValue={inputValue =>
+                                    setClientDataForPost(inputValue, dtoKey)
+                                }
+                                id={id}
+                                isPickerAddButton={isPickerAddButton}
+                                isPickerItemEditable={isPickerItemEditable}
+                                pickerOnPressAddButton={pickerOnPressAddButton}
+                                pickerOnPressEditButton={pickerOnPressEditButton}
+                                selectable={selectable}
+                                selectableData={dataForPicker}
+                                isErorr={isError}
+                                pickerDataKeyName={pickerDataKeyName}
+                                titleColor={Colors.METALLIC_GOLD}
+                                isDisabled={disabled}
+                                isPickerSearchEnabled={isPickerSearchEnabled}
+                                disablePickerActionButtons={disablePickerActionButtons}
+                                errorDetail={errorDetail}
+                                isCheckBox={isCheckBox}
+                            />
+                        );
+                    }
 
-                    );
                 });
 
             }
@@ -196,7 +219,7 @@ const AddEditModal = ({
             },
         ]);
     };
-  
+
 
     const onCloseModal = () => {
         setIsShowModal(false);
@@ -242,7 +265,6 @@ const AddEditModal = ({
                 if (response.error) {
                     throw response.error;
                 }
-                console.log("response===>>>", response);
                 onCloseModal();
                 await addToast({
                     type: 'success',
@@ -272,6 +294,7 @@ const AddEditModal = ({
             closeModal={onCloseModal}
             isShowModal={isShowModal}
             isDissmissEnabled={false}
+            width={modalWidth}
         >
             <View style={{ flex: 1 }}>
                 <Text style={style.headerText}>

@@ -1,3 +1,4 @@
+import {IsingelSelectData} from '../../containers/customPicker';
 import {AddClient} from '../../types/client';
 import {ClientsQueryParams, ClientsResponse} from '../../types/clientsQuery';
 import {InventoryApi} from './apiSlice';
@@ -42,6 +43,14 @@ export const ClientsApi = InventoryApi.injectEndpoints({
         };
       },
     }),
+    getClientForPicker: build.query<{client: {id: number; label: string}[]},undefined>({
+      providesTags: ['clientForPicker'],
+      query: () => {
+        return {
+          url: '/client/data/picker',
+        };
+      },
+    }),
   }),
   overrideExisting: true,
 });
@@ -51,4 +60,5 @@ export const {
   useAddClientMutation,
   useDeleteClientMutation,
   useEditClientMutation,
+  useGetClientForPickerQuery,
 } = ClientsApi;

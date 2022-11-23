@@ -25,7 +25,7 @@ import MultipleSelectItem, { IMultipleSelectData } from './components/multipleSe
 
 export interface IsingelSelectData {
     label?: string;
-    value?: number | string;
+    value?: number | string | boolean;
 }
 
 

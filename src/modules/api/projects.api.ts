@@ -11,7 +11,16 @@ import {InventoryApi} from './apiSlice';
 export const ProjectsApi = InventoryApi.injectEndpoints({
   endpoints: build => ({
     getProjects: build.query<ProjectsResponse, ProjectsQueryParams>({
-      providesTags: ['projects'],
+      providesTags: result =>
+        result
+          ? [
+              ...result.projects.map(({id}) => ({
+                type: 'projects' as const,
+                id,
+              })),
+              'projects',
+            ]
+          : ['projects'],
       query: filter => {
         return {
           url: '/client/projects/all',
@@ -37,7 +46,19 @@ export const ProjectsApi = InventoryApi.injectEndpoints({
           method: 'PATCH',
         };
       },
-      invalidatesTags: ['projects'],
+      invalidatesTags: (result, error, arg) => [{type: 'projects', id: arg.id}],
+    }),
+    deleteProject: build.mutation<undefined, number[]>({
+      query: Ids => {
+        return {
+          url: `/client/project/delete`,
+          body: Ids,
+          method: 'DELETE',
+        };
+      },
+      invalidatesTags: (result, error, arg) => [
+        ...arg.map(id => ({type: 'projects' as const, id})),
+      ],
     }),
   }),
   overrideExisting: true,
@@ -47,4 +68,5 @@ export const {
   useGetProjectsQuery,
   useAddProjectMutation,
   useEditProjectMutation,
+  useDeleteProjectMutation,
 } = ProjectsApi;

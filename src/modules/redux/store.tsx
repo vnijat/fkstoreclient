@@ -1,4 +1,4 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { combineReducers, configureStore, Store } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/dist/query';
 import { useDispatch } from 'react-redux';
 import { InventoryApi } from '../api/apiSlice';
@@ -12,9 +12,19 @@ import clientQuery from './clientsQuerySlicer';
 import clientSlicer from './clientsSlicer';
 import projectQuery from './projectQuerySlicer';
 import projectSlicer from './projectSlicer';
+import configsSlicer from './configsSlicer';
+import { FLUSH, PAUSE, PERSIST, PersistConfig, persistReducer, persistStore, PURGE, REGISTER, REHYDRATE } from 'redux-persist';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export const store = configureStore({
-    reducer: {
+
+const persistConfig: PersistConfig<any> = {
+    key: 'root',
+    storage: AsyncStorage,
+    whitelist: ['configs']
+};
+
+const rootReducer = combineReducers(
+    {
         [InventoryApi.reducerPath]: InventoryApi.reducer,
         appStateSlicer,
         menuSlicer,
@@ -26,14 +36,29 @@ export const store = configureStore({
         clientSlicer,
         projectQuery,
         projectSlicer,
-    },
+        configs: configsSlicer
+    }
+);
+
+const persistedReducer = persistReducer<any, any>(persistConfig, rootReducer);
+
+export const store = configureStore({
+    reducer: persistedReducer,
     middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware().concat(InventoryApi.middleware),
+        getDefaultMiddleware({
+            serializableCheck: {
+                ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+            },
+        }).concat(InventoryApi.middleware),
 });
 
-export type RootState = ReturnType<typeof store.getState>;
+export type RootState = ReturnType<typeof rootReducer>;
 export type AppDispatch = typeof store.dispatch;
 export const useAppDispatch = () => useDispatch<AppDispatch>();
 setupListeners(store.dispatch);
+
+
+export const persistor = persistStore(store);
+
 
 export default store;

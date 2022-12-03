@@ -15,7 +15,7 @@ export const ClientsApi = InventoryApi.injectEndpoints({
       },
     }),
     addClient: build.mutation<ClientsResponse, AddClient>({
-      invalidatesTags: ['clients'],
+      invalidatesTags: ['clients', 'clientForPicker'],
       query: body => {
         return {
           url: '/client/',
@@ -34,7 +34,7 @@ export const ClientsApi = InventoryApi.injectEndpoints({
       },
     }),
     editClient: build.mutation<ClientsResponse, {body: AddClient; id: number}>({
-      invalidatesTags: ['clients'],
+      invalidatesTags: ['clients', 'clientForPicker'],
       query: ({body, id}) => {
         return {
           url: `/client/${id}`,
@@ -43,7 +43,10 @@ export const ClientsApi = InventoryApi.injectEndpoints({
         };
       },
     }),
-    getClientForPicker: build.query<{client: {id: number; label: string}[]},undefined>({
+    getClientForPicker: build.query<
+      {client: {id: number; label: string}[]},
+      undefined
+    >({
       providesTags: ['clientForPicker'],
       query: () => {
         return {

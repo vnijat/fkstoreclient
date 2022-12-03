@@ -1,4 +1,5 @@
 import {ClientType} from '../../enums/clientType';
+import {ProjectStatus} from '../../enums/projectStatus';
 import {InputsConfig} from '../../types/inputsconfig';
 
 const projectInputConfig: InputsConfig[] = [
@@ -50,6 +51,25 @@ const projectInputConfig: InputsConfig[] = [
     selectableDataKey: 'client',
     height: 35,
     width: 230,
+  },
+  {
+    title: 'DeadLine',
+    dtoKey: 'deadline',
+    height: 35,
+    width: 250,
+    isDate: true,
+  },
+  {
+    title: 'Status',
+    dtoKey: 'status',
+    height: 35,
+    width: 250,
+    selectable: true,
+    isEnum: true,
+    enumData: Object.values(ProjectStatus).map(type => ({
+      label: type,
+      value: type,
+    })),
   },
   {
     title: 'For Sample?',

@@ -40,7 +40,9 @@ const CustomContextMenu = ({ children, zIndex }: ICustomContextMenu) => {
         <>
             <View style={[StyleSheet.absoluteFill, { zIndex: zIndex || 1, backgroundColor: 'transparent' }]}
                 onTouchStart={onTouchStart}
-                ref={ref} />
+                ref={ref}
+                // tooltip={'*Click Right Mouse Button For Context Menu*'}
+            />
 
             <Flyout
                 isOpen={isOpenContextMenu}

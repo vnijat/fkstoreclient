@@ -15,7 +15,9 @@ interface Project extends Common {
   client: Client;
   otherExpenses: OtherExpensesType[];
   otherExpensesTotalCost: number;
+  totalPrice: number;
   paymentStatus: PaymentStatus;
+  unPaid: number;
 }
 
 type OtherExpensesType = {

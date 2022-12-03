@@ -6,7 +6,7 @@ import { Colors } from "../../utils/colors";
 import Icon from 'react-native-vector-icons/Entypo';
 import { getStyle } from "./style";
 
-interface IaddOptionsModal {
+interface ICustomModal {
     isShowModal: boolean;
     closeModal: () => void;
     isDissmissEnabled: boolean;
@@ -16,7 +16,7 @@ interface IaddOptionsModal {
 }
 
 
-const CustomModal = ({ children, isShowModal, closeModal, isDissmissEnabled, width }: IaddOptionsModal) => {
+const CustomModal = ({ children, isShowModal, closeModal, isDissmissEnabled, width }: ICustomModal) => {
     const style = useMemo(() => getStyle(width), [width]);
 
     return (

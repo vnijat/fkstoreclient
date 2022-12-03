@@ -1,12 +1,17 @@
 import React from "react";
 import { Alert, Text, View, StyleSheet } from "react-native";
-import { CompletedIcon, CorporateClientIcon, DeclinedIcon, IndividualClientIcon, InProgressIcon, VipIcon } from "../assets/icons/clientCardIcons";
+import { CompletedIcon, CorporateClientIcon, DeclinedIcon, IndividualClientIcon, InProgressIcon, UnknownClientIcon, VipIcon } from "../assets/icons/clientCardIcons";
 import { IMultipleSelectData } from "../containers/customPicker/components/multipleSelectItem";
 import { ClientType } from "../enums/clientType";
 import { ProjectStatus } from "../enums/projectStatus";
 import { IICON } from "../types/icon";
 import { Item } from "../types/ItemsQuery";
 import { Colors } from "../utils/colors";
+import countries from 'i18n-iso-countries';
+
+countries.registerLocale(require('i18n-iso-countries/langs/en.json'));
+countries.registerLocale(require('i18n-iso-countries/langs/az.json'));
+const countryobjects = countries.getNames('en', { select: 'official' });
 
 const modifieErrorMessage = (error: any) => {
     return error.data.message.reduce((errorObject: { [key: string]: string[]; }, message: string,) => {
@@ -42,13 +47,13 @@ const modifyItemForEdit = (data: Item[] | Item, itemId: number) => {
 const alertPromise = (title: string, message: string) => {
     return new Promise((resolve, reject) => {
         Alert.alert(title, message, [
-            { onPress: () => reject('cancelled') },
             { text: 'Cancel', onPress: () => reject('rejected'), style: 'cancel' },
-            { text: 'Yes', onPress: () => resolve(true), style: 'destructive' }
-        ]);
+            { text: 'Yes', onPress: () => resolve(true), style: 'destructive' },
+        ], { onDismiss: () => reject('rejected') });
 
     });
 };
+
 
 
 const getNestedCategoriesIds = (tree: IMultipleSelectData[]) => {
@@ -111,9 +116,10 @@ const getClientTypeIcons = (type: ClientType, size?: number, color?: string) => 
     const clientTypeIcon = {
         [ClientType.INDIVIDUAL]: <IndividualClientIcon {...ClientTypeIconOptions} />,
         [ClientType.CORPORATE]: <CorporateClientIcon {...ClientTypeIconOptions} />,
-        [ClientType.VIP]: <IconVip />
+        [ClientType.VIP]: <IconVip />,
+        default: <UnknownClientIcon {...ClientTypeIconOptions} />
     };
-    return clientTypeIcon[type];
+    return clientTypeIcon[type] ?? clientTypeIcon['default'];
 };
 
 
@@ -127,6 +133,15 @@ const getProjectStatusIcons = (status: ProjectStatus, size?: number, color?: str
 };
 
 
+
+const getCountriesForPicker = () => {
+    const countriesForPicker = [];
+    for (const countryCode in countryobjects) {
+        countriesForPicker.push({ value: countryCode, label: countryobjects[countryCode] });
+    }
+    return countriesForPicker;
+};
+
 const HELP = {
     modifieErrorMessage,
     modifyItemForEdit,
@@ -135,7 +150,8 @@ const HELP = {
     getNestedCategoriesIds,
     getNestedCategoriesForSelect,
     getClientTypeIcons,
-    getProjectStatusIcons
+    getProjectStatusIcons,
+    getCountriesForPicker
 };
 
 export default HELP;

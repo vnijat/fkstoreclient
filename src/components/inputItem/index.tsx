@@ -3,6 +3,7 @@ import React, { FC, memo, useMemo, useState } from 'react';
 import { View, TextInput, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
 import CustomPicker, { IsingelSelectData } from '../../containers/customPicker';
+import DateTimePicker from '../../containers/dateTimePicker';
 import HELP from '../../services/helpers';
 import { Colors } from '../../utils/colors';
 import { regExPatterns } from '../../utils/validation';
@@ -17,7 +18,7 @@ interface IInputItem {
   maxLength?: number;
   isMultiLine?: boolean;
   inputRef?: (r: any) => {};
-  setValue: (text: string | boolean) => void;
+  setValue: (text: string | boolean | Date) => void;
   inputValue: string | boolean;
   id?: number;
   selectable?: boolean;
@@ -38,6 +39,7 @@ interface IInputItem {
   disablePickerActionButtons?: boolean;
   errorDetail?: string;
   isCheckBox?: boolean;
+  isDatePicker?: boolean;
 }
 
 export const InputItem: FC<IInputItem> = memo(
@@ -70,7 +72,8 @@ export const InputItem: FC<IInputItem> = memo(
     pickerOnPressAddButton,
     disablePickerActionButtons,
     errorDetail,
-    isCheckBox
+    isCheckBox,
+    isDatePicker
   }) => {
     const style = useMemo(
       () => getStyle(height, width, isErorr, titleColor, backgroundColor),
@@ -143,7 +146,7 @@ export const InputItem: FC<IInputItem> = memo(
 
 
     const renderTextInput = useMemo(() => {
-      if (!isCheckBox) {
+      if (!isCheckBox && !isDatePicker) {
         return (
           <TextInput
             key={id}
@@ -160,7 +163,7 @@ export const InputItem: FC<IInputItem> = memo(
         return null;
       }
 
-    }, [id, onChangeText, inputValue, placeHolder, isMultiLine, maxLength, onFocus, onBlur, isCheckBox]);
+    }, [id, onChangeText, inputValue, placeHolder, isMultiLine, maxLength, onFocus, onBlur, isCheckBox, isDatePicker]);
 
 
 
@@ -182,7 +185,16 @@ export const InputItem: FC<IInputItem> = memo(
       }
     }, [isCheckBox, inputValue]);
 
+    isDatePicker && console.log("inputValue-->>", inputValue);
 
+    const renderDatePicker = useMemo(() => {
+      if (isDatePicker) {
+        return <DateTimePicker dateValue={inputValue} getDate={(date: Date) => setValue(date)} />;
+      } else {
+        return null;
+      }
+
+    }, [isDatePicker, inputValue]);
 
     return (
       <View style={{ margin: 5 }} tooltip={errorMessage}>
@@ -192,6 +204,8 @@ export const InputItem: FC<IInputItem> = memo(
         )
         }
         {chekBoxInput}
+        {renderDatePicker}
+        { }
         {selectable ? renderCustomPicker
           :
           (

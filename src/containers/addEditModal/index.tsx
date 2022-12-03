@@ -99,7 +99,7 @@ const AddEditModal = ({
 
 
     const setClientDataForPost = (
-        inputValue: string | RowDataType[] | boolean,
+        inputValue: string | RowDataType[] | boolean | Date,
         objectKey: string,
     ) => {
         errorMessage[objectKey] &&
@@ -133,7 +133,8 @@ const AddEditModal = ({
                         requiredDataDtoKey,
                         isTableInput,
                         tableConfig,
-                        isCheckBox
+                        isCheckBox,
+                        isDate
                     } = config;
                     const inputValue: string | boolean = dataForRequest[dtoKey!] || '';
                     const dataForPickerFromServer = (selectableData && selectableDataKey) ? (!!requiredDataName ? selectableData[selectableDataKey]?.filter((data: { [key: string]: any; }) => (data?.[requiredDataDtoKey!!] ? data?.[requiredDataDtoKey!!] : data?.[requiredDataDtoKey?.toLowerCase()!!]) == dataForRequest[requiredDataDtoKey!]) : selectableData[selectableDataKey]) : [];
@@ -186,6 +187,7 @@ const AddEditModal = ({
                                 disablePickerActionButtons={disablePickerActionButtons}
                                 errorDetail={errorDetail}
                                 isCheckBox={isCheckBox}
+                                isDatePicker={isDate}
                             />
                         );
                     }

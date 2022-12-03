@@ -1,3 +1,4 @@
+import {ProjectStatus} from '../enums/projectStatus';
 import {OtherExpensesType} from './projectsQuery';
 
 interface AddClientProject {
@@ -9,6 +10,7 @@ interface AddClientProject {
   deadline?: Date | null;
   isSample?: boolean;
   otherExpenses?: OtherExpensesType[];
+  status: ProjectStatus;
 }
 
 export type {AddClientProject};

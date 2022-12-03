@@ -21,11 +21,9 @@ interface IProjectsView {
 const ProjectsView = ({ navigation }: IProjectsView) => {
     const style = getStyle();
     const projectsQueryParams = useSelector((state: RootState) => state.projectQuery);
-    const { data: queryData, error: fetchError, isLoading } = useGetProjectsQuery(projectsQueryParams, {
+    const { data: queryData } = useGetProjectsQuery(projectsQueryParams, {
         selectFromResult: ({ data, isLoading, isUninitialized, error }) => ({
             data,
-            error,
-            isLoading: isUninitialized ? true : isLoading,
         }
         ),
         pollingInterval: 5000

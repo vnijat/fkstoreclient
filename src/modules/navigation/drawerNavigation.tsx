@@ -3,10 +3,10 @@ import React, { FC } from 'react';
 import { OrderView } from '../../views/orderView';
 import { PurchaseView } from '../../views/purchaseView';
 import CustomDrawer from '../../containers/customDrawer';
-import { AddItemView } from '../../views/addItemView';
 import { ClientsView } from '../../views/clientsView';
 import { ItemsView } from '../../views/itemsView';
 import ProjectsView from '../../views/projectsView';
+import SettingsAddEditModal from '../../containers/settingsAddEditModal';
 
 export const DrawerNavigation: FC<any> = () => {
     const Drawer = createDrawerNavigator();

@@ -9,8 +9,8 @@
 // Includes from @react-native-community/checkbox
 #include <winrt/CheckboxWindows.h>
 
-// Includes from @react-native-picker/picker
-#include <winrt/ReactNativePicker.h>
+// Includes from @react-native-community/datetimepicker
+#include <winrt/DateTimePicker.h>
 
 // Includes from react-native-print
 #include <winrt/RNPrint.h>
@@ -27,8 +27,8 @@ void RegisterAutolinkedNativeModulePackages(winrt::Windows::Foundation::Collecti
     packageProviders.Append(winrt::ReactNativeAsyncStorage::ReactPackageProvider());
     // IReactPackageProviders from @react-native-community/checkbox
     packageProviders.Append(winrt::CheckboxWindows::ReactPackageProvider());
-    // IReactPackageProviders from @react-native-picker/picker
-    packageProviders.Append(winrt::ReactNativePicker::ReactPackageProvider());
+    // IReactPackageProviders from @react-native-community/datetimepicker
+    packageProviders.Append(winrt::DateTimePicker::ReactPackageProvider());
     // IReactPackageProviders from react-native-print
     packageProviders.Append(winrt::RNPrint::ReactPackageProvider());
     // IReactPackageProviders from react-native-screens

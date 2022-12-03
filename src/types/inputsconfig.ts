@@ -19,6 +19,7 @@ interface InputsConfig {
   isTableInput?: boolean;
   tableConfig?: ITableConfig[];
   isCheckBox?: boolean;
+  isDate?: boolean;
 }
 
 export type {InputsConfig};

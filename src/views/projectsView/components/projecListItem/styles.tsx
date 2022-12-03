@@ -9,19 +9,18 @@ export const getStyle = () => {
             // alignItems: 'center'
         },
         columContent: {
-            height: "100%",
             minHeight: 50,
             maxHeight: 80,
             alignItems: 'center',
             flex: 1,
             flexDirection: 'row',
-
         },
         columContentText: {
+            maxHeight: 40,
             color: Colors.DEFAULT_TEXT_COLOR,
-            fontSize: 13,
+            fontSize: 12,
             fontWeight: '400',
-            maxWidth: 150
+            width: 90,
         },
         rowItem: {
             flexDirection: 'row',
@@ -36,9 +35,9 @@ export const getStyle = () => {
             justifyContent: 'center',
             alignItems: 'center',
             marginRight: 5,
-            width: 40,
-            height: 40,
-            borderRadius: 40,
+            width: 35,
+            height: 35,
+            borderRadius: 32,
             backgroundColor: Colors.CARD_HEADER_COLOR
         }
     });

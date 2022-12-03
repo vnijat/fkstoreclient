@@ -1,4 +1,5 @@
-import { InputsConfig } from "../../types/inputsconfig";
+import HELP from '../../services/helpers';
+import {InputsConfig} from '../../types/inputsconfig';
 
 const supplier: InputsConfig[] = [
   {
@@ -44,6 +45,9 @@ const supplier: InputsConfig[] = [
     isNumeric: false,
     maxLength: 200,
     placeHolder: 'Country',
+    selectable: true,
+    isEnum: true,
+    enumData: HELP.getCountriesForPicker(),
     width: 230,
     height: 35,
   },
@@ -56,7 +60,6 @@ const supplier: InputsConfig[] = [
     width: 230,
     height: 35,
   },
-  
 ];
 
 export {supplier};

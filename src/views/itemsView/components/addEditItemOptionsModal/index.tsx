@@ -9,10 +9,6 @@ import { RootState, useAppDispatch } from "../../../../modules/redux/store";
 import { InputsConfig } from "../../../../types/inputsconfig";
 
 
-
-
-
-
 const AddEditItemOptionsModal = () => {
     const dispatch = useAppDispatch();
     const optionName = useSelector((state: RootState) => state.itemOptions.optionNameForModal);
@@ -47,7 +43,7 @@ const AddEditItemOptionsModal = () => {
     };
 
     const addOption = (data: { body: object; }) => {
-        return apiAddOption({ ...data, optionName: optionName! });
+        return apiAddOption({ body: data, optionName: optionName! });
     };
 
     const editOption = (data: { body: object; id: number; }) => {

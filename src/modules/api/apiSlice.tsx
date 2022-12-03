@@ -6,7 +6,7 @@ import { RootState } from '../redux/store';
 // Define a service using a base URL and expected endpoints
 
 const asyncFetchBaseQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (args, api, extraOptions) => {
-    const baseUrl = (api.getState() as RootState).appStateSlicer.url;
+    const baseUrl = (api.getState() as RootState).configs.apiURL;
     const rawBaseQuery = fetchBaseQuery({ baseUrl });
     return rawBaseQuery(args, api, extraOptions);
 };
@@ -87,7 +87,8 @@ export const InventoryApi = createApi({
         'qrCode',
         'item',
         'projects',
-        'clientForPicker'
+        'clientForPicker',
+        'orders'
     ]
 });
 

@@ -72,6 +72,14 @@ export const PopUpICon = ({ size, color }: IICON) => {
 };
 
 
+export const UnknownClientIcon = ({ size, color }: IICON) => {
+    return (
+        <Icon name="help" size={size} color={color} />
+    );
+};
+
+
+
 
 
 

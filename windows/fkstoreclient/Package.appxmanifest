@@ -7,9 +7,8 @@
   IgnorableNamespaces="uap mp">
 
   <Identity
-    Name="480eb102-e22b-422b-9fea-56f15468e48f"
     Publisher="CN=neejee"
-    Version="1.1.2.0" />
+    Version="1.1.5.0"  Name="fkclient"/>
 
   <mp:PhoneIdentity PhoneProductId="480eb102-e22b-422b-9fea-56f15468e48f" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
@@ -46,5 +45,7 @@
 
   <Capabilities>
     <Capability Name="internetClient" />
+    <Capability Name="internetClientServer"/>
+    <Capability Name="privateNetworkClientServer"/>
   </Capabilities>
 </Package>

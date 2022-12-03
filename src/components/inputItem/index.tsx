@@ -1,13 +1,12 @@
-import { assertAccessor } from '@babel/types';
-import { Picker } from '@react-native-picker/picker';
+import CheckBox from '@react-native-community/checkbox';
 import React, { FC, memo, useMemo, useState } from 'react';
 import { View, TextInput, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
 import CustomPicker, { IsingelSelectData } from '../../containers/customPicker';
+import DateTimePicker from '../../containers/dateTimePicker';
 import HELP from '../../services/helpers';
 import { Colors } from '../../utils/colors';
 import { regExPatterns } from '../../utils/validation';
-import CustomPressable from '../customPressable';
 import { getStyle } from './styles';
 
 interface IInputItem {
@@ -19,8 +18,8 @@ interface IInputItem {
   maxLength?: number;
   isMultiLine?: boolean;
   inputRef?: (r: any) => {};
-  setValue: (text: string) => void;
-  inputValue: string;
+  setValue: (text: string | boolean | Date) => void;
+  inputValue: string | boolean;
   id?: number;
   selectable?: boolean;
   selectableData?: Array<IsingelSelectData & { id?: number; }>;
@@ -35,6 +34,12 @@ interface IInputItem {
   isPickerItemEditable?: boolean;
   isDisabled?: boolean;
   requiredText?: string;
+  pickerOnPressEditButton?: (dataId: number, dataKeyName?: string) => void;
+  pickerOnPressAddButton?: (dataKeyName: string) => void;
+  disablePickerActionButtons?: boolean;
+  errorDetail?: string;
+  isCheckBox?: boolean;
+  isDatePicker?: boolean;
 }
 
 export const InputItem: FC<IInputItem> = memo(
@@ -63,6 +68,12 @@ export const InputItem: FC<IInputItem> = memo(
     isPickerItemEditable,
     isDisabled,
     requiredText,
+    pickerOnPressEditButton,
+    pickerOnPressAddButton,
+    disablePickerActionButtons,
+    errorDetail,
+    isCheckBox,
+    isDatePicker
   }) => {
     const style = useMemo(
       () => getStyle(height, width, isErorr, titleColor, backgroundColor),
@@ -73,6 +84,8 @@ export const InputItem: FC<IInputItem> = memo(
       () => !isFocused && isSearch && !inputValue.length,
       [isFocused, isSearch, inputValue],
     );
+    const errorMessage = useMemo(() => isErorr ? errorDetail : inputTitle, [isErorr, errorDetail]);
+
     const onChangeText = (text: string) => {
       const isNum = regExPatterns.IS_NUMERIC;
       if (isNumeric) {
@@ -80,6 +93,10 @@ export const InputItem: FC<IInputItem> = memo(
       } else {
         setValue(text);
       }
+    };
+
+    const onCheckBoxValueChange = () => {
+      setValue(!inputValue);
     };
 
     const onValueChange = (item: IsingelSelectData) => {
@@ -119,37 +136,80 @@ export const InputItem: FC<IInputItem> = memo(
           isDataSearchEnabled={isPickerSearchEnabled}
           isDisabled={isDisabled}
           requiredText={requiredText}
+          onPressEditButton={pickerOnPressEditButton}
+          onPressAddButton={pickerOnPressAddButton}
+          disablePickerActionButtons={disablePickerActionButtons}
         />
       </>
       );
-    }, [inputValue, dataForPicker.length, isErorr, isPickerItemEditable, isDisabled]);
+    }, [inputValue, dataForPicker, isErorr, isPickerItemEditable, isDisabled, disablePickerActionButtons]);
 
 
     const renderTextInput = useMemo(() => {
-      return (
-        <TextInput
-          key={id}
-          style={style.textInput}
-          onChangeText={onChangeText}
-          value={inputValue}
-          placeholder={placeHolder}
-          multiline={isMultiLine}
-          maxLength={maxLength}
-          onFocus={onFocus}
-          onBlur={onBlur}
-        />);
-    }, [id, onChangeText, inputValue, placeHolder, isMultiLine, maxLength, onFocus, onBlur]);
+      if (!isCheckBox && !isDatePicker) {
+        return (
+          <TextInput
+            key={id}
+            style={style.textInput}
+            onChangeText={onChangeText}
+            value={inputValue}
+            placeholder={placeHolder}
+            multiline={isMultiLine}
+            maxLength={maxLength}
+            onFocus={onFocus}
+            onBlur={onBlur}
+          />);
+      } else {
+        return null;
+      }
+
+    }, [id, onChangeText, inputValue, placeHolder, isMultiLine, maxLength, onFocus, onBlur, isCheckBox, isDatePicker]);
+
+
+
+
+    const chekBoxInput = useMemo(() => {
+      if (isCheckBox) {
+        return (
+          <CheckBox
+            value={!!inputValue}
+            tintColor={Colors.CARD_COLOR}
+            onValueChange={onCheckBoxValueChange}
+            onCheckColor={Colors.CARD_HEADER_COLOR}
+            onTintColor={Colors.CARD_HEADER_COLOR}
+            onFillColor={Colors.CULTURED}
+          />
+        );
+      } else {
+        return null;
+      }
+    }, [isCheckBox, inputValue]);
+
+    isDatePicker && console.log("inputValue-->>", inputValue);
+
+    const renderDatePicker = useMemo(() => {
+      if (isDatePicker) {
+        return <DateTimePicker dateValue={inputValue} getDate={(date: Date) => setValue(date)} />;
+      } else {
+        return null;
+      }
+
+    }, [isDatePicker, inputValue]);
 
     return (
-      <View style={{ margin: 5 }}>
+      <View style={{ margin: 5 }} tooltip={errorMessage}>
         {!!inputTitle && (
           <Text style={style.inputTitle}>{`${inputTitle?.toUpperCase()} ${isErorr ? '*' : ''
             } `}</Text>
-        )}
+        )
+        }
+        {chekBoxInput}
+        {renderDatePicker}
+        { }
         {selectable ? renderCustomPicker
           :
           (
-            <View style={{ justifyContent: 'center' }}>
+            <View style={{ justifyContent: 'center' }} >
               {renderTextInput}
               {isShowMagnify && (
                 <View

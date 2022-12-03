@@ -65,6 +65,21 @@ export const VipIcon = ({ size, color }: IICON) => {
 };
 
 
+export const PopUpICon = ({ size, color }: IICON) => {
+    return (
+        <Icon name="popup" size={size} color={color} />
+    );
+};
+
+
+export const UnknownClientIcon = ({ size, color }: IICON) => {
+    return (
+        <Icon name="help" size={size} color={color} />
+    );
+};
+
+
+
 
 
 

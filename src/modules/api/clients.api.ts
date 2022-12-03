@@ -1,3 +1,4 @@
+import {IsingelSelectData} from '../../containers/customPicker';
 import {AddClient} from '../../types/client';
 import {ClientsQueryParams, ClientsResponse} from '../../types/clientsQuery';
 import {InventoryApi} from './apiSlice';
@@ -14,7 +15,7 @@ export const ClientsApi = InventoryApi.injectEndpoints({
       },
     }),
     addClient: build.mutation<ClientsResponse, AddClient>({
-      invalidatesTags: ['clients'],
+      invalidatesTags: ['clients', 'clientForPicker'],
       query: body => {
         return {
           url: '/client/',
@@ -32,16 +33,24 @@ export const ClientsApi = InventoryApi.injectEndpoints({
         };
       },
     }),
-    editClient: build.mutation<
-      ClientsResponse,
-      {body: AddClient; clientId: number}
-    >({
-      invalidatesTags: ['clients'],
-      query: ({body, clientId}) => {
+    editClient: build.mutation<ClientsResponse, {body: AddClient; id: number}>({
+      invalidatesTags: ['clients', 'clientForPicker'],
+      query: ({body, id}) => {
         return {
-          url: `/client/${clientId}`,
+          url: `/client/${id}`,
           body: body,
           method: 'PATCH',
+        };
+      },
+    }),
+    getClientForPicker: build.query<
+      {client: {id: number; label: string}[]},
+      undefined
+    >({
+      providesTags: ['clientForPicker'],
+      query: () => {
+        return {
+          url: '/client/data/picker',
         };
       },
     }),
@@ -54,4 +63,5 @@ export const {
   useAddClientMutation,
   useDeleteClientMutation,
   useEditClientMutation,
+  useGetClientForPickerQuery,
 } = ClientsApi;

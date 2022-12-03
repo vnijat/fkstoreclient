@@ -1,12 +1,14 @@
 import CheckBox from "@react-native-community/checkbox";
-import React, { FC, useMemo, useRef, useState } from "react";
-import { Image, Pressable, Text, View } from "react-native";
+import React, { FC, useMemo, useState } from "react";
+import { Text, View } from "react-native";
 import { useSelector } from "react-redux";
+import CustomContextMenu from "../../components/customContextMenu";
 import CustomPressable from "../../components/customPressable";
-import { addItemId, setIsEditMode, setIsShowItemModal, setItemIdForFullResponse } from "../../modules/redux/itemsSlicer";
+import { addItemId, clearSelectedItems, setIsEditMode, setIsItemForEdit, setIsShowAddEditModal, setIsShowItemModal, setItemForPost, setItemIdForFullResponse } from "../../modules/redux/itemsSlicer";
 import { selectIsEditMode } from "../../modules/redux/selectors/itemSelectors";
 import { RootState, useAppDispatch } from "../../modules/redux/store";
-import { Barcode, Category, Color, Unit } from "../../types/ItemsQuery";
+import HELP from "../../services/helpers";
+import { Item } from "../../types/ItemsQuery";
 import { Colors } from "../../utils/colors";
 import { currency } from "../../utils/currency";
 import { getStyle } from "./styles";
@@ -14,22 +16,12 @@ import { getStyle } from "./styles";
 
 interface ItemsContentProps {
     id: number;
-    name: string;
-    description: string;
-    barcode: Barcode;
-    category: Category;
-    quantity: number;
-    unit: Unit;
-    totalPrice: number;
-    stockPrice: number;
     itemIndex: number;
-    lastItem: number | undefined;
-    color: Color;
     selectBulk: Function;
-    purchasePrice: number;
+    data: Item;
 }
 
-const ItemsContent: FC<ItemsContentProps> = ({ id, name, barcode, category, quantity, unit, totalPrice, stockPrice, itemIndex, lastItem, selectBulk, color, description, purchasePrice }) => {
+const ItemsContent: FC<ItemsContentProps> = ({ id, itemIndex, selectBulk, data }) => {
     const style = getStyle();
     const dispatch = useAppDispatch();
     const isEditMode = useSelector(selectIsEditMode);
@@ -42,9 +34,6 @@ const ItemsContent: FC<ItemsContentProps> = ({ id, name, barcode, category, quan
         };
     });
 
-    const pressableRef = useRef(null);
-
-
     const onPressItem = ({ nativeEvent }: any) => {
         const { shiftKey } = nativeEvent;
         if (isEditMode) {
@@ -56,7 +45,7 @@ const ItemsContent: FC<ItemsContentProps> = ({ id, name, barcode, category, quan
                 selectBulk(firstSelectedItemIndex, itemIndex);
             }
             else {
-                dispatch(addItemId({ index: itemIndex, Id: id, totalPrice }));
+                dispatch(addItemId({ index: itemIndex, Id: id, totalPrice: data.totalPrice }));
             }
         } else {
             dispatch(setIsShowItemModal(true));
@@ -67,7 +56,7 @@ const ItemsContent: FC<ItemsContentProps> = ({ id, name, barcode, category, quan
         return (
             <>
                 <View key={id} style={[style.columContent]}>
-                    <Text key={`${content}-${id}`} style={style.columContentText}>
+                    <Text key={`${content}-${id}`} style={style.columContentText} >
                         {content}
                     </Text>
                 </View>
@@ -76,7 +65,7 @@ const ItemsContent: FC<ItemsContentProps> = ({ id, name, barcode, category, quan
     };
 
     const onCheckBoxValueChange = () => {
-        dispatch(addItemId({ index: itemIndex, Id: id, totalPrice }));
+        dispatch(addItemId({ index: itemIndex, Id: id, totalPrice: data.totalPrice }));
         if (isEditMode && isSelected && selectedCount === 1) {
             dispatch(setIsEditMode(false));
         } else {
@@ -103,16 +92,16 @@ const ItemsContent: FC<ItemsContentProps> = ({ id, name, barcode, category, quan
     }, [isSelected, isShowCheckBox, isEditMode, selectedCount]);
 
     const rowData = useMemo(() => [
-        name.toUpperCase(),
-        description.toUpperCase(),
-        barcode.code,
-        category.title.toUpperCase(),
-        color.name.toUpperCase(),
-        unit.name.toUpperCase(),
-        quantity,
-        currency.format(purchasePrice),
-        currency.format(totalPrice)
-    ], [name, description, barcode, category, color, quantity, unit, stockPrice, totalPrice]);
+        data?.name.toUpperCase(),
+        data?.description.toUpperCase(),
+        data?.barcode?.code,
+        data?.category?.title.toUpperCase(),
+        data?.color?.name.toUpperCase(),
+        data?.unit?.name.toUpperCase(),
+        Number(data?.quantity ?? 0),
+        currency.format(data?.purchasePrice ?? 0),
+        currency.format(data?.totalPrice ?? 0)
+    ], [data]);
 
     const renderRow = useMemo(() => {
         return rowData.map((content, i) => {
@@ -121,15 +110,66 @@ const ItemsContent: FC<ItemsContentProps> = ({ id, name, barcode, category, quan
 
     }, [rowData]);
 
+
+
+    const onPressEdit = () => {
+        const itemForPost = HELP.modifyItemForEdit(data, data.id);
+        dispatch(setIsItemForEdit(true));
+        dispatch(setItemForPost(itemForPost));
+        dispatch(setIsShowAddEditModal(true));
+        dispatch(clearSelectedItems());
+        dispatch(setIsEditMode(false));
+    };
+
+    const onPressDelete = () => {
+
+
+    };
+
+    const contextActionButtons = [
+        {
+            title: 'EDIT', onPress: onPressEdit
+        },
+        {
+            title: 'DELETE', onPress: onPressDelete
+        }
+    ];
+
+
+    const contextMenuContent = useMemo(() => {
+        return (
+            <View style={{ width: 150, maxHeight: 200, backgroundColor: Colors.CARD_COLOR, padding: 2 }}>
+                {contextActionButtons.map((button, index) => {
+                    return (
+                        <CustomPressable
+                            key={`${button.title}-${index}`}
+                            style={{ width: '100%', height: 30, flexDirection: 'row', backgroundColor: Colors.CARD_HEADER_COLOR, marginVertical: 1, alignItems: 'center', paddingHorizontal: 5 }}
+                            onPress={button.onPress}
+                            onHoverOpacity
+                        >
+                            <Text style={{ color: Colors.DEFAULT_TEXT_COLOR }}>
+                                {button.title}
+                            </Text>
+                        </CustomPressable>
+                    );
+                })
+                }
+            </View>
+        );
+    }, [data]);
+
+
     return (
         <>
-            <CustomPressable ref={pressableRef} key={id}
+            <CustomPressable key={id}
                 onPress={onPressItem}
                 style={[{ backgroundColor: isSelected ? Colors.CARD_COLOR : Colors.FLORAL_WHITE }, style.rowItem]}
                 onMouseEnter={() => setIsShowCheckBox(true)}
                 onMouseLeave={() => setIsShowCheckBox(false)}
-                onHoverOpacity
-            >
+                onHoverOpacity>
+                <CustomContextMenu>
+                    {contextMenuContent}
+                </CustomContextMenu>
                 {renderCheckBox}
                 {renderRow}
             </CustomPressable>

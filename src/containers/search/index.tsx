@@ -17,6 +17,7 @@ import RNprint from 'react-native-print';
 import { currency } from '../../utils/currency';
 import FilterModal from '../filterModal';
 import CustomPicker from '../customPicker';
+import { setIsShowAddEditModal } from '../../modules/redux/itemsSlicer';
 
 
 
@@ -134,7 +135,10 @@ const SearchContainer: FC<ISearchContainer> = ({ searchValue, overallPrice }) =>
     const onCloseFilterModal = () => {
         setIsShowFilterModal(false);
     };
+    const onPressAddItem = () => {
+        dispatch(setIsShowAddEditModal(true));
 
+    };
 
     return (
         <View style={style.container}>
@@ -150,7 +154,7 @@ const SearchContainer: FC<ISearchContainer> = ({ searchValue, overallPrice }) =>
             <View style={style.sortBy}>
                 <View style={style.filterByIconContainer} tooltip={'Filters'} >
                     {/* <CustomPressable onPress={onPressFilterBy} onHoverOpacity ref={filterByButtonRef}> */}
-                        <FilterByIcon size={20} color={Colors.DEFAULT_TEXT_COLOR} />
+                    <FilterByIcon size={20} color={Colors.DEFAULT_TEXT_COLOR} />
                     {/* </CustomPressable> */}
                 </View>
                 {renderFilterByPickers}
@@ -161,6 +165,14 @@ const SearchContainer: FC<ISearchContainer> = ({ searchValue, overallPrice }) =>
                     <View style={style.clearText} tooltip={'Clear Filters'}  >
                         <ClearIcon size={20} color={Colors.METALLIC_GOLD} />
                     </View>
+                </CustomPressable>
+                <CustomPressable onPress={onPressAddItem}
+                    onHoverOpacity
+                    style={{ backgroundColor: Colors.DEFAULT_TEXT_COLOR, justifyContent: 'center', paddingHorizontal: 5, paddingVertical: 2, borderRadius: 1, alignItems: 'center' }}
+                >
+                    <Text style={{ color: Colors.CARD_COLOR, }}>
+                        {'Add Item'.toUpperCase()}
+                    </Text>
                 </CustomPressable>
                 <View style={{ justifyContent: 'center', position: 'absolute', right: 30 }}>
                     <Text style={{ color: Colors.DEFAULT_TEXT_COLOR, fontSize: 12, fontWeight: '700' }}>

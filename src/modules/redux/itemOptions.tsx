@@ -11,23 +11,43 @@ import { AddUnit } from '../../types/unit';
 
 export interface IItemOptions {
     options: {
-        color?: AddColor;
-        store?: AddStore;
-        label?: AddLabel;
-        location?: AddLocation;
-        category?: AddCategory;
-        unit?: AddUnit;
-        supplier?: AddSupplier;
-        barcode?: AddBarcode;
+        color: AddColor | {};
+        store: AddStore | {};
+        label: AddLabel | {};
+        location: AddLocation | {};
+        category: AddCategory | {};
+        unit: AddUnit | {};
+        supplier: AddSupplier | {};
+        barcode: AddBarcode | {};
     },
     isOptionForEdit: boolean;
     isOpenOptionModal: boolean;
     optionNameForModal?: keyof IItemOptions['options'];
 }
 
+const defaultOptions = {
+    color: {},
+    store: {},
+    label: {},
+    location: {},
+    category: {},
+    unit: {},
+    supplier: {},
+    barcode: {},
+};
+
+
+
 const initialState = {
     options: {
-
+        color: {},
+        store: {},
+        label: {},
+        location: {},
+        category: {},
+        unit: {},
+        supplier: {},
+        barcode: {},
     },
     isOptionForEdit: false,
     isOpenOptionModal: false,
@@ -37,11 +57,11 @@ const itemOptions = createSlice({
     name: 'itemOptions',
     initialState,
     reducers: {
-        addItemOption: (state, action: PayloadAction<{ [key: string]: object; }>) => {
-            Object.assign(state.options, action.payload);
+        addItemOption: (state, action: PayloadAction<{ optionName: keyof IItemOptions['options'], value: { [key: string]: string | number; }; }>) => {
+            Object.assign(state.options[action.payload.optionName], action.payload.value);
         },
         clearItemOptions: (state) => {
-            state.options = {};
+            state.options = defaultOptions;
         },
         setIsOptionForEdit: (state, action: PayloadAction<boolean>) => {
             state.isOptionForEdit = action.payload;

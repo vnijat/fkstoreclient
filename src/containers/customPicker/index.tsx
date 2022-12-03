@@ -10,7 +10,6 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
 import { Flyout } from 'react-native-windows';
-import AddOptionsModal from '../../containers/addOptionsModal';
 import { inputsForItemOptions } from '../../containers/addOptionsModal/configs';
 import { ItemOptionsApi } from '../../modules/api/itemOptions.api';
 import { useAppDispatch } from '../../modules/redux/store';
@@ -26,7 +25,7 @@ import MultipleSelectItem, { IMultipleSelectData } from './components/multipleSe
 
 export interface IsingelSelectData {
     label?: string;
-    value?: number | string;
+    value?: number | string | boolean;
 }
 
 
@@ -57,6 +56,9 @@ interface ICustomPicker {
     isDisabled?: boolean;
     requiredText?: string;
     arrowDownColor?: string;
+    onPressEditButton?: (dataId: number, dataKeyName?: string) => void;
+    onPressAddButton?: (dataKeyName: string) => void;
+    disablePickerActionButtons?: boolean;
 }
 
 const CustomPicker = ({
@@ -81,7 +83,10 @@ const CustomPicker = ({
     isEditable,
     isDisabled,
     requiredText,
-    arrowDownColor
+    arrowDownColor,
+    onPressEditButton,
+    onPressAddButton,
+    disablePickerActionButtons
 }: ICustomPicker) => {
     const style = getStyle();
     const dispatch = useAppDispatch();
@@ -147,13 +152,17 @@ const CustomPicker = ({
     };
 
     const onPressEdit = async (optionId: number) => {
-        const dataForEdit = await getOptionData(optionId);
-        if (dataKeyName && dataForEdit) {
-            dispatch(addItemOption({ [`${dataKeyName}`]: dataForEdit }));
-            dispatch(setIsOptionForEdit(true));
-            dispatch(setOptionNameForModal(dataKeyName));
+        if (onPressEditButton) {
+            onPressEditButton(optionId, dataKeyName);
+        } else {
+            const dataForEdit = await getOptionData(optionId);
+            if (dataKeyName && dataForEdit) {
+                dispatch(addItemOption({ optionName: dataKeyName, value: dataForEdit }));
+                dispatch(setIsOptionForEdit(true));
+                dispatch(setOptionNameForModal(dataKeyName));
+            }
+            dispatch(setIsOpenOptionModal(true));
         }
-        dispatch(setIsOpenOptionModal(true));
     };
 
     const renerListEmptyComponent = () => {
@@ -177,84 +186,11 @@ const CustomPicker = ({
     }, [multipleSelectData?.length, singleSelectData?.length, getFilteredData?.length, searchText]);
 
 
-
-    // const MultipleSelectItem = ({ isSelected, index, label, id, isShowEdit, nested, indent }: { isSelected: boolean; index: number; label: string; id: number; isShowEdit: boolean; nested?: ImultipleSelectItem[]; indent: number; }) => {
-    //     const [isShowNested, setIsshowNested] = useState(false);
-    //     const isHasNestedData = !!nested?.length;
-    //     const rotate = isShowNested ? '90deg' : '0deg';
-    //     const nestedIds = HELP.getNestedCategoriesIds(nested ?? []);
-    //     const nestedSelectedCount = (nestedIds.length && selectedIds?.filter(id => nestedIds.includes(id)).length) ?? 0;
-    //     const onPressItem = () => {
-    //         if (isHasNestedData) {
-    //             setIsshowNested(!isShowNested);
-    //         } else {
-    //             onSelect && onSelect({ id, label, parent: parent! });
-    //         }
-    //     };
-
-    //     return (<>
-    //         {(nestedSelectedCount > 0) &&
-    //             <View
-    //                 style={style.counter}>
-    //                 <Text
-    //                     style={style.counterText}>
-    //                     {selectedIds?.length}
-    //                 </Text>
-    //             </View>}
-    //         <CustomPressable
-    //             style={[{ paddingLeft: indent }, (isSelected && selectedItemStyle) ? selectedItemStyle : (itemStyle || style.multipleSelectItem)]}
-    //             key={`${index}-${label}`}
-    //             onPress={onPressItem}
-    //             onMouseEnter={() => onMouseEnter(index)}
-    //             onMouseLeave={() => onMouseLeave(index)}
-    //             onHoverOpacity>
-    //             <CheckBox
-    //                 value={isSelected}
-    //                 tintColor={Colors.CARD_COLOR}
-    //                 onValueChange={() =>
-    //                     onSelect && onSelect({ id, label, parent: parent! })
-    //                 }
-    //                 onCheckColor={Colors.CARD_HEADER_COLOR}
-    //                 onTintColor={Colors.CARD_HEADER_COLOR}
-    //                 onFillColor={Colors.CULTURED}
-    //             />
-    //             <Text
-    //                 style={[(isSelected && selectedItemTextStyle) ? selectedItemTextStyle : (itemTextStyle || { fontSize: 12, color: Colors.DEFAULT_TEXT_COLOR })]}
-    //                 key={`${label}`}>
-    //                 {label}
-    //             </Text>
-    //             {isHasNestedData &&
-    //                 <View style={{ transform: [{ rotate }] }}>
-    //                     <Icon name={'chevron-small-right'} size={24} color={Colors.METALLIC_GOLD} />
-    //                 </View>
-    //             }
-    //             {isEditable && isShowEdit &&
-    //                 <CustomPressable onPress={onPressEdit} key={`${index}-${item.label}`}>
-    //                     <Icon size={14} color={Colors.METALLIC_GOLD} name={'cog'} key={`${index}-${item.label}`} />
-    //                 </CustomPressable>
-    //             }
-    //         </CustomPressable>
-    //         {
-    //             isShowNested && isHasNestedData && nested.map((item: ImultipleSelectItem, index) => {
-    //                 const { id, label } = item;
-    //                 const isSelected = !!selectedIds?.includes(id);
-    //                 const isShowEdit = isShowEditButton.some(item => item.id === index);
-    //                 return <MultipleSelectItem {...{ id, index, label, isSelected, isShowEdit }} nested={item.nested} key={`${id}-${index}`} indent={indent + 5} />;
-    //             })
-    //         }
-    //     </>
-
-    //     );
-
-    // };
-
-
     const renderMultipleSelectItem = useMemo(
         () =>
             ({ item, index }: { item: IMultipleSelectData; index: number; }) => {
                 const { id, label } = item;
                 const isSelected = !!selectedIds?.includes(id);
-                // const nestedIds = item.nested?.length ? HELP.getNestedCategoriesIds(item.nested) : [];
                 return (
                     <>
                         <MultipleSelectItem {...{ id, index, label, isSelected, itemStyle, itemTextStyle, selectedIds, parent, selectedItemStyle, selectedItemTextStyle, onSelect }} nestedData={item?.nested} key={`${id}-${index}`} indent={0} />
@@ -263,11 +199,6 @@ const CustomPicker = ({
             },
         [selectedIds, multipleSelectData?.length, parent, itemStyle, isShowEditButton.length]
     );
-
-
-
-
-
 
     const onPressSingleItem = (item: IsingelSelectData) => {
         const { label, value } = item;
@@ -279,10 +210,16 @@ const CustomPicker = ({
         }
     };
 
-    const onPressAddButton = () => {
-        setShowContent(false);
-        dispatch(setIsOpenOptionModal(true));
-        dispatch(setOptionNameForModal(dataKeyName!));
+    const onPressAdd = () => {
+        if (onPressAddButton) {
+            setShowContent(false);
+            onPressAddButton(dataKeyName!);
+        } else {
+            setShowContent(false);
+            dispatch(setIsOpenOptionModal(true));
+            dispatch(setOptionNameForModal(dataKeyName!));
+        }
+
     };
 
     const singleSelectedTitle = useMemo(() => {
@@ -312,7 +249,7 @@ const CustomPicker = ({
                                 {item?.label}
                             </Text>
                             {isEditable && isShowEdit &&
-                                <CustomPressable onPress={() => onPressEdit(item.value)} key={`${index}-${item.label}`}>
+                                <CustomPressable onPress={() => onPressEdit(item.value)} key={`${index}-${item.label}`} disabled={disablePickerActionButtons}>
                                     <Icon size={14} color={Colors.METALLIC_GOLD} name={'cog'} key={`${index}-${item.label}`} />
                                 </CustomPressable>
                             }
@@ -320,7 +257,7 @@ const CustomPicker = ({
                     </>
                 );
             },
-        [singleSelected, singleSelectData?.length, itemStyle, selectedItemStyle, itemTextStyle, selectedItemTextStyle, isEditable, isShowEditButton.length, isDisabled]
+        [singleSelected, singleSelectData?.length, itemStyle, selectedItemStyle, itemTextStyle, selectedItemTextStyle, isEditable, isShowEditButton.length, isDisabled, disablePickerActionButtons]
     );
 
     const renderCounter = useMemo(() => {
@@ -408,7 +345,7 @@ const CustomPicker = ({
                             ListEmptyComponent={renerListEmptyComponent}
                         />
                     )}
-                    {isAddButton && <PrimaryButton onPress={onPressAddButton} title={'Add new'.toUpperCase()} textColor={Colors.DEFAULT_TEXT_COLOR} buttonColor={Colors.CARD_HEADER_COLOR} height={30} />}
+                    {isAddButton && <PrimaryButton onPress={onPressAdd} title={'Add new'.toUpperCase()} textColor={Colors.DEFAULT_TEXT_COLOR} buttonColor={Colors.CARD_HEADER_COLOR} height={30} disabled={disablePickerActionButtons} />}
                 </View>
             </Flyout>
         </>

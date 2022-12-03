@@ -1,5 +1,6 @@
 import {ClientType} from '../enums/clientType';
 import {Order} from '../enums/order.enum';
+import {PaymentStatus} from '../enums/paymentStatus';
 import {ProjectStatus} from '../enums/projectStatus';
 import {Client} from './clientsQuery';
 import {Common, Imeta} from './common/common';
@@ -12,7 +13,18 @@ interface Project extends Common {
   paid: number;
   deadline: Date | null;
   client: Client;
+  otherExpenses: OtherExpensesType[];
+  otherExpensesTotalCost: number;
+  totalPrice: number;
+  paymentStatus: PaymentStatus;
+  unPaid: number;
 }
+
+type OtherExpensesType = {
+  title: string;
+  description?: string;
+  cost: number;
+};
 
 interface ProjectsQueryParams {
   search?: string;
@@ -33,4 +45,4 @@ interface ProjectsResponse {
   clientId: number;
 }
 
-export type {Project, ProjectsQueryParams, ProjectsResponse};
+export type {Project, ProjectsQueryParams, ProjectsResponse, OtherExpensesType};

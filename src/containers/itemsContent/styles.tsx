@@ -39,7 +39,8 @@ export const getStyle = () => {
             height: 30,
             alignSelf: 'center',
             marginRight: 1,
-            paddingLeft:11
+            paddingLeft: 11,
+            zIndex: 2
         }
     });
 

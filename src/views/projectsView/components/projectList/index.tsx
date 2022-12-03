@@ -19,7 +19,6 @@ const ProjectsList = ({ data }: IProjectslist) => {
     const style = useMemo(() => getStyle(), []);
 
 
-
     return (
 
         <View style={{ flex: 1 }}>

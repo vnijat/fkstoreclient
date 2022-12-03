@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 import CustomModal from "../../components/customModal";
 import { PrimaryButton } from "../../components/primaryButton";
 import { InventoryApi, useGetItemQuery } from "../../modules/api/apiSlice";
-import { setIsItemForEdit, setIsShowItemModal, setItemForPost } from "../../modules/redux/itemsSlicer";
+import { setIsItemForEdit, setIsShowAddEditModal, setIsShowItemModal, setItemForPost } from "../../modules/redux/itemsSlicer";
 import { RootState, useAppDispatch } from "../../modules/redux/store";
 import HELP from "../../services/helpers";
 import { Item, ItemResponse } from "../../types/ItemsQuery";
@@ -43,18 +43,16 @@ const ItemModal = ({ itemsData }: IItemModal) => {
         const itemForPost = HELP.modifyItemForEdit(itemsData, itemId!);
         dispatch(setIsItemForEdit(true));
         dispatch(setItemForPost(itemForPost));
-        onCloseModal();
-        navigation.navigate('AddItem');
+        dispatch(setIsShowAddEditModal(true));
     };
 
 
     return (
         <CustomModal
             isShowModal={isShowModal}
-            isDissmissEnabled={true}
+            isDissmissEnabled={false}
             closeModal={onCloseModal}
             width={1000}
-
         >
             <View style={{ flex: 1, height: 700 }}>
                 {(isShowModal && data) ? <>

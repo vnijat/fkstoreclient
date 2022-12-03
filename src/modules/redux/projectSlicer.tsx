@@ -1,40 +1,58 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AddClient } from '../../types/client';
+import { Client } from '../../types/clientsQuery';
 import { AddClientProject } from '../../types/project';
 
 
 interface IProjectSlicer {
-    projectForPost: AddClientProject;
+    projectDataForPost: AddClientProject;
     isProjectForEdit: boolean;
-    isShowProjectModal: boolean;
+    isShowProjectAddEditModal: boolean;
+    isOpenClientInfoModal: boolean;
+    clientInfoData: Client;
 }
 
 
 
 const initialState = {
-    projectForPost: {},
+    projectDataForPost: {},
     isProjectForEdit: false,
-    isShowProjectModal: false
+    isShowProjectAddEditModal: false,
+    isOpenClientInfoModal: false,
+    clientInfoData: {}
 } as IProjectSlicer;
 
 const projectSlicer = createSlice({
     name: 'projectSlicer',
     initialState,
     reducers: {
-        setClientForPost: (state, action: PayloadAction<AddClientProject>) => {
-            Object.assign(state.projectForPost, action.payload);
+        setProjectDataForPost: (state, action: PayloadAction<AddClientProject>) => {
+            Object.assign(state.projectDataForPost, action.payload);
         },
         clearProjectForPost: (state) => {
-            state.projectForPost = {} as AddClientProject;
+            state.projectDataForPost = {} as AddClientProject;
         },
         setIsProjectForEdit: (state, action: PayloadAction<boolean>) => {
             state.isProjectForEdit = action.payload;
         },
-        setIsShowProjectModal: (state, action: PayloadAction<boolean>) => {
-            state.isShowProjectModal = action.payload;
+        setIsShowProjectAddEditModal: (state, action: PayloadAction<boolean>) => {
+            state.isShowProjectAddEditModal = action.payload;
+        },
+        setIsOpenClientInfoModal: (state, action: PayloadAction<boolean>) => {
+            state.isOpenClientInfoModal = action.payload;
+        },
+        setClientInfoData: (state, action: PayloadAction<Client>) => {
+            Object.assign(state.clientInfoData, action.payload);
         },
     }
 });
 
-export const { setClientForPost, clearProjectForPost, setIsProjectForEdit, setIsShowProjectModal } = projectSlicer.actions;
+export const {
+    setProjectDataForPost,
+    clearProjectForPost,
+    setIsProjectForEdit,
+    setIsShowProjectAddEditModal,
+    setIsOpenClientInfoModal,
+    setClientInfoData
+} = projectSlicer.actions;
 export default projectSlicer.reducer;

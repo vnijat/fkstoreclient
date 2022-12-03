@@ -8,7 +8,7 @@ import { ListHeader } from "./components/listHeader";
 import { PrimaryButton } from "../../components/primaryButton";
 import RowItem from "../../components/rowItem";
 import { useDeleteManyItemsMutation } from "../../modules/api/apiSlice";
-import { addItemId, clearSelectedItems, setIsEditMode, setIsItemForEdit, setItemForPost } from "../../modules/redux/itemsSlicer";
+import { addItemId, clearSelectedItems, setIsEditMode, setIsItemForEdit, setIsShowAddEditModal, setIsShowItemModal, setItemForPost } from "../../modules/redux/itemsSlicer";
 import { setItemQueryParams } from "../../modules/redux/itemQuerySlicer";
 import { selectIsEditMode } from "../../modules/redux/selectors/itemSelectors";
 import { RootState, useAppDispatch } from "../../modules/redux/store";
@@ -50,7 +50,7 @@ const ItemListTable: FC<IItemListTable> = ({ data, isLoading }) => {
     };
 
     const aproveDeletion = () => {
-        apiDeleteItems({ Ids: selectedItemsID });
+        apiDeleteItems(selectedItemsID);
         dispatch(clearSelectedItems());
         dispatch(setIsEditMode(false));
         dispatch(setItemQueryParams({ page: 1, search: '' }));
@@ -71,8 +71,8 @@ const ItemListTable: FC<IItemListTable> = ({ data, isLoading }) => {
         const itemForPost = HELP.modifyItemForEdit(data, selectedItemsID[0]);
         dispatch(setIsItemForEdit(true));
         dispatch(setItemForPost(itemForPost));
+        dispatch(setIsShowAddEditModal(true));
         cancelEdit();
-        navigation.navigate('AddItem');
     };
 
 
@@ -114,37 +114,14 @@ const ItemListTable: FC<IItemListTable> = ({ data, isLoading }) => {
                     data={data}
                     keyExtractor={(item) => item.id.toString()}
                     renderItem={({ item, index }) => {
-                        const {
-                            name,
-                            description,
-                            barcode,
-                            category,
-                            color,
-                            unit,
-                            quantity,
-                            pricePerUnit,
-                            totalPrice,
-                            purchasePrice,
-                            id } = item;
                         return (
                             <ItemsContent
-                                key={id + index}
-                                id={id}
+                                data={item}
+                                key={item.id + index}
+                                id={item.id}
                                 itemIndex={index}
-                                lastItem={(data?.length ?? 1) - 1}
                                 selectBulk={selectBulk}
-                                name={name}
-                                description={description}
-                                barcode={barcode}
-                                category={category}
-                                color={color}
-                                quantity={Number(quantity)}
-                                unit={unit}
-                                purchasePrice={Number(purchasePrice)}
-                                // stockPrice={Number(pricePerUnit)}
-                                totalPrice={totalPrice}
                             />
-
                         );
                     }}
                 />

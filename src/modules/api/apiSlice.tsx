@@ -6,7 +6,7 @@ import { RootState } from '../redux/store';
 // Define a service using a base URL and expected endpoints
 
 const asyncFetchBaseQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (args, api, extraOptions) => {
-    const baseUrl = (api.getState() as RootState).appStateSlicer.url;
+    const baseUrl = (api.getState() as RootState).configs.apiURL;
     const rawBaseQuery = fetchBaseQuery({ baseUrl });
     return rawBaseQuery(args, api, extraOptions);
 };
@@ -40,7 +40,7 @@ export const InventoryApi = createApi({
                 };
             }
         }),
-        deleteManyItems: build.mutation<undefined, { Ids: number[]; }>({
+        deleteManyItems: build.mutation<undefined, number[]>({
             query: (Ids) => {
                 return {
                     url: '/item/',
@@ -68,10 +68,10 @@ export const InventoryApi = createApi({
             },
             invalidatesTags: ['items']
         }),
-        editItem: build.mutation<undefined, any>({
-            query: (body) => {
+        editItem: build.mutation<undefined, { body: any; id: number; }>({
+            query: ({ body, id }) => {
                 return {
-                    url: `/item/${body.id}`,
+                    url: `/item/${id}`,
                     body: body,
                     method: 'PATCH'
                 };
@@ -86,7 +86,9 @@ export const InventoryApi = createApi({
         'clients',
         'qrCode',
         'item',
-        'projects'
+        'projects',
+        'clientForPicker',
+        'orders'
     ]
 });
 

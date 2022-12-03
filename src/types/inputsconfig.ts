@@ -1,5 +1,7 @@
+import {ITableConfig, RowDataType} from '../containers/tableInput/types';
+
 interface InputsConfig {
-  dtoKey?: string;
+  dtoKey: string;
   title?: string;
   isNumeric?: boolean;
   maxLength?: number;
@@ -14,6 +16,10 @@ interface InputsConfig {
   requiredText?: string;
   isEnum?: boolean;
   enumData?: {label: string; value: string | number}[];
+  isTableInput?: boolean;
+  tableConfig?: ITableConfig[];
+  isCheckBox?: boolean;
+  isDate?: boolean;
 }
 
 export type {InputsConfig};

@@ -1,7 +1,7 @@
 export interface Common {
   id: number;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
   skuCode?: string;
 }
 

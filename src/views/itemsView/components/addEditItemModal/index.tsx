@@ -69,8 +69,6 @@ const AddEditItemModal = () => {
         dispatch(setIsShowAddEditModal(data));
     };
 
-
-
     return (
         <>
             < AddEditItemOptionsModal />

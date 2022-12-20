@@ -5,7 +5,6 @@ interface itemQueryParams {
   page?: number;
   search?: string;
   take?: number;
-  barcodeId?: string;
   categoryId?: string;
   supplierId?: string;
   unitId?: string;
@@ -69,12 +68,12 @@ interface Label extends Common {
 interface Item extends Common {
   name: string;
   description: string;
-  purchasePrice: number;
   pricePerUnit: number;
   quantity: number;
+  code: string;
+  barcode: string;
   unit: Unit;
   supplier: Supplier;
-  barcode: Barcode;
   category: Category;
   location: Location;
   store: Store;

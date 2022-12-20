@@ -1,4 +1,3 @@
-import {barcode} from './barcode';
 import {category} from './category';
 import {color} from './color';
 import {label} from './label';
@@ -15,6 +14,5 @@ const inputsForItemOptions = {
   store,
   supplier,
   location,
-  barcode,
 };
 export {inputsForItemOptions};

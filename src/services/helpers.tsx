@@ -8,6 +8,7 @@ import { IICON } from "../types/icon";
 import { Item } from "../types/ItemsQuery";
 import { Colors } from "../utils/colors";
 import countries from 'i18n-iso-countries';
+import { IsingelSelectData } from "../containers/customPicker";
 
 countries.registerLocale(require('i18n-iso-countries/langs/en.json'));
 countries.registerLocale(require('i18n-iso-countries/langs/az.json'));
@@ -37,7 +38,7 @@ const modifyItemForEdit = (data: Item[] | Item, itemId: number) => {
         if (isObject) {
             itemForPost[`${key}Id`] = objectValue.id.toString();
         } else {
-            itemForPost[key] = !!(objectValue as string).length ? (isNaN(Number(objectValue)) ? objectValue : Number(objectValue).toString()) : objectValue;
+            itemForPost[key] = !!(objectValue as string).length ? ((isNaN(Number(objectValue)) || key === 'code') ? objectValue : Number(objectValue).toString()) : objectValue;
         }
     }
     return itemForPost;
@@ -59,49 +60,56 @@ const alertPromise = (title: string, message: string) => {
 const getNestedCategoriesIds = (tree: IMultipleSelectData[]) => {
     return tree?.reduce((acc, curr) => {
         const { nested, id } = curr;
-        if (nested?.length) {
+        if (!!nested?.length) {
             acc = acc.concat(getNestedCategoriesIds(nested));
         }
-        acc.push(id);
+        !nested?.length && acc.push(id);
         return acc;
     }, [] as number[]);
+
+};
+
+const getNestedDataValues = (tree: IsingelSelectData[]) => {
+    return tree?.reduce((acc, curr) => {
+        const { nested, value } = curr;
+        if (nested?.length) {
+            acc = acc.concat(getNestedDataValues(nested));
+        }
+        acc.push(value);
+        return acc;
+    }, [] as any[]);
 
 };
 
 const getNestedCategoriesForSelect = (tree: IMultipleSelectData[]) => {
     return tree?.reduce((acc, curr) => {
         const { nested, id, label, } = curr;
-        if (nested?.length) {
+        if (!!nested?.length) {
             acc = acc.concat(getNestedCategoriesForSelect(nested));
         }
-        acc.push({ id, label });
+        acc.push({ id, label, hasNested: !!nested?.length });
         return acc;
-    }, [] as IMultipleSelectData[]);
+    }, [] as any[]);
 
 };
 
 
-const flatNestedCategories = (tree: IMultipleSelectData[]) => {
+const flatNestedCategories = (tree: IMultipleSelectData[] | IsingelSelectData[]) => {
     return tree?.reduce((acc, curr) => {
         const { nested, ...rest } = curr;
         if (nested?.length) {
             acc = acc.concat(flatNestedCategories(nested));
         }
-        acc.push(rest);
+        acc.push({ ...rest, hasNested: nested?.length });
         return acc;
-    }, [] as IMultipleSelectData[]);
+    }, [] as IMultipleSelectData[] | IsingelSelectData[]);
+};
+
+const mapNestedForPicker = (tree: IsingelSelectData[]): IsingelSelectData[] => {
+    return tree?.map((data) => ({ label: data?.label, value: data.id ? data.id : data.value, nested: mapNestedForPicker(data?.nested!) }));
 };
 
 const getClientTypeIcons = (type: ClientType, size?: number, color?: string) => {
-    const style = StyleSheet.create({
-        iconVipText: {
-            fontSize: size ? (size * 0.2 | 0) : 10,
-            fontWeight: '700',
-            position: 'absolute',
-            top: size ? size / 2 : 22,
-            color: Colors.METALLIC_GOLD
-        }
-    });
 
     const ClientTypeIconOptions: IICON = {
         size: size || 50,
@@ -132,15 +140,8 @@ const getProjectStatusIcons = (status: ProjectStatus, size?: number, color?: str
     return icons[status];
 };
 
+const getCountriesForPicker = () => Object.keys(countryobjects).map((key) => ({ value: key, label: countryobjects[key] }));
 
-
-const getCountriesForPicker = () => {
-    const countriesForPicker = [];
-    for (const countryCode in countryobjects) {
-        countriesForPicker.push({ value: countryCode, label: countryobjects[countryCode] });
-    }
-    return countriesForPicker;
-};
 
 const HELP = {
     modifieErrorMessage,
@@ -151,7 +152,9 @@ const HELP = {
     getNestedCategoriesForSelect,
     getClientTypeIcons,
     getProjectStatusIcons,
-    getCountriesForPicker
+    getCountriesForPicker,
+    mapNestedForPicker,
+    getNestedDataValues
 };
 
 export default HELP;

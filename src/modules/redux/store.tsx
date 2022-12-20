@@ -13,6 +13,8 @@ import clientSlicer from './clientsSlicer';
 import projectQuery from './projectQuerySlicer';
 import projectSlicer from './projectSlicer';
 import configsSlicer from './configsSlicer';
+import ordersQueryParams from './orderQuerySlicer';
+import ordersSlicer from './orderSlicer';
 import { FLUSH, PAUSE, PERSIST, PersistConfig, persistReducer, persistStore, PURGE, REGISTER, REHYDRATE } from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -36,6 +38,8 @@ const rootReducer = combineReducers(
         clientSlicer,
         projectQuery,
         projectSlicer,
+        ordersQueryParams,
+        ordersSlicer,
         configs: configsSlicer
     }
 );

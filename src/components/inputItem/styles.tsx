@@ -47,7 +47,7 @@ export const getStyle = (height: number, width: number, isErorr?: boolean, title
             alignItems: 'center',
             borderRadius: 1,
             borderWidth: 1,
-            borderColor: Colors.CARD_COLOR,
+            borderColor: Colors.CARD_HEADER_COLOR,
             justifyContent: 'space-between',
         },
         pickerItemStyle: {

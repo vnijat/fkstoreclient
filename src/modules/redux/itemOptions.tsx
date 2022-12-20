@@ -18,7 +18,6 @@ export interface IItemOptions {
         category: AddCategory | {};
         unit: AddUnit | {};
         supplier: AddSupplier | {};
-        barcode: AddBarcode | {};
     },
     isOptionForEdit: boolean;
     isOpenOptionModal: boolean;
@@ -33,7 +32,6 @@ const defaultOptions = {
     category: {},
     unit: {},
     supplier: {},
-    barcode: {},
 };
 
 
@@ -47,7 +45,6 @@ const initialState = {
         category: {},
         unit: {},
         supplier: {},
-        barcode: {},
     },
     isOptionForEdit: false,
     isOpenOptionModal: false,

@@ -1,7 +1,7 @@
 export interface Common {
-  id: number;
-  createdAt: string;
-  updatedAt: string;
+  id?: number;
+  createdAt?: string;
+  updatedAt?: string;
   skuCode?: string;
 }
 
@@ -12,4 +12,9 @@ export interface Imeta {
   pageCount?: number;
   hasPreviousPage?: boolean;
   hasNextPage?: boolean;
+}
+
+export interface IListHeader {
+  title: string;
+  dtoKey?: string;
 }

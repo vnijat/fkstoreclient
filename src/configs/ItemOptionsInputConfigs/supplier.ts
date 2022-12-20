@@ -1,6 +1,7 @@
 import HELP from '../../services/helpers';
 import {InputsConfig} from '../../types/inputsconfig';
 
+
 const supplier: InputsConfig[] = [
   {
     title: 'Name',

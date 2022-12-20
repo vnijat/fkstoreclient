@@ -168,7 +168,7 @@ const SearchContainer: FC<ISearchContainer> = ({ searchValue, overallPrice }) =>
                 </CustomPressable>
                 <CustomPressable onPress={onPressAddItem}
                     onHoverOpacity
-                    style={{ backgroundColor: Colors.DEFAULT_TEXT_COLOR, justifyContent: 'center', paddingHorizontal: 5, paddingVertical: 2, borderRadius: 1, alignItems: 'center' }}
+                    style={{ backgroundColor: Colors.DEFAULT_TEXT_COLOR, justifyContent: 'center', paddingHorizontal: 5, paddingVertical: 2, borderRadius: 1, alignItems: 'center', marginLeft: 20 }}
                 >
                     <Text style={{ color: Colors.CARD_COLOR, }}>
                         {'Add Item'.toUpperCase()}

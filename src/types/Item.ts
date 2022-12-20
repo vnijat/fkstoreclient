@@ -1,9 +1,15 @@
 export interface AddItemInterface {
+  id?: number | null;
+
+  createdAt?: string | null;
+
+  updatedAt?: string | null;
+
   name: string;
 
-  description?: string;
+  code: string;
 
-  purchasePrice?: string;
+  description?: string;
 
   pricePerUnit?: string;
 

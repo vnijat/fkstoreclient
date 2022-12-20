@@ -31,11 +31,6 @@ const TableInput = ({ tableData, tableConfig, getNewTableData }: ITableInput) =>
         return acc;
     }, {} as RowDataType), [tableConfig.length]);
 
-    // useEffect(() => {
-    //     if (!tableData.length) {
-    //         setData([emptyRow]);
-    //     }
-    // }, []);
 
     const addRowToTable = () => {
         setData(prev => [...prev, emptyRow]);
@@ -52,7 +47,6 @@ const TableInput = ({ tableData, tableConfig, getNewTableData }: ITableInput) =>
     };
 
     const setRowDataToTableData = (data: { [key: string]: string; }, index: number) => {
-        console.log("setRowDataToTableData==>>>", data);
         setData(prev => {
             prev[index] = { ...prev[index], ...data };
             return [...prev];

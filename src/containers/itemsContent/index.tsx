@@ -4,6 +4,7 @@ import { Text, View } from "react-native";
 import { useSelector } from "react-redux";
 import CustomContextMenu from "../../components/customContextMenu";
 import CustomPressable from "../../components/customPressable";
+import { useDeleteManyItemsMutation } from "../../modules/api/apiSlice";
 import { addItemId, clearSelectedItems, setIsEditMode, setIsItemForEdit, setIsShowAddEditModal, setIsShowItemModal, setItemForPost, setItemIdForFullResponse } from "../../modules/redux/itemsSlicer";
 import { selectIsEditMode } from "../../modules/redux/selectors/itemSelectors";
 import { RootState, useAppDispatch } from "../../modules/redux/store";
@@ -25,7 +26,11 @@ const ItemsContent: FC<ItemsContentProps> = ({ id, itemIndex, selectBulk, data }
     const style = getStyle();
     const dispatch = useAppDispatch();
     const isEditMode = useSelector(selectIsEditMode);
+    const isShowAddEditModal = useSelector((state: RootState) => state.itemsSlicer.isShowAddEditModal);
+    const isShowFullItem = useSelector((state: RootState) => state.itemsSlicer.isShowItemModal);
     const [isShowCheckBox, setIsShowCheckBox] = useState(false);
+    const [apiDeleteItems] = useDeleteManyItemsMutation();
+    const isContextMenuDisabled = isEditMode || isShowAddEditModal || isShowFullItem;
     const { isSelected, selectedCount, firstSelectedItem } = useSelector((state: RootState) => {
         return {
             firstSelectedItem: state.itemsSlicer.selectedItems[0],
@@ -47,16 +52,16 @@ const ItemsContent: FC<ItemsContentProps> = ({ id, itemIndex, selectBulk, data }
             else {
                 dispatch(addItemId({ index: itemIndex, Id: id, totalPrice: data.totalPrice }));
             }
-        } else {
-            dispatch(setIsShowItemModal(true));
-            dispatch(setItemIdForFullResponse(id));
         }
     };
+
+
+
     const RenderColumnContent: FC<{ content: string | number; id: number; }> = ({ content, id }) => {
         return (
             <>
-                <View key={id} style={[style.columContent]}>
-                    <Text key={`${content}-${id}`} style={style.columContentText} >
+                <View key={id} style={[style.columContent, { zIndex: 2 }]}>
+                    <Text key={`${content}-${id}`} style={style.columContentText} selectable>
                         {content}
                     </Text>
                 </View>
@@ -94,12 +99,12 @@ const ItemsContent: FC<ItemsContentProps> = ({ id, itemIndex, selectBulk, data }
     const rowData = useMemo(() => [
         data?.name.toUpperCase(),
         data?.description.toUpperCase(),
-        data?.barcode?.code,
+        data?.barcode.toUpperCase(),
         data?.category?.title.toUpperCase(),
         data?.color?.name.toUpperCase(),
         data?.unit?.name.toUpperCase(),
         Number(data?.quantity ?? 0),
-        currency.format(data?.purchasePrice ?? 0),
+        currency.format(data?.pricePerUnit ?? 0),
         currency.format(data?.totalPrice ?? 0)
     ], [data]);
 
@@ -121,18 +126,37 @@ const ItemsContent: FC<ItemsContentProps> = ({ id, itemIndex, selectBulk, data }
         dispatch(setIsEditMode(false));
     };
 
-    const onPressDelete = () => {
+    const onPressShowFull = () => {
+        dispatch(setIsShowItemModal(true));
+        dispatch(setItemIdForFullResponse(id));
+    };
 
+    const aproveDeletion = () => {
+        apiDeleteItems([id]);
+    };
+
+
+    const deleteItem = async () => {
+        try {
+            await HELP.alertPromise('do you want to delete Items?', 'you cant recover deletet Items!');
+            aproveDeletion();
+        } catch (erorr) {
+            console.log("deleteItem=>", erorr);
+        }
 
     };
+
 
     const contextActionButtons = [
         {
             title: 'EDIT', onPress: onPressEdit
         },
         {
-            title: 'DELETE', onPress: onPressDelete
-        }
+            title: 'DELETE', onPress: deleteItem
+        },
+        {
+            title: 'SHOW FULL', onPress: onPressShowFull
+        },
     ];
 
 
@@ -167,7 +191,7 @@ const ItemsContent: FC<ItemsContentProps> = ({ id, itemIndex, selectBulk, data }
                 onMouseEnter={() => setIsShowCheckBox(true)}
                 onMouseLeave={() => setIsShowCheckBox(false)}
                 onHoverOpacity>
-                <CustomContextMenu>
+                <CustomContextMenu disabled={isContextMenuDisabled}>
                     {contextMenuContent}
                 </CustomContextMenu>
                 {renderCheckBox}

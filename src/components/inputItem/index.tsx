@@ -40,6 +40,8 @@ interface IInputItem {
   errorDetail?: string;
   isCheckBox?: boolean;
   isDatePicker?: boolean;
+  disabledForEdit?: boolean;
+  canSelectParent?: boolean;
 }
 
 export const InputItem: FC<IInputItem> = memo(
@@ -73,7 +75,9 @@ export const InputItem: FC<IInputItem> = memo(
     disablePickerActionButtons,
     errorDetail,
     isCheckBox,
-    isDatePicker
+    isDatePicker,
+    disabledForEdit,
+    canSelectParent
   }) => {
     const style = useMemo(
       () => getStyle(height, width, isErorr, titleColor, backgroundColor),
@@ -81,10 +85,9 @@ export const InputItem: FC<IInputItem> = memo(
     );
     const [isFocused, setIsFocused] = useState<boolean>(false);
     const isShowMagnify = useMemo(
-      () => !isFocused && isSearch && !inputValue.length,
-      [isFocused, isSearch, inputValue],
-    );
-    const errorMessage = useMemo(() => isErorr ? errorDetail : inputTitle, [isErorr, errorDetail]);
+      () => (typeof inputValue === 'string') && !isFocused && isSearch && !inputValue.length,
+      [isFocused, isSearch, inputValue]);
+    const errorMessage = useMemo(() => isErorr ? errorDetail : (placeHolder || inputTitle), [isErorr, errorDetail]);
 
     const onChangeText = (text: string) => {
       const isNum = regExPatterns.IS_NUMERIC;
@@ -98,9 +101,8 @@ export const InputItem: FC<IInputItem> = memo(
     const onCheckBoxValueChange = () => {
       setValue(!inputValue);
     };
-
     const onValueChange = (item: IsingelSelectData) => {
-      setValue(item.value.toString());
+      setValue(item.value?.toString());
     };
 
     const onFocus = () => {
@@ -113,12 +115,13 @@ export const InputItem: FC<IInputItem> = memo(
 
     const dataForPicker = useMemo(() => {
       if (selectableData?.length) {
-        const singleSelectData = HELP.flatNestedCategories(selectableData).map((item) => (item.id ? { value: item.id, label: item.label } : item));
+        const singleSelectData = HELP.mapNestedForPicker(selectableData);
         return singleSelectData as IsingelSelectData[];
       } else {
         return [];
       }
     }, [selectableData]);
+
 
     const renderCustomPicker = useMemo(() => {
       return (<>
@@ -139,10 +142,13 @@ export const InputItem: FC<IInputItem> = memo(
           onPressEditButton={pickerOnPressEditButton}
           onPressAddButton={pickerOnPressAddButton}
           disablePickerActionButtons={disablePickerActionButtons}
+          disabledForEdit={disabledForEdit}
+          canSelectParent={canSelectParent}
+
         />
       </>
       );
-    }, [inputValue, dataForPicker, isErorr, isPickerItemEditable, isDisabled, disablePickerActionButtons]);
+    }, [inputValue, canSelectParent, dataForPicker, isErorr, isPickerItemEditable, isDisabled, disablePickerActionButtons, disabledForEdit]);
 
 
     const renderTextInput = useMemo(() => {
@@ -158,12 +164,14 @@ export const InputItem: FC<IInputItem> = memo(
             maxLength={maxLength}
             onFocus={onFocus}
             onBlur={onBlur}
+            editable={!disabledForEdit}
+            caretHidden={disabledForEdit}
           />);
       } else {
         return null;
       }
 
-    }, [id, onChangeText, inputValue, placeHolder, isMultiLine, maxLength, onFocus, onBlur, isCheckBox, isDatePicker]);
+    }, [id, onChangeText, inputValue, placeHolder, isMultiLine, maxLength, onFocus, onBlur, isCheckBox, isDatePicker, disabledForEdit]);
 
 
 
@@ -185,7 +193,6 @@ export const InputItem: FC<IInputItem> = memo(
       }
     }, [isCheckBox, inputValue]);
 
-    isDatePicker && console.log("inputValue-->>", inputValue);
 
     const renderDatePicker = useMemo(() => {
       if (isDatePicker) {
@@ -197,7 +204,7 @@ export const InputItem: FC<IInputItem> = memo(
     }, [isDatePicker, inputValue]);
 
     return (
-      <View style={{ margin: 5 }} tooltip={errorMessage}>
+      <View style={{ margin: 5, opacity: disabledForEdit ? 0.6 : 1 }} tooltip={errorMessage}>
         {!!inputTitle && (
           <Text style={style.inputTitle}>{`${inputTitle?.toUpperCase()} ${isErorr ? '*' : ''
             } `}</Text>
@@ -205,7 +212,6 @@ export const InputItem: FC<IInputItem> = memo(
         }
         {chekBoxInput}
         {renderDatePicker}
-        { }
         {selectable ? renderCustomPicker
           :
           (

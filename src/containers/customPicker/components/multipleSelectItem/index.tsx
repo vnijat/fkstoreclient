@@ -46,9 +46,9 @@ const MultipleSelectItem = ({ isSelected, index, label, id, nestedData, indent, 
     const nestedIds = HELP.getNestedCategoriesIds(nestedData ?? []);
     const nestedCategoriesForSelect = HELP.getNestedCategoriesForSelect(nestedData ?? []);
     const nestedSelectedCount = useMemo(() => (nestedIds.length && selectedIds?.filter(id => nestedIds.includes(id)).length) ?? 0, [selectedIds]);
-    const isEveryNestedSelected = nestedIds.every(id => selectedIds?.includes(id));
-    const isEveryNestedUnselected = nestedIds.every(id => !selectedIds?.includes(id));
-
+    const isEveryNestedSelected = !!nestedIds.length && nestedIds.every(id => selectedIds?.includes(id));
+    const isEveryNestedUnselected = !!nestedIds.length && nestedIds.every(id => !selectedIds?.includes(id));
+    const chekBoxValue = useMemo(() => !isHasNestedData ? isSelected : isEveryNestedSelected, [isHasNestedData, isSelected, isEveryNestedSelected]);
 
     const onPressItem = () => {
         if (isHasNestedData) {
@@ -57,7 +57,6 @@ const MultipleSelectItem = ({ isSelected, index, label, id, nestedData, indent, 
             onSelect && onSelect({ id, label, parent: parent! });
         }
     };
-
 
     const renderSelectedCounter = useMemo(() => {
         if ((nestedSelectedCount > 0) && !isShowNested) {
@@ -74,11 +73,10 @@ const MultipleSelectItem = ({ isSelected, index, label, id, nestedData, indent, 
     }, [nestedSelectedCount, isShowNested]);
 
     const onCheckBoxSelect = () => {
-        if (isHasNestedData && ((!isSelected && isEveryNestedUnselected) || (isSelected && isEveryNestedSelected))) {
-            onSelect && onSelect({ id, label, parent: parent! });
-            nestedCategoriesForSelect.forEach(({ id, label }) => onSelect && onSelect({ id, label, parent: parent! }));
+        if (isHasNestedData && ((isEveryNestedUnselected) || (isEveryNestedSelected))) {
+            nestedCategoriesForSelect.forEach(({ id, label, hasNested }) => !hasNested && onSelect && onSelect({ id, label, parent: parent! }));
         } else {
-            onSelect && onSelect({ id, label, parent: parent! });
+            !isHasNestedData && onSelect && onSelect({ id, label, parent: parent! });
         }
     };
 
@@ -91,7 +89,7 @@ const MultipleSelectItem = ({ isSelected, index, label, id, nestedData, indent, 
             onHoverOpacity
         >
             <CheckBox
-                value={isSelected}
+                value={chekBoxValue}
                 tintColor={Colors.CARD_COLOR}
                 onValueChange={onCheckBoxSelect}
                 onCheckColor={Colors.CARD_HEADER_COLOR}

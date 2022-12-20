@@ -47,10 +47,25 @@ export const ItemOptionsApi = InventoryApi.injectEndpoints({
         };
       },
     }),
+    deleteOption: build.mutation<undefined,{optionName: string; Ids: number[]}
+    >({
+      query: ({Ids, optionName}) => {
+        return {
+          url: `/${optionName}/`,
+          body: Ids,
+          method: 'DELETE',
+        };
+      },
+      invalidatesTags: ['itemInputs', 'itemOptions', 'items', 'item'],
+    }),
   }),
 
   overrideExisting: true,
 });
 
-export const {useAddOptionMutation, useEditOptionMutation, useGetOptionQuery} =
-  ItemOptionsApi;
+export const {
+  useAddOptionMutation,
+  useEditOptionMutation,
+  useGetOptionQuery,
+  useDeleteOptionMutation,
+} = ItemOptionsApi;

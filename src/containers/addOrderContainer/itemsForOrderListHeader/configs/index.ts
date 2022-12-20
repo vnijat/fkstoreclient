@@ -1,0 +1,16 @@
+import {IListHeader} from '../../../../types/common/common';
+
+const HEADERS: IListHeader[] = [
+  {title: 'No.', dtoKey: 'index'},
+  {title: 'Name', dtoKey: 'name'},
+  {title: 'Barcode', dtoKey: 'barcode'},
+  {title: 'At Stock', dtoKey: 'itemAtStock'},
+  {title: 'Unit', dtoKey: 'unit'},
+  {title: 'Quantity', dtoKey: 'quantity'},
+];
+
+const ITEMS_FORORDER_LIST = {
+  HEADERS,
+};
+
+export default ITEMS_FORORDER_LIST;

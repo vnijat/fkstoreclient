@@ -10,7 +10,6 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
 import { Flyout } from 'react-native-windows';
-import { inputsForItemOptions } from '../../containers/addOptionsModal/configs';
 import { ItemOptionsApi } from '../../modules/api/itemOptions.api';
 import { useAppDispatch } from '../../modules/redux/store';
 import { FilterParamskey } from '../../types/ItemsQuery';
@@ -22,10 +21,15 @@ import { InputItem } from '../../components/inputItem';
 import CustomPressable from '../../components/customPressable';
 import { PrimaryButton } from '../../components/primaryButton';
 import MultipleSelectItem, { IMultipleSelectData } from './components/multipleSelectItem';
+import { inputsForItemOptions } from '../../configs/ItemOptionsInputConfigs';
+import SingleSelectItem from './components/singleSelectItem';
 
 export interface IsingelSelectData {
+    id?: number;
     label?: string;
     value?: number | string | boolean;
+    code?: string;
+    nested?: IsingelSelectData[];
 }
 
 
@@ -59,6 +63,8 @@ interface ICustomPicker {
     onPressEditButton?: (dataId: number, dataKeyName?: string) => void;
     onPressAddButton?: (dataKeyName: string) => void;
     disablePickerActionButtons?: boolean;
+    disabledForEdit?: boolean;
+    canSelectParent?: boolean;
 }
 
 const CustomPicker = ({
@@ -86,12 +92,13 @@ const CustomPicker = ({
     arrowDownColor,
     onPressEditButton,
     onPressAddButton,
-    disablePickerActionButtons
+    disablePickerActionButtons,
+    disabledForEdit,
+    canSelectParent
 }: ICustomPicker) => {
     const style = getStyle();
     const dispatch = useAppDispatch();
     const [isShowContent, setShowContent] = useState(false);
-    const [isShowEditButton, setIsshowEditButton] = useState<Array<{ id: number, isHover: boolean; }>>([]);
     const [searchText, setSearchText] = useState('');
     const buttonRef = useRef(null);
 
@@ -99,18 +106,23 @@ const CustomPicker = ({
     const getFilteredData = useMemo(() => {
         let filteredData;
         if (isDataSearchEnabled && searchText.trim().length) {
-            const dataForfilter = singleSelectMode ? singleSelectData : HELP.flatNestedCategories(multipleSelectData!);
+            const nestedData = multipleSelectData! || singleSelectData;
+            const dataForfilter = HELP.flatNestedCategories(nestedData);
             const regEx = new RegExp(searchText.trim(), 'i');
-            filteredData = dataForfilter?.filter((data: { label: string; }) => regEx.test(data.label.trim()));
+            filteredData = dataForfilter?.filter((data: { label: string; hasNested: boolean; }) => !data.hasNested && regEx.test(data.label.trim()));
         }
         return filteredData;
     }, [searchText, singleSelectMode, singleSelectData, multipleSelectData, isDataSearchEnabled]);
 
+
     const onPress = () => {
         if (isDisabled) {
             Alert.alert('Requires field before select', requiredText);
+        } else if (disabledForEdit) {
+            Alert.alert('You cant edit this field',);
         } else {
             setShowContent(true);
+
         }
     };
 
@@ -119,48 +131,10 @@ const CustomPicker = ({
         setShowContent(false);
     };
 
-    const onMouseEnter = (index: number) => {
-        if (isEditable) {
-            setIsshowEditButton((prevstate) => {
-                const newArray = [...prevstate];
-                newArray.push({ id: index, isHover: true });
-                return newArray;
-            }
-            );
-        }
-    };
 
-    const onMouseLeave = (index: number) => {
-        if (isEditable) {
-            setIsshowEditButton((prevstate) => {
-                const newArray = prevstate.filter(button => button.id !== index);
-                return newArray;
-            }
-            );
-        }
-    };
-
-    const getOptionData = async (optionId: number) => {
-        try {
-            const response = await dispatch(ItemOptionsApi.endpoints.getOption.initiate({ optionName: dataKeyName, id: optionId }));
-            if (response.data) {
-                return response?.data;
-            }
-        } catch (error) {
-
-        }
-    };
-
-    const onPressEdit = async (optionId: number) => {
+    const onPressEdit = async (optionId: number | string) => {
         if (onPressEditButton) {
-            onPressEditButton(optionId, dataKeyName);
-        } else {
-            const dataForEdit = await getOptionData(optionId);
-            if (dataKeyName && dataForEdit) {
-                dispatch(addItemOption({ optionName: dataKeyName, value: dataForEdit }));
-                dispatch(setIsOptionForEdit(true));
-                dispatch(setOptionNameForModal(dataKeyName));
-            }
+            onPressEditButton(optionId as number, dataKeyName as string);
             dispatch(setIsOpenOptionModal(true));
         }
     };
@@ -179,12 +153,10 @@ const CustomPicker = ({
         return <InputItem isSearch inputValue={searchText} setValue={(text) => setSearchText(text)} height={30} />;
     }, [searchText]);
 
-
     const isShowableExited = useMemo(() => {
         const itemLength = (searchText.trim().length && !getFilteredData?.length) ? 0 : (getFilteredData?.length || multipleSelectData?.length || singleSelectData?.length);
         return itemLength > 3;
     }, [multipleSelectData?.length, singleSelectData?.length, getFilteredData?.length, searchText]);
-
 
     const renderMultipleSelectItem = useMemo(
         () =>
@@ -197,7 +169,7 @@ const CustomPicker = ({
                     </>
                 );
             },
-        [selectedIds, multipleSelectData?.length, parent, itemStyle, isShowEditButton.length]
+        [selectedIds, multipleSelectData?.length, parent, itemStyle]
     );
 
     const onPressSingleItem = (item: IsingelSelectData) => {
@@ -224,40 +196,30 @@ const CustomPicker = ({
 
     const singleSelectedTitle = useMemo(() => {
         if (singleSelectData?.length) {
-            const selected = singleSelectData.filter((item) => item.value == singleSelected)[0];
+            const selected = HELP.flatNestedCategories(singleSelectData).filter((item) => item.value == singleSelected)[0];
             return selected?.label ?? 'select';
         } else return 'no data';
     }, [singleSelected, singleSelectData?.length]);
 
+
     const renderSingleSelectItem = useMemo(
         () =>
             ({ item, index }: { item: IsingelSelectData; index: number; }) => {
-                const isSelected = item?.value == singleSelected;
-                const isShowEdit = isShowEditButton.some(item => item.id === index);
                 return (
                     <>
-                        <CustomPressable
-                            style={[(isSelected && selectedItemStyle) ? selectedItemStyle : (itemStyle || [style.singleSelectItem, { backgroundColor: isSelected ? Colors.CARD_HEADER_COLOR : 'transparent' }])]}
-                            key={`${index}`}
-                            onPress={() => onPressSingleItem(item)}
-                            onMouseEnter={() => onMouseEnter(index)}
-                            onMouseLeave={() => onMouseLeave(index)}
-                            onHoverOpacity>
-                            <Text
-                                style={[(isSelected && selectedItemTextStyle) ? selectedItemTextStyle : (itemTextStyle || { fontSize: 12, color: Colors.DEFAULT_TEXT_COLOR })]}
-                                key={`${index}`}>
-                                {item?.label}
-                            </Text>
-                            {isEditable && isShowEdit &&
-                                <CustomPressable onPress={() => onPressEdit(item.value)} key={`${index}-${item.label}`} disabled={disablePickerActionButtons}>
-                                    <Icon size={14} color={Colors.METALLIC_GOLD} name={'cog'} key={`${index}-${item.label}`} />
-                                </CustomPressable>
-                            }
-                        </CustomPressable >
+                        <SingleSelectItem
+                            {...{ itemStyle, selectedItemStyle, selectedItemTextStyle, itemTextStyle, singleSelected, disablePickerActionButtons, isEditable, index }}
+                            data={item}
+                            indent={0}
+                            onPressSingleItem={(data: IsingelSelectData) => onPressSingleItem(data)}
+                            onPressEditButton={(value?: string | number) => onPressEdit(value!)}
+                            canSelectParent={canSelectParent}
+                            key={`${index}-${item.label}`}
+                        />
                     </>
                 );
             },
-        [singleSelected, singleSelectData?.length, itemStyle, selectedItemStyle, itemTextStyle, selectedItemTextStyle, isEditable, isShowEditButton.length, isDisabled, disablePickerActionButtons]
+        [singleSelected, singleSelectData?.length, itemStyle, canSelectParent, selectedItemStyle, itemTextStyle, selectedItemTextStyle, isEditable,isDisabled, disablePickerActionButtons]
     );
 
     const renderCounter = useMemo(() => {
@@ -276,7 +238,6 @@ const CustomPicker = ({
         }
 
     }, [singleSelectMode, selectedIds?.length]);
-
 
     return (
         <>
@@ -340,7 +301,7 @@ const CustomPicker = ({
                                 backgroundColor: Colors.FLORAL_WHITE,
                             }}
                             data={getFilteredData || multipleSelectData}
-                            keyExtractor={item => item.id.toString()}
+                            keyExtractor={item => item?.id.toString()}
                             renderItem={renderMultipleSelectItem}
                             ListEmptyComponent={renerListEmptyComponent}
                         />

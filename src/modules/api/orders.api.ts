@@ -1,16 +1,23 @@
-import {IsingelSelectData} from '../../containers/customPicker';
-import {AddClient} from '../../types/client';
-import {ClientsQueryParams, ClientsResponse} from '../../types/clientsQuery';
+import {Item} from '../../types/ItemsQuery';
+import {OrderQueryResponse, OrdersQueryParams} from '../../types/projectOrder';
 import {InventoryApi} from './apiSlice';
 
 export const OrdersApi = InventoryApi.injectEndpoints({
   endpoints: build => ({
-    getOrders: build.query<undefined, undefined>({
+    getOrders: build.query<OrderQueryResponse, undefined | OrdersQueryParams>({
       providesTags: ['orders'],
       query: filter => {
         return {
           url: '/order/all',
           params: filter,
+        };
+      },
+    }),
+    itemForOrder: build.query<Item[], string>({
+      providesTags: ['itemForOrder'],
+      query: searchValue => {
+        return {
+          url: `/order/item/${searchValue}`,
         };
       },
     }),
@@ -52,4 +59,5 @@ export const {
   useAddOrderMutation,
   useEditOrderMutation,
   useDeleteOrderMutation,
+  useItemForOrderQuery,
 } = OrdersApi;

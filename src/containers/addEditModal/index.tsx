@@ -11,6 +11,7 @@ import { InputsConfig } from "../../types/inputsconfig";
 import { IsingelSelectData } from "../customPicker";
 import TableInput from "../tableInput";
 import { RowDataType } from "../tableInput/types";
+import CodeInput from "../../components/codeInput";
 
 interface IAddEditModal {
     /**  Pass Function For Post data to Api*/
@@ -58,6 +59,8 @@ interface IAddEditModal {
     disablePickerActionButtons?: boolean;
 
     modalWidth?: number;
+
+    deleteFunction?: (Ids: number[]) => Promise<any>;
 }
 
 
@@ -80,7 +83,8 @@ const AddEditModal = ({
     isPickerSearchEnabled,
     setIsDataForEdit,
     disablePickerActionButtons,
-    modalWidth
+    modalWidth,
+    deleteFunction
 }: IAddEditModal) => {
     const style = getStyle();
     const { addToast } = useToast();
@@ -134,7 +138,11 @@ const AddEditModal = ({
                         isTableInput,
                         tableConfig,
                         isCheckBox,
-                        isDate
+                        isDate,
+                        isCode,
+                        requiredText,
+                        isDisableForEdit,
+                        canSelectParent,
                     } = config;
                     const inputValue: string | boolean = dataForRequest[dtoKey!] || '';
                     const dataForPickerFromServer = (selectableData && selectableDataKey) ? (!!requiredDataName ? selectableData[selectableDataKey]?.filter((data: { [key: string]: any; }) => (data?.[requiredDataDtoKey!!] ? data?.[requiredDataDtoKey!!] : data?.[requiredDataDtoKey?.toLowerCase()!!]) == dataForRequest[requiredDataDtoKey!]) : selectableData[selectableDataKey]) : [];
@@ -142,8 +150,9 @@ const AddEditModal = ({
                     const dataForPicker = selectable ? (isEnum ? dataForPickerFromEnum : dataForPickerFromServer) : [];
                     const pickerDataKeyName = selectable ? selectableDataKey : '';
                     const isError = !!errorMessage[dtoKey!]?.length;
-                    const errorDetail = isError ? (selectable ? `Please pick ${title}` : errorMessage[dtoKey!].map(t => `*${t}`).join('\n')) : undefined;
+                    const errorDetail = isError ? ((selectable && !(inputValue as string).length) ? `Please pick ${title}` : errorMessage[dtoKey!].map(t => `*${t}`).join('\n')) : undefined;
                     const disabled = (!!requiredDataName && !!requiredDataDtoKey) && !dataForRequest[requiredDataDtoKey];
+                    const disableForEdit = isDisableForEdit && tempDataForEdit;
                     if (isTableInput) {
                         return (
                             <View style={{ width: 460, height: 200 }} key={`${title}`}>
@@ -154,6 +163,24 @@ const AddEditModal = ({
                                 </View>
                                 <TableInput getNewTableData={(data: RowDataType[]) => setClientDataForPost(data, dtoKey)} tableData={dataForRequest[dtoKey!] ?? []} tableConfig={tableConfig ?? []} />
                             </View>
+                        );
+                    } else if (isCode) {
+                        return (
+                            <CodeInput
+                                inputValue={inputValue as string}
+                                isDisableForEdit={disableForEdit}
+                                maxLength={maxLength}
+                                key={id}
+                                inputTitle={title}
+                                width={width}
+                                height={height}
+                                isDisabled={disabled}
+                                requiredDataText={requiredText}
+                                getCodeValue={inputValue => setClientDataForPost(inputValue, dtoKey)}
+                                categoryId={dataForRequest['categoryId']}
+                                isError={isError}
+                                errorDetail={errorDetail}
+                            />
                         );
                     }
                     else {
@@ -188,16 +215,17 @@ const AddEditModal = ({
                                 errorDetail={errorDetail}
                                 isCheckBox={isCheckBox}
                                 isDatePicker={isDate}
+                                disabledForEdit={disableForEdit}
+                                canSelectParent={canSelectParent}
                             />
                         );
                     }
-
                 });
 
             }
 
         }
-    }, [errorMessage, isShowModal, dataForRequest, selectableData, disablePickerActionButtons]);
+    }, [errorMessage, isShowModal, dataForRequest, selectableData, disablePickerActionButtons, tempDataForEdit]);
 
     const clearInputs = () => {
         clearDataForRequest();
@@ -226,10 +254,49 @@ const AddEditModal = ({
     const onCloseModal = () => {
         setIsShowModal(false);
         setErrorMessages({});
-        clearInputs();
+        clearDataForRequest();
         settempDataForEdit(undefined);
         setIsDataForEdit && setIsDataForEdit(false);
     };
+
+
+    const clearWithoutClosingModal = () => {
+        setErrorMessages({});
+        clearDataForRequest();
+        settempDataForEdit(undefined);
+        setIsDataForEdit && setIsDataForEdit(false);
+    };
+
+
+    const handleDeleteButton = async () => {
+        if (deleteFunction && tempDataForEdit) {
+            try {
+                const response = await deleteFunction([tempDataForEdit.id]);
+                if (response.error) {
+                    throw response.error;
+                }
+                await addToast({
+                    type: 'success',
+                    message: `${dataTitle ?? ''} deleted`.toUpperCase(),
+                    title: "Success"
+                });
+                onCloseModal();
+            } catch (error) {
+                console.log(`onPressAdd${dataTitle}`, error);
+                if (error?.status === 400) {
+                    setErrorMessages(HELP.modifieErrorMessage(error));
+
+                }
+                else {
+                    if (error?.data.message) {
+                        errorAlert(error?.status, error?.data.message);
+                    }
+                }
+            }
+        }
+
+    };
+
 
     const onPressAdd = async () => {
         try {
@@ -242,11 +309,10 @@ const AddEditModal = ({
                 message: `new ${dataTitle ?? ''} added`.toUpperCase(),
                 title: "Success"
             });
-            onCloseModal();
+            clearWithoutClosingModal();
         } catch (error) {
-            console.log(`OnpressAdd=>onPressAdd=>Err==>>`, error);
+            console.log(`onPressAdd${dataTitle}`, error);
             if (error?.status === 400) {
-                console.log("------->>>", error, HELP.modifieErrorMessage(error));
                 setErrorMessages(HELP.modifieErrorMessage(error));
 
             }
@@ -274,7 +340,7 @@ const AddEditModal = ({
                     title: "Success"
                 });
             } catch (error) {
-                console.log("onPressSave==erorr>>", error);
+                console.log(`onPressSave${dataTitle}`, error);
                 if (error?.status === 400) {
                     setErrorMessages(HELP.modifieErrorMessage(error));
                 }
@@ -286,7 +352,7 @@ const AddEditModal = ({
 
             }
         } else {
-            console.warn("onPressSave====>>>There is No updateApi Function ");
+            console.warn(`onPressSaveP${dataTitle} ====>>>There is No updateApi Function `);
         }
     };
 
@@ -315,6 +381,15 @@ const AddEditModal = ({
                         height={30}
                         width={80}
                     />
+                    {(deleteFunction && tempDataForEdit) && < PrimaryButton
+                        title={'Delete'}
+                        onPress={handleDeleteButton}
+                        buttonColor={Colors.INFRA_RED}
+                        textColor={Colors.CULTURED}
+                        pressedColor={Colors.METALLIC_GOLD}
+                        height={30}
+                        width={80}
+                    />}
                     {!!tempDataForEdit ?
                         <PrimaryButton
                             title={'Save'}

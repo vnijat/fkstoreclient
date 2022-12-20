@@ -1,4 +1,4 @@
-import { InputsConfig } from "../../types/inputsconfig";
+import {InputsConfig} from '../../types/inputsconfig';
 
 const category: InputsConfig[] = [
   {
@@ -10,6 +10,16 @@ const category: InputsConfig[] = [
     height: 35,
     width: 150,
     multiLine: false,
+  },
+  {
+    title: 'CODE',
+    dtoKey: 'code',
+    placeHolder: 'CODE NEEDED WHEN GENERATE BARCODE',
+    isNumeric: false,
+    maxLength: 3,
+    width: 150,
+    height: 35,
+    isDisableForEdit: true,
   },
   {
     title: 'SKU',
@@ -30,6 +40,8 @@ const category: InputsConfig[] = [
     height: 35,
     selectable: true,
     selectableDataKey: 'category',
+    isDisableForEdit: true,
+    canSelectParent: true,
   },
 ];
 

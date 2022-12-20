@@ -20,6 +20,9 @@ interface InputsConfig {
   tableConfig?: ITableConfig[];
   isCheckBox?: boolean;
   isDate?: boolean;
+  isDisableForEdit?: boolean;
+  isCode?: boolean;
+  canSelectParent?: boolean;
 }
 
 export type {InputsConfig};

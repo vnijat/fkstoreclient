@@ -64,7 +64,6 @@ const ItemModal = ({ itemsData }: IItemModal) => {
                             <View style={{ flexDirection: 'row' }}>
                                 <DataField title={'Unit'} value={data?.unit.name!} width={100} />
                                 <DataField title={'Quantity'} value={Number(data?.quantity!)} width={100} />
-                                <DataField title={'Cost Per Unit'} value={currency.format(Number(data?.purchasePrice!))} width={100} />
                                 <DataField title={'Price Per Unit'} value={currency.format(Number(data?.pricePerUnit!))} width={100} />
                                 <DataField title={'Total Price'} value={currency.format(Number(data?.totalPrice!))} width={100} />
                             </View>
@@ -77,7 +76,7 @@ const ItemModal = ({ itemsData }: IItemModal) => {
                         <View style={{ flex: 0.4 }}>
                             <View style={{ flex: 1, justifyContent: 'center' }}>
                                 <Text style={{ alignSelf: 'center', color: Colors.DEFAULT_TEXT_COLOR }}>
-                                    {`Barcode: ${data?.barcode.code}`}
+                                    {`Barcode: ${data?.barcode}`}
                                 </Text>
                                 <Text style={{ alignSelf: 'center', color: Colors.DEFAULT_TEXT_COLOR, fontSize: 14, fontWeight: '700' }}>
                                     {!!data?.label.name.length && `Label: ${data?.label.name}`}

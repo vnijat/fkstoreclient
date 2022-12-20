@@ -24,6 +24,15 @@ export const InventoryApi = createApi({
                 };
             },
         }),
+        getItemCodeSuggestions: build.query<{ lastCodes: { code: string; }[]; suggestedCodes: { code: string; }[]; }, undefined | { categoryId: number; itemCode: string; }>({
+            providesTags: ['codeSuggestions'],
+            query: (codeParams) => {
+                return {
+                    url: '/item/code/suggestions',
+                    params: codeParams,
+                };
+            },
+        }),
         getItem: build.query<itemResponseFull, number | undefined>({
             providesTags: ['item'],
             query: (id) => {
@@ -66,7 +75,7 @@ export const InventoryApi = createApi({
                     method: 'POST'
                 };
             },
-            invalidatesTags: ['items']
+            invalidatesTags: ['items', 'codeSuggestions']
         }),
         editItem: build.mutation<undefined, { body: any; id: number; }>({
             query: ({ body, id }) => {
@@ -88,7 +97,9 @@ export const InventoryApi = createApi({
         'item',
         'projects',
         'clientForPicker',
-        'orders'
+        'orders',
+        'codeSuggestions',
+        'itemForOrder'
     ]
 });
 
@@ -99,5 +110,6 @@ export const {
     useGetItemInputsQuery,
     useEditItemMutation,
     useGetItemQrCodeQuery,
-    useGetItemQuery
+    useGetItemQuery,
+    useGetItemCodeSuggestionsQuery
 } = InventoryApi;

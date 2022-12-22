@@ -1,7 +1,7 @@
 import React, { memo, useEffect, useMemo, useRef, useState } from "react";
 import { ScrollView, View } from "react-native";
 import { ActivityIndicator, Flyout, Text } from "react-native-windows";
-import { InputItem } from "../../../components/inputItem";
+import { InputItem } from "../../../components/inputItem/index.windows";
 import { useItemForOrderQuery } from "../../../modules/api/orders.api";
 import { addItemForOrder } from "../../../modules/redux/orderSlicer";
 import { useAppDispatch } from "../../../modules/redux/store";

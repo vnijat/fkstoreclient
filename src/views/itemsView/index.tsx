@@ -14,10 +14,6 @@ import { Colors } from '../../utils/colors';
 import AddEditItemModal from './components/addEditItemModal';
 import { getStyle } from './styles';
 
-// import countries from 'i18n-iso-countries';
-// countries.registerLocale(require("i18n-iso-countries/langs/en.json"));
-// countries.registerLocale(require("i18n-iso-countries/langs/az.json"));
-// const countryobjects = countries.getNames('en', { select: 'official' });
 
 export const ItemsView: FC<any> = ({ navigation }) => {
   const style = getStyle();

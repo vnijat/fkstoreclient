@@ -11,7 +11,7 @@ import { RootState, useAppDispatch } from "../../modules/redux/store";
 import HELP from "../../services/helpers";
 import { Item } from "../../types/ItemsQuery";
 import { Colors } from "../../utils/colors";
-import { currency } from "../../utils/currency";
+import { currency } from "../../utils/currency.windows";
 import { getStyle } from "./styles";
 
 

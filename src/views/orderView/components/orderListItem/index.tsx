@@ -4,7 +4,7 @@ import CustomContextMenu from "../../../../components/customContextMenu";
 import CustomPressable from "../../../../components/customPressable";
 import { ProjectOrder } from "../../../../types/projectOrder";
 import { Colors } from "../../../../utils/colors";
-import { currency } from "../../../../utils/currency";
+import { currency } from "../../../../utils/currency.windows";
 import { getStyle } from "./styles";
 
 

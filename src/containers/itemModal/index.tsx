@@ -13,7 +13,7 @@ import { RootState, useAppDispatch } from "../../modules/redux/store";
 import HELP from "../../services/helpers";
 import { Item, ItemResponse } from "../../types/ItemsQuery";
 import { Colors } from "../../utils/colors";
-import { currency } from "../../utils/currency";
+import { currency } from "../../utils/currency.windows";
 import DataField from "./components/dataField";
 import { getStyle } from "./style";
 

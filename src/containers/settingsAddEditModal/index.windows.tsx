@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Text, View } from "react-native";
 import { useSelector } from "react-redux";
 import CustomModal from "../../components/customModal";
-import { InputItem } from "../../components/inputItem";
+import { InputItem } from "../../components/inputItem/index.windows";
 import { PrimaryButton } from "../../components/primaryButton";
 import { setIsShowSettingsModal } from "../../modules/redux/appStateSlicer";
 import { setApiURL } from "../../modules/redux/configsSlicer";

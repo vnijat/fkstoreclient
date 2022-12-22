@@ -1,7 +1,7 @@
 import React, { memo, useEffect, useMemo, useState } from "react";
 import { Text, TextInput, View } from "react-native";
 import { Colors } from "../../../../utils/colors";
-import { currency } from "../../../../utils/currency";
+import { currency } from "../../../../utils/currency.windows";
 import { regExPatterns } from "../../../../utils/validation";
 import { getStyle } from "./styles";
 

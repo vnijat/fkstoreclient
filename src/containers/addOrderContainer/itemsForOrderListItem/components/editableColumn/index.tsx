@@ -1,6 +1,6 @@
 import React, { memo, useState } from "react";
 import { View } from "react-native";
-import { InputItem } from "../../../../../components/inputItem";
+import { InputItem } from "../../../../../components/inputItem/index.windows";
 
 
 

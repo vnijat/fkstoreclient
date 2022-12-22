@@ -3,7 +3,7 @@ import { View } from "react-native";
 import Icon from "react-native-vector-icons/Entypo";
 import { Text } from "react-native-windows";
 import CustomPressable from "../../../../components/customPressable";
-import { InputItem } from "../../../../components/inputItem";
+import { InputItem } from "../../../../components/inputItem/index.windows";
 import AddClientModal from "../../../../containers/addClient";
 import CustomPicker, { IsingelSelectData } from "../../../../containers/customPicker";
 import { ClientSort } from "../../../../enums/clientSort";

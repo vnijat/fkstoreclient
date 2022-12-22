@@ -1,7 +1,7 @@
 import React, { memo, useEffect, useMemo, useRef, useState } from "react";
 import { Text, View, Alert } from "react-native";
 import { Colors } from "../../utils/colors";
-import { InputItem } from "../../components/inputItem";
+import { InputItem } from "../../components/inputItem/index.windows";
 import { PrimaryButton } from "../../components/primaryButton";
 import HELP from "../../services/helpers";
 import { useToast } from "react-native-rooster";

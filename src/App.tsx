@@ -8,7 +8,7 @@ import { persistor, store } from './modules/redux/store';
 import { ToastProvider } from 'react-native-rooster';
 import { PersistGate } from 'redux-persist/integration/react';
 
-LogBox.ignoreLogs(["EventEmitter.removeListener"]);
+LogBox.ignoreLogs(["EventEmitter.removeListener", 'Reanimated 2']);
 
 const App: FC<any> = () => {
 

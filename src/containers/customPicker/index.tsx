@@ -17,7 +17,7 @@ import { Colors } from '../../utils/colors';
 import { getStyle } from './style';
 import { addItemOption, setIsOpenOptionModal, setIsOptionForEdit, setOptionNameForModal } from "../../modules/redux/itemOptions";
 import HELP from '../../services/helpers';
-import { InputItem } from '../../components/inputItem';
+import { InputItem } from '../../components/inputItem/index.windows';
 import CustomPressable from '../../components/customPressable';
 import { PrimaryButton } from '../../components/primaryButton';
 import MultipleSelectItem, { IMultipleSelectData } from './components/multipleSelectItem';

@@ -1,7 +1,7 @@
 import { memo, useEffect, useState } from "react";
 import { View } from "react-native";
 import { useSelector } from "react-redux";
-import { InputItem } from "../../components/inputItem";
+import { InputItem } from "../../components/inputItem/index.windows";
 import { clearOrderDataForPost } from "../../modules/redux/orderSlicer";
 import { RootState, useAppDispatch } from "../../modules/redux/store";
 import { Colors } from "../../utils/colors";

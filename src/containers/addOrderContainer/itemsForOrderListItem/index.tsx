@@ -1,7 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 import { Text } from "react-native-windows";
-import { InputItem } from "../../../components/inputItem";
+import { InputItem } from "../../../components/inputItem/index.windows";
 import { updateItemForOrder } from "../../../modules/redux/orderSlicer";
 import { useAppDispatch } from "../../../modules/redux/store";
 import { OrderItem } from "../../../types/projectOrder";

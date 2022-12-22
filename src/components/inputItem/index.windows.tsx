@@ -87,6 +87,7 @@ export const InputItem: FC<IInputItem> = memo(
     const isShowMagnify = useMemo(
       () => (typeof inputValue === 'string') && !isFocused && isSearch && !inputValue.length,
       [isFocused, isSearch, inputValue]);
+    const errorMessage = useMemo(() => isErorr ? errorDetail : (placeHolder || inputTitle), [isErorr, errorDetail]);
 
     const onChangeText = (text: string) => {
       const isNum = regExPatterns.IS_NUMERIC;
@@ -100,6 +101,9 @@ export const InputItem: FC<IInputItem> = memo(
     const onCheckBoxValueChange = () => {
       setValue(!inputValue);
     };
+    const onValueChange = (item: IsingelSelectData) => {
+      setValue(item.value?.toString());
+    };
 
     const onFocus = () => {
       setIsFocused(true);
@@ -109,7 +113,44 @@ export const InputItem: FC<IInputItem> = memo(
       setIsFocused(false);
     };
 
-   
+    const dataForPicker = useMemo(() => {
+      if (selectableData?.length) {
+        const singleSelectData = HELP.mapNestedForPicker(selectableData);
+        return singleSelectData as IsingelSelectData[];
+      } else {
+        return [];
+      }
+    }, [selectableData]);
+
+
+    const renderCustomPicker = useMemo(() => {
+      return (<>
+        < CustomPicker
+          dataKeyName={pickerDataKeyName}
+          singleSelected={inputValue}
+          singleOnSelect={onValueChange}
+          singleSelectData={dataForPicker}
+          isAddButton={isPickerAddButton}
+          buttonStyle={style.pickerButtonStyle}
+          itemStyle={style.pickerItemStyle}
+          selectedItemStyle={[style.pickerItemStyle, { backgroundColor: Colors.CARD_HEADER_COLOR }]}
+          singleSelectMode
+          isEditable={isPickerItemEditable}
+          isDataSearchEnabled={isPickerSearchEnabled}
+          isDisabled={isDisabled}
+          requiredText={requiredText}
+          onPressEditButton={pickerOnPressEditButton}
+          onPressAddButton={pickerOnPressAddButton}
+          disablePickerActionButtons={disablePickerActionButtons}
+          disabledForEdit={disabledForEdit}
+          canSelectParent={canSelectParent}
+
+        />
+      </>
+      );
+    }, [inputValue, canSelectParent, dataForPicker, isErorr, isPickerItemEditable, isDisabled, disablePickerActionButtons, disabledForEdit]);
+
+
     const renderTextInput = useMemo(() => {
       if (!isCheckBox && !isDatePicker) {
         return (
@@ -131,6 +172,9 @@ export const InputItem: FC<IInputItem> = memo(
       }
 
     }, [id, onChangeText, inputValue, placeHolder, isMultiLine, maxLength, onFocus, onBlur, isCheckBox, isDatePicker, disabledForEdit]);
+
+
+
 
     const chekBoxInput = useMemo(() => {
       if (isCheckBox) {
@@ -160,13 +204,17 @@ export const InputItem: FC<IInputItem> = memo(
     }, [isDatePicker, inputValue]);
 
     return (
-      <View style={{ margin: 5, opacity: disabledForEdit ? 0.6 : 1 }}>
+      <View style={{ margin: 5, opacity: disabledForEdit ? 0.6 : 1 }} tooltip={errorMessage}>
         {!!inputTitle && (
-          <Text style={style.inputTitle}>{`${inputTitle?.toUpperCase()} ${isErorr ? '*' : ''} `}</Text>
+          <Text style={style.inputTitle}>{`${inputTitle?.toUpperCase()} ${isErorr ? '*' : ''
+            } `}</Text>
         )
         }
         {chekBoxInput}
         {renderDatePicker}
+        {selectable ? renderCustomPicker
+          :
+          (
             <View style={{ justifyContent: 'center' }} >
               {renderTextInput}
               {isShowMagnify && (
@@ -176,7 +224,9 @@ export const InputItem: FC<IInputItem> = memo(
                 </View>
               )}
             </View>
+          )
+        }
       </View >
     );
-  }
+  },
 );

@@ -1,6 +1,6 @@
 import React, { memo, useEffect, useMemo, useState } from "react";
 import { View } from "react-native";
-import { currency } from "../../../../utils/currency";
+import { currency } from "../../../../utils/currency.windows";
 import { ITableConfig, RowDataType, } from "../../types";
 import ColumnInput from "../columnInput";
 import { getStyle } from "./styles";

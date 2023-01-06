@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import { Colors } from '../../utils/colors';
 
 export const getStyle = (height: number, width: number, isErorr?: boolean, titleColor?: string, backgroundColor?: string) => {
@@ -27,8 +27,12 @@ export const getStyle = (height: number, width: number, isErorr?: boolean, title
             padding: 5,
             justifyContent: 'center',
             borderRadius: 3,
-            borderBottomWidth: 1,
-            borderColor: Colors.CARD_COLOR,
+            ...Platform.select({
+                windows: {
+                    borderBottomWidth: 1,
+                    borderColor: Colors.CARD_COLOR,
+                }
+            }),
             backgroundColor: backgroundColor || Colors.CARD_HEADER_COLOR,
             color: Colors.DEFAULT_TEXT_COLOR
         },

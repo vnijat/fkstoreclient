@@ -28,6 +28,10 @@ export const getStyle = (width: number) => {
             height: 30,
             alignItems: 'center'
         },
+        configButton: {
+            justifyContent: 'center',
+            alignItems: 'center'
+        }
     });
 
     return style;

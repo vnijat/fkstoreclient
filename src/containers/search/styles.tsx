@@ -51,7 +51,7 @@ export const getStyle = () => {
             maxHeight: 300,
             minHeight: 40,
             paddingTop: 5,
-            flexWrap: 'wrap'
+            flexWrap: 'wrap',
         },
         filterByIconContainer: {
             marginHorizontal: 1,
@@ -61,9 +61,21 @@ export const getStyle = () => {
         clearButtonContainer: {
             justifyContent: 'center',
             alignItems: 'center',
-            marginLeft: 10
+            marginHorizontal: 5
+        },
+        rightContainer: {
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flex: 1,
+            flexWrap: 'wrap',
+            paddingHorizontal: 10
+        },
+        infoText: {
+            color: Colors.DEFAULT_TEXT_COLOR,
+            fontSize: 12,
+            fontWeight: '700',
         }
-
     });
 
     return style;

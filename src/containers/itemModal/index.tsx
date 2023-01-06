@@ -1,9 +1,8 @@
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import React, { memo, useEffect, useMemo, useState } from "react";
-import { Image, View } from "react-native";
+import React, { memo, useMemo } from "react";
+import { Image, View, Linking, ActivityIndicator, Text } from "react-native";
 import Icon from "react-native-vector-icons/Entypo";
-import { ActivityIndicator, Text } from "react-native-windows";
 import { useSelector } from "react-redux";
 import CustomModal from "../../components/customModal";
 import { PrimaryButton } from "../../components/primaryButton";
@@ -11,12 +10,13 @@ import { InventoryApi, useGetItemQuery } from "../../modules/api/apiSlice";
 import { setIsItemForEdit, setIsShowAddEditModal, setIsShowItemModal, setItemForPost } from "../../modules/redux/itemsSlicer";
 import { RootState, useAppDispatch } from "../../modules/redux/store";
 import HELP from "../../services/helpers";
-import { Item, ItemResponse } from "../../types/ItemsQuery";
+import { Item } from "../../types/ItemsQuery";
 import { Colors } from "../../utils/colors";
-import { currency } from "../../utils/currency";
+import { currency } from "../../utils/currency.windows";
 import DataField from "./components/dataField";
 import { getStyle } from "./style";
-
+import RNPrint from 'react-native-print';
+import { useToast } from "react-native-rooster";
 interface IItemModal {
     itemsData: Item[];
 }
@@ -25,6 +25,8 @@ interface IItemModal {
 const ItemModal = ({ itemsData }: IItemModal) => {
     const style = useMemo(() => getStyle(), []);
     const navigation = useNavigation<StackNavigationProp<any>>();
+    const { addToast } = useToast();
+    const apiURL = useSelector((state: RootState) => state.configs.apiURL);
     const dispatch = useAppDispatch();
     const itemId = useSelector((state: RootState) => state.itemsSlicer.itemIdForFullResponse);
     const isShowModal = useSelector((state: RootState) => state.itemsSlicer.isShowItemModal);
@@ -46,6 +48,27 @@ const ItemModal = ({ itemsData }: IItemModal) => {
         dispatch(setIsShowAddEditModal(true));
     };
 
+    const onPressGetBarcodePdf = async () => {
+        Linking.openURL(`${apiURL}/item/barcode/pdf/${itemId}`);
+    };
+
+    const onPressPrint = async () => {
+        const response = await dispatch(InventoryApi.endpoints.printBarcode.initiate({ itemId: itemId! }));
+        if (response?.data) {
+            await addToast({
+                type: 'success',
+                message: `${response?.data.message}`.toUpperCase(),
+                title: "Success"
+            });
+        } else {
+            await addToast({
+                type: 'error',
+                message: `${response?.error?.data}`.toUpperCase(),
+                title: "Error"
+            });
+        }
+
+    };
 
     return (
         <CustomModal
@@ -54,10 +77,10 @@ const ItemModal = ({ itemsData }: IItemModal) => {
             closeModal={onCloseModal}
             width={1000}
         >
-            <View style={{ flex: 1, height: 700 }}>
+            <View style={style.container}>
                 {(isShowModal && data) ? <>
-                    <View style={{ flex: 0.5, flexDirection: 'row' }}>
-                        <View style={{ flex: 0.6, borderColor: Colors.CARD_HEADER_COLOR, borderRightWidth: 1 }}>
+                    <View style={style.contentTopContainer}>
+                        <View style={style.contentTopLeftContainer}>
                             <DataField title={'Name'} value={data?.name!} />
                             <DataField title={'Description'} value={data?.description!} height={100} />
                             <DataField title={'Category'} value={data?.category!} />
@@ -73,31 +96,34 @@ const ItemModal = ({ itemsData }: IItemModal) => {
                                 <DataField title={'Location'} value={data?.location.code!} width={100} />
                             </View>
                         </View>
-                        <View style={{ flex: 0.4 }}>
-                            <View style={{ flex: 1, justifyContent: 'center' }}>
-                                <Text style={{ alignSelf: 'center', color: Colors.DEFAULT_TEXT_COLOR }}>
-                                    {`Barcode: ${data?.barcode}`}
-                                </Text>
-                                <Text style={{ alignSelf: 'center', color: Colors.DEFAULT_TEXT_COLOR, fontSize: 14, fontWeight: '700' }}>
-                                    {!!data?.label.name.length && `Label: ${data?.label.name}`}
-                                </Text>
-                                <Image source={{ uri: `data:image/png;base64,${data?.qrCode}` }} resizeMode={'contain'} style={{ flex: 1, justifyContent: 'center', }} />
-                                <Text style={{ alignSelf: 'center', color: Colors.DEFAULT_TEXT_COLOR }}>
+                        <View style={style.contentTopRightContainer}>
+                            <View style={style.itemBarcodeContainer}>
+                                <View style={style.barcodeImage}>
+                                    <Image source={{ uri: `data:image/png;base64,${data?.qrCode}` }} resizeMode={'center'} style={{ flex: 1, }} />
+                                </View>
+                                <Text style={style.rightContainerInfoText}>
                                     {`SKU: ${data?.skuCode}`}
                                 </Text>
+                                <Text style={style.rightContainerInfoText}>
+                                    {!!data?.label.name.length && `Label: ${data?.label.name}`}
+                                </Text>
+                            </View>
+                            <View style={style.barcodeActionsButton}>
+                                <PrimaryButton onPress={onPressGetBarcodePdf} title={'Get PDF'} width={100} />
+                                <PrimaryButton onPress={onPressPrint} title={'Print'} width={100} />
                             </View>
                         </View>
                     </View>
-                    <View style={{ flex: 0.5, flexDirection: 'row' }}>
-                        <View style={{ flex: 0.6, borderColor: Colors.CARD_HEADER_COLOR, borderRightWidth: 1, justifyContent: 'flex-end', alignItems: 'flex-end' }}>
-                            <View style={{ marginRight: 10 }}>
+                    <View style={style.contentBottomContainer}>
+                        <View style={style.contentBottomLeft}>
+                            <View style={style.bottomActionButton}>
                                 <PrimaryButton title={'Edit'} onPress={onPressEdit} onHoverOpacity width={100} />
                             </View>
                         </View>
-                        <View style={{ flex: 0.4, justifyContent: 'center' }}>
-                            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                        <View style={style.bottomRightContainer}>
+                            <View style={style.bottomRightContent}>
                                 <Icon name={'shop'} color={Colors.METALLIC_GOLD} size={34} />
-                                <Text style={{ color: Colors.DEFAULT_TEXT_COLOR, fontSize: 14, fontWeight: '700', paddingRight: 2 }}>
+                                <Text style={style.bottomRightTitleText}>
                                     {'Supplier'}
                                 </Text>
                             </View>

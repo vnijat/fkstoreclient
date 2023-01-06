@@ -1,9 +1,10 @@
-import React, { memo, useState } from "react";
+import React, { memo, useMemo, useState } from "react";
 import { Text, View } from "react-native";
 import { CompletedIcon, DeclinedIcon, InProgressIcon, ShowIcon, TotalProjcetsIcon } from "../../../../assets/icons/clientCardIcons";
 import CustomPressable from "../../../../components/customPressable";
 import { ProjectStatus } from "../../../../enums/projectStatus";
 import { Colors } from "../../../../utils/colors";
+import { getStyle } from "./styles";
 
 
 
@@ -16,6 +17,8 @@ interface IProjectInfo {
 
 
 const ProjectInfo = ({ projectsCompleted, projectsDeclined, projectsInProgress, totalProjects }: IProjectInfo) => {
+    const style = useMemo(() => getStyle(), []);
+
     const ICON_SIZE = 16;
     const [isShowProjects, setIsShowProjects] = useState(false);
 
@@ -47,35 +50,35 @@ const ProjectInfo = ({ projectsCompleted, projectsDeclined, projectsInProgress, 
     ];
 
     return (
-        <View>
-            <View style={{ alignSelf: 'center', top: -30, position: 'absolute', width: '100%', justifyContent: 'center', alignItems: 'center', borderTopWidth: 1, borderColor: Colors.CARD_HEADER_COLOR }}>
-                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: 5 }}>
-                    <Text style={{ fontSize: 12, color: Colors.CARD_HEADER_COLOR, fontWeight: '700' }}>
+        <>
+            <View style={style.projectInfoTitleContainer}>
+                <View style={style.projectInfoButtonContiner}>
+                    <Text style={style.projectInfoButtonText}>
                         {'Projects'.toUpperCase()}
                     </Text>
-                    <CustomPressable style={{ justifyContent: 'center', alignItems: 'center', paddingLeft: 5 }}
+                    <CustomPressable style={style.projectInfoIconButton}
                         onPress={() => setIsShowProjects((prevValue) => !prevValue)}
                     >
                         <ShowIcon size={14} color={Colors.OLD_GOLD} />
                     </CustomPressable>
                 </View>
             </View>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 30, marginBottom: 10, opacity: isShowProjects ? 1 : 0 }}>
+            <View style={[style.projectInfoContentContainer, { opacity: isShowProjects ? 1 : 0 }]}>
                 {
                     projectsInfo.map((info, index) => {
                         const { value, icon, color, title } = info;
                         return (
-                            <View key={index} style={{ justifyContent: 'center', alignItems: 'center' }}>
-                                <View key={index} style={{ width: 30, height: 30, borderRadius: 40, borderWidth: 2, borderColor: color, justifyContent: 'center', alignItems: 'center' }}>
-                                    <View style={{ width: 25, height: 25, justifyContent: 'center', alignItems: 'center' }}>
+                            <View key={index} style={style.infoItemContainer}>
+                                <View key={index} style={[style.infoIconContiner, { borderColor: color }]}>
+                                    <View style={style.infoIcon}>
                                         {icon}
                                     </View>
                                 </View>
-                                <View style={{ alignItems: 'center', paddingTop: 1 }}>
-                                    <Text style={{ fontSize: 10, color: Colors.CARD_HEADER_COLOR, fontWeight: '700' }}>
+                                <View style={style.infoContentContainer}>
+                                    <Text style={style.infoTitleText}>
                                         {title}
                                     </Text>
-                                    <Text style={{ fontSize: 14, color: Colors.METALLIC_GOLD, fontWeight: '700', marginBottom: 5 }}>
+                                    <Text style={style.infoValueText}>
                                         {value}
                                     </Text>
                                 </View>
@@ -84,7 +87,7 @@ const ProjectInfo = ({ projectsCompleted, projectsDeclined, projectsInProgress, 
                     })
                 }
             </View>
-        </View>
+        </>
     );
 
 };

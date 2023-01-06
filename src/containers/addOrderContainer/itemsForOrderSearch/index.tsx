@@ -1,12 +1,13 @@
 import React, { memo, useEffect, useMemo, useRef, useState } from "react";
 import { ScrollView, View } from "react-native";
 import { ActivityIndicator, Flyout, Text } from "react-native-windows";
-import { InputItem } from "../../../components/inputItem";
+import { InputItem } from "../../../components/inputItem/index.windows";
 import { useItemForOrderQuery } from "../../../modules/api/orders.api";
 import { addItemForOrder } from "../../../modules/redux/orderSlicer";
 import { useAppDispatch } from "../../../modules/redux/store";
 import { Colors } from "../../../utils/colors";
 import SearchContentItem from "../itemsForOrderSearchItem";
+import { getStyle } from "./style";
 
 
 
@@ -16,6 +17,7 @@ interface IItemsForOrderSearch {
 
 
 const ItemsForOrderSearch = ({ }: IItemsForOrderSearch) => {
+    const style = useMemo(() => getStyle(), []);
     let timeoutId = useRef<ReturnType<typeof setTimeout>>(null).current;
     const dispatch = useAppDispatch();
     const [value, setSearchValue] = useState('');
@@ -25,7 +27,11 @@ const ItemsForOrderSearch = ({ }: IItemsForOrderSearch) => {
     const { data, isLoading, isUninitialized } = useItemForOrderQuery(value, {
         skip
     });
-    const searchContentHeight = useMemo(() => data?.length && ((data?.length >= 5) ? 150 : (data?.length * 45)), [data?.length]);
+    const searchContentHeight = useMemo(
+        () => data?.length &&
+            ((data?.length >= 5)
+                ? 150
+                : (data?.length * 45)), [data?.length]);
 
     useEffect(() => {
         if (data?.length) {
@@ -85,12 +91,12 @@ const ItemsForOrderSearch = ({ }: IItemsForOrderSearch) => {
                     height={30}
                     maxLength={60}
                 />
-                {!isUninitialized && <View style={{ position: 'absolute', right: 10, alignItems: 'center', justifyContent: 'center', zIndex: 2, top: 30, marginHorizontal: 20, height: 20 }}>
+                {!isUninitialized && <View style={style.resultInfoContainer}>
                     {
                         (isLoading) ?
                             <ActivityIndicator size={'small'} color={Colors.METALLIC_GOLD} />
                             :
-                            <Text style={{ color: Colors.METALLIC_GOLD, fontSize: 12 }}>
+                            <Text style={style.resultInfoText}>
                                 {data?.length ? `Found:${data.length}` : 'Not Found :('}
                             </Text>
                     }
@@ -104,7 +110,7 @@ const ItemsForOrderSearch = ({ }: IItemsForOrderSearch) => {
                 placement={'bottom'}
                 showMode={'transient'}
             >
-                <View style={{ height: searchContentHeight, backgroundColor: Colors.CULTURED, width: 680 }}>
+                <View style={[style.floatResultsContainer, { height: searchContentHeight, }]}>
                     <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingVertical: 5 }}>
                         {!!data?.length && data?.map((item, index) => {
                             return <SearchContentItem data={item} setShowContent={(data) => setShowContent(data)} key={`${index}-searchItem`} />;

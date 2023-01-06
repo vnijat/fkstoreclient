@@ -1,12 +1,12 @@
 import { StyleSheet } from 'react-native';
 import { Colors } from '../../utils/colors';
+import FONT from '../../utils/font';
 
 export const getStyle = () => {
     const style = StyleSheet.create({
         container: {
-            backgroundColor: Colors.FLORAL_WHITE,
-            marginBottom: 10,
-            justifyContent: 'space-between'
+            flex: 1,
+            height: 700
         },
 
         infoTitle: {
@@ -23,10 +23,69 @@ export const getStyle = () => {
         },
         infoContainer: {
             height: 40,
-            backgroundColor:Colors.DEFAULT_TEXT_COLOR,
+            backgroundColor: Colors.DEFAULT_TEXT_COLOR,
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'space-between'
+        },
+        contentTopContainer: {
+            flex: 0.5,
+            flexDirection: 'row'
+        },
+        contentTopLeftContainer: {
+            flex: 0.6,
+            borderColor: Colors.CARD_HEADER_COLOR,
+            borderRightWidth: 1
+        },
+        contentTopRightContainer: {
+            flex: 0.4,
+        },
+        itemBarcodeContainer: {
+            flex: 1
+        },
+        barcodeImage: {
+            width: '80%',
+            height: 150,
+            alignSelf: 'center'
+        },
+        rightContainerInfoText: {
+            alignSelf: 'center',
+            color: Colors.DEFAULT_TEXT_COLOR,
+            fontSize: 14, fontWeight: '700'
+        },
+        barcodeActionsButton: {
+            flexDirection: 'row',
+            justifyContent: 'space-around',
+            paddingTop: 10
+        },
+        contentBottomContainer: {
+            flex: 0.5,
+            flexDirection: 'row'
+        },
+        contentBottomLeft: {
+            flex: 0.6,
+            borderColor:
+                Colors.CARD_HEADER_COLOR,
+            borderRightWidth: 1,
+            justifyContent: 'flex-end',
+            alignItems: 'flex-end'
+        },
+        bottomActionButton: {
+            marginRight: 10
+        },
+        bottomRightContainer: {
+            flex: 0.4,
+            justifyContent: 'center'
+        },
+        bottomRightContent: {
+            justifyContent: 'center',
+            alignItems: 'center'
+        },
+        bottomRightTitleText: {
+            color: Colors.DEFAULT_TEXT_COLOR,
+            fontSize: FONT.FONT_SIZE_MEDIUM,
+            fontWeight: FONT.FONT_BOLD,
+            paddingRight: 2
         }
     });
 

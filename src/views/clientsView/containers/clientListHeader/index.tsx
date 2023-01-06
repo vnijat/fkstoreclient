@@ -3,7 +3,7 @@ import { View } from "react-native";
 import Icon from "react-native-vector-icons/Entypo";
 import { Text } from "react-native-windows";
 import CustomPressable from "../../../../components/customPressable";
-import { InputItem } from "../../../../components/inputItem";
+import { InputItem } from "../../../../components/inputItem/index.windows";
 import AddClientModal from "../../../../containers/addClient";
 import CustomPicker, { IsingelSelectData } from "../../../../containers/customPicker";
 import { ClientSort } from "../../../../enums/clientSort";
@@ -90,6 +90,7 @@ const ClientListHeader = ({ searchValue, clientTypeValue, orderBy }: IClinetList
                         singleSelectData={selectedData}
                         singleSelected={selected}
                         buttonStyle={style.pickerButton}
+                        itemStyle={{ backgroundColor: Colors.CARD_COLOR, margin: 1, minHeight: 20, paddingLeft: 5, justifyContent: 'center' }}
                         arrowDownColor={Colors.DEFAULT_TEXT_COLOR}
                     />
                     {isOrder && renderAscDescIcon}

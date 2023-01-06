@@ -4,11 +4,8 @@ import { Colors } from '../../utils/colors';
 export const getStyle = () => {
     const style = StyleSheet.create({
         container: {
-            backgroundColor: Colors.FLORAL_WHITE,
-            marginBottom: 10,
-            justifyContent: 'space-between'
+            flex: 1
         },
-
         infoTitle: {
             color: Colors.CARD_COLOR,
         },
@@ -23,10 +20,28 @@ export const getStyle = () => {
         },
         infoContainer: {
             height: 40,
-            backgroundColor:Colors.DEFAULT_TEXT_COLOR,
+            backgroundColor: Colors.DEFAULT_TEXT_COLOR,
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'space-between'
+        },
+        infoActionButtonContainer: {
+            flexDirection: 'row',
+            width: 180,
+            height: 30,
+            marginRight: 10,
+            justifyContent: 'space-between'
+        },
+        listHeaderContainer: {
+            backgroundColor: Colors.CARD_HEADER_COLOR,
+            justifyContent: 'center'
+        },
+        activityContainer: {
+            paddingTop: 100
+        },
+        listContainer: {
+            flex: 1,
+            backgroundColor: Colors.BACKGROUND_COLOR
         }
     });
 

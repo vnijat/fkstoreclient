@@ -1,5 +1,5 @@
-import React, { memo, useMemo } from "react";
-import { View } from "react-native";
+import React, { memo, useMemo, useRef, useState } from "react";
+import { useWindowDimensions, View, Animated } from "react-native";
 import { Popup, } from "react-native-windows";
 import CustomPressable from "../../components/customPressable";
 import { Colors } from "../../utils/colors";
@@ -18,7 +18,6 @@ interface ICustomModal {
 
 const CustomModal = ({ children, isShowModal, closeModal, isDissmissEnabled, width }: ICustomModal) => {
     const style = useMemo(() => getStyle(width), [width]);
-
     return (
         <Popup
             isOpen={isShowModal}

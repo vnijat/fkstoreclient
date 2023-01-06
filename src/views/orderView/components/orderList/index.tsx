@@ -17,7 +17,7 @@ interface IOrderList {
 }
 
 
-const ProjectsList = ({ data }: IOrderList) => {
+const OrderList = ({ data }: IOrderList) => {
     const style = useMemo(() => getStyle(), []);
 
 
@@ -50,4 +50,4 @@ const ProjectsList = ({ data }: IOrderList) => {
 
 };
 
-export default memo(ProjectsList);
+export default memo(OrderList);

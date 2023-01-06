@@ -7,6 +7,7 @@ const HEADERS: IListHeader[] = [
   {title: 'At Stock', dtoKey: 'itemAtStock'},
   {title: 'Unit', dtoKey: 'unit'},
   {title: 'Quantity', dtoKey: 'quantity'},
+  {title: 'Status', dtoKey: 'status'},
 ];
 
 const ITEMS_FORORDER_LIST = {

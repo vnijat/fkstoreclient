@@ -35,7 +35,7 @@ const CustomDrawer: FC<ICustomDrawer> = ({ navigation, currentRoute, routeNames 
                 <CustomPressable
                     onPress={onPressConfigs}
                     onHoverOpacity
-                    style={{ justifyContent: 'center', alignItems: 'center' }} >
+                    style={style.configButton} >
                     <Icon name='cog' size={30} color={Colors.DEFAULT_TEXT_COLOR} />
                 </CustomPressable>
                 <Text style={style.logoText}>

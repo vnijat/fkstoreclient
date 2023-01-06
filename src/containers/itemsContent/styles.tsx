@@ -14,13 +14,14 @@ export const getStyle = () => {
             alignItems: 'center',
             flex: 1,
             flexDirection: 'row',
+            paddingLeft: 1
 
         },
         columContentText: {
             color: Colors.DEFAULT_TEXT_COLOR,
             fontSize: 13,
             fontWeight: '400',
-            maxWidth: 100
+            maxWidth: 130
         },
         rowItem: {
             flexDirection: 'row',
@@ -41,6 +42,24 @@ export const getStyle = () => {
             marginRight: 1,
             paddingLeft: 11,
             zIndex: 2
+        },
+        contextMenuContainer: {
+            width: 150,
+            maxHeight: 200,
+            backgroundColor: Colors.CARD_COLOR,
+            padding: 2
+        },
+        contextMenuButton: {
+            width: '100%',
+            height: 30,
+            flexDirection: 'row',
+            backgroundColor: Colors.CARD_HEADER_COLOR,
+            marginVertical: 1,
+            alignItems: 'center',
+            paddingHorizontal: 5
+        },
+        contextMenuButtonText: {
+            color: Colors.DEFAULT_TEXT_COLOR
         }
     });
 

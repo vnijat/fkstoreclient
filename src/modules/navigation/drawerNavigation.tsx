@@ -1,28 +1,27 @@
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import React, { FC } from 'react';
-import { OrderView } from '../../views/orderView';
-import { PurchaseView } from '../../views/purchaseView';
-import CustomDrawer from '../../containers/customDrawer';
-import { ClientsView } from '../../views/clientsView';
-import { ItemsView } from '../../views/itemsView';
-import ProjectsView from '../../views/projectsView';
-import SettingsAddEditModal from '../../containers/settingsAddEditModal';
+import { Pressable, StatusBar } from 'react-native';
+import Icon from 'react-native-vector-icons/Entypo';
+import ConfigsView from '../../mobile/views/configsView';
+import { Colors } from '../../utils/colors';
+import { BottomTabNavigator } from './bottomTabNavigator';
+import DrawerScreenOptions from './configs/drawerScreenOptions';
 
-export const DrawerNavigation: FC<any> = () => {
+export const DrawerNavigation = ({ }) => {
     const Drawer = createDrawerNavigator();
-
     return (
-        <Drawer.Navigator initialRouteName='Items'
-            drawerContent={({ navigation, state }) =>
-                <CustomDrawer
-                    navigation={navigation}
-                    routeNames={state.routeNames} currentRoute={state.routes[state.index].name} />}
-            screenOptions={{ headerShown: false, drawerStyle: { backgroundColor: 'transparent', width: 0 } }}>
-            <Drawer.Screen name="Items" component={ItemsView} />
-            <Drawer.Screen name="Clients" component={ClientsView} />
-            <Drawer.Screen name="Projects" component={ProjectsView} />
-            <Drawer.Screen name="Orders" component={OrderView} />
-            <Drawer.Screen name="Purchases" component={PurchaseView} />
-        </Drawer.Navigator>
+        <>
+            <StatusBar backgroundColor={Colors.METALLIC_GOLD} />
+            <Drawer.Navigator initialRouteName='Home'
+                screenOptions={DrawerScreenOptions}
+            >
+                <Drawer.Screen name="Home" component={BottomTabNavigator} />
+                <Drawer.Screen name="Config" component={ConfigsView}
+                    options={{
+                        headerShown: true
+                    }}
+                />
+            </Drawer.Navigator>
+        </>
     );
 };

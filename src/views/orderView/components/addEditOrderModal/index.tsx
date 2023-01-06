@@ -25,7 +25,7 @@ const AddEditOrderModal = ({ isOpen, onClose }: IAddEditOrderModal) => {
             isShowModal={isOpen}
             closeModal={onCloseModal}
             isDissmissEnabled={false}
-            width={700}
+            width={800}
         >
             {isOpen && <AddOrderContainer />}
         </CustomModal>

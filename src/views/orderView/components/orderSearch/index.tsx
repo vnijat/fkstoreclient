@@ -2,11 +2,12 @@ import React, { memo, useMemo, useState } from "react";
 import { View } from "react-native";
 import { Alert } from "react-native-windows";
 import CustomModal from "../../../../components/customModal";
-import { InputItem } from "../../../../components/inputItem";
+import { InputItem } from "../../../../components/inputItem/index.windows";
 import { PrimaryButton } from "../../../../components/primaryButton";
 import TableInput from "../../../../containers/tableInput";
 import { ITableConfig } from "../../../../containers/tableInput/types";
 import { setOrdersQueryParams } from "../../../../modules/redux/orderQuerySlicer";
+import { setIsShowOrderModal } from "../../../../modules/redux/orderSlicer";
 import { setProjectsQueryParams } from "../../../../modules/redux/projectQuerySlicer";
 import { setIsShowProjectAddEditModal } from "../../../../modules/redux/projectSlicer";
 import { useAppDispatch } from "../../../../modules/redux/store";
@@ -28,21 +29,17 @@ interface IOrderSearchContainer {
 const OrderSearchContainer = ({ searchValue }: IOrderSearchContainer) => {
     const style = useMemo(() => getStyle(), []);
     const dispatch = useAppDispatch();
-    const [isOpenOrderModal, setIsOpenOrderModal] = useState(false);
 
     const setSearchValue = (text: string) => {
         dispatch(setOrdersQueryParams({ page: 1, search: text }));
     };
 
     const onPressAddOrder = () => {
-        // dispatch(setIsShowProjectAddEditModal(true));
-        setIsOpenOrderModal(true);
-
+        dispatch(setIsShowOrderModal(true));
     };
 
     return (
         <>
-            <AddEditOrderModal isOpen={isOpenOrderModal} onClose={() => setIsOpenOrderModal(false)} />
             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', backgroundColor: Colors.CARD_COLOR, paddingHorizontal: 20 }}>
                 <View style={{ flex: 0.4 }}>
                     <InputItem inputValue={searchValue ?? ''} setValue={setSearchValue} isSearch />

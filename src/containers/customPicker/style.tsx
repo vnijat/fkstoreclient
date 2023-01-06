@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { Colors } from '../../utils/colors';
+import FONT from '../../utils/font';
 
 export const getStyle = () => {
     const style = StyleSheet.create({
@@ -69,6 +70,25 @@ export const getStyle = () => {
             alignItems: 'center',
             paddingHorizontal: 5,
             justifyContent: 'space-between'
+        },
+        listContainer: {
+            flex: 1,
+            maxHeight: 100,
+            paddingRight: 10,
+        },
+        pickerButtonText: {
+            color: Colors.DEFAULT_TEXT_COLOR,
+            fontSize: FONT.FONT_SIZE_SMALL
+        },
+        flyoutContent: {
+            flex: 1,
+            minWidth: 100
+        },
+        searchInputContainer: {
+            backgroundColor: Colors.FLORAL_WHITE
+        },
+        listContentContainer: {
+            backgroundColor: Colors.FLORAL_WHITE,
         }
     });
 

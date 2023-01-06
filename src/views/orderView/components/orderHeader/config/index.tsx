@@ -6,7 +6,7 @@ interface IOrdersColumnTitle {
 
 export const OrdersColumnTitle: IOrdersColumnTitle[] = [
     { title: 'Date', dtoKey: 'createdAt' },
-    { title: 'Project', dtoKey: 'project' },
+    { title: 'detail', dtoKey: 'project' },
     { title: 'Total Items', dtoKey: 'totalItems' },
     { title: 'Total Cost', dtoKey: 'totalPrice' },
     { title: 'Status', dtoKey: 'status' }

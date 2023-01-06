@@ -6,7 +6,7 @@ import { ScrollView } from "react-native-windows";
 import CustomPressable from "../../components/customPressable";
 import { PrimaryButton } from "../../components/primaryButton";
 import { Colors } from "../../utils/colors";
-import { currency } from "../../utils/currency";
+import { currency } from "../../utils/currency.windows";
 import HeaderColumn from "./components/headerColumn";
 import TableInputRow from "./components/tableInputRow";
 import { getStyle } from "./styles";
@@ -111,10 +111,9 @@ const TableInput = ({ tableData, tableConfig, getNewTableData }: ITableInput) =>
         }
     };
 
-
     const renderTableFooter = useMemo(() => {
         return (
-            <View style={{ flex: 1, justifyContent: 'center' }}>
+            <View style={style.tableFooterContent}>
                 <View style={style.columnTotalsContainer}>
                     {getColumnsAllowedToSum.map((col, index) => {
                         return (

@@ -11,7 +11,7 @@ import HELP from "../../../../services/helpers";
 import { Client } from "../../../../types/clientsQuery";
 import { Project } from "../../../../types/projectsQuery";
 import { Colors } from "../../../../utils/colors";
-import { currency } from "../../../../utils/currency";
+import { currency } from "../../../../utils/currency.windows";
 import StatusColumn from "./statusColumn";
 import { getStyle } from "./styles";
 

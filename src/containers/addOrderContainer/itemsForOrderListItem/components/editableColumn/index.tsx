@@ -1,11 +1,12 @@
-import React, { memo, useState } from "react";
+import React, { memo, useEffect, useMemo, useState } from "react";
 import { View } from "react-native";
 import { InputItem } from "../../../../../components/inputItem/index.windows";
+import { getStyle } from "./style";
 
 
 
 interface IEditableColumn {
-    value: string | number;
+    value: string;
     setValue: (text: string) => void;
     /**
      * Item quantity at Stock for restriction order quantity 
@@ -15,23 +16,36 @@ interface IEditableColumn {
 
 
 const EditableColumn = ({ value, setValue, atStock }: IEditableColumn) => {
-    const maxLength = `${Number(atStock)}`.length;
+    const style = useMemo(() => getStyle(), []);
+    const [inputValue, setInputvalue] = useState(value ?? '');
     const handeInputChange = (numberString: string) => {
         if (Number(numberString) <= Number(atStock)) {
-            setValue(numberString);
+            setInputvalue(numberString);
         } else {
-            atStock && setValue(Number(atStock).toString());
+            atStock && setInputvalue(Number(atStock).toString());
         }
     };
+    useEffect(() => {
+        if (Number(value) !== Number(inputValue)) {
+            setValue(inputValue);
+        }
+    }, [inputValue]);
+
+    useEffect(() => {
+        if (Number(value) !== Number(inputValue)) {
+            setInputvalue(value);
+        }
+    }, [value]);
+
     return (
-        <View style={{ alignItems: 'flex-start', width: 120 }}>
+        <View style={style.editableColumnContainer}>
             <InputItem
-                setValue={(numberString) => handeInputChange(numberString as string)}
-                inputValue={value.toString()}
+                setValue={handeInputChange}
+                inputValue={inputValue}
                 height={30}
                 width={100}
                 isNumeric={true}
-                maxLength={maxLength}
+                maxLength={13}
             />
         </View>
     );

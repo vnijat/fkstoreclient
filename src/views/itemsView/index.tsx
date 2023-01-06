@@ -72,10 +72,10 @@ export const ItemsView: FC<any> = ({ navigation }) => {
       <AddEditItemModal />
       <ItemModal itemsData={queryData?.items!} />
       <View style={{ flex: 0.9, backgroundColor: Colors.BACKGROUND_COLOR }}>
-        <View style={{ flex: 0.2, backgroundColor: Colors.CARD_COLOR }}>
+        <View style={{ backgroundColor: Colors.CARD_COLOR, flexShrink: 0.2 }}>
           {renderSearchContainer}
         </View>
-        <View style={{ flex: 0.8 }}>
+        <View style={{ flexGrow: 1 }}>
           {renderListTable}
         </View>
       </View>

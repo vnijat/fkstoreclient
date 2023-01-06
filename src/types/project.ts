@@ -1,4 +1,5 @@
 import {ProjectStatus} from '../enums/projectStatus';
+import {OrderItem} from './projectOrder';
 import {OtherExpensesType} from './projectsQuery';
 
 interface AddClientProject {
@@ -11,6 +12,7 @@ interface AddClientProject {
   isSample?: boolean;
   otherExpenses?: OtherExpensesType[];
   status: ProjectStatus;
+  orders: OrderItem[];
 }
 
 export type {AddClientProject};

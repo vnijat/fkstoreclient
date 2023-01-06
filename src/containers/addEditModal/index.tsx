@@ -152,12 +152,12 @@ const AddEditModal = ({
                     const isError = !!errorMessage[dtoKey!]?.length;
                     const errorDetail = isError ? ((selectable && !(inputValue as string).length) ? `Please pick ${title}` : errorMessage[dtoKey!].map(t => `*${t}`).join('\n')) : undefined;
                     const disabled = (!!requiredDataName && !!requiredDataDtoKey) && !dataForRequest[requiredDataDtoKey];
-                    const disableForEdit = isDisableForEdit && tempDataForEdit;
+                    const disableForEdit = tempDataForEdit && isDisableForEdit;
                     if (isTableInput) {
                         return (
-                            <View style={{ width: 460, height: 200 }} key={`${title}`}>
-                                <View style={{ flexDirection: 'row', justifyContent: 'center', marginVertical: 3 }}>
-                                    <Text style={{ color: Colors.DEFAULT_TEXT_COLOR, textAlign: 'center' }}>
+                            <View style={style.tableInputContainer} key={`${title}`}>
+                                <View style={style.tableInputTitleContainer}>
+                                    <Text style={style.tableInputTitleText}>
                                         {`${title}`.toUpperCase()}
                                     </Text>
                                 </View>

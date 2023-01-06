@@ -32,14 +32,14 @@ const modifieErrorMessage = (error: any) => {
 
 
 
-const modifyItemForEdit = (data: Item[] | Item, itemId: number) => {
+const modifyItemForEdit = (data: any[] | any, itemId?: number) => {
     const itemForPost: any = {};
     const selectedItem: Item = Array.isArray(data) ? data.filter(item => item.id === itemId)[0] : data;
     for (let key in selectedItem) {
         const objectValue = selectedItem[key as keyof Item];
         const isObject = objectValue && typeof objectValue === 'object';
         if (isObject) {
-            itemForPost[`${key}Id`] = objectValue.id.toString();
+            itemForPost[`${key}Id`] = objectValue?.id?.toString();
         } else {
             itemForPost[key] = !!(objectValue as string).length ? ((isNaN(Number(objectValue)) || key === 'code') ? objectValue : Number(objectValue).toString()) : objectValue;
         }

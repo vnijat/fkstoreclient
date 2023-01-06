@@ -2,6 +2,9 @@ import React, { memo, useMemo } from "react";
 import { Text, View } from "react-native";
 import CustomContextMenu from "../../../../components/customContextMenu";
 import CustomPressable from "../../../../components/customPressable";
+import { setIsOrderForEdit, setIsShowOrderModal, setOrderDataForPost } from "../../../../modules/redux/orderSlicer";
+import { useAppDispatch } from "../../../../modules/redux/store";
+import HELP from "../../../../services/helpers";
 import { ProjectOrder } from "../../../../types/projectOrder";
 import { Colors } from "../../../../utils/colors";
 import { currency } from "../../../../utils/currency.windows";
@@ -22,13 +25,14 @@ interface ICompundData {
 }
 
 const OrderListItem = ({ data }: IOrderListItem) => {
+    const dispatch = useAppDispatch();
     const style = useMemo(() => getStyle(), []);
 
 
 
     const rowData = useMemo(() => [
         data.createdAt,
-        data.project.title,
+        data.detail,
         data.totalItems,
         currency.format(data.totalPrice),
         data.status
@@ -42,16 +46,24 @@ const OrderListItem = ({ data }: IOrderListItem) => {
     }, []);
 
 
+    const onPressEdit = () => {
+        dispatch(setOrderDataForPost({ ...data }));
+        dispatch(setIsOrderForEdit(true));
+        dispatch(setIsShowOrderModal(true));
+    };
+
+
+
     const contextActionButtons = [
         {
-            title: 'EDIT', onPress: () => { }
+            title: 'EDIT', onPress: onPressEdit
         },
         {
             title: 'DELETE', onPress: () => { }
         },
-        {
-            title: 'CLIENT INFO', onPress: () => { }
-        },
+        // {
+        //     title: 'CLIENT INFO', onPress: () => { }
+        // },
     ];
 
     const contextMenuContent = useMemo(() => {
@@ -80,7 +92,7 @@ const OrderListItem = ({ data }: IOrderListItem) => {
     const RenderColumnContent = ({ content, id }: { content: string | number | ICompundData; id: string; }) => {
         return (
             <>
-                <CustomPressable key={id} style={[style.columContent, { zIndex: 3 }]}
+                <CustomPressable key={id} style={[style.columContent, { zIndex: 2 }]}
                     disabled
                 >
                     {
@@ -116,7 +128,7 @@ const OrderListItem = ({ data }: IOrderListItem) => {
             onHoverOpacity
         >
             {renderRow}
-            <CustomContextMenu>
+            <CustomContextMenu zIndex={3}>
                 {contextMenuContent}
             </CustomContextMenu>
         </CustomPressable>

@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { Colors } from '../../../../utils/colors';
+import FONT from '../../../../utils/font';
 
 export const getStyle = (textColor?: string, buttonColor?: string) => {
     const style = StyleSheet.create({
@@ -39,6 +40,27 @@ export const getStyle = (textColor?: string, buttonColor?: string) => {
             borderColor: Colors.CARD_COLOR,
             justifyContent: 'space-between'
         },
+        pageNumbersContainer: {
+            flexDirection: 'row',
+            width: 160,
+            justifyContent: 'center'
+        },
+        pageNumberPressed: {
+            backgroundColor: Colors.CARD_HEADER_COLOR
+        },
+        paginationLeftContainer: {
+            flexDirection: 'row'
+        },
+        paginationRightContainer: {
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
+        },
+        pageInfoText: {
+            color: Colors.DEFAULT_TEXT_COLOR,
+            fontSize: FONT.FONT_SIZE_SMALL
+        },
+        pickerContainer: { marginLeft: 10 }
     });
 
     return style;

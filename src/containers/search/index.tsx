@@ -18,6 +18,7 @@ import { currency } from '../../utils/currency.windows';
 import FilterModal from '../filterModal';
 import CustomPicker from '../customPicker';
 import { setIsShowAddEditModal } from '../../modules/redux/itemsSlicer';
+import { PrimaryButton } from '../../components/primaryButton';
 
 
 
@@ -28,11 +29,10 @@ interface ISearchContainer {
 
 
 const SearchContainer: FC<ISearchContainer> = ({ searchValue, overallPrice }) => {
-    const style = getStyle();
+    const style = useMemo(() => getStyle(), []);
     const dispatch = useAppDispatch();
     const filterByButtonRef = useRef(null);
     const [isShowFilterModal, setIsShowFilterModal] = useState(false);
-    const url = useSelector((state: RootState) => state.appStateSlicer.url);
     const pickerFilterParams = useSelector(selectFilterByForPicker, shallowEqual);
     const selectedWithLabel = useSelector(selectSelectedWithLabel, shallowEqual);
     const searchInputRef = useRef(null);
@@ -152,30 +152,25 @@ const SearchContainer: FC<ISearchContainer> = ({ searchValue, overallPrice }) =>
                 </View>
             </View>
             <View style={style.sortBy}>
-                <View style={style.filterByIconContainer} tooltip={'Filters'} >
-                    {/* <CustomPressable onPress={onPressFilterBy} onHoverOpacity ref={filterByButtonRef}> */}
-                    <FilterByIcon size={20} color={Colors.DEFAULT_TEXT_COLOR} />
-                    {/* </CustomPressable> */}
-                </View>
                 {renderFilterByPickers}
                 <CustomPressable onPress={clearFiler}
                     onHoverOpacity
                     style={style.clearButtonContainer}
                 >
                     <View style={style.clearText} tooltip={'Clear Filters'}  >
-                        <ClearIcon size={20} color={Colors.METALLIC_GOLD} />
+                        <ClearIcon size={22} color={isHasFitlerParams ? Colors.METALLIC_GOLD : Colors.DEFAULT_TEXT_COLOR} />
                     </View>
                 </CustomPressable>
-                <CustomPressable onPress={onPressAddItem}
-                    onHoverOpacity
-                    style={{ backgroundColor: Colors.DEFAULT_TEXT_COLOR, justifyContent: 'center', paddingHorizontal: 5, paddingVertical: 2, borderRadius: 1, alignItems: 'center', marginLeft: 20 }}
-                >
-                    <Text style={{ color: Colors.CARD_COLOR, }}>
-                        {'Add Item'.toUpperCase()}
-                    </Text>
-                </CustomPressable>
-                <View style={{ justifyContent: 'center', position: 'absolute', right: 30 }}>
-                    <Text style={{ color: Colors.DEFAULT_TEXT_COLOR, fontSize: 12, fontWeight: '700' }}>
+                <View style={style.rightContainer}>
+                    <PrimaryButton
+                        title={'NEW ITEM'}
+                        onPress={onPressAddItem}
+                        onHoverOpacity
+                        textColor={Colors.CARD_COLOR}
+                        buttonColor={Colors.DEFAULT_TEXT_COLOR}
+                        borderRadius={2}
+                    />
+                    <Text style={style.infoText}>
                         {`OVERALL PRICE : `}
                         <Text style={{ color: Colors.METALLIC_GOLD }}>
                             {currency.format(overallPrice)}

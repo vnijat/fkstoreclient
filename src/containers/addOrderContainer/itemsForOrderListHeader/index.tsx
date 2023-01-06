@@ -1,6 +1,8 @@
+import { useMemo } from "react";
 import { Text, View } from "react-native";
 import { Colors } from "../../../utils/colors";
 import ITEMS_FORORDER_LIST from "./configs";
+import { getStyle } from "./style";
 
 
 
@@ -10,14 +12,14 @@ interface IItemsForOrderListHeader {
 }
 
 const ItemsForOrderListHeader = ({ }: IItemsForOrderListHeader) => {
-
+    const style = useMemo(() => getStyle(), []);
     return (
-        <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', height: 40 }}>
+        <View style={style.container}>
             {ITEMS_FORORDER_LIST.HEADERS.map((header, index) => {
                 const columnWidth = index == 0 ? 60 : 120;
                 return (
-                    <View key={`${header}-${header.dtoKey}`} style={{ height: 30, justifyContent: 'center', alignItems: 'flex-start', width: columnWidth, margin: 1 }}>
-                        <Text style={{ color: Colors.DEFAULT_TEXT_COLOR, fontSize: 12 }}>
+                    <View key={`${header}-${header.dtoKey}`} style={[style.columnContainer, { width: columnWidth }]}>
+                        <Text style={style.columnText}>
                             {header.title}
                         </Text>
                     </View>

@@ -96,7 +96,7 @@ export const PagePagination: FC<IPagePAgination> = ({
                 },
                 styles.pageButtons,
               ]}
-              pressedStyle={{ backgroundColor: Colors.CARD_HEADER_COLOR }}>
+              pressedStyle={styles.pageNumberPressed}>
               <Text style={[styles.pageText, !selectedPage && { color: Colors.DEFAULT_TEXT_COLOR }]} key={`${index}-${item}`}>
                 {item}
               </Text>
@@ -111,7 +111,7 @@ export const PagePagination: FC<IPagePAgination> = ({
   const renderPages = useMemo(() => {
     return (
       <View
-        style={{ flexDirection: 'row', width: 160, justifyContent: 'center' }}>
+        style={styles.pageNumbersContainer}>
         {renderPageNumbers}
       </View>
     );
@@ -185,23 +185,19 @@ export const PagePagination: FC<IPagePAgination> = ({
 
   return (
     <View style={styles.paginationContainer}>
-      <View style={{ flexDirection: 'row' }}>
+      <View style={styles.paginationLeftContainer}>
         {renderLeftButtons}
         {renderPages}
         {renderRightButtons}
       </View>
       <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
-        <Text style={{ color: Colors.DEFAULT_TEXT_COLOR, fontSize: 12 }}>
+        style={styles.paginationRightContainer}>
+        <Text style={styles.pageInfoText}>
           {showedItemCount > 0
             ? `page ${page} of ${pageCount} | showed ${showedItemsCount} of ${showedItemCount}`
             : 'No Data'}
         </Text>
-        <View style={{ marginLeft: 10 }}>
+        <View style={styles.pickerContainer}>
           <CustomPicker
             singleSelectMode
             singleSelectData={paginationTakeOptions}

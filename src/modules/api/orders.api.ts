@@ -1,5 +1,9 @@
 import {Item} from '../../types/ItemsQuery';
-import {OrderQueryResponse, OrdersQueryParams} from '../../types/projectOrder';
+import {
+  AddOrderDto,
+  OrderQueryResponse,
+  OrdersQueryParams,
+} from '../../types/projectOrder';
 import {InventoryApi} from './apiSlice';
 
 export const OrdersApi = InventoryApi.injectEndpoints({
@@ -21,7 +25,7 @@ export const OrdersApi = InventoryApi.injectEndpoints({
         };
       },
     }),
-    addOrder: build.mutation<undefined, undefined>({
+    addOrder: build.mutation<undefined, AddOrderDto>({
       invalidatesTags: ['orders'],
       query: body => {
         return {

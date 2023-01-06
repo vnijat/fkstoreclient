@@ -82,6 +82,10 @@ export const getStyle = () => {
             borderRadius: 30,
             backgroundColor: Colors.METALLIC_GOLD,
             justifyContent: 'center', alignItems: 'center'
+        },
+        tableFooterContent: {
+            flex: 1,
+            justifyContent: 'center'
         }
     });
 

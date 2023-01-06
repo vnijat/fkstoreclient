@@ -12,6 +12,7 @@ interface IItemsForOrderList {
 
 const ItemsForOrderList = ({ orderItems }: IItemsForOrderList) => {
 
+
     return (
         <View style={{ flex: 1 }}>
             <FlatList

@@ -1,5 +1,5 @@
 import CheckBox from '@react-native-community/checkbox';
-import React, { memo, useCallback, useMemo, useRef, useState } from 'react';
+import React, { memo, useMemo, useRef, useState } from 'react';
 import {
     Text,
     View,
@@ -7,15 +7,14 @@ import {
     StyleProp,
     ViewStyle,
     Alert,
+    TextStyle
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
 import { Flyout } from 'react-native-windows';
-import { ItemOptionsApi } from '../../modules/api/itemOptions.api';
-import { useAppDispatch } from '../../modules/redux/store';
 import { FilterParamskey } from '../../types/ItemsQuery';
 import { Colors } from '../../utils/colors';
 import { getStyle } from './style';
-import { addItemOption, setIsOpenOptionModal, setIsOptionForEdit, setOptionNameForModal } from "../../modules/redux/itemOptions";
+import { setIsOpenOptionModal, setOptionNameForModal } from "../../modules/redux/itemOptions";
 import HELP from '../../services/helpers';
 import { InputItem } from '../../components/inputItem/index.windows';
 import CustomPressable from '../../components/customPressable';
@@ -23,6 +22,7 @@ import { PrimaryButton } from '../../components/primaryButton';
 import MultipleSelectItem, { IMultipleSelectData } from './components/multipleSelectItem';
 import { inputsForItemOptions } from '../../configs/ItemOptionsInputConfigs';
 import SingleSelectItem from './components/singleSelectItem';
+import { useAppDispatch } from '../../modules/redux/store';
 
 export interface IsingelSelectData {
     id?: number;
@@ -48,11 +48,11 @@ interface ICustomPicker {
     singleSelectData?: IsingelSelectData[];
     singleOnSelect?: (selected: IsingelSelectData) => void;
     buttonStyle?: StyleProp<ViewStyle> | undefined;
-    butonTextStyle?: StyleProp<ViewStyle> | undefined;
+    butonTextStyle?: StyleProp<TextStyle> | undefined;
     itemStyle?: StyleProp<ViewStyle> | undefined;
     selectedItemStyle?: StyleProp<ViewStyle> | undefined;
-    itemTextStyle?: StyleProp<ViewStyle> | undefined;
-    selectedItemTextStyle?: StyleProp<ViewStyle> | undefined;
+    itemTextStyle?: StyleProp<TextStyle> | undefined;
+    selectedItemTextStyle?: StyleProp<TextStyle> | undefined;
     isDataSearchEnabled?: boolean;
     isAddButton?: boolean;
     dataKeyName?: keyof typeof inputsForItemOptions;
@@ -122,7 +122,6 @@ const CustomPicker = ({
             Alert.alert('You cant edit this field',);
         } else {
             setShowContent(true);
-
         }
     };
 
@@ -158,6 +157,7 @@ const CustomPicker = ({
         return itemLength > 3;
     }, [multipleSelectData?.length, singleSelectData?.length, getFilteredData?.length, searchText]);
 
+
     const renderMultipleSelectItem = useMemo(
         () =>
             ({ item, index }: { item: IMultipleSelectData; index: number; }) => {
@@ -172,6 +172,10 @@ const CustomPicker = ({
         [selectedIds, multipleSelectData?.length, parent, itemStyle]
     );
 
+
+
+
+
     const onPressSingleItem = (item: IsingelSelectData) => {
         const { label, value } = item;
         if (singleOnSelect) {
@@ -181,6 +185,8 @@ const CustomPicker = ({
             return;
         }
     };
+
+
 
     const onPressAdd = () => {
         if (onPressAddButton) {
@@ -219,7 +225,7 @@ const CustomPicker = ({
                     </>
                 );
             },
-        [singleSelected, singleSelectData?.length, itemStyle, canSelectParent, selectedItemStyle, itemTextStyle, selectedItemTextStyle, isEditable,isDisabled, disablePickerActionButtons]
+        [singleSelected, singleSelectData?.length, itemStyle, canSelectParent, selectedItemStyle, itemTextStyle, selectedItemTextStyle, isEditable, isDisabled, disablePickerActionButtons]
     );
 
     const renderCounter = useMemo(() => {
@@ -250,7 +256,7 @@ const CustomPicker = ({
                     key={title}
                     onHoverOpacity
                 >
-                    <Text style={[butonTextStyle || { color: Colors.DEFAULT_TEXT_COLOR, fontSize: 12 }]}>
+                    <Text style={[butonTextStyle || style.pickerButtonText]}>
                         {(singleSelectMode
                             ? ` ${(title && title) || ''} ${singleSelectedTitle}`
                             : title) || ''}
@@ -265,24 +271,17 @@ const CustomPicker = ({
                 onDismiss={onDismiss}
                 showMode={'transient-with-dismiss-on-pointer-move-away'}
             >
-                <View style={{ flex: 1, justifyContent: 'space-between', minWidth: 200 }}>
+                <View style={style.flyoutContent}>
                     {isDataSearchEnabled
                         &&
-                        <View style={{ backgroundColor: Colors.FLORAL_WHITE }}>
+                        <View style={style.searchInputContainer}>
                             {renderSearchInput}
                         </View>
                     }
                     {singleSelectMode ? (
                         <FlatList
-                            style={{
-                                flex: 1,
-                                maxHeight: 100,
-                                paddingRight: 10,
-                                backgroundColor: isShowableExited ? Colors.CARD_HEADER_COLOR : Colors.FLORAL_WHITE,
-                            }}
-                            contentContainerStyle={{
-                                backgroundColor: Colors.FLORAL_WHITE,
-                            }}
+                            style={[style.listContainer, { backgroundColor: isShowableExited ? Colors.CARD_HEADER_COLOR : Colors.FLORAL_WHITE }]}
+                            contentContainerStyle={style.listContentContainer}
                             data={getFilteredData || singleSelectData}
                             keyExtractor={(item) => `${item.label}-${item.value}`}
                             renderItem={renderSingleSelectItem}
@@ -291,15 +290,8 @@ const CustomPicker = ({
                         />
                     ) : (
                         <FlatList
-                            style={{
-                                flex: 1,
-                                maxHeight: 100,
-                                paddingRight: 10,
-                                backgroundColor: isShowableExited ? Colors.CARD_HEADER_COLOR : Colors.FLORAL_WHITE,
-                            }}
-                            contentContainerStyle={{
-                                backgroundColor: Colors.FLORAL_WHITE,
-                            }}
+                            style={[style.listContainer, { backgroundColor: isShowableExited ? Colors.CARD_HEADER_COLOR : Colors.FLORAL_WHITE }]}
+                            contentContainerStyle={style.listContentContainer}
                             data={getFilteredData || multipleSelectData}
                             keyExtractor={item => item?.id.toString()}
                             renderItem={renderMultipleSelectItem}

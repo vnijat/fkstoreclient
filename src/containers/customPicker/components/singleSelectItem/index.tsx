@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { Pressable, StyleProp, Text, View, ViewStyle } from "react-native";
+import { Pressable, StyleProp, Text, View, ViewStyle, TextStyle } from "react-native";
 import Icon from "react-native-vector-icons/Entypo";
 import { IsingelSelectData } from "../..";
 import CustomPressable from "../../../../components/customPressable";
@@ -15,8 +15,8 @@ interface ISingleSelectItem {
     isEditable?: boolean;
     data: IsingelSelectData;
     selectedItemStyle?: StyleProp<ViewStyle> | undefined;
-    itemTextStyle?: StyleProp<ViewStyle> | undefined;
-    selectedItemTextStyle?: StyleProp<ViewStyle> | undefined;
+    itemTextStyle?: StyleProp<TextStyle> | undefined;
+    selectedItemTextStyle?: StyleProp<TextStyle> | undefined;
     itemStyle?: StyleProp<ViewStyle> | undefined;
     index?: number;
     indent: number;
@@ -39,7 +39,6 @@ const SingleSelectItem = ({ singleSelected, data, onPressSingleItem, indent, isE
         if (!!data.nested?.length && !canSelectParent) {
             setIsShowNested(!isShowNested);
         } else {
-            console.log("onPressItem,", data);
             onPressSingleItem(data);
         }
     };
@@ -81,14 +80,16 @@ const SingleSelectItem = ({ singleSelected, data, onPressSingleItem, indent, isE
                 >
                     {data?.label}
                 </Text>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <View style={{ justifyContent: 'center' }}>
+                <View style={style.buttonRightContainer}>
+                    <View style={style.selectedInfoContainer}>
                         {renderSelectedCounter}
                     </View>
                     {!!data.nested?.length && <Pressable
                         onPress={onPressArrow}
-                        style={{ transform: [{ rotate }], alignItems: 'center' }}>
-                        <Icon name={'chevron-small-right'} size={18} color={Colors.METALLIC_GOLD} />
+                        style={style.arrowButton}>
+                        <View style={{ transform: [{ rotate }] }}>
+                            <Icon name={'chevron-small-right'} size={22} color={Colors.METALLIC_GOLD} />
+                        </View>
                     </Pressable>}
                     {isEditable && isShowEditButton &&
                         <CustomPressable onPress={onPressEdit} disabled={disablePickerActionButtons}>

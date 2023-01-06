@@ -84,7 +84,7 @@ const ItemListTable: FC<IItemListTable> = ({ data, isLoading }) => {
                         <Text style={style.infoTitle}>Selected:</Text> <Text style={style.infoValue} >{selectedCount} </Text>
                         <Text style={style.infoTitle}>Total Price:</Text> <Text style={style.infoValue}>{currency.format(selectedTotalPrice)} </Text>
                     </Text>
-                    <View style={{ flexDirection: 'row', width: 180, height: 30, marginRight: 10, justifyContent: 'space-between' }}>
+                    <View style={style.infoActionButtonContainer}>
                         {selectedCount === 1 && < PrimaryButton title={'Edit'} onHoverOpacity onPress={onPressEdit} buttonColor={Colors.CARD_COLOR} borderRadius={2} textColor={Colors.DEFAULT_TEXT_COLOR} />}
                         < PrimaryButton title={`Delete (${selectedCount})`} onPress={deleteItem} onHoverOpacity buttonColor={Colors.METALLIC_GOLD} borderRadius={2} />
                         < PrimaryButton title={'Cancel'} onPress={cancelEdit} onHoverOpacity buttonColor={Colors.CARD_COLOR} borderRadius={2} textColor={Colors.DEFAULT_TEXT_COLOR} />
@@ -98,19 +98,19 @@ const ItemListTable: FC<IItemListTable> = ({ data, isLoading }) => {
     }, [isEditMode, selectedCount, selectedTotalPrice]);
 
     return (
-        <View style={{ flex: 1 }}>
+        <View style={style.container}>
             {renderSelectedInfo}
-            <View style={{ backgroundColor: Colors.CARD_HEADER_COLOR, justifyContent: 'center' }}>
+            <View style={style.listHeaderContainer}>
                 <ListHeader />
             </View>
             <View>
             </View>
             {isLoading ?
-                <View style={{ paddingTop: 100 }}>
+                <View style={style.activityContainer}>
                     <ActivityIndicator color={Colors.OLD_GOLD} />
                 </View>
                 : <FlatList
-                    style={{ flex: 1, backgroundColor: Colors.BACKGROUND_COLOR }}
+                    style={style.listContainer}
                     data={data}
                     keyExtractor={(item) => item.id.toString()}
                     renderItem={({ item, index }) => {

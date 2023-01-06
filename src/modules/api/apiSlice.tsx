@@ -87,6 +87,15 @@ export const InventoryApi = createApi({
             },
             invalidatesTags: ['items', 'item']
         }),
+        printBarcode: build.mutation<undefined, { itemId: number; }>({
+            query: (body) => {
+                return {
+                    url: `/item/print/barcode/`,
+                    body: body,
+                    method: 'POST'
+                };
+            },
+        }),
     }),
     tagTypes: [
         'items',
@@ -111,5 +120,6 @@ export const {
     useEditItemMutation,
     useGetItemQrCodeQuery,
     useGetItemQuery,
-    useGetItemCodeSuggestionsQuery
+    useGetItemCodeSuggestionsQuery,
+    usePrintBarcodeMutation
 } = InventoryApi;

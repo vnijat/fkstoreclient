@@ -11,7 +11,8 @@ export const getStyle = (textColor?: string, buttonColor?: string, disabled?: bo
         },
         title: {
             color: disabled ? '#FFF' : textColor || '#FFF',
-            opacity: disabled ? 0.3 : 1
+            opacity: disabled ? 0.3 : 1,
+            textAlign: 'center'
         }
 
     });

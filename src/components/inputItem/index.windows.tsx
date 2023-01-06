@@ -18,7 +18,7 @@ interface IInputItem {
   maxLength?: number;
   isMultiLine?: boolean;
   inputRef?: (r: any) => {};
-  setValue: (text: string | boolean | Date) => void;
+  setValue: (text: any) => void;
   inputValue: string | boolean;
   id?: number;
   selectable?: boolean;

@@ -28,42 +28,45 @@ interface ICodeInput {
 
 const CodeInput = ({ inputValue, maxLength, width, height, categoryId, errorDetail, isDisableForEdit, inputTitle, isError, isDisabled, requiredDataText, getCodeValue }: ICodeInput) => {
     const style = useMemo(() => getStyle(width, height, isError), [width, height, isError, isDisabled]);
-    let timeoutId = useRef<ReturnType<typeof setTimeout>>(null).current;
-    const isEditable = !(isDisableForEdit || isDisabled);
+    const isEditable = useMemo(() => !(isDisableForEdit || isDisabled), [isDisableForEdit, isDisabled]);
     const inputRef = useRef(null);
+    let timeoutId = useRef<ReturnType<typeof setTimeout>>(null).current;
     const [isOpenSuggested, setIsOpenSuggested] = useState(false);
-    const [skip, setSkip] = useState(true);
     const errorMessage = useMemo(() => isError ? errorDetail : inputTitle, [isError, errorDetail]);
     const { data: codeSuggestion, error: fetchError, isLoading, isUninitialized } = useGetItemCodeSuggestionsQuery({ itemCode: inputValue, categoryId: categoryId as number }, {
-        skip
     });
 
-
     const onChangeText = (text: string) => {
-        const isNum = regExPatterns.IS_NUMERIC;
-        if ((isNum.test(text) || text === '') && (inputValue !== text)) {
-            isNum.test(text) && !isOpenSuggested && setIsOpenSuggested(true);
-            setSkip(true);
-            clearTimeout(timeoutId as ReturnType<typeof setTimeout>);
+        const isCode = regExPatterns.IS_CODE;
+        if ((isCode.test(text) || text === '') && (inputValue !== text)) {
+            isCode.test(text) && !isOpenSuggested && setIsOpenSuggested(true);
             getCodeValue(text);
             (text === '') && setIsOpenSuggested(false);
         }
     };
 
     useEffect(() => {
-        if (isEditable && inputValue.trim().length) {
-            timeoutId = setTimeout(() => setSkip(false), 300);
+        if (isEditable) {
+            if (codeSuggestion?.lastCodes[0]?.code && categoryId) {
+                const latestCode = codeSuggestion?.lastCodes[0].code;
+                const nextCode = `${(Number(latestCode) + 1)}`.padStart(6, '0');
+                timeoutId = setTimeout(() => {
+                    getCodeValue(nextCode);
+                }, 300);
+            } else if (!codeSuggestion?.lastCodes[0]?.code) {
+                timeoutId = setTimeout(() => {
+                    getCodeValue('000001');
+                }, 300);
+            }
         }
         return () => {
-            setSkip(true);
             clearTimeout(timeoutId as ReturnType<typeof setTimeout>);
         };
-    }, [inputValue, isEditable]);
+    }, [codeSuggestion?.lastCodes[0]?.code, categoryId, isEditable]);
 
 
     const onDissmisSuggested = () => {
         setIsOpenSuggested(false);
-        setSkip(true);
     };
 
     const onPressCodeItem = (code: string) => {
@@ -73,11 +76,11 @@ const CodeInput = ({ inputValue, maxLength, width, height, categoryId, errorDeta
 
     const CodeItem = ({ code }: { code: string; }) => {
         return <>
-            <CustomPressable style={{ justifyContent: 'center', height: 20, margin: 1, backgroundColor: Colors.CARD_HEADER_COLOR }}
+            <CustomPressable style={style.codeItem}
                 onPress={() => onPressCodeItem(code)}
                 onHoverOpacity
             >
-                <Text style={{ color: Colors.DEFAULT_TEXT_COLOR, fontSize: 14, marginLeft: 5 }}>
+                <Text style={style.codeItemText}>
                     {code}
                 </Text>
             </CustomPressable>
@@ -92,7 +95,7 @@ const CodeInput = ({ inputValue, maxLength, width, height, categoryId, errorDeta
                     {`${inputTitle?.toUpperCase()} ${isError ? '*' : ''} `}
                 </Text>
             }
-            <View style={{ justifyContent: 'center' }}
+            <View style={style.codeInputContainer}
                 ref={inputRef}
             >
                 <TextInput
@@ -114,29 +117,25 @@ const CodeInput = ({ inputValue, maxLength, width, height, categoryId, errorDeta
                 showMode={'transient'}
 
             >
-                <View style={{ width: width || 120, height: 130, backgroundColor: Colors.CARD_COLOR, paddingHorizontal: 5 }}>
+                <View style={style.codeSuggestionContent}>
                     {(isUninitialized || isLoading)
                         ?
                         <>
-                            <View style={{ justifyContent: 'center', alignItems: 'center', padding: 1 }}>
+                            <View style={style.actvityContainer}>
                                 <ActivityIndicator size={'small'} color={Colors.METALLIC_GOLD} />
                             </View>
                         </>
                         :
-                        <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingVertical: 5 }}>
-                            <View style={{}}>
-                                <Text style={{ color: Colors.DEFAULT_TEXT_COLOR }}>
-                                    {'Suggested: '}
-                                </Text>
-                            </View>
+                        <ScrollView style={style.contentScroll} contentContainerStyle={style.scrollContent}>
+                            <Text style={style.contentTitleText}>
+                                {'Suggested: '}
+                            </Text>
                             {codeSuggestion?.suggestedCodes.map((suggested, index) => {
                                 return <CodeItem code={suggested.code} key={`${suggested.code}-${index}`} />;
                             })}
-                            <View style={{}}>
-                                <Text style={{ color: Colors.DEFAULT_TEXT_COLOR }}>
-                                    {'Last Codes:'}
-                                </Text>
-                            </View>
+                            <Text style={style.contentTitleText}>
+                                {'Last Codes:'}
+                            </Text>
                             {codeSuggestion?.lastCodes.map((lastcode, index) => {
                                 return <CodeItem code={lastcode.code} key={`${lastcode.code}-${index}`} />;
                             })}

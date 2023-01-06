@@ -111,10 +111,9 @@ const TableInput = ({ tableData, tableConfig, getNewTableData }: ITableInput) =>
         }
     };
 
-
     const renderTableFooter = useMemo(() => {
         return (
-            <View style={{ flex: 1, justifyContent: 'center' }}>
+            <View style={style.tableFooterContent}>
                 <View style={style.columnTotalsContainer}>
                     {getColumnsAllowedToSum.map((col, index) => {
                         return (

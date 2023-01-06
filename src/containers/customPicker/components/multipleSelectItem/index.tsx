@@ -97,7 +97,7 @@ const MultipleSelectItem = ({ isSelected, index, label, id, nestedData, indent, 
                 onFillColor={Colors.CULTURED}
             />
             <Text
-                style={[(isSelected && selectedItemTextStyle) ? selectedItemTextStyle : (itemTextStyle || { fontSize: 12, color: Colors.DEFAULT_TEXT_COLOR })]}
+                style={[(isSelected && selectedItemTextStyle) ? selectedItemTextStyle : (itemTextStyle || style.itemText)]}
                 key={`${label}`}>
                 {label}
             </Text>

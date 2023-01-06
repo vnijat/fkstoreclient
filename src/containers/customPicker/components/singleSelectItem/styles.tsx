@@ -32,7 +32,16 @@ export const getStyle = (indent?: number) => {
             borderLeftWidth: 1,
             borderColor: Colors.METALLIC_GOLD,
             marginLeft: indent
-        }
+        },
+        buttonRightContainer: {
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center'
+        },
+        selectedInfoContainer: {
+            justifyContent: 'center'
+        },
+        arrowButton: { alignItems: 'center' }
     });
 
     return style;

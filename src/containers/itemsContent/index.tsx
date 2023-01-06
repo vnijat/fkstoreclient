@@ -162,16 +162,16 @@ const ItemsContent: FC<ItemsContentProps> = ({ id, itemIndex, selectBulk, data }
 
     const contextMenuContent = useMemo(() => {
         return (
-            <View style={{ width: 150, maxHeight: 200, backgroundColor: Colors.CARD_COLOR, padding: 2 }}>
+            <View style={style.contextMenuContainer}>
                 {contextActionButtons.map((button, index) => {
                     return (
                         <CustomPressable
                             key={`${button.title}-${index}`}
-                            style={{ width: '100%', height: 30, flexDirection: 'row', backgroundColor: Colors.CARD_HEADER_COLOR, marginVertical: 1, alignItems: 'center', paddingHorizontal: 5 }}
+                            style={style.contextMenuButton}
                             onPress={button.onPress}
                             onHoverOpacity
                         >
-                            <Text style={{ color: Colors.DEFAULT_TEXT_COLOR }}>
+                            <Text style={style.contextMenuButtonText}>
                                 {button.title}
                             </Text>
                         </CustomPressable>

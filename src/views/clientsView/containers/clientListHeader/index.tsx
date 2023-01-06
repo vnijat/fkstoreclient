@@ -90,6 +90,7 @@ const ClientListHeader = ({ searchValue, clientTypeValue, orderBy }: IClinetList
                         singleSelectData={selectedData}
                         singleSelected={selected}
                         buttonStyle={style.pickerButton}
+                        itemStyle={{ backgroundColor: Colors.CARD_COLOR, margin: 1, minHeight: 20, paddingLeft: 5, justifyContent: 'center' }}
                         arrowDownColor={Colors.DEFAULT_TEXT_COLOR}
                     />
                     {isOrder && renderAscDescIcon}

@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { Colors } from '../../utils/colors';
+import FONT from '../../utils/font';
 
 export const getStyle = () => {
   const style = StyleSheet.create({
@@ -27,15 +28,29 @@ export const getStyle = () => {
     },
     headerText: {
       color: Colors.METALLIC_GOLD,
-      fontWeight: '700',
+      fontWeight: FONT.FONT_BOLD,
       textAlign: 'center',
-      fontSize: 14
+      fontSize: FONT.FONT_SIZE_MEDIUM
     },
     contentContainer: {
       justifyContent: 'flex-start',
       paddingHorizontal: 5,
       flexDirection: 'row',
       flexWrap: 'wrap',
+    },
+    tableInputContainer: {
+      width: 460,
+      height: 200
+    },
+    tableInputTitleContainer: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      marginVertical: 3
+    },
+    tableInputTitleText: {
+      color: Colors.DEFAULT_TEXT_COLOR,
+      textAlign: 'center',
+      fontSize: FONT.FONT_SIZE_MEDIUM
     }
   });
 

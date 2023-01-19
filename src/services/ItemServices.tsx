@@ -1,6 +1,6 @@
 import { PayloadAction } from "@reduxjs/toolkit";
 import { AppDispatch } from "../modules/redux/store";
-import { Item } from "../types/ItemsQuery";
+import { Item } from "../types/item";
 
 export const selectMany = (from: number, to: number, data: Item[], dispatch: AppDispatch, addItem: (payload: { index: number; Id: number; totalPrice: number; }) => PayloadAction<{ index: number; Id: number; totalPrice: number; }>) => {
     const fromIndex = from > to ? to : from + 1;

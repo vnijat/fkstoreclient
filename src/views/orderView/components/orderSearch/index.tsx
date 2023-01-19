@@ -1,18 +1,11 @@
 import React, { memo, useMemo, useState } from "react";
 import { View } from "react-native";
-import { Alert } from "react-native-windows";
-import CustomModal from "../../../../components/customModal";
 import { InputItem } from "../../../../components/inputItem/index.windows";
 import { PrimaryButton } from "../../../../components/primaryButton";
-import TableInput from "../../../../containers/tableInput";
-import { ITableConfig } from "../../../../containers/tableInput/types";
 import { setOrdersQueryParams } from "../../../../modules/redux/orderQuerySlicer";
 import { setIsShowOrderModal } from "../../../../modules/redux/orderSlicer";
-import { setProjectsQueryParams } from "../../../../modules/redux/projectQuerySlicer";
-import { setIsShowProjectAddEditModal } from "../../../../modules/redux/projectSlicer";
 import { useAppDispatch } from "../../../../modules/redux/store";
 import { Colors } from "../../../../utils/colors";
-import AddEditOrderModal from "../addEditOrderModal";
 import { getStyle } from "./styles";
 
 

@@ -52,11 +52,11 @@ const CodeInput = ({ inputValue, maxLength, width, height, categoryId, errorDeta
                 const nextCode = `${(Number(latestCode) + 1)}`.padStart(6, '0');
                 timeoutId = setTimeout(() => {
                     getCodeValue(nextCode);
-                }, 300);
+                }, 100);
             } else if (!codeSuggestion?.lastCodes[0]?.code) {
                 timeoutId = setTimeout(() => {
                     getCodeValue('000001');
-                }, 300);
+                }, 100);
             }
         }
         return () => {

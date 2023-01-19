@@ -1,6 +1,4 @@
-import {IsingelSelectData} from '../../containers/customPicker';
-import {AddClient} from '../../types/client';
-import {ClientsQueryParams, ClientsResponse} from '../../types/clientsQuery';
+import {AddClient, ClientsQueryParams, ClientsResponse} from '../../types/client';
 import {InventoryApi} from './apiSlice';
 
 export const ClientsApi = InventoryApi.injectEndpoints({

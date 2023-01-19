@@ -1,4 +1,4 @@
-import {ITableConfig, RowDataType} from '../containers/tableInput/types';
+import {ITableConfig} from '../containers/tableInput/types';
 
 interface InputsConfig {
   dtoKey: string;
@@ -23,6 +23,7 @@ interface InputsConfig {
   isDisableForEdit?: boolean;
   isCode?: boolean;
   canSelectParent?: boolean;
+  nullable?: boolean;
 }
 
 export type {InputsConfig};

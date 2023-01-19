@@ -7,7 +7,8 @@ import { InputItem } from "../../../components/inputItem/index.windows";
 import { OrderItemStatus } from "../../../enums/orderItemStatus";
 import { deleteItemFromOrder, updateItemForOrder } from "../../../modules/redux/orderSlicer";
 import { useAppDispatch } from "../../../modules/redux/store";
-import { OrderItem } from "../../../types/projectOrder";
+import { IProjectsForPicker } from "../../../types/project";
+import { Order, OrderItem } from "../../../types/projectOrder";
 import { Colors } from "../../../utils/colors";
 import EditableColumn from "./components/editableColumn";
 import SelectableColumn from "./components/selectableColumn";
@@ -18,34 +19,51 @@ import { getStyle } from "./style";
 interface IItemsForOrderListItem {
     orderItem: OrderItem;
     index?: number;
+    projectsData: IProjectsForPicker[];
 }
 
 interface IrowData {
     value: any;
     editable?: boolean;
     selectable?: boolean;
-    selectableData?: { value: string; label: string; }[];
+    selectableData?: { value: string | number, label: string; }[];
+    searchEnabled?: boolean;
+    dtoKey?: string;
+    isDeselectEnabled?: boolean;
 }
 
 
-const ItemsForOrderListItem = ({ orderItem, index }: IItemsForOrderListItem) => {
+const ItemsForOrderListItem = ({ orderItem, index, projectsData }: IItemsForOrderListItem) => {
     const style = useMemo(() => getStyle(), []);
     const dispatch = useAppDispatch();
-    const rowData: IrowData[] = [
-        { value: (1 + (index ?? 0)) },
+    const orderItemStatusData = useMemo(() => {
+        const values = Object.values(OrderItemStatus);
+        const valuesWithoutInuse = values.filter(i => i !== OrderItemStatus.IN_USE);
+        const orderItemSatusValues = orderItem.fullfilled ? valuesWithoutInuse : values;
+        return orderItemSatusValues.map((status) => ({ value: status, label: status.toUpperCase() }));
+    }, [orderItem.fullfilled]);
+
+
+    const rowData: IrowData[] = useMemo(() => [
+        { value: (1 + (index ?? 0)), },
+        { value: (orderItem.fullfilled && orderItem.project) ? `${orderItem.project?.title}` + `${orderItem.project.isSample ? '(sample)' : ''}` : orderItem.projectId, selectable: !orderItem.fullfilled, selectableData: projectsData, searchEnabled: true, dtoKey: 'projectId', isDeselectEnabled: true },
         { value: orderItem.name },
-        { value: orderItem.barcode },
+        { value: orderItem.barcode, },
         { value: Number(orderItem.itemAtStock) },
-        { value: orderItem.unit },
-        { value: Number(orderItem.quantity), editable: true },
-        { value: orderItem.status, selectable: true, selectableData: Object.keys(OrderItemStatus).map((key) => ({ label: OrderItemStatus[key as keyof typeof OrderItemStatus], value: OrderItemStatus[key as keyof typeof OrderItemStatus] })) }
-    ];
+        { value: orderItem.unit, },
+        { value: Number(orderItem.quantity), editable: !orderItem.fullfilled },
+        { value: orderItem.status, selectable: !orderItem.fullfilled, selectableData: orderItemStatusData, dtoKey: 'status' },
+    ], [orderItem.status, orderItem.projectId, orderItem.project, orderItem.quantity, orderItem.fullfilled]);
+
 
     const handleOnChangeEditableColumn = (text: string) => {
-        dispatch(updateItemForOrder({ ...orderItem, quantity: Number(text) }));
+        dispatch(updateItemForOrder({ itemId: orderItem.itemId, data: { quantity: Number(text) } }));
     };
 
     const handleDeleteItemFromOrder = () => {
+        if (orderItem.fullfilled) {
+            return;
+        }
         dispatch(deleteItemFromOrder({ itemId: orderItem.itemId }));
     };
 
@@ -78,20 +96,34 @@ const ItemsForOrderListItem = ({ orderItem, index }: IItemsForOrderListItem) => 
         );
     }, [orderItem]);
 
-    const getSelectedValue = (value: string) => {
-        dispatch(updateItemForOrder({ ...orderItem, status: value as OrderItemStatus }));
+    const getSelectedValue = (value: string, dtoKey: string) => {
+        dispatch(updateItemForOrder({ itemId: orderItem.itemId, data: { [dtoKey]: value } }));
     };
 
     const renderColumns = useMemo(() => {
         return rowData.map((data, index) => {
             if (data.editable) {
-                return <EditableColumn value={data?.value?.toString()} setValue={handleOnChangeEditableColumn} key={`${index}-editable`} atStock={orderItem?.itemAtStock} />;
+                return <EditableColumn
+                    key={`${index}-editable`}
+                    value={data?.value?.toString()}
+                    setValue={handleOnChangeEditableColumn}
+                    atStock={orderItem?.itemAtStock} />;
             }
             else if (data.selectable) {
-                return <SelectableColumn getValue={getSelectedValue} selectedValue={data.value} selectableData={data?.selectableData} key={`${index}-selectable`} />;
+                return <SelectableColumn
+                    key={`${index}-selectable${data.dtoKey}`}
+                    getValue={(value) => getSelectedValue(value, data.dtoKey!)}
+                    selectedValue={data.value}
+                    selectableData={data?.selectableData}
+                    searchEnabled={data.searchEnabled}
+                    isDeselectEnabled={data.isDeselectEnabled}
+                />;
             }
             else {
-                return <StaticColumn value={data.value ?? ''} key={`${index}-static`} index={index} />;
+                return <StaticColumn
+                    key={`${index}-static`}
+                    value={data.value ?? ''}
+                    index={index} />;
             }
         });
     }, [orderItem]);
@@ -100,9 +132,9 @@ const ItemsForOrderListItem = ({ orderItem, index }: IItemsForOrderListItem) => 
         <>
             <CustomPressable
                 style={style.listItemContainer}>
-                <CustomContextMenu zIndex={2}>
+                {!orderItem.fullfilled && <CustomContextMenu zIndex={2}>
                     {contextMenuContent}
-                </CustomContextMenu>
+                </CustomContextMenu>}
                 {renderColumns}
             </CustomPressable>
         </>

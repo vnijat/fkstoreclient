@@ -5,10 +5,10 @@ import { IMultipleSelectData } from "../containers/customPicker/components/multi
 import { ClientType } from "../enums/clientType";
 import { ProjectStatus } from "../enums/projectStatus";
 import { IICON } from "../types/icon";
-import { Item } from "../types/ItemsQuery";
 import { Colors } from "../utils/colors";
 import countries from 'i18n-iso-countries';
 import { IsingelSelectData } from "../containers/customPicker";
+import { Item } from "../types/item";
 
 countries.registerLocale(require('i18n-iso-countries/langs/en.json'));
 countries.registerLocale(require('i18n-iso-countries/langs/az.json'));
@@ -143,6 +143,15 @@ const getProjectStatusIcons = (status: ProjectStatus, size?: number, color?: str
     return icons[status];
 };
 
+const alertError = (error?: { status: string, data: { message: string; }; }, title?: string, message?: string) => {
+    Alert.alert(title || `Conflict Status Code  ${error?.status}` || '', message || error?.data.message || '', [
+        {
+            text: 'Ok',
+            onPress: () => { }
+        },
+    ]);
+};
+
 const getCountriesForPicker = () => Object.keys(countryobjects).map((key) => ({ value: key, label: countryobjects[key] }));
 
 
@@ -157,7 +166,8 @@ const HELP = {
     getProjectStatusIcons,
     getCountriesForPicker,
     mapNestedForPicker,
-    getNestedDataValues
+    getNestedDataValues,
+    alertError
 };
 
 export default HELP;

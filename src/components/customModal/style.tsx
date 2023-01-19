@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
 import { Colors } from '../../utils/colors';
 
-export const getStyle = (width?: number) => {
+export const getStyle = (width?: number, borderColor?: string) => {
     const style = StyleSheet.create({
         modalContent: {
             width: width || 500,
@@ -9,7 +9,7 @@ export const getStyle = (width?: number) => {
             backgroundColor: Colors.CARD_COLOR,
             borderRadius: 3,
             borderWidth: 2,
-            borderColor: Colors.CARD_HEADER_COLOR,
+            borderColor: borderColor || Colors.CARD_HEADER_COLOR,
             zIndex: 1
         },
         closeButton: {

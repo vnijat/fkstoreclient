@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { ProjectsQueryParams } from '../../types/projectsQuery';
+import { ProjectsQueryParams } from '../../types/project';
 
 
 

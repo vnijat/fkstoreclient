@@ -73,7 +73,7 @@ export const getStyle = () => {
         },
         listContainer: {
             flex: 1,
-            maxHeight: 100,
+            maxHeight: 200,
             paddingRight: 10,
         },
         pickerButtonText: {
@@ -82,7 +82,8 @@ export const getStyle = () => {
         },
         flyoutContent: {
             flex: 1,
-            minWidth: 100
+            minWidth: 100,
+            
         },
         searchInputContainer: {
             backgroundColor: Colors.FLORAL_WHITE

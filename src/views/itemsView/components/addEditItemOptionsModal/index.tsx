@@ -7,6 +7,7 @@ import { useAddOptionMutation, useDeleteOptionMutation, useEditOptionMutation } 
 import { addItemOption, clearItemOptions, setIsOpenOptionModal, setIsOptionForEdit } from "../../../../modules/redux/itemOptions";
 import { RootState, useAppDispatch } from "../../../../modules/redux/store";
 import { InputsConfig } from "../../../../types/inputsconfig";
+import { Colors } from "../../../../utils/colors";
 
 
 const AddEditItemOptionsModal = () => {
@@ -57,22 +58,26 @@ const AddEditItemOptionsModal = () => {
 
 
     return (
-        <AddEditModal
-            isDataForEdit={isOptionForEdit}
-            dataForRequest={optionDataForPost}
-            selectableData={inputsData}
-            inputConfigs={optionInputconfig}
-            apiPostData={addOption}
-            apiUpdateData={editOption}
-            clearDataForRequest={clearDataForRequest}
-            setIsShowModal={setIsShowModal}
-            setDataForRequest={setDataForRequest}
-            setIsDataForEdit={setIsDataForEdit}
-            dataTitle={optionName?.toUpperCase()}
-            isPickerSearchEnabled
-            isShowModal={isShowModal}
-            deleteFunction={handleOnDelete}
-        />
+        <>
+            {isShowModal && <AddEditModal
+                isDataForEdit={isOptionForEdit}
+                dataForRequest={optionDataForPost}
+                selectableData={inputsData}
+                inputConfigs={optionInputconfig}
+                apiPostData={addOption}
+                apiUpdateData={editOption}
+                clearDataForRequest={clearDataForRequest}
+                setIsShowModal={setIsShowModal}
+                setDataForRequest={setDataForRequest}
+                setIsDataForEdit={setIsDataForEdit}
+                dataTitle={optionName?.toUpperCase()}
+                isPickerSearchEnabled
+                isShowModal={isShowModal}
+                deleteFunction={handleOnDelete}
+                modalBorderColor={Colors.DEFAULT_TEXT_COLOR}
+            />}
+        </>
+
     );
 
 };

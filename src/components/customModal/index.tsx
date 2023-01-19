@@ -12,12 +12,13 @@ interface ICustomModal {
     isDissmissEnabled: boolean;
     children?: React.ReactNode;
     width?: number;
+    borderColor?: string;
 
 }
 
 
-const CustomModal = ({ children, isShowModal, closeModal, isDissmissEnabled, width }: ICustomModal) => {
-    const style = useMemo(() => getStyle(width), [width]);
+const CustomModal = ({ children, isShowModal, closeModal, isDissmissEnabled, width, borderColor }: ICustomModal) => {
+    const style = useMemo(() => getStyle(width, borderColor), [width, borderColor]);
     return (
         <Popup
             isOpen={isShowModal}

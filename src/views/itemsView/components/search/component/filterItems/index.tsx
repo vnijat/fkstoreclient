@@ -1,8 +1,7 @@
 import React, { FC, useMemo } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
-import CustomPressable from '../../../../components/customPressable';
-import { Colors } from '../../../../utils/colors';
+import CustomPressable from '../../../../../../components/customPressable';
 import { getStyle } from './styles';
 
 

@@ -4,27 +4,25 @@ import React, { memo, useMemo } from "react";
 import { Image, View, Linking, ActivityIndicator, Text } from "react-native";
 import Icon from "react-native-vector-icons/Entypo";
 import { useSelector } from "react-redux";
-import CustomModal from "../../components/customModal";
-import { PrimaryButton } from "../../components/primaryButton";
-import { InventoryApi, useGetItemQuery } from "../../modules/api/apiSlice";
-import { setIsItemForEdit, setIsShowAddEditModal, setIsShowItemModal, setItemForPost } from "../../modules/redux/itemsSlicer";
-import { RootState, useAppDispatch } from "../../modules/redux/store";
-import HELP from "../../services/helpers";
-import { Item } from "../../types/ItemsQuery";
-import { Colors } from "../../utils/colors";
-import { currency } from "../../utils/currency.windows";
 import DataField from "./components/dataField";
 import { getStyle } from "./style";
 import RNPrint from 'react-native-print';
 import { useToast } from "react-native-rooster";
+import CustomModal from "../../../../components/customModal";
+import { PrimaryButton } from "../../../../components/primaryButton";
+import { useGetItemQuery, InventoryApi } from "../../../../modules/api/apiSlice";
+import { setIsShowItemModal } from "../../../../modules/redux/itemsSlicer";
+import { RootState, useAppDispatch } from "../../../../modules/redux/store";
+import { currency } from "../../../../utils/currency.windows";
+import { Colors } from "../../../../utils/colors";
+
+
 interface IItemModal {
-    itemsData: Item[];
 }
 
 
-const ItemModal = ({ itemsData }: IItemModal) => {
+const ItemModal = ({ }: IItemModal) => {
     const style = useMemo(() => getStyle(), []);
-    const navigation = useNavigation<StackNavigationProp<any>>();
     const { addToast } = useToast();
     const apiURL = useSelector((state: RootState) => state.configs.apiURL);
     const dispatch = useAppDispatch();
@@ -36,16 +34,8 @@ const ItemModal = ({ itemsData }: IItemModal) => {
         })
     });
 
-
     const onCloseModal = () => {
         dispatch(setIsShowItemModal(false));
-    };
-
-    const onPressEdit = () => {
-        const itemForPost = HELP.modifyItemForEdit(itemsData, itemId!);
-        dispatch(setIsItemForEdit(true));
-        dispatch(setItemForPost(itemForPost));
-        dispatch(setIsShowAddEditModal(true));
     };
 
     const onPressGetBarcodePdf = async () => {
@@ -117,7 +107,6 @@ const ItemModal = ({ itemsData }: IItemModal) => {
                     <View style={style.contentBottomContainer}>
                         <View style={style.contentBottomLeft}>
                             <View style={style.bottomActionButton}>
-                                <PrimaryButton title={'Edit'} onPress={onPressEdit} onHoverOpacity width={100} />
                             </View>
                         </View>
                         <View style={style.bottomRightContainer}>

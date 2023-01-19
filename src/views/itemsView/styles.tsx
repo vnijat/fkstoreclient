@@ -11,6 +11,20 @@ export const getStyle = () => {
       paddingRight: 20,
       paddingBottom: 20,
     },
+    listContainer: {
+      flex: 0.9,
+      backgroundColor: Colors.BACKGROUND_COLOR
+    },
+    searchContainer: {
+      backgroundColor: Colors.CARD_COLOR,
+      flexShrink: 0.2
+    },
+    footContainer: {
+      flex: 0.1,
+      backgroundColor: Colors.CARD_HEADER_COLOR,
+      justifyContent: 'center'
+    },
+    listTable: { flexGrow: 1 }
   });
 
   return style;

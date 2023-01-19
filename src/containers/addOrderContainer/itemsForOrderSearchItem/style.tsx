@@ -9,12 +9,13 @@ export const getStyle = () => {
             flexDirection: 'row',
             alignItems: 'center',
             height: 30,
-            maxWidth: 150,
-            minWidth: 100
+            width: 120,
+            margin: 1
         },
         titleText: {
             color: Colors.DEFAULT_TEXT_COLOR,
-            fontSize: FONT.FONT_SIZE_VERY_SMALL
+            fontSize: FONT.FONT_SIZE_VERY_SMALL,
+            marginRight: 5
         },
         valueText: {
             color: Colors.METALLIC_GOLD,
@@ -28,7 +29,8 @@ export const getStyle = () => {
             justifyContent: 'space-between',
             backgroundColor: Colors.CARD_COLOR,
             margin: 1,
-            paddingHorizontal: 5
+            paddingHorizontal: 5,
+            width: '100%'
         }
     });
 

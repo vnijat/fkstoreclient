@@ -19,7 +19,7 @@ interface IInputItem {
   isMultiLine?: boolean;
   inputRef?: (r: any) => {};
   setValue: (text: any) => void;
-  inputValue: string | boolean;
+  inputValue: string | boolean | Date;
   id?: number;
   selectable?: boolean;
   selectableData?: Array<IsingelSelectData & { id?: number; }>;
@@ -42,6 +42,7 @@ interface IInputItem {
   isDatePicker?: boolean;
   disabledForEdit?: boolean;
   canSelectParent?: boolean;
+  isDeselectEnabled?: boolean;
 }
 
 export const InputItem: FC<IInputItem> = memo(
@@ -77,7 +78,8 @@ export const InputItem: FC<IInputItem> = memo(
     isCheckBox,
     isDatePicker,
     disabledForEdit,
-    canSelectParent
+    canSelectParent,
+    isDeselectEnabled
   }) => {
     const style = useMemo(
       () => getStyle(height, width, isErorr, titleColor, backgroundColor),
@@ -102,7 +104,7 @@ export const InputItem: FC<IInputItem> = memo(
       setValue(!inputValue);
     };
     const onValueChange = (item: IsingelSelectData) => {
-      setValue(item.value?.toString());
+      setValue(item.value);
     };
 
     const onFocus = () => {
@@ -144,6 +146,7 @@ export const InputItem: FC<IInputItem> = memo(
           disablePickerActionButtons={disablePickerActionButtons}
           disabledForEdit={disabledForEdit}
           canSelectParent={canSelectParent}
+          isDeselectEnabled={isDeselectEnabled}
 
         />
       </>
@@ -196,7 +199,7 @@ export const InputItem: FC<IInputItem> = memo(
 
     const renderDatePicker = useMemo(() => {
       if (isDatePicker) {
-        return <DateTimePicker dateValue={inputValue} getDate={(date: Date) => setValue(date)} />;
+        return <DateTimePicker dateValue={inputValue as Date} getDate={(date: string) => setValue(date)} />;
       } else {
         return null;
       }

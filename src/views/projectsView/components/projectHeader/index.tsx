@@ -1,20 +1,12 @@
 import React, { memo, useMemo } from "react";
 import { Text, View } from "react-native";
-import { Project } from "../../../../types/projectsQuery";
 import { ProjectColumnsTitle } from "./config";
 import { getStyle } from "./styles";
-
-
 interface IProjectListHeader {
 }
 
-
-
 const ProjectListHeader = ({ }: IProjectListHeader) => {
     const style = useMemo(() => getStyle(), []);
-
-
-
 
     return (
         <View style={style.container}>

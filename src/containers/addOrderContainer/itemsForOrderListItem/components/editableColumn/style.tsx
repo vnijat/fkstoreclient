@@ -6,7 +6,8 @@ export const getStyle = () => {
         editableColumnContainer: {
             alignItems: 'flex-start',
             width: 120,
-            zIndex: 3
+            zIndex: 3,
+            margin: 1
         }
     });
 

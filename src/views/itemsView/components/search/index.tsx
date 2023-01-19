@@ -1,38 +1,38 @@
+import CheckBox from '@react-native-community/checkbox';
 import React, { FC, useMemo, useRef, useState } from 'react';
 import { Text, View } from 'react-native';
+import { cos } from 'react-native-reanimated';
 import { shallowEqual, useSelector } from 'react-redux';
-import { ClearIcon, FilterByIcon } from '../../assets/icons/searchContainerIcons';
-import CustomPressable from '../../components/customPressable';
-import { InputItem } from '../../components/inputItem/index.windows';
-import { useGetItemInputsQuery } from '../../modules/api/apiSlice';
-import { clearFilters, setFilterByParams, setSelectedWithLabel } from '../../modules/redux/filterSlicer';
-import { setItemQueryParams } from '../../modules/redux/itemQuerySlicer';
-import { selectFilterByForPicker, selectSelectedWithLabel } from '../../modules/redux/selectors/filterSelector';
-import { RootState, useAppDispatch } from '../../modules/redux/store';
-import { FilterParamskey } from '../../types/ItemsQuery';
-import { Colors } from '../../utils/colors';
+import { ClearIcon } from '../../../../assets/icons/searchContainerIcons';
+import CustomPressable from '../../../../components/customPressable';
+import { InputItem } from '../../../../components/inputItem';
+import { PrimaryButton } from '../../../../components/primaryButton';
+import CustomPicker from '../../../../containers/customPicker';
+import { useGetItemInputsQuery } from '../../../../modules/api/apiSlice';
+import { setSelectedWithLabel, setFilterByParams, clearFilters } from '../../../../modules/redux/filterSlicer';
+import { setItemQueryParams } from '../../../../modules/redux/itemQuerySlicer';
+import { setIsShowAddEditModal } from '../../../../modules/redux/itemsSlicer';
+import { selectFilterByForPicker, selectSelectedWithLabel } from '../../../../modules/redux/selectors/filterSelector';
+import { useAppDispatch } from '../../../../modules/redux/store';
+import { FilterParamskey } from '../../../../types/item';
+import { Colors } from '../../../../utils/colors';
+import { currency } from '../../../../utils/currency.windows';
 import FilterItem from './component/filterItems';
 import { getStyle } from './styles';
-import RNprint from 'react-native-print';
-import { currency } from '../../utils/currency.windows';
-import FilterModal from '../filterModal';
-import CustomPicker from '../customPicker';
-import { setIsShowAddEditModal } from '../../modules/redux/itemsSlicer';
-import { PrimaryButton } from '../../components/primaryButton';
 
 
 
 interface ISearchContainer {
     searchValue: string;
     overallPrice: number;
+    outOfStockParam?: boolean;
+
 }
 
 
-const SearchContainer: FC<ISearchContainer> = ({ searchValue, overallPrice }) => {
+const SearchContainer: FC<ISearchContainer> = ({ searchValue, overallPrice, outOfStockParam }) => {
     const style = useMemo(() => getStyle(), []);
     const dispatch = useAppDispatch();
-    const filterByButtonRef = useRef(null);
-    const [isShowFilterModal, setIsShowFilterModal] = useState(false);
     const pickerFilterParams = useSelector(selectFilterByForPicker, shallowEqual);
     const selectedWithLabel = useSelector(selectSelectedWithLabel, shallowEqual);
     const searchInputRef = useRef(null);
@@ -127,22 +127,17 @@ const SearchContainer: FC<ISearchContainer> = ({ searchValue, overallPrice }) =>
     }, [selectedWithLabel.length]);
 
 
-
-    const onPressFilterBy = () => {
-        setIsShowFilterModal(true);
-    };
-
-    const onCloseFilterModal = () => {
-        setIsShowFilterModal(false);
-    };
     const onPressAddItem = () => {
         dispatch(setIsShowAddEditModal(true));
 
     };
 
+    const handleOutofstockSelect = (value: boolean) => {
+        dispatch(setItemQueryParams({ outOfStock: value, page: 1 }));
+    };
+
     return (
         <View style={style.container}>
-            {/* <FilterModal isOpen={isShowFilterModal} ref={filterByButtonRef} onClose={onCloseFilterModal} /> */}
             <View style={style.filterItemsContainer}>
                 {renderFilterItems}
             </View>
@@ -170,12 +165,27 @@ const SearchContainer: FC<ISearchContainer> = ({ searchValue, overallPrice }) =>
                         buttonColor={Colors.DEFAULT_TEXT_COLOR}
                         borderRadius={2}
                     />
-                    <Text style={style.infoText}>
-                        {`OVERALL PRICE : `}
-                        <Text style={{ color: Colors.METALLIC_GOLD }}>
-                            {currency.format(overallPrice)}
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        <Text style={{ fontSize: 12, color: Colors.DEFAULT_TEXT_COLOR }}>
+                            {'OUT OF STOCK: '}
                         </Text>
-                    </Text>
+                        <CheckBox
+                            tintColor={Colors.CARD_HEADER_COLOR}
+                            onFillColor={Colors.CARD_HEADER_COLOR}
+                            onCheckColor={Colors.METALLIC_GOLD}
+                            onTintColor={Colors.CARD_COLOR}
+                            value={outOfStockParam}
+                            onValueChange={handleOutofstockSelect}
+
+                        />
+                        <Text style={style.infoText}>
+                            {`OVERALL PRICE : `}
+                            <Text style={{ color: Colors.METALLIC_GOLD }}>
+                                {currency.format(overallPrice)}
+                            </Text>
+                        </Text>
+                    </View>
+
                 </View>
             </View>
         </View>

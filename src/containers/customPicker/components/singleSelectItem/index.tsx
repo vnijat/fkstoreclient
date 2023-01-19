@@ -24,9 +24,10 @@ interface ISingleSelectItem {
     disablePickerActionButtons?: boolean;
     onPressSingleItem: (data: IsingelSelectData) => void;
     canSelectParent?: boolean;
+    isDeselectEnabled?: boolean;
 }
 
-const SingleSelectItem = ({ singleSelected, data, onPressSingleItem, indent, isEditable, canSelectParent, selectedItemStyle, selectedItemTextStyle, onPressEditButton, itemTextStyle, itemStyle, disablePickerActionButtons }: ISingleSelectItem) => {
+const SingleSelectItem = ({ singleSelected, data, onPressSingleItem, indent, isEditable, canSelectParent, selectedItemStyle, selectedItemTextStyle, onPressEditButton, itemTextStyle, itemStyle, disablePickerActionButtons, isDeselectEnabled }: ISingleSelectItem) => {
     const [isShowEditButton, setIsshowEditButton] = useState<boolean>(false);
     const [isShowNested, setIsShowNested] = useState(false);
     const style = useMemo(() => getStyle(indent), [indent]);
@@ -39,7 +40,12 @@ const SingleSelectItem = ({ singleSelected, data, onPressSingleItem, indent, isE
         if (!!data.nested?.length && !canSelectParent) {
             setIsShowNested(!isShowNested);
         } else {
-            onPressSingleItem(data);
+            if (isDeselectEnabled && isSelected) {
+                onPressSingleItem({ value: null, label: data.label });
+            } else {
+
+                onPressSingleItem(data);
+            }
         }
     };
 
@@ -112,7 +118,8 @@ const SingleSelectItem = ({ singleSelected, data, onPressSingleItem, indent, isE
                                 disablePickerActionButtons,
                                 isEditable,
                                 index,
-                                canSelectParent
+                                canSelectParent,
+                                isDeselectEnabled
                             }}
                             data={item}
                             indent={indent + 5}

@@ -38,7 +38,7 @@ const AddEditClientModal = ({ }: IAddEditClientModal) => {
 
     return (
         <>
-            <AddEditModal
+            {isShowClientModal && <AddEditModal
                 isDataForEdit={isClientForEdit}
                 dataForRequest={clientDataForPost}
                 inputConfigs={clientInputs}
@@ -51,7 +51,7 @@ const AddEditClientModal = ({ }: IAddEditClientModal) => {
                 dataTitle={'CLIENT'}
                 isShowModal={isShowClientModal}
                 isPickerSearchEnabled
-            />
+            />}
         </>
     );
 

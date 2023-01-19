@@ -1,11 +1,10 @@
-import {AddClient} from '../../types/client';
-import {ClientsQueryParams, ClientsResponse} from '../../types/clientsQuery';
-import {AddClientProject} from '../../types/project';
 import {
+  AddClientProject,
+  IProjectsForPicker,
   Project,
   ProjectsQueryParams,
   ProjectsResponse,
-} from '../../types/projectsQuery';
+} from '../../types/project';
 import {InventoryApi} from './apiSlice';
 
 export const ProjectsApi = InventoryApi.injectEndpoints({
@@ -28,6 +27,14 @@ export const ProjectsApi = InventoryApi.injectEndpoints({
         };
       },
     }),
+    getProjectsForPicker: build.query<IProjectsForPicker[], undefined>({
+      providesTags: ['projectsForPicker'],
+      query: () => {
+        return {
+          url: '/client/projects/picker',
+        };
+      },
+    }),
     addProject: build.mutation<Project, AddClientProject>({
       query: body => {
         return {
@@ -36,7 +43,7 @@ export const ProjectsApi = InventoryApi.injectEndpoints({
           method: 'POST',
         };
       },
-      invalidatesTags: ['projects'],
+      invalidatesTags: ['projects', 'projectsForPicker'],
     }),
     editProject: build.mutation<Project, {id: number; body: AddClientProject}>({
       query: ({id, body}) => {
@@ -46,7 +53,11 @@ export const ProjectsApi = InventoryApi.injectEndpoints({
           method: 'PATCH',
         };
       },
-      invalidatesTags: (result, error, arg) => [{type: 'projects', id: arg.id}],
+      invalidatesTags: (result, error, arg) => [
+        {type: 'projects', id: arg.id},
+        'projectsForPicker',
+        'clients',
+      ],
     }),
     deleteProject: build.mutation<undefined, number[]>({
       query: Ids => {
@@ -58,6 +69,7 @@ export const ProjectsApi = InventoryApi.injectEndpoints({
       },
       invalidatesTags: (result, error, arg) => [
         ...arg.map(id => ({type: 'projects' as const, id})),
+        'projectsForPicker',
       ],
     }),
   }),
@@ -69,4 +81,5 @@ export const {
   useAddProjectMutation,
   useEditProjectMutation,
   useDeleteProjectMutation,
+  useGetProjectsForPickerQuery,
 } = ProjectsApi;

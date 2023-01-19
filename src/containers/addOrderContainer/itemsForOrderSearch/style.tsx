@@ -7,11 +7,11 @@ export const getStyle = () => {
     const style = StyleSheet.create({
         resultInfoContainer: {
             position: 'absolute',
-            right: 10,
+            right: 15,
             alignItems: 'center',
             justifyContent: 'center',
             zIndex: 2,
-            top: 30,
+            top: 35,
             marginHorizontal: 20,
             height: 20
         },
@@ -21,7 +21,9 @@ export const getStyle = () => {
         },
         floatResultsContainer: {
             backgroundColor: Colors.CULTURED,
-            width: 680
+        },
+        searchContainer: {
+            paddingTop: 5
         }
     });
 

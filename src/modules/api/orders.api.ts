@@ -1,4 +1,4 @@
-import {Item} from '../../types/ItemsQuery';
+import { Item } from '../../types/item';
 import {
   AddOrderDto,
   OrderQueryResponse,
@@ -26,7 +26,7 @@ export const OrdersApi = InventoryApi.injectEndpoints({
       },
     }),
     addOrder: build.mutation<undefined, AddOrderDto>({
-      invalidatesTags: ['orders'],
+      invalidatesTags: ['orders', 'items', 'item', 'itemForOrder'],
       query: body => {
         return {
           url: '/order/',
@@ -37,15 +37,15 @@ export const OrdersApi = InventoryApi.injectEndpoints({
     }),
     deleteOrder: build.mutation<undefined, number>({
       invalidatesTags: ['orders'],
-      query: clientId => {
+      query: orderId => {
         return {
-          url: `/order/${clientId}`,
+          url: `/order/${orderId}`,
           method: 'DELETE',
         };
       },
     }),
     editOrder: build.mutation<undefined, {body: any; id: number}>({
-      invalidatesTags: ['orders'],
+      invalidatesTags: ['orders', 'items', 'item', 'itemForOrder'],
       query: ({body, id}) => {
         return {
           url: `/order/${id}`,

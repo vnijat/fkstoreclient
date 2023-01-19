@@ -1,15 +1,15 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { itemQueryParams } from '../../types/ItemsQuery';
+import { ItemQueryParams } from '../../types/item';
 
 
 
-const initialState = {} as itemQueryParams;
+const initialState = {} as ItemQueryParams;
 
 const itemQuerySlicer = createSlice({
     name: 'itemQueryParams',
     initialState,
     reducers: {
-        setItemQueryParams: (state, action: PayloadAction<itemQueryParams>) => {
+        setItemQueryParams: (state, action: PayloadAction<ItemQueryParams>) => {
             Object.assign(state, action.payload);
         }
     },

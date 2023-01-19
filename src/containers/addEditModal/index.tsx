@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useMemo, useRef, useState } from "react";
+import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Text, View, Alert } from "react-native";
 import { Colors } from "../../utils/colors";
 import { InputItem } from "../../components/inputItem/index.windows";
@@ -61,6 +61,8 @@ interface IAddEditModal {
     modalWidth?: number;
 
     deleteFunction?: (Ids: number[]) => Promise<any>;
+
+    modalBorderColor?: string;
 }
 
 
@@ -84,7 +86,8 @@ const AddEditModal = ({
     setIsDataForEdit,
     disablePickerActionButtons,
     modalWidth,
-    deleteFunction
+    deleteFunction,
+    modalBorderColor
 }: IAddEditModal) => {
     const style = getStyle();
     const { addToast } = useToast();
@@ -102,7 +105,7 @@ const AddEditModal = ({
 
 
 
-    const setClientDataForPost = (
+    const setClientDataForPost = useCallback((
         inputValue: string | RowDataType[] | boolean | Date,
         objectKey: string,
     ) => {
@@ -112,7 +115,7 @@ const AddEditModal = ({
                 return { ...prev };
             });
         setDataForRequest({ [objectKey]: inputValue });
-    };
+    }, [errorMessage, dataForRequest]);
 
 
 
@@ -143,6 +146,7 @@ const AddEditModal = ({
                         requiredText,
                         isDisableForEdit,
                         canSelectParent,
+                        nullable
                     } = config;
                     const inputValue: string | boolean = dataForRequest[dtoKey!] || '';
                     const dataForPickerFromServer = (selectableData && selectableDataKey) ? (!!requiredDataName ? selectableData[selectableDataKey]?.filter((data: { [key: string]: any; }) => (data?.[requiredDataDtoKey!!] ? data?.[requiredDataDtoKey!!] : data?.[requiredDataDtoKey?.toLowerCase()!!]) == dataForRequest[requiredDataDtoKey!]) : selectableData[selectableDataKey]) : [];
@@ -217,6 +221,7 @@ const AddEditModal = ({
                                 isDatePicker={isDate}
                                 disabledForEdit={disableForEdit}
                                 canSelectParent={canSelectParent}
+                                isDeselectEnabled={nullable}
                             />
                         );
                     }
@@ -227,48 +232,37 @@ const AddEditModal = ({
         }
     }, [errorMessage, isShowModal, dataForRequest, selectableData, disablePickerActionButtons, tempDataForEdit]);
 
-    const clearInputs = () => {
+    const clearInputs = useCallback(() => {
         clearDataForRequest();
-    };
+    }, []);
 
-    const onPressReset = () => {
+    const onPressReset = useCallback(() => {
         if (!!tempDataForEdit) {
             setDataForRequest(tempDataForEdit!);
         } else {
             setErrorMessages({});
             clearInputs();
         }
-    };
+    }, [tempDataForEdit]);
 
-
-    const errorAlert = (status: string, message: string) => {
-        Alert.alert(`Conflict Status Code  ${status}`, message, [
-            {
-                text: 'Ok',
-                onPress: () => { }
-            },
-        ]);
-    };
-
-
-    const onCloseModal = () => {
+    const onCloseModal = useCallback(() => {
         setIsShowModal(false);
         setErrorMessages({});
         clearDataForRequest();
         settempDataForEdit(undefined);
         setIsDataForEdit && setIsDataForEdit(false);
-    };
+    }, [isShowModal]);
 
 
-    const clearWithoutClosingModal = () => {
+    const clearWithoutClosingModal = useCallback(() => {
         setErrorMessages({});
         clearDataForRequest();
         settempDataForEdit(undefined);
         setIsDataForEdit && setIsDataForEdit(false);
-    };
+    }, [isShowModal]);
 
 
-    const handleDeleteButton = async () => {
+    const handleDeleteButton = useCallback(async () => {
         if (deleteFunction && tempDataForEdit) {
             try {
                 const response = await deleteFunction([tempDataForEdit.id]);
@@ -289,16 +283,16 @@ const AddEditModal = ({
                 }
                 else {
                     if (error?.data.message) {
-                        errorAlert(error?.status, error?.data.message);
+                        HELP.alertError(error);
                     }
                 }
             }
         }
 
-    };
+    }, [tempDataForEdit]);
 
 
-    const onPressAdd = async () => {
+    const onPressAdd = useCallback(async () => {
         try {
             const response = await apiPostData(dataForRequest);
             if (response.error) {
@@ -318,14 +312,13 @@ const AddEditModal = ({
             }
             else {
                 if (error?.data.message) {
-
-                    errorAlert(error?.status, error?.data.message);
+                    HELP.alertError(error);
                 }
             }
         }
-    };
+    }, [dataForRequest]);
 
-    const onPressSave = async () => {
+    const onPressSave = useCallback(async () => {
         if (apiUpdateData) {
             const { id, ...body } = dataForRequest;
             try {
@@ -346,7 +339,7 @@ const AddEditModal = ({
                 }
                 else {
                     if (error?.data.message) {
-                        errorAlert(error?.status, error?.data.message);
+                        HELP.alertError(error);
                     }
                 }
 
@@ -354,7 +347,7 @@ const AddEditModal = ({
         } else {
             console.warn(`onPressSaveP${dataTitle} ====>>>There is No updateApi Function `);
         }
-    };
+    }, [dataForRequest]);
 
 
     return (
@@ -363,6 +356,7 @@ const AddEditModal = ({
             isShowModal={isShowModal}
             isDissmissEnabled={false}
             width={modalWidth}
+            borderColor={modalBorderColor}
         >
             <View style={{ flex: 1 }}>
                 <Text style={style.headerText}>

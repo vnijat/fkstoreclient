@@ -1,10 +1,12 @@
 import { memo, useMemo } from "react";
 import { Text, View } from "react-native";
+import { Alert } from "react-native-windows";
 import CustomPressable from "../../../components/customPressable";
 import { OrderItemStatus } from "../../../enums/orderItemStatus";
 import { addItemForOrder } from "../../../modules/redux/orderSlicer";
 import { useAppDispatch } from "../../../modules/redux/store";
-import { Item } from "../../../types/ItemsQuery";
+import HELP from "../../../services/helpers";
+import { Item } from "../../../types/item";
 import { Colors } from "../../../utils/colors";
 import { getStyle } from "./style";
 
@@ -31,17 +33,23 @@ const ItemsForOrderSearchItem = ({ data, setShowContent }: IItemsForOrderSearchI
 
 
     const setItemForOrder = () => {
-        dispatch(addItemForOrder({
-            itemId: data.id as number,
-            unit: data.unit.name,
-            name: data.name,
-            quantity: 0,
-            barcode: data.barcode,
-            itemAtStock: data?.quantity,
-            pricePerUnit: data.pricePerUnit,
-            status: OrderItemStatus.IN_USE
-        }));
-        setShowContent && setShowContent(false);
+        if (!data.inUse) {
+            dispatch(addItemForOrder({
+                itemId: data.id as number,
+                unit: data.unit.name,
+                name: data.name,
+                quantity: 0,
+                barcode: data.barcode,
+                itemAtStock: data?.quantity,
+                pricePerUnit: data.pricePerUnit,
+                status: OrderItemStatus.IN_USE,
+                projectId: null
+            }));
+            setShowContent && setShowContent(false);
+        } else {
+            HELP.alertError(undefined, 'Item is in another Order, Please complete another order first');
+
+        }
     };
 
 
@@ -49,10 +57,10 @@ const ItemsForOrderSearchItem = ({ data, setShowContent }: IItemsForOrderSearchI
         return (
             <View style={style.columnContainer}>
                 <Text style={style.titleText}>
-                    {`${title}:`}
+                    {`${title}:`.toUpperCase()}
                 </Text>
                 <Text style={style.valueText}>
-                    {`${value}`}
+                    {`${value}`.toUpperCase()}
                 </Text>
             </View >
         );

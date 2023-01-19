@@ -1,6 +1,5 @@
 import React, { FC } from "react";
 import { Text, View } from "react-native";
-import { Item } from "../../../../types/ItemsQuery";
 import { columnHeaders } from "../../configs/columnHeaders";
 import { getStyle } from "./styles";
 

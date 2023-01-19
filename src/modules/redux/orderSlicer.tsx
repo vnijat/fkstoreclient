@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { OrderStatus } from '../../enums/orderStatus';
 import { AddOrderDto, OrderItem } from '../../types/projectOrder';
 
 
@@ -9,7 +10,7 @@ interface IOrders {
 }
 
 const initialState = {
-    orderDataForPost: {},
+    orderDataForPost: { status: OrderStatus.PENDING },
     isOrderForEdit: false,
     isShowOrderModal: false
 } as IOrders;
@@ -18,7 +19,7 @@ const ordersSlicer = createSlice({
     name: 'ordersSlicer',
     initialState,
     reducers: {
-        setOrderDataForPost: (state, action: PayloadAction<{ [key: string]: any; }>) => {
+        setOrderDataForPost: (state, action: PayloadAction<AddOrderDto>) => {
             Object.assign(state.orderDataForPost, action.payload);
         },
         addItemForOrder: (state, action: PayloadAction<OrderItem>) => {
@@ -30,16 +31,20 @@ const ordersSlicer = createSlice({
                 state.orderDataForPost.orderItems.push(action.payload);
             }
         },
-        updateItemForOrder: (state, action: PayloadAction<OrderItem>) => {
-            const itemIndex = state?.orderDataForPost?.orderItems.findIndex((item) => item.itemId == action.payload.itemId);
-            state.orderDataForPost.orderItems[itemIndex] = action.payload;
+        updateItemForOrder: (state, action: PayloadAction<{ itemId: number, data: { [key: string]: any; }; }>) => {
+            if (state?.orderDataForPost?.orderItems) {
+                const itemIndex = state?.orderDataForPost?.orderItems.findIndex((item) => item.itemId == action.payload.itemId);
+                state.orderDataForPost.orderItems[itemIndex] = Object.assign(state.orderDataForPost.orderItems[itemIndex], action.payload.data);
+            }
         },
         deleteItemFromOrder: (state, action: PayloadAction<{ itemId: number | string; }>) => {
-            const itemIndex = state.orderDataForPost.orderItems.findIndex((item) => item.itemId == action.payload.itemId);
-            state.orderDataForPost.orderItems.splice(itemIndex, 1);
+            if (state?.orderDataForPost?.orderItems) {
+                const itemIndex = state.orderDataForPost.orderItems.findIndex((item) => item.itemId == action.payload.itemId);
+                state.orderDataForPost.orderItems.splice(itemIndex, 1);
+            }
         },
         clearOrderDataForPost: (state) => {
-            state.orderDataForPost = {} as AddOrderDto;
+            state.orderDataForPost = initialState.orderDataForPost as AddOrderDto;
         },
         setIsOrderForEdit: (state, action: PayloadAction<boolean>) => {
             state.isOrderForEdit = action.payload;

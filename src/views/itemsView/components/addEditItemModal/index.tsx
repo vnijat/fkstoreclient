@@ -7,7 +7,7 @@ import { ItemOptionsApi } from "../../../../modules/api/itemOptions.api";
 import { addItemOption, IItemOptions, setIsOpenOptionModal, setIsOptionForEdit, setOptionNameForModal } from "../../../../modules/redux/itemOptions";
 import { clearItemForPosting, setIsItemForEdit, setIsShowAddEditModal, setItemForPost } from "../../../../modules/redux/itemsSlicer";
 import { RootState, useAppDispatch } from "../../../../modules/redux/store";
-import { AddItemInterface } from "../../../../types/Item";
+import { AddItemInterface } from "../../../../types/item";
 import AddEditItemOptionsModal from "../addEditItemOptionsModal";
 
 
@@ -72,7 +72,7 @@ const AddEditItemModal = () => {
     return (
         <>
             < AddEditItemOptionsModal />
-            <AddEditModal
+            {isShowItemModal && <AddEditModal
                 isDataForEdit={isItemForEdit}
                 dataForRequest={itemForPosting}
                 selectableData={inputsData}
@@ -90,7 +90,7 @@ const AddEditItemModal = () => {
                 isPickerAddButton
                 isPickerSearchEnabled
                 isShowModal={isShowItemModal}
-            />
+            />}
         </>
     );
 

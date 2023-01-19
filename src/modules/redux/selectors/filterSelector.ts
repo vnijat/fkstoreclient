@@ -1,11 +1,11 @@
-import {queryFilterByParam} from '../../../types/ItemsQuery';
+import {QueryFilterByParam} from '../../../types/item';
 import {RootState} from '../store';
 
 export const selectFilterbyForQuery = (
   state: RootState,
-): queryFilterByParam => {
+): QueryFilterByParam => {
   const filterByParams = state.filterSlicer.filterByParams;
-  const filterParamObj: queryFilterByParam = {};
+  const filterParamObj: QueryFilterByParam = {};
   for (let key in filterByParams) {
     filterParamObj[key as keyof typeof filterParamObj] =
       filterByParams[key as keyof typeof filterByParams].toString();

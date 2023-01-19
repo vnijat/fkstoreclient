@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { Colors } from '../../utils/colors';
+import FONT from '../../utils/font';
 
 
 export const getStyle = () => {
@@ -9,6 +10,7 @@ export const getStyle = () => {
             paddingHorizontal: 5
         },
         orderContentContainer: {
+            paddingTop: 5,
             flexShrink: 0.5
         },
         orderListHeaderContainer: {
@@ -25,7 +27,7 @@ export const getStyle = () => {
             height: 300
         },
         orderDetailContainer: {
-            flex: 0.3
+            flex: 0.2
         },
         orderFooterContainer: {
             flex: 0.1
@@ -36,6 +38,25 @@ export const getStyle = () => {
             flexDirection: 'row',
             justifyContent: 'space-around',
             alignItems: 'center'
+        },
+        orderActionsContainer: {
+            backgroundColor: Colors.DEFAULT_TEXT_COLOR,
+            height: 50,
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            borderTopWidth: 5
+        },
+        orderStatusText: {
+            fontSize: FONT.FONT_SIZE_SMALL,
+            marginLeft: 10
+        },
+        orderActionButtonsContainer: {
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            width: 220,
+            marginRight: 20
         }
 
     });

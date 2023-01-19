@@ -1,7 +1,6 @@
 import React, { memo, useMemo, useState } from "react";
 import { View } from "react-native";
 import { Alert } from "react-native-windows";
-import CustomModal from "../../../../components/customModal";
 import { InputItem } from "../../../../components/inputItem/index.windows";
 import { PrimaryButton } from "../../../../components/primaryButton";
 import TableInput from "../../../../containers/tableInput";

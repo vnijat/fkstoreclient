@@ -1,5 +1,7 @@
 import { StyleSheet } from 'react-native';
-import { Colors } from '../../utils/colors';
+import { Colors } from '../../../../utils/colors';
+import FONT from '../../../../utils/font';
+
 
 export const getStyle = () => {
     const style = StyleSheet.create({
@@ -19,8 +21,7 @@ export const getStyle = () => {
         },
         columContentText: {
             color: Colors.DEFAULT_TEXT_COLOR,
-            fontSize: 13,
-            fontWeight: '400',
+            fontSize: FONT.FONT_SIZE_SMALL,
             maxWidth: 130
         },
         rowItem: {
@@ -28,7 +29,6 @@ export const getStyle = () => {
             borderRadius: 3,
             flex: 1,
             justifyContent: 'space-evenly',
-            // alignItems: 'center',
             paddingLeft: 5,
             marginVertical: 1
         },
@@ -60,6 +60,19 @@ export const getStyle = () => {
         },
         contextMenuButtonText: {
             color: Colors.DEFAULT_TEXT_COLOR
+        },
+        outOfStockInfo: {
+            opacity: 0.3,
+            backgroundColor: Colors.DEFAULT_TEXT_COLOR,
+            justifyContent: 'space-around',
+            flexDirection: 'row',
+            alignItems: 'center'
+        },
+        outOfStockInfoText: {
+            fontSize: FONT.FONT_SIZE_MEGA + 5,
+            color: Colors.DECLINED_COLOR,
+            opacity: 0.5,
+            fontWeight: FONT.FONT_BOLD
         }
     });
 

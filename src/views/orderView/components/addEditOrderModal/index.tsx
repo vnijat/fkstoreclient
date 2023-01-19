@@ -1,6 +1,7 @@
 import { memo } from "react";
 import CustomModal from "../../../../components/customModal";
 import AddOrderContainer from "../../../../containers/addOrderContainer";
+import { Colors } from "../../../../utils/colors";
 
 
 
@@ -25,7 +26,8 @@ const AddEditOrderModal = ({ isOpen, onClose }: IAddEditOrderModal) => {
             isShowModal={isOpen}
             closeModal={onCloseModal}
             isDissmissEnabled={false}
-            width={800}
+            width={1000}
+            borderColor={Colors.DEFAULT_TEXT_COLOR}
         >
             {isOpen && <AddOrderContainer />}
         </CustomModal>

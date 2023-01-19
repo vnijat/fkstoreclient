@@ -1,6 +1,6 @@
 
-import { createNavigationContainerRef, NavigationContainer } from '@react-navigation/native';
-import React, { FC, useRef } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import React, { FC } from 'react';
 import { RootNavigation } from './modules/navigation/rootNavigation';
 import { LogBox, View } from "react-native";
 import { Provider } from 'react-redux';

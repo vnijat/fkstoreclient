@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
-import { Colors } from '../../../../utils/colors';
+import { Colors } from '../../../../../../utils/colors';
+import FONT from '../../../../../../utils/font';
 
 export const getStyle = () => {
     const style = StyleSheet.create({
@@ -8,7 +9,7 @@ export const getStyle = () => {
             flexDirection: 'row',
             justifyContent: 'space-evenly',
             paddingLeft: 36
-            
+
         },
         columnContainer: {
             justifyContent: 'center',
@@ -16,8 +17,8 @@ export const getStyle = () => {
         },
         columnText: {
             color: Colors.DEFAULT_TEXT_COLOR,
-            fontWeight: '700',
-            fontSize: 10,
+            fontWeight: FONT.FONT_BOLD,
+            fontSize: FONT.FONT_SIZE_VERY_SMALL,
         }
     });
 

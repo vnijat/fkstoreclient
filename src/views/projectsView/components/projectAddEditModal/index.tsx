@@ -40,21 +40,24 @@ const ProjectAddEditModal = ({ }: IProjectAddEditModal) => {
     };
 
     return (
-        <AddEditModal
-            isDataForEdit={isProjectForEdit}
-            dataForRequest={projectDataForPost}
-            inputConfigs={projectInputConfig}
-            apiPostData={apiAddProject}
-            apiUpdateData={apiEditProject}
-            clearDataForRequest={clearDataForRequest}
-            setIsShowModal={setIsShowModal}
-            setDataForRequest={setDataForRequest}
-            setIsDataForEdit={setIsDataForEdit}
-            dataTitle={'PROJECT'}
-            selectableData={selectableData}
-            isPickerSearchEnabled
-            isShowModal={isShowProjectAddEditModal}
-        />);
+        <>
+            {isShowProjectAddEditModal && <AddEditModal
+                isDataForEdit={isProjectForEdit}
+                dataForRequest={projectDataForPost}
+                inputConfigs={projectInputConfig}
+                apiPostData={apiAddProject}
+                apiUpdateData={apiEditProject}
+                clearDataForRequest={clearDataForRequest}
+                setIsShowModal={setIsShowModal}
+                setDataForRequest={setDataForRequest}
+                setIsDataForEdit={setIsDataForEdit}
+                dataTitle={'PROJECT'}
+                selectableData={selectableData}
+                isPickerSearchEnabled
+                isShowModal={isShowProjectAddEditModal}
+            />}
+        </>
+    );
 
 };
 

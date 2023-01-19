@@ -1,13 +1,5 @@
 import { ActionCreator, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { act } from 'react-test-renderer';
-import { AddBarcode } from '../../types/barcode';
-import { AddCategory } from '../../types/category';
-import { AddColor } from '../../types/color';
-import { AddLabel } from '../../types/label';
-import { AddLocation } from '../../types/location';
-import { AddStore } from '../../types/store';
-import { AddSupplier } from '../../types/supplier';
-import { AddUnit } from '../../types/unit';
+import { AddCategory, AddColor, AddLabel, AddLocation, AddStore, AddSupplier, AddUnit } from '../../types/itemOptions';
 
 export interface IItemOptions {
     options: {

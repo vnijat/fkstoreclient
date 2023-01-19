@@ -1,17 +1,18 @@
 import CheckBox from "@react-native-community/checkbox";
-import React, { FC, useMemo, useState } from "react";
-import { Text, View } from "react-native";
+import React, { FC, memo, useMemo, useState } from "react";
+import { Text, View, StyleSheet } from "react-native";
 import { useSelector } from "react-redux";
-import CustomContextMenu from "../../components/customContextMenu";
-import CustomPressable from "../../components/customPressable";
-import { useDeleteManyItemsMutation } from "../../modules/api/apiSlice";
-import { addItemId, clearSelectedItems, setIsEditMode, setIsItemForEdit, setIsShowAddEditModal, setIsShowItemModal, setItemForPost, setItemIdForFullResponse } from "../../modules/redux/itemsSlicer";
-import { selectIsEditMode } from "../../modules/redux/selectors/itemSelectors";
-import { RootState, useAppDispatch } from "../../modules/redux/store";
-import HELP from "../../services/helpers";
-import { Item } from "../../types/ItemsQuery";
-import { Colors } from "../../utils/colors";
-import { currency } from "../../utils/currency.windows";
+import CustomContextMenu from "../../../../components/customContextMenu";
+import CustomPressable from "../../../../components/customPressable";
+import { useDeleteManyItemsMutation } from "../../../../modules/api/apiSlice";
+import { setIsEditMode, addItemId, setIsItemForEdit, setItemForPost, setIsShowAddEditModal, clearSelectedItems, setIsShowItemModal, setItemIdForFullResponse } from "../../../../modules/redux/itemsSlicer";
+import { selectIsEditMode } from "../../../../modules/redux/selectors/itemSelectors";
+import { RootState, useAppDispatch } from "../../../../modules/redux/store";
+import HELP from "../../../../services/helpers";
+import { Item } from "../../../../types/item";
+import { Colors } from "../../../../utils/colors";
+import { currency } from "../../../../utils/currency.windows";
+
 import { getStyle } from "./styles";
 
 
@@ -131,15 +132,24 @@ const ItemsContent: FC<ItemsContentProps> = ({ id, itemIndex, selectBulk, data }
         dispatch(setItemIdForFullResponse(id));
     };
 
-    const aproveDeletion = () => {
-        apiDeleteItems([id]);
+    const aproveDeletion = async () => {
+        try {
+            const response = await apiDeleteItems([id]);
+            if (response.error) {
+                throw response.error;
+            }
+        } catch (error) {
+            if (error?.data?.message) {
+                HELP.alertError(error);
+            }
+        }
     };
 
 
     const deleteItem = async () => {
         try {
             await HELP.alertPromise('do you want to delete Items?', 'you cant recover deletet Items!');
-            aproveDeletion();
+            await aproveDeletion();
         } catch (erorr) {
             console.log("deleteItem=>", erorr);
         }
@@ -191,14 +201,26 @@ const ItemsContent: FC<ItemsContentProps> = ({ id, itemIndex, selectBulk, data }
                 onMouseEnter={() => setIsShowCheckBox(true)}
                 onMouseLeave={() => setIsShowCheckBox(false)}
                 onHoverOpacity>
+                {renderCheckBox}
+                {renderRow}
+                {
+                    data.outOfStock
+                    &&
+                    <View style={[StyleSheet.absoluteFill, style.outOfStockInfo]}>
+                        {[...Array(4)].map((i, index) => {
+                            return (<Text style={style.outOfStockInfoText} key={`${index}`}>
+                                {'OUT OF STOCK'}
+                            </Text>);
+                        })
+                        }
+                    </View>
+                }
                 <CustomContextMenu disabled={isContextMenuDisabled}>
                     {contextMenuContent}
                 </CustomContextMenu>
-                {renderCheckBox}
-                {renderRow}
             </CustomPressable>
         </>
     );
 };
 
-export default ItemsContent; 
+export default memo(ItemsContent);

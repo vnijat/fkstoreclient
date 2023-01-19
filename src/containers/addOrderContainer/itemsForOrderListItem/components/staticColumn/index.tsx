@@ -11,8 +11,7 @@ interface IStaticColumn {
 
 
 const StaticColumn = ({ value, index }: IStaticColumn) => {
-    const columnWidth = index == 0 ? 50 : 120;
-    const style = useMemo(() => getStyle(columnWidth), [columnWidth]);
+    const style = useMemo(() => getStyle(index), [index]);
     return (
         <View style={style.staticColumnContainer}>
             <Text style={style.staticColumnText}>

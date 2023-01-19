@@ -1,6 +1,6 @@
 // Need to use the React-specific entry point to import createApi
 import { BaseQueryFn, createApi, FetchArgs, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
-import { itemQueryParams, ItemResponse, itemResponseFull } from '../../types/ItemsQuery';
+import { ItemQueryParams, ItemResponse, ItemResponseFull } from '../../types/item';
 import { RootState } from '../redux/store';
 
 // Define a service using a base URL and expected endpoints
@@ -15,7 +15,7 @@ export const InventoryApi = createApi({
     reducerPath: 'inventoryApi',
     baseQuery: asyncFetchBaseQuery,
     endpoints: (build) => ({
-        getAllItems: build.query<ItemResponse, undefined | itemQueryParams>({
+        getAllItems: build.query<ItemResponse, undefined | ItemQueryParams>({
             providesTags: ['items'],
             query: (filter) => {
                 return {
@@ -33,7 +33,7 @@ export const InventoryApi = createApi({
                 };
             },
         }),
-        getItem: build.query<itemResponseFull, number | undefined>({
+        getItem: build.query<ItemResponseFull, number | undefined>({
             providesTags: ['item'],
             query: (id) => {
                 return {
@@ -57,7 +57,7 @@ export const InventoryApi = createApi({
                     method: 'DELETE'
                 };
             },
-            invalidatesTags: ['items']
+            invalidatesTags: ['items', 'itemForOrder', 'item']
         }),
         getItemQrCode: build.query<undefined, number>({
             query: (id) => {
@@ -75,7 +75,7 @@ export const InventoryApi = createApi({
                     method: 'POST'
                 };
             },
-            invalidatesTags: ['items', 'codeSuggestions']
+            invalidatesTags: ['items', 'codeSuggestions', 'itemForOrder']
         }),
         editItem: build.mutation<undefined, { body: any; id: number; }>({
             query: ({ body, id }) => {
@@ -85,7 +85,7 @@ export const InventoryApi = createApi({
                     method: 'PATCH'
                 };
             },
-            invalidatesTags: ['items', 'item']
+            invalidatesTags: ['items', 'item', 'itemForOrder']
         }),
         printBarcode: build.mutation<undefined, { itemId: number; }>({
             query: (body) => {
@@ -108,7 +108,8 @@ export const InventoryApi = createApi({
         'clientForPicker',
         'orders',
         'codeSuggestions',
-        'itemForOrder'
+        'itemForOrder',
+        'projectsForPicker'
     ]
 });
 

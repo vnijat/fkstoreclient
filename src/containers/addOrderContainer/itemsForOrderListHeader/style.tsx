@@ -10,13 +10,13 @@ export const getStyle = () => {
             flexDirection: 'row',
             justifyContent: 'space-evenly',
             alignItems: 'center',
-            height: 40
+            height: 40,
         },
         columnContainer: {
             height: 30,
             justifyContent: 'center',
             alignItems: 'flex-start',
-            margin: 1
+            margin: 1,
         },
         columnText: {
             color: Colors.DEFAULT_TEXT_COLOR,

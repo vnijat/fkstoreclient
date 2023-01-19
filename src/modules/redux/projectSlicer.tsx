@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { AddClient } from '../../types/client';
-import { Client } from '../../types/clientsQuery';
+import { Client } from '../../types/client';
 import { AddClientProject } from '../../types/project';
 
 

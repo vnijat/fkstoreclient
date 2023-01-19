@@ -2,8 +2,7 @@ import {Order} from '../enums/order.enum';
 import {OrderItemStatus} from '../enums/orderItemStatus';
 import {OrderStatus} from '../enums/orderStatus';
 import {Common, Imeta} from './common/common';
-import {Item} from './ItemsQuery';
-import {Project} from './projectsQuery';
+import {Project} from './project';
 
 interface ProjectOrder extends Common {
   orderItems: OrderItem[];
@@ -24,18 +23,18 @@ interface OrderItem extends Common {
   quantity?: number;
   totalPrice?: number;
   orderId?: number;
-  projectId?: number;
+  projectId?: number | null;
+  project?: Project;
   itemAtStock?: number;
+  fullfilled?: boolean;
   status?: OrderItemStatus;
 }
 
 interface AddOrderDto {
   id?: number;
-  orderItems: OrderItem[];
-  totalItems: number;
-  totalPrice: number;
+  orderItems?: OrderItem[];
   detail?: string;
-  status: OrderStatus;
+  status?: OrderStatus;
 }
 
 interface OrderQueryResponse {

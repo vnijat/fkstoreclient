@@ -1,5 +1,5 @@
 import CheckBox from '@react-native-community/checkbox';
-import React, { memo, useMemo, useRef, useState } from 'react';
+import React, { memo, useMemo, useRef, useState, useCallback } from 'react';
 import {
     Text,
     View,
@@ -11,7 +11,6 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
 import { Flyout } from 'react-native-windows';
-import { FilterParamskey } from '../../types/ItemsQuery';
 import { Colors } from '../../utils/colors';
 import { getStyle } from './style';
 import { setIsOpenOptionModal, setOptionNameForModal } from "../../modules/redux/itemOptions";
@@ -23,11 +22,12 @@ import MultipleSelectItem, { IMultipleSelectData } from './components/multipleSe
 import { inputsForItemOptions } from '../../configs/ItemOptionsInputConfigs';
 import SingleSelectItem from './components/singleSelectItem';
 import { useAppDispatch } from '../../modules/redux/store';
+import { FilterParamskey } from '../../types/item';
 
 export interface IsingelSelectData {
     id?: number;
     label?: string;
-    value?: number | string | boolean;
+    value?: number | string | boolean | null;
     code?: string;
     nested?: IsingelSelectData[];
 }
@@ -65,6 +65,7 @@ interface ICustomPicker {
     disablePickerActionButtons?: boolean;
     disabledForEdit?: boolean;
     canSelectParent?: boolean;
+    isDeselectEnabled?: boolean;
 }
 
 const CustomPicker = ({
@@ -94,7 +95,8 @@ const CustomPicker = ({
     onPressAddButton,
     disablePickerActionButtons,
     disabledForEdit,
-    canSelectParent
+    canSelectParent,
+    isDeselectEnabled
 }: ICustomPicker) => {
     const style = getStyle();
     const dispatch = useAppDispatch();
@@ -115,28 +117,28 @@ const CustomPicker = ({
     }, [searchText, singleSelectMode, singleSelectData, multipleSelectData, isDataSearchEnabled]);
 
 
-    const onPress = () => {
+    const onPress = useCallback(() => {
         if (isDisabled) {
-            Alert.alert('Requires field before select', requiredText);
+            HELP.alertError(undefined, 'Requires field before select', requiredText);
         } else if (disabledForEdit) {
-            Alert.alert('You cant edit this field',);
+            HELP.alertError(undefined, 'You cant edit this field');
         } else {
             setShowContent(true);
         }
-    };
+    }, [isDisabled, disabledForEdit, requiredText]);
 
-    const onDismiss = () => {
+    const onDismiss = useCallback(() => {
         setSearchText('');
         setShowContent(false);
-    };
+    }, []);
 
 
-    const onPressEdit = async (optionId: number | string) => {
+    const onPressEdit = useCallback(async (optionId: number | string) => {
         if (onPressEditButton) {
             onPressEditButton(optionId as number, dataKeyName as string);
             dispatch(setIsOpenOptionModal(true));
         }
-    };
+    }, [dataKeyName]);
 
     const renerListEmptyComponent = () => {
         return (
@@ -214,7 +216,7 @@ const CustomPicker = ({
                 return (
                     <>
                         <SingleSelectItem
-                            {...{ itemStyle, selectedItemStyle, selectedItemTextStyle, itemTextStyle, singleSelected, disablePickerActionButtons, isEditable, index }}
+                            {...{ isDeselectEnabled, itemStyle, selectedItemStyle, selectedItemTextStyle, itemTextStyle, singleSelected, disablePickerActionButtons, isEditable, index }}
                             data={item}
                             indent={0}
                             onPressSingleItem={(data: IsingelSelectData) => onPressSingleItem(data)}
@@ -225,7 +227,7 @@ const CustomPicker = ({
                     </>
                 );
             },
-        [singleSelected, singleSelectData?.length, itemStyle, canSelectParent, selectedItemStyle, itemTextStyle, selectedItemTextStyle, isEditable, isDisabled, disablePickerActionButtons]
+        [singleSelected, singleSelectData?.length, itemStyle, selectedItemStyle, itemTextStyle, selectedItemTextStyle, isEditable, isDisabled, disablePickerActionButtons]
     );
 
     const renderCounter = useMemo(() => {
@@ -283,17 +285,18 @@ const CustomPicker = ({
                             style={[style.listContainer, { backgroundColor: isShowableExited ? Colors.CARD_HEADER_COLOR : Colors.FLORAL_WHITE }]}
                             contentContainerStyle={style.listContentContainer}
                             data={getFilteredData || singleSelectData}
-                            keyExtractor={(item) => `${item.label}-${item.value}`}
+                            listKey={(item, index) => `${index}-singleModeList`}
+                            keyExtractor={(item, index) => `${item.label}-${item.value}`}
                             renderItem={renderSingleSelectItem}
                             ListEmptyComponent={renerListEmptyComponent}
-
                         />
                     ) : (
                         <FlatList
                             style={[style.listContainer, { backgroundColor: isShowableExited ? Colors.CARD_HEADER_COLOR : Colors.FLORAL_WHITE }]}
                             contentContainerStyle={style.listContentContainer}
                             data={getFilteredData || multipleSelectData}
-                            keyExtractor={item => item?.id.toString()}
+                            keyExtractor={(item, index) => item?.id.toString()}
+                            listKey={(item, index) => `${index}-multiselectList`}
                             renderItem={renderMultipleSelectItem}
                             ListEmptyComponent={renerListEmptyComponent}
                         />

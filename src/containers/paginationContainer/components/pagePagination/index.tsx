@@ -1,4 +1,4 @@
-import React, { FC, useMemo } from 'react';
+import React, { FC, useCallback, useMemo } from 'react';
 import { Text, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
 import CustomPressable from '../../../../components/customPressable';
@@ -62,9 +62,9 @@ export const PagePagination: FC<IPagePAgination> = ({
     [take, showedItemCount, hasNextPage],
   );
 
-  const onPressPageNumber = (pageNumber: number) => {
+  const onPressPageNumber = useCallback((pageNumber: number) => {
     setPage({ page: pageNumber });
-  };
+  }, []);
 
   const renderPageNumbers = useMemo(() => {
     if (page && pageCountToNumbers?.length) {

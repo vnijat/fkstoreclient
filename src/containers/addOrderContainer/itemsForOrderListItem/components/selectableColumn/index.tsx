@@ -10,10 +10,12 @@ interface ISelectableColumn {
     selectedValue: string;
     selectableData: any;
     getValue: (value: string) => void;
+    searchEnabled?: boolean;
+    isDeselectEnabled?: boolean;
 }
 
 
-const SelectableColumn = ({ selectedValue, selectableData, getValue }: ISelectableColumn) => {
+const SelectableColumn = ({ selectedValue, selectableData, getValue, searchEnabled, isDeselectEnabled }: ISelectableColumn) => {
     const style = useMemo(() => getStyle(), []);
 
 
@@ -25,14 +27,16 @@ const SelectableColumn = ({ selectedValue, selectableData, getValue }: ISelectab
         <View style={style.selectableColumnContainer}>
             <CustomPicker
                 singleOnSelect={singleOnselect}
-                singleSelectMode
+                singleSelected={selectedValue}
                 singleSelectData={selectableData}
+                singleSelectMode
                 buttonStyle={style.pickerButton}
                 itemStyle={style.pickerItem}
                 selectedItemStyle={style.pickerSelectedItem}
                 itemTextStyle={style.pickerItemText}
                 selectedItemTextStyle={style.pickerItemSelectedText}
-                singleSelected={selectedValue}
+                isDataSearchEnabled={searchEnabled}
+                isDeselectEnabled={isDeselectEnabled}
             />
         </View>
     );

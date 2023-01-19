@@ -1,4 +1,4 @@
-import React, { FC, memo, useMemo } from "react";
+import React, { FC, memo, useCallback, useMemo } from "react";
 import { View } from "react-native";
 import { useAppDispatch } from "../../modules/redux/store";
 import { Imeta } from "../../types/common/common";
@@ -17,31 +17,31 @@ const PaginationContainer = ({ meta, actionFunction }: IPaginationContainer) => 
     const style = getStyle();
     const dispatch = useAppDispatch();
 
-    const onPressNext = (data: Imeta) => {
+    const onPressNext = useCallback((data: Imeta) => {
         dispatch(actionFunction(data));
-    };
+    }, []);
 
 
-    const onPressPrevious = (data: Imeta) => {
+    const onPressPrevious = useCallback((data: Imeta) => {
         dispatch(actionFunction(data));
-    };
+    }, []);
 
 
-    const onPressToLast = (data: Imeta) => {
+    const onPressToLast = useCallback((data: Imeta) => {
         dispatch(actionFunction(data));
-    };
+    }, []);
 
-    const onPressToFirst = (data: Imeta) => {
+    const onPressToFirst = useCallback((data: Imeta) => {
         dispatch(actionFunction(data));
-    };
+    }, []);
 
-    const setPage = (data: Imeta) => {
+    const setPage = useCallback((data: Imeta) => {
         dispatch(actionFunction(data));
-    };
+    }, []);
 
-    const onSelectTakeValue = (data: Imeta) => {
+    const onSelectTakeValue = useCallback((data: Imeta) => {
         dispatch(actionFunction(data));
-    };
+    }, []);
 
 
     const renderPagination = useMemo(() => {

@@ -1,8 +1,8 @@
 import React, { memo } from "react";
 import { Pressable, Text, View } from "react-native";
-import { Item } from "../../../../../types/ItemsQuery";
 import { Colors } from "../../../../../utils/colors";
 import MIcon from "react-native-vector-icons/MaterialCommunityIcons";
+import { Item } from "../../../../../types/item";
 
 
 interface IProductListItem {

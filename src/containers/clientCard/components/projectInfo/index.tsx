@@ -50,7 +50,7 @@ const ProjectInfo = ({ projectsCompleted, projectsDeclined, projectsInProgress, 
     ];
 
     return (
-        <>
+        <View>
             <View style={style.projectInfoTitleContainer}>
                 <View style={style.projectInfoButtonContiner}>
                     <Text style={style.projectInfoButtonText}>
@@ -87,7 +87,7 @@ const ProjectInfo = ({ projectsCompleted, projectsDeclined, projectsInProgress, 
                     })
                 }
             </View>
-        </>
+        </View>
     );
 
 };

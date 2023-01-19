@@ -79,7 +79,7 @@ const ItemsForOrderSearch = ({ }: IItemsForOrderSearch) => {
 
     return (
         <>
-            <View style={{}}
+            <View style={style.searchContainer}
                 ref={searchRef}
             >
                 <InputItem

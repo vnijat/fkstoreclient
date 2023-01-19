@@ -1,4 +1,4 @@
-import {AddItemInterface} from '../types/Item';
+import {AddItemInterface} from '../types/item';
 
 export const ItemForPostDefaults: AddItemInterface = {
   name: '',

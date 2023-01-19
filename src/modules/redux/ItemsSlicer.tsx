@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { AddItemInterface } from '../../types/Item';
+import { AddItemInterface } from '../../types/item';
 import { ItemForPostDefaults } from '../../utils/defaults';
 
 interface ItemsSlicerInterface {

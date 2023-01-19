@@ -16,11 +16,12 @@ const ItemsForOrderListHeader = ({ }: IItemsForOrderListHeader) => {
     return (
         <View style={style.container}>
             {ITEMS_FORORDER_LIST.HEADERS.map((header, index) => {
-                const columnWidth = index == 0 ? 60 : 120;
+                const isFirstColumn = index == 0;
+                const columnWidth = isFirstColumn ? 30 : 120;
                 return (
-                    <View key={`${header}-${header.dtoKey}`} style={[style.columnContainer, { width: columnWidth }]}>
+                    <View key={`${header}-${header.dtoKey}`} style={[style.columnContainer, { width: columnWidth }, isFirstColumn && { alignItems: 'center' }]}>
                         <Text style={style.columnText}>
-                            {header.title}
+                            {header.title.toUpperCase()}
                         </Text>
                     </View>
                 );

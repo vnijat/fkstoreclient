@@ -5,9 +5,15 @@ export const getStyle = () => {
   const style = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: Colors.BACKGROUND_COLOR,
-      // alignItems: 'center'
     },
+    listHeaderContainer: {
+      backgroundColor: Colors.CARD_HEADER_COLOR,
+      justifyContent: 'center'
+    },
+    listContent: {
+      flex: 1,
+      backgroundColor: Colors.BACKGROUND_COLOR
+    }
   });
 
   return style;

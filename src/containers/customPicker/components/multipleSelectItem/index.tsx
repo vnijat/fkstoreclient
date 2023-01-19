@@ -4,7 +4,7 @@ import { StyleProp, Text, View, ViewStyle } from "react-native";
 import Icon from "react-native-vector-icons/Entypo";
 import CustomPressable from "../../../../components/customPressable";
 import HELP from "../../../../services/helpers";
-import { FilterParamskey } from "../../../../types/ItemsQuery";
+import { FilterParamskey } from "../../../../types/item";
 import { Colors } from "../../../../utils/colors";
 import { getStyle } from "./styles";
 

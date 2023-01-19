@@ -1,24 +1,20 @@
-import { useNavigation } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
-import React, { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ActivityIndicator, Alert, Animated, Easing, FlatList, Text, View } from "react-native";
-import { Flyout } from "react-native-windows";
+import React, { FC, memo, useCallback, useMemo } from "react";
+import { ActivityIndicator, Alert, FlatList, Text, View } from "react-native";
 import { useSelector } from "react-redux";
-import { ListHeader } from "./components/listHeader";
-import { PrimaryButton } from "../../components/primaryButton";
-import RowItem from "../../components/rowItem";
-import { useDeleteManyItemsMutation } from "../../modules/api/apiSlice";
-import { addItemId, clearSelectedItems, setIsEditMode, setIsItemForEdit, setIsShowAddEditModal, setIsShowItemModal, setItemForPost } from "../../modules/redux/itemsSlicer";
-import { setItemQueryParams } from "../../modules/redux/itemQuerySlicer";
-import { selectIsEditMode } from "../../modules/redux/selectors/itemSelectors";
-import { RootState, useAppDispatch } from "../../modules/redux/store";
-import { getSelectedTotalPrice, selectMany } from "../../services/ItemServices";
-import { Item } from "../../types/ItemsQuery";
-import { Colors } from "../../utils/colors";
-import { currency } from "../../utils/currency.windows";
+import { PrimaryButton } from "../../../../components/primaryButton";
+import { useDeleteManyItemsMutation } from "../../../../modules/api/apiSlice";
+import { setItemQueryParams } from "../../../../modules/redux/itemQuerySlicer";
+import { addItemId, clearSelectedItems, setIsEditMode, setIsItemForEdit, setItemForPost, setIsShowAddEditModal } from "../../../../modules/redux/itemsSlicer";
+import { selectIsEditMode } from "../../../../modules/redux/selectors/itemSelectors";
+import { RootState, useAppDispatch } from "../../../../modules/redux/store";
+import HELP from "../../../../services/helpers";
+import { selectMany } from "../../../../services/ItemServices";
+import { Item } from "../../../../types/ItemsQuery";
+import { Colors } from "../../../../utils/colors";
+import { currency } from "../../../../utils/currency.windows";
 import ItemsContent from "../itemsContent";
+import { ListHeader } from "./components/listHeader";
 import { getStyle } from "./style";
-import HELP from "../../services/helpers";
 
 
 interface IItemListTable {
@@ -33,7 +29,6 @@ const ItemListTable: FC<IItemListTable> = ({ data, isLoading }) => {
     const dispatch = useAppDispatch();
     const isEditMode = useSelector(selectIsEditMode);
     const [apiDeleteItems] = useDeleteManyItemsMutation();
-    const navigation = useNavigation<StackNavigationProp<any>>();
     const { selectedItemsID, selectedTotalPrice, selectedCount } = useSelector((state: RootState) => {
         return {
             selectedItemsID: state.itemsSlicer.selectedItems.map((item) => item.Id),
@@ -43,37 +38,45 @@ const ItemListTable: FC<IItemListTable> = ({ data, isLoading }) => {
     });
     const selectBulk = useCallback((from: number, to: number) => selectMany(from, to, data!, dispatch, addItemId), [data]);
 
-
-    const cancelEdit = () => {
+    const cancelEdit = useCallback(() => {
         dispatch(clearSelectedItems());
         dispatch(setIsEditMode(false));
-    };
+    }, []);
 
-    const aproveDeletion = () => {
-        apiDeleteItems(selectedItemsID);
-        dispatch(clearSelectedItems());
-        dispatch(setIsEditMode(false));
-        dispatch(setItemQueryParams({ page: 1, search: '' }));
-    };
+    const aproveDeletion = useCallback(async () => {
+        try {
+            const response = await apiDeleteItems(selectedItemsID);
+            if (response.error) {
+                throw response.error;
+            }
+            dispatch(clearSelectedItems());
+            dispatch(setIsEditMode(false));
+            dispatch(setItemQueryParams({ page: 1, search: '' }));
+        } catch (error) {
+            if (error?.data?.message) {
+                HELP.alertError(error);
+            }
+        }
+
+    }, [selectedItemsID.length]);
 
 
-    const deleteItem = async () => {
+    const deleteItem = useCallback(async () => {
         try {
             await HELP.alertPromise('do you want to delete Items?', 'you cant recover deletet Items!');
-            aproveDeletion();
+            await aproveDeletion();
         } catch (erorr) {
             console.log("deleteItem=>", erorr);
         }
+    }, [selectedItemsID.length]);
 
-    };
-
-    const onPressEdit = () => {
+    const onPressEdit = useCallback(() => {
         const itemForPost = HELP.modifyItemForEdit(data, selectedItemsID[0]);
         dispatch(setIsItemForEdit(true));
         dispatch(setItemForPost(itemForPost));
         dispatch(setIsShowAddEditModal(true));
         cancelEdit();
-    };
+    }, [data, selectedItemsID.length]);
 
 
     const renderSelectedInfo = useMemo(() => {
@@ -130,4 +133,4 @@ const ItemListTable: FC<IItemListTable> = ({ data, isLoading }) => {
     );
 };
 
-export default ItemListTable;
+export default memo(ItemListTable);

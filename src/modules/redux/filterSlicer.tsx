@@ -1,7 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { AddItemInterface } from '../../types/Item';
-import { FilterParamskey } from '../../types/ItemsQuery';
-import { ItemForPostDefaults } from '../../utils/defaults';
+import { FilterParamskey } from '../../types/item';
 
 
 
@@ -9,7 +7,6 @@ import { ItemForPostDefaults } from '../../utils/defaults';
 
 export interface IfilterSlicerInterface {
     filterByParams: {
-        barcodeId: number[];
         categoryId: number[];
         supplierId: number[];
         unitId: number[];

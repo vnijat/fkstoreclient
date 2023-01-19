@@ -7,29 +7,38 @@ export const getStyle = () => {
             width: 120,
             height: 40,
             flexDirection: 'row',
-            alignItems: 'center'
+            alignItems: 'center',
         },
         pickerItem: {
+            paddingLeft: 5,
+            marginLeft: 5,
+            minWidth: 120,
             height: 25,
+            // maxHeight: 60,
             margin: 2,
-            backgroundColor: Colors.CARD_HEADER_COLOR,
-            justifyContent: 'center'
+            backgroundColor: Colors.CARD_COLOR,
         },
         pickerSelectedItem: {
+            paddingLeft: 5,
+            marginLeft: 5,
+            minWidth: 120,
             height: 25,
-            margin: 2,
             backgroundColor: Colors.METALLIC_GOLD,
-            justifyContent: 'center'
+            margin: 2,
         },
         pickerItemText: {
-            color: Colors.DEFAULT_TEXT_COLOR
+            color: Colors.DEFAULT_TEXT_COLOR,
+            // minWidth: 100,
+            // maxWidth: 200
+            width: '100%'
         },
         pickerItemSelectedText: {
             color: Colors.CARD_COLOR,
             fontWeight: '700'
         },
         selectableColumnContainer: {
-            zIndex: 3
+            zIndex: 2,
+            margin: 1,
         }
     });
 

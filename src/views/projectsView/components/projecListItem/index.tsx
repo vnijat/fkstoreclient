@@ -8,8 +8,8 @@ import { useDeleteProjectMutation } from "../../../../modules/api/projects.api";
 import { setClientInfoData, setIsOpenClientInfoModal, setIsProjectForEdit, setIsShowProjectAddEditModal, setProjectDataForPost } from "../../../../modules/redux/projectSlicer";
 import { useAppDispatch } from "../../../../modules/redux/store";
 import HELP from "../../../../services/helpers";
-import { Client } from "../../../../types/clientsQuery";
-import { Project } from "../../../../types/projectsQuery";
+import { Client } from "../../../../types/client";
+import { Project } from "../../../../types/project";
 import { Colors } from "../../../../utils/colors";
 import { currency } from "../../../../utils/currency.windows";
 import StatusColumn from "./statusColumn";
@@ -49,7 +49,7 @@ const ProjectListItem = ({ project }: IProjectslistItem) => {
             dispatch(setClientInfoData(project?.client));
             dispatch(setIsOpenClientInfoModal(true));
         } else {
-            Alert.alert('Client is Unknown', 'Please Set Client For Project');
+            HELP.alertError(undefined, 'Client is Unknown', 'Please Set Client For Project');
         }
     };
 

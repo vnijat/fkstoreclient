@@ -1,4 +1,8 @@
-import {AddClient, ClientsQueryParams, ClientsResponse} from '../../types/client';
+import {
+  AddClient,
+  ClientsQueryParams,
+  ClientsResponse,
+} from '../../types/client';
 import {InventoryApi} from './apiSlice';
 
 export const ClientsApi = InventoryApi.injectEndpoints({

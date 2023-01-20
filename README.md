@@ -1,1 +1,1 @@
-Client Side UWP App  For Inventory Managemant Application, and small  erp solutions
+CROSS PLATFORM REACT NATIVE APP INVENTORY MANAGEMANT FOR FASHION HOUSE - ATELIER 

@@ -3,6 +3,7 @@ import { BaseQueryFn, createApi, FetchArgs, fetchBaseQuery, FetchBaseQueryError 
 import { ItemOptionForInputs, ItemQueryParams, ItemResponse, ItemResponseFull } from '../../types/item';
 import { IItemOptions } from '../redux/itemOptions';
 import { RootState } from '../redux/store';
+import { ApiTags } from './api.tags';
 
 // Define a service using a base URL and expected endpoints
 
@@ -98,21 +99,7 @@ export const InventoryApi = createApi({
             },
         }),
     }),
-    tagTypes: [
-        'items',
-        'itemInputs',
-        'itemOptions',
-        'clients',
-        'qrCode',
-        'item',
-        'projects',
-        'clientForPicker',
-        'orders',
-        'codeSuggestions',
-        'itemForOrder',
-        'projectsForPicker',
-        'purchases',
-    ]
+    tagTypes: ApiTags
 });
 
 export const {

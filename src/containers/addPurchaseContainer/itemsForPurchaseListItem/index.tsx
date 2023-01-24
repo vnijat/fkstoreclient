@@ -3,6 +3,7 @@ import { View } from "react-native";
 import { Text } from "react-native-windows";
 import CustomContextMenu from "../../../components/customContextMenu";
 import CustomPressable from "../../../components/customPressable";
+import { PaymentMethod } from "../../../enums/purchase";
 import { deleteItemFromPurchase, updateItemForPurchase } from "../../../modules/redux/purchaseSlicer";
 import { useAppDispatch } from "../../../modules/redux/store";
 import { ItemOptionForInputs } from "../../../types/item";
@@ -28,6 +29,9 @@ interface IrowData {
     searchEnabled?: boolean;
     dtoKey?: string;
     isDeselectEnabled?: boolean;
+    isCheckBox?: boolean;
+    isNumeric?: boolean;
+    disabled?: boolean;
 }
 
 
@@ -35,22 +39,40 @@ const ItemsForPurchaseListItem = ({ purchaseItem, index, suppliersData }: IItems
     const style = useMemo(() => getStyle(), []);
     const dispatch = useAppDispatch();
     const selectableSuppliersData = useMemo(() => suppliersData.map((data) => ({ value: data.id, label: data.label })) as { value: string | number, label: string; }[], [suppliersData.length]);
+    const paymentMethodData = useMemo(() => Object.keys(PaymentMethod).map((payment) => ({ value: PaymentMethod[payment as keyof typeof PaymentMethod], label: payment })), []);
+    const {
+        fullfilled,
+        supplier,
+        supplierId,
+        name,
+        barcode,
+        poInfo,
+        pricePerUnit,
+        updateMainPrice,
+        quantity,
+        paymentMethod,
+        unit
+    } = purchaseItem;
     const rowData: IrowData[] = useMemo(() => [
         { value: (1 + (index ?? 0)), },
-        { value: purchaseItem.name },
-        { value: purchaseItem.barcode },
-        { value: purchaseItem.unit },
-        { value: Number(purchaseItem.pricePerUnit), editable: !purchaseItem.fullfilled },
-        { value: Number(purchaseItem.quantity), editable: !purchaseItem.fullfilled },
-        { value: purchaseItem.supplierId, selectable: true, selectableData: selectableSuppliersData, searchEnabled: true },
-    ], [purchaseItem.quantity, purchaseItem.fullfilled, purchaseItem.pricePerUnit, purchaseItem.supplierId]);
+        { value: (fullfilled && supplier) ? supplier.name : supplierId, selectable: !fullfilled, selectableData: selectableSuppliersData, searchEnabled: true, dtoKey: 'supplierId' },
+        { value: paymentMethod, selectable: !fullfilled, selectableData: paymentMethodData, dtoKey: 'paymentMethod' },
+        { value: poInfo, editable: !fullfilled },
+        { value: name },
+        { value: barcode },
+        { value: unit },
+        { value: Number(pricePerUnit), editable: true, dtoKey: 'pricePerUnit', isNumeric: true, disabled: fullfilled },
+        { value: updateMainPrice, isCheckBox: true, editable: true, dtoKey: 'updateMainPrice', disabled: fullfilled },
+        { value: Number(quantity), editable: true, dtoKey: 'quantity', isNumeric: true, disabled: fullfilled },
+    ], [quantity, fullfilled, pricePerUnit, supplierId, paymentMethod, poInfo, updateMainPrice]);
 
 
-    const handleOnChangeEditableColumn = (text: string) => {
-        dispatch(updateItemForPurchase({ itemId: purchaseItem.itemId, data: { quantity: Number(text) } }));
+    const handleOnChangeEditableColumn = (inputValue: string | boolean, dtoKey: string) => {
+        const value = (typeof inputValue === 'string' && inputValue !== '' && !isNaN(Number(inputValue))) ? Number(inputValue) : inputValue;
+        dispatch(updateItemForPurchase({ itemId: purchaseItem.itemId, data: { [dtoKey]: value } }));
     };
 
-    const handleDeleteItemFromOrder = () => {
+    const handleDeleteItemForPurchase = () => {
         if (purchaseItem.fullfilled) {
             return;
         }
@@ -59,7 +81,7 @@ const ItemsForPurchaseListItem = ({ purchaseItem, index, suppliersData }: IItems
 
     const contextActionButtons = [
         {
-            title: 'DELETE', onPress: handleDeleteItemFromOrder
+            title: 'DELETE', onPress: handleDeleteItemForPurchase
         },
     ];
 
@@ -92,10 +114,14 @@ const ItemsForPurchaseListItem = ({ purchaseItem, index, suppliersData }: IItems
     const renderColumns = useMemo(() => {
         return rowData.map((data, index) => {
             if (data.editable) {
+                const value = typeof data.value !== 'boolean' ? data.value.toString() : data.value;
                 return <EditableColumn
                     key={`${index}-editable`}
-                    value={data?.value?.toString()}
-                    setValue={handleOnChangeEditableColumn}
+                    value={value}
+                    setValue={(value) => handleOnChangeEditableColumn(value, data.dtoKey!)}
+                    isCheckBox={data.isCheckBox}
+                    isNumeric={data.isNumeric}
+                    disabled={data.disabled}
                 />;
             }
             else if (data.selectable) {

@@ -1,9 +1,18 @@
-import {AddPurchaseDto, PurchaseQueryParams, PurchaseQueryResponse} from '../../types/purchase';
+import {Item} from '../../types/item';
+import {
+  AddPurchaseDto,
+  PurchaseItem,
+  PurchaseQueryParams,
+  PurchaseQueryResponse,
+} from '../../types/purchase';
 import {InventoryApi} from './apiSlice';
 
 export const PurchaseApi = InventoryApi.injectEndpoints({
   endpoints: build => ({
-    getPurchases: build.query<PurchaseQueryResponse, undefined | PurchaseQueryParams>({
+    getPurchases: build.query<
+      PurchaseQueryResponse,
+      undefined | PurchaseQueryParams
+    >({
       providesTags: ['purchases'],
       query: params => {
         return {
@@ -12,7 +21,7 @@ export const PurchaseApi = InventoryApi.injectEndpoints({
         };
       },
     }),
-    addPurchase: build.mutation<undefined,  AddPurchaseDto>({
+    addPurchase: build.mutation<undefined, AddPurchaseDto>({
       invalidatesTags: ['purchases', 'items', 'item', 'itemForOrder'],
       query: body => {
         return {
@@ -23,7 +32,7 @@ export const PurchaseApi = InventoryApi.injectEndpoints({
       },
     }),
     deletePurchase: build.mutation<undefined, number>({
-      invalidatesTags: ['orders'],
+      invalidatesTags: ['purchases'],
       query: purchaseId => {
         return {
           url: `/purchase/${purchaseId}`,
@@ -41,6 +50,14 @@ export const PurchaseApi = InventoryApi.injectEndpoints({
         };
       },
     }),
+    getItemForPurchase: build.query<Item[], string>({
+      providesTags: ['itemForPurchase'],
+      query: value => {
+        return {
+          url: `/purchase/item/${value}`,
+        };
+      },
+    }),
   }),
   overrideExisting: true,
 });
@@ -50,4 +67,5 @@ export const {
   useGetPurchasesQuery,
   useDeletePurchaseMutation,
   useAddPurchaseMutation,
+  useGetItemForPurchaseQuery,
 } = PurchaseApi;

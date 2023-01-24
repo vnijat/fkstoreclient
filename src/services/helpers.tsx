@@ -72,6 +72,17 @@ const getNestedCategoriesIds = (tree: IMultipleSelectData[]) => {
 
 };
 
+const isNotSameValue = (value1: number | boolean | string, value2: number | boolean | string) => {
+    console.log("value1===>>>", value1, 'value2', value2);
+    if (typeof value1 === 'boolean' && typeof value2 === 'boolean') {
+        return value1 !== value2;
+    } else if (!(isNaN(Number(value1)) && isNaN(Number(value2)))) {
+        return Number(value1) !== Number(value2);
+    } else {
+        return value1 !== value2;
+    }
+};
+
 const getNestedDataValues = (tree: IsingelSelectData[]) => {
     return tree?.reduce((acc, curr) => {
         const { nested, value } = curr;
@@ -167,7 +178,8 @@ const HELP = {
     getCountriesForPicker,
     mapNestedForPicker,
     getNestedDataValues,
-    alertError
+    alertError,
+    isNotSameValue
 };
 
 export default HELP;

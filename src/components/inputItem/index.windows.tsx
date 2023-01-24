@@ -147,7 +147,6 @@ export const InputItem: FC<IInputItem> = memo(
           disabledForEdit={disabledForEdit}
           canSelectParent={canSelectParent}
           isDeselectEnabled={isDeselectEnabled}
-
         />
       </>
       );
@@ -183,18 +182,19 @@ export const InputItem: FC<IInputItem> = memo(
       if (isCheckBox) {
         return (
           <CheckBox
-            value={!!inputValue}
+            value={Boolean(inputValue)}
             tintColor={Colors.CARD_COLOR}
             onValueChange={onCheckBoxValueChange}
             onCheckColor={Colors.CARD_HEADER_COLOR}
             onTintColor={Colors.CARD_HEADER_COLOR}
             onFillColor={Colors.CULTURED}
+            disabled={disabledForEdit}
           />
         );
       } else {
         return null;
       }
-    }, [isCheckBox, inputValue]);
+    }, [isCheckBox, inputValue, disabledForEdit]);
 
 
     const renderDatePicker = useMemo(() => {

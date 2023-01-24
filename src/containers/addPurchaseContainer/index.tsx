@@ -22,6 +22,7 @@ import { AddPurchaseDto } from "../../types/purchase";
 import { PurchaseStatus } from "../../enums/purchase";
 import { clearPurchaseDataForPost, setIsPurchaseForEdit, setIsShowPurchaseModal } from "../../modules/redux/purchaseSlicer";
 import ItemsForPurchaseList from "./itemsForPurchaseList";
+import ItemsForPurchaseSearch from "./itemsForPurchaseSearch";
 
 
 
@@ -124,7 +125,7 @@ const AddPurchaseContainer = ({ }: IAddPurchaseContainer) => {
     return (
         <View style={style.container}>
             {purchaseStatus.inProgress && <View style={style.searchContainer}>
-                {/* <ItemsForOrderSearch /> */}
+                <ItemsForPurchaseSearch />
             </View>}
             <View style={style.orderContentContainer}>
                 <View style={style.orderListHeaderContainer}>
@@ -140,8 +141,8 @@ const AddPurchaseContainer = ({ }: IAddPurchaseContainer) => {
                     {`PURCHASE STATUS: ${purchaseData.status}`.toUpperCase()}
                 </Text>
                 {tempOrderData && <View style={style.orderActionButtonsContainer}>
-                    {(!purchaseStatus.confirmed && !purchaseStatus.rejected) && <PrimaryButton onHoverOpacity title={'CONFIRM'} onPress={handleOrderConfirm} width={100} height={30} borderRadius={2} textColor={Colors.CARD_COLOR} buttonColor={Colors.METALLIC_GOLD} />}
-                    {(!purchaseStatus.rejected && purchaseStatus.confirmed) && <PrimaryButton onHoverOpacity title={'REJECT'} onPress={handleOrderReject} width={100} height={30} borderRadius={2} textColor={Colors.CARD_COLOR} buttonColor={Colors.INFRA_RED} />}
+                    {(!purchaseStatus.confirmed && !purchaseStatus.rejected) && <PrimaryButton onHoverOpacity title={'CONFIRM'} onPress={handlePurchaseConfirm} width={100} height={30} borderRadius={2} textColor={Colors.CARD_COLOR} buttonColor={Colors.METALLIC_GOLD} />}
+                    {(!purchaseStatus.rejected && purchaseStatus.confirmed) && <PrimaryButton onHoverOpacity title={'REJECT'} onPress={handlePurchaseReject} width={100} height={30} borderRadius={2} textColor={Colors.CARD_COLOR} buttonColor={Colors.INFRA_RED} />}
                 </View>}
             </View>
             <View style={style.orderDetailContainer}>

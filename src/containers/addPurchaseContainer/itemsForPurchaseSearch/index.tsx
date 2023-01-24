@@ -2,8 +2,11 @@ import React, { memo, useEffect, useMemo, useRef, useState } from "react";
 import { ScrollView, View } from "react-native";
 import { ActivityIndicator, Flyout, Text } from "react-native-windows";
 import { InputItem } from "../../../components/inputItem/index.windows";
+import { PaymentMethod } from "../../../enums/purchase";
 import { useItemForOrderQuery } from "../../../modules/api/orders.api";
+import { useGetItemForPurchaseQuery } from "../../../modules/api/purchase.api";
 import { addItemForOrder } from "../../../modules/redux/orderSlicer";
+import { addItemForPurchase } from "../../../modules/redux/purchaseSlicer";
 import { useAppDispatch } from "../../../modules/redux/store";
 import { Colors } from "../../../utils/colors";
 import SearchContentItem from "../itemsForPurchaseSearchItem";
@@ -24,7 +27,7 @@ const ItemsForPurchaseSearch = ({ }: IItemsForOrderSearch) => {
     const [skip, setSkip] = useState(true);
     const [isShowContent, setShowContent] = useState(false);
     const searchRef = useRef(null);
-    const { data, isLoading, isUninitialized } = useItemForOrderQuery(value, {
+    const { data, isLoading, isUninitialized } = useGetItemForPurchaseQuery(value, {
         skip
     });
     const searchContentHeight = useMemo(
@@ -37,13 +40,18 @@ const ItemsForPurchaseSearch = ({ }: IItemsForOrderSearch) => {
         if (data?.length) {
             data.length > 1 && setShowContent(true);
             if (data?.length === 1) {
-                dispatch(addItemForOrder({
+                dispatch(addItemForPurchase({
                     itemId: data[0].id as number,
                     unit: data[0].unit.name,
                     name: data[0].name,
                     quantity: 0,
                     barcode: data[0].barcode,
-                    itemAtStock: data[0]?.quantity
+                    updateMainPrice: false,
+                    pricePerUnit: data[0].pricePerUnit,
+                    paymentMethod: PaymentMethod.CASH,
+                    fullfilled: false,
+                    supplierId: data[0].supplier.id || null,
+                    poInfo: ''
                 }));
             }
         }

@@ -3,7 +3,9 @@ import { Text, View } from "react-native";
 import { Alert } from "react-native-windows";
 import CustomPressable from "../../../components/customPressable";
 import { OrderItemStatus } from "../../../enums/orderItemStatus";
+import { PaymentMethod } from "../../../enums/purchase";
 import { addItemForOrder } from "../../../modules/redux/orderSlicer";
+import { addItemForPurchase } from "../../../modules/redux/purchaseSlicer";
 import { useAppDispatch } from "../../../modules/redux/store";
 import HELP from "../../../services/helpers";
 import { Item } from "../../../types/item";
@@ -11,7 +13,7 @@ import { Colors } from "../../../utils/colors";
 import { getStyle } from "./style";
 
 
-interface IItemsForOrderSearchItem {
+interface IItemsForPurchaseSearchItem {
     data: Item;
     setShowContent?: (data: boolean) => void;
 }
@@ -21,7 +23,7 @@ interface IRowData {
     title: string;
 }
 
-const ItemsForOrderSearchItem = ({ data, setShowContent }: IItemsForOrderSearchItem) => {
+const ItemsForPurchaseSearchItem = ({ data, setShowContent }: IItemsForPurchaseSearchItem) => {
     const style = useMemo(() => getStyle(), []);
     const dispatch = useAppDispatch();
     const rowData = useMemo(() => [
@@ -34,20 +36,22 @@ const ItemsForOrderSearchItem = ({ data, setShowContent }: IItemsForOrderSearchI
 
     const setItemForOrder = () => {
         if (!data.inUse) {
-            dispatch(addItemForOrder({
+            dispatch(addItemForPurchase({
                 itemId: data.id as number,
                 unit: data.unit.name,
                 name: data.name,
                 quantity: 0,
                 barcode: data.barcode,
-                itemAtStock: data?.quantity,
                 pricePerUnit: data.pricePerUnit,
-                status: OrderItemStatus.IN_USE,
-                projectId: null
+                fullfilled: false,
+                supplierId: data.supplier.id || null,
+                paymentMethod: PaymentMethod.CASH,
+                updateMainPrice: false,
+                poInfo: ''
             }));
             setShowContent && setShowContent(false);
         } else {
-            HELP.alertError(undefined, 'Item is in another Order, Please complete another order first');
+            HELP.alertError(undefined, 'Item in active  Order, Please complete order first');
 
         }
     };
@@ -86,6 +90,6 @@ const ItemsForOrderSearchItem = ({ data, setShowContent }: IItemsForOrderSearchI
 
 };
 
-export default memo(ItemsForOrderSearchItem)
+export default memo(ItemsForPurchaseSearchItem)
 
 

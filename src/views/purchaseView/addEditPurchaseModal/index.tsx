@@ -26,7 +26,7 @@ const AddEditPurchaseModal = ({ isOpen, onClose }: IAddEditPurchaseModal) => {
             isShowModal={isOpen}
             closeModal={onCloseModal}
             isDissmissEnabled={false}
-            width={1000}
+            width={1250}
             borderColor={Colors.DEFAULT_TEXT_COLOR}
         >
             {isOpen && <AddPurchaseContainer />}

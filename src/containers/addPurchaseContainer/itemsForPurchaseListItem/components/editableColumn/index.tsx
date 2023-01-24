@@ -1,38 +1,44 @@
 import React, { memo, useEffect, useMemo, useState } from "react";
 import { View } from "react-native";
 import { InputItem } from "../../../../../components/inputItem/index.windows";
+import HELP from "../../../../../services/helpers";
 import { getStyle } from "./style";
 
 
 
 interface IEditableColumn {
     value: string;
-    setValue: (text: string) => void;
+    setValue: (text: string | boolean) => void;
     /**
      * Item quantity at Stock for restriction order quantity 
      */
     atStock?: number;
+    isCheckBox?: boolean;
+    isNumeric?: boolean;
+    disabled?: boolean;
 }
 
 
-const EditableColumn = ({ value, setValue, atStock }: IEditableColumn) => {
+const EditableColumn = ({ value, setValue, atStock, isCheckBox, isNumeric, disabled }: IEditableColumn) => {
     const style = useMemo(() => getStyle(), []);
-    const [inputValue, setInputvalue] = useState(value ?? '');
-    const handeInputChange = (numberString: string) => {
-        if (Number(numberString) <= Number(atStock)) {
-            setInputvalue(numberString);
+    const [inputValue, setInputvalue] = useState<string | boolean>(value);
+
+    const handeInputChange = (value: string | boolean) => {
+        if (isNumeric) {
+            setInputvalue(value);
         } else {
-            atStock && setInputvalue(Number(atStock).toString());
+            setInputvalue(value);
         }
     };
     useEffect(() => {
-        if (Number(value) !== Number(inputValue)) {
+        console.log("isNotSameValue===>>>", HELP.isNotSameValue(value, inputValue));
+        if (HELP.isNotSameValue(value, inputValue)) {
             setValue(inputValue);
         }
     }, [inputValue]);
 
     useEffect(() => {
-        if (Number(value) !== Number(inputValue)) {
+        if (HELP.isNotSameValue(value, inputValue)) {
             setInputvalue(value);
         }
     }, [value]);
@@ -44,8 +50,10 @@ const EditableColumn = ({ value, setValue, atStock }: IEditableColumn) => {
                 inputValue={inputValue}
                 height={30}
                 width={100}
-                isNumeric={true}
-                maxLength={13}
+                isNumeric={isNumeric}
+                maxLength={30}
+                isCheckBox={isCheckBox}
+                disabledForEdit={disabled}
             />
         </View>
     );

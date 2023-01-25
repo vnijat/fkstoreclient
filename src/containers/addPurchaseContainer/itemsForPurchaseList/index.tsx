@@ -1,9 +1,8 @@
-import React from "react";
-import { View, ScrollView, FlatList } from "react-native";
+import React, { useCallback } from "react";
+import { View, FlatList } from "react-native";
 import { ItemOptionForInputs } from "../../../types/item";
-import { IProjectsForPicker } from "../../../types/project";
 import { PurchaseItem } from "../../../types/purchase";
-import ItemsForOrderListItem from "../itemsForPurchaseListItem";
+import ItemsForPurchaseListItem from "../itemsForPurchaseListItem";
 
 
 
@@ -16,15 +15,22 @@ interface IItemsForPurchaseList {
 const ItemsForPurchaseList = ({ purchaseItems, suppliersData }: IItemsForPurchaseList) => {
 
 
+    const listItem = useCallback(({ item, index }: { item: PurchaseItem; index: number; }) => {
+        return <ItemsForPurchaseListItem
+            purchaseItem={item}
+            index={index}
+            key={`${index}`}
+            suppliersData={suppliersData} />;
+    }, []);
+
+
     return (
         <View style={{ flex: 1 }}>
             <FlatList
                 data={purchaseItems}
                 keyExtractor={(item) => item.itemId.toString()}
                 listKey={'purchaseList'}
-                renderItem={({ item, index }) => {
-                    return <ItemsForOrderListItem purchaseItem={item} index={index} key={`${index}`} suppliersData={suppliersData} />;
-                }}
+                renderItem={listItem}
             />
         </View>
     );

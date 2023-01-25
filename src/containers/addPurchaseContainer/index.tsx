@@ -20,9 +20,10 @@ import { useGetOptionQuery } from "../../modules/api/itemOptions.api";
 import { useGetItemInputsQuery } from "../../modules/api/apiSlice";
 import { AddPurchaseDto } from "../../types/purchase";
 import { PurchaseStatus } from "../../enums/purchase";
-import { clearPurchaseDataForPost, setIsPurchaseForEdit, setIsShowPurchaseModal } from "../../modules/redux/purchaseSlicer";
+import { clearPurchaseDataForPost, setIsPurchaseForEdit, setIsShowPurchaseModal, setPurchaseDataForPost } from "../../modules/redux/purchaseSlicer";
 import ItemsForPurchaseList from "./itemsForPurchaseList";
 import ItemsForPurchaseSearch from "./itemsForPurchaseSearch";
+import { useAddPurchaseMutation, useEditPurchaseMutation } from "../../modules/api/purchase.api";
 
 
 
@@ -33,8 +34,8 @@ interface IAddPurchaseContainer {
 const AddPurchaseContainer = ({ }: IAddPurchaseContainer) => {
     const style = useMemo(() => getStyle(), []);
     const dispatch = useAppDispatch();
-    // const [apiAddOrder] = useAddOrderMutation();
-    // const [apiUpdateOrder] = useEditOrderMutation();
+    const [apiAddPurchase] = useAddPurchaseMutation();
+    const [apiUpdatePurchase] = useEditPurchaseMutation();
     const { data: suppliersData, isLoading } = useGetItemInputsQuery(undefined, {
         selectFromResult: ({ data, isLoading }) => ({
             data: data?.supplier,
@@ -43,7 +44,7 @@ const AddPurchaseContainer = ({ }: IAddPurchaseContainer) => {
     });
     const isPurchaseForEdit = useSelector((state: RootState) => state.purchaseSlicer?.isPurchaseForedit);
     const purchaseData = useSelector((state: RootState) => state.purchaseSlicer.purchaseDataForPost);
-    const [tempOrderData, setTempOrderData] = useState<AddPurchaseDto>();
+    const [tempData, setTempData] = useState<AddPurchaseDto>();
     const purchaseStatus = useMemo(() => {
         return {
             confirmed: purchaseData.status === PurchaseStatus.CONFIRMED,
@@ -52,9 +53,10 @@ const AddPurchaseContainer = ({ }: IAddPurchaseContainer) => {
         };
     }, [purchaseData.status]);
 
+
     useEffect(() => {
         return () => {
-            setTempOrderData(undefined);
+            setTempData(undefined);
             dispatch(clearPurchaseDataForPost());
             dispatch(setIsShowPurchaseModal(false));
         };
@@ -62,56 +64,76 @@ const AddPurchaseContainer = ({ }: IAddPurchaseContainer) => {
 
     useEffect(() => {
         if (isPurchaseForEdit) {
-            setTempOrderData(purchaseData);
+            setTempData(purchaseData);
             dispatch(setIsPurchaseForEdit(false));
         }
     }, [isPurchaseForEdit]);
 
 
-    const handleCreateOrder = async () => {
+    const handleCreatePurchase = async () => {
         if (!!purchaseData.purchaseItems?.length) {
-            // const response = await apiAddOrder(orderData);
+            const response = await apiAddPurchase(purchaseData);
             if (response?.data) {
-                // dispatch(setOrderDataForPost({ ...response.data }));
-                // setTempOrderData({ ...response.data });
+                dispatch(setPurchaseDataForPost({ ...response.data }));
+                setTempData({ ...response.data });
             }
         } else {
-            // HELP.alertError(undefined, `Cant Create Order`, `Order Cart is Empty`);
+            HELP.alertError(undefined, `Cant Create Purchase`, `Purchase List is Empty`);
         }
     };
 
-    const handleClearOrderData = () => {
-        // if (tempOrderData) {
-        //     dispatch(setOrderDataForPost(tempOrderData));
-        // } else {
-        //     dispatch(clearOrderDataForPost());
-        // }
-    };
-
-    const orderDetailSetValue = (value: string) => {
-        dispatch(setOrderDataForPost({ detail: value }));
-    };
-
-    const handleUpdateOrder = async () => {
-        if (!!purchaseData.purchaseItems?.length) {
-            // const response = await apiUpdateOrder({ body: orderData, id: orderData?.id! });
-            if (response?.data) {
-                // dispatch(setOrderDataForPost({ ...response.data }));
-                // setTempOrderData({ ...response.data });
-            }
+    const handleClearPurchaseData = () => {
+        if (tempData) {
+            dispatch(setPurchaseDataForPost(tempData));
         } else {
-            // HELP.alertError(undefined, `Cant Update Order`, `Order Cart is Empty`);
+            dispatch(clearPurchaseDataForPost());
         }
     };
 
+    const purchaseDetailSetValue = (value: string) => {
+        dispatch(setPurchaseDataForPost({ detail: value }));
+    };
+
+    const handleUpdatePurchase = async () => {
+        if (!!purchaseData.purchaseItems?.length) {
+            const response = await apiUpdatePurchase({ body: purchaseData, id: purchaseData?.id! });
+            if (response?.data) {
+                dispatch(setPurchaseDataForPost({ ...response.data }));
+                setTempData({ ...response.data });
+            }
+        } else {
+            HELP.alertError(undefined, `Cant Update Purchase`, `Purchase List is Empty`);
+        }
+    };
 
     const handlePurchaseConfirm = async () => {
+        const isPurchaseCanConfirmed = !!purchaseData?.purchaseItems?.length && !purchaseData.purchaseItems?.some(item => item.quantity === 0 || item.pricePerUnit === 0);
+        if (isPurchaseCanConfirmed) {
+            const response = await apiUpdatePurchase({ body: { ...purchaseData, status: PurchaseStatus.CONFIRMED }, id: purchaseData?.id! });
+            if (response?.data) {
+                dispatch(setPurchaseDataForPost({ ...response.data }));
+                setTempData({ ...response.data });
+            } else {
 
+            }
+        }
+        else {
+            HELP.alertError(undefined, `Can't Confirm!`, `List is empty or  some purchase Item quantity or price is 0"`);
+        }
     };
 
     const handlePurchaseReject = async () => {
-
+        if (!!purchaseData.purchaseItems?.length) {
+            const response = await apiUpdatePurchase({ body: { ...purchaseData, status: PurchaseStatus.REJECTED }, id: purchaseData?.id! });
+            if (response?.data) {
+                dispatch(setPurchaseDataForPost({ ...response.data }));
+                setTempData({ ...response.data });
+            }
+        } else {
+            HELP.alertError(undefined, `Cant Reject`, `Purchase List  is empty`);
+        }
     };
+
 
     const actionContainerColor = useMemo(() => {
         const colors = {
@@ -121,6 +143,42 @@ const AddPurchaseContainer = ({ }: IAddPurchaseContainer) => {
         };
         return purchaseData.status && colors[purchaseData.status];
     }, [PurchaseStatus]);
+
+    const renderActionButtons = useMemo(() => {
+        if (tempData) {
+            return (
+                <View style={style.orderActionButtonsContainer}>
+                    {(!purchaseStatus.confirmed && !purchaseStatus.rejected)
+                        &&
+                        <PrimaryButton
+                            onHoverOpacity
+                            title={'CONFIRM'}
+                            onPress={handlePurchaseConfirm}
+                            width={100}
+                            height={30}
+                            borderRadius={2}
+                            textColor={Colors.CARD_COLOR}
+                            buttonColor={Colors.METALLIC_GOLD} />}
+                    {(!purchaseStatus.rejected && purchaseStatus.confirmed)
+                        &&
+                        <PrimaryButton
+                            onHoverOpacity
+                            title={'REJECT'}
+                            onPress={handlePurchaseReject}
+                            width={100}
+                            height={30}
+                            borderRadius={2}
+                            textColor={Colors.CARD_COLOR}
+                            buttonColor={Colors.INFRA_RED} />}
+                </View>
+            );
+        } else {
+            return null;
+        }
+    }, [purchaseStatus, tempData]);
+
+
+
 
     return (
         <View style={style.container}>
@@ -133,22 +191,21 @@ const AddPurchaseContainer = ({ }: IAddPurchaseContainer) => {
                 </View>
                 <View style={style.orderListContainer}>
                     {isLoading ? <ActivityIndicator size={'large'} color={Colors.METALLIC_GOLD} />
-                        : <ItemsForPurchaseList purchaseItems={purchaseData.purchaseItems ?? []} suppliersData={suppliersData ?? []} />}
+                        : <ItemsForPurchaseList
+                            purchaseItems={purchaseData.purchaseItems ?? []}
+                            suppliersData={suppliersData ?? []} />}
                 </View>
             </View>
             <View style={[style.orderActionsContainer, { borderColor: actionContainerColor }]}>
                 <Text style={style.orderStatusText}>
                     {`PURCHASE STATUS: ${purchaseData.status}`.toUpperCase()}
                 </Text>
-                {tempOrderData && <View style={style.orderActionButtonsContainer}>
-                    {(!purchaseStatus.confirmed && !purchaseStatus.rejected) && <PrimaryButton onHoverOpacity title={'CONFIRM'} onPress={handlePurchaseConfirm} width={100} height={30} borderRadius={2} textColor={Colors.CARD_COLOR} buttonColor={Colors.METALLIC_GOLD} />}
-                    {(!purchaseStatus.rejected && purchaseStatus.confirmed) && <PrimaryButton onHoverOpacity title={'REJECT'} onPress={handlePurchaseReject} width={100} height={30} borderRadius={2} textColor={Colors.CARD_COLOR} buttonColor={Colors.INFRA_RED} />}
-                </View>}
+                {renderActionButtons}
             </View>
             <View style={style.orderDetailContainer}>
                 <InputItem
                     inputTitle={'PURCHASE DETAIL'}
-                    setValue={orderDetailSetValue}
+                    setValue={purchaseDetailSetValue}
                     inputValue={purchaseData.detail ?? ''}
                     isMultiLine
                     disabledForEdit={!purchaseStatus.inProgress}
@@ -157,9 +214,9 @@ const AddPurchaseContainer = ({ }: IAddPurchaseContainer) => {
             </View>
             <View style={style.orderFooterContainer}>
                 {purchaseStatus.inProgress && <View style={style.orderFooterButtonContainer}>
-                    <PrimaryButton onHoverOpacity title={'RESET'} onPress={handleClearOrderData} width={100} height={30} borderRadius={2} textColor={Colors.CARD_COLOR} buttonColor={Colors.DEFAULT_TEXT_COLOR} />
-                    {tempOrderData ? <PrimaryButton onHoverOpacity title={'UPDATE'} onPress={handleUpdateOrder} width={100} height={30} borderRadius={2} textColor={Colors.CARD_COLOR} buttonColor={Colors.DEFAULT_TEXT_COLOR} />
-                        : <PrimaryButton onHoverOpacity title={'CREATE'} onPress={handleCreateOrder} width={100} height={30} borderRadius={2} textColor={Colors.CARD_COLOR} buttonColor={Colors.DEFAULT_TEXT_COLOR} />
+                    <PrimaryButton onHoverOpacity title={'RESET'} onPress={handleClearPurchaseData} width={100} height={30} borderRadius={2} textColor={Colors.CARD_COLOR} buttonColor={Colors.DEFAULT_TEXT_COLOR} />
+                    {tempData ? <PrimaryButton onHoverOpacity title={'UPDATE'} onPress={handleUpdatePurchase} width={100} height={30} borderRadius={2} textColor={Colors.CARD_COLOR} buttonColor={Colors.DEFAULT_TEXT_COLOR} />
+                        : <PrimaryButton onHoverOpacity title={'CREATE'} onPress={handleCreatePurchase} width={100} height={30} borderRadius={2} textColor={Colors.CARD_COLOR} buttonColor={Colors.DEFAULT_TEXT_COLOR} />
                     }
                 </View>}
             </View>

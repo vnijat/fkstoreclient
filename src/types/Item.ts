@@ -146,4 +146,5 @@ export type {
   ItemResponseFull,
   AddItemInterface,
   ItemOptionForInputs,
+  Supplier,
 };

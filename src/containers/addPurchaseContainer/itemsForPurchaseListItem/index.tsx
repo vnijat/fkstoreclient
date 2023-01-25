@@ -57,15 +57,14 @@ const ItemsForPurchaseListItem = ({ purchaseItem, index, suppliersData }: IItems
         { value: (1 + (index ?? 0)), },
         { value: (fullfilled && supplier) ? supplier.name : supplierId, selectable: !fullfilled, selectableData: selectableSuppliersData, searchEnabled: true, dtoKey: 'supplierId' },
         { value: paymentMethod, selectable: !fullfilled, selectableData: paymentMethodData, dtoKey: 'paymentMethod' },
-        { value: poInfo, editable: !fullfilled },
+        { value: poInfo, editable: true, disabled: fullfilled, dtoKey: 'poInfo' },
         { value: name },
         { value: barcode },
         { value: unit },
         { value: Number(pricePerUnit), editable: true, dtoKey: 'pricePerUnit', isNumeric: true, disabled: fullfilled },
-        { value: updateMainPrice, isCheckBox: true, editable: true, dtoKey: 'updateMainPrice', disabled: fullfilled },
+        { value: fullfilled ? { true: 'Price Updated', false: 'Price Not Updated' }[`${updateMainPrice}`] : updateMainPrice, isCheckBox: true, editable: !fullfilled, dtoKey: 'updateMainPrice' },
         { value: Number(quantity), editable: true, dtoKey: 'quantity', isNumeric: true, disabled: fullfilled },
     ], [quantity, fullfilled, pricePerUnit, supplierId, paymentMethod, poInfo, updateMainPrice]);
-
 
     const handleOnChangeEditableColumn = (inputValue: string | boolean, dtoKey: string) => {
         const value = (typeof inputValue === 'string' && inputValue !== '' && !isNaN(Number(inputValue))) ? Number(inputValue) : inputValue;

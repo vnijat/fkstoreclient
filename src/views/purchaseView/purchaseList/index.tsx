@@ -20,9 +20,9 @@ const PurchaseList = ({ data }: IPurchaseList) => {
     const style = useMemo(() => getStyle(), []);
     const [apiDeletePurchase] = useDeletePurchaseMutation();
 
-    const onDeletePurchase = async (orderId: number) => {
+    const onDeletePurchase = async (purchaseId: number) => {
         try {
-            const response = await apiDeletePurchase(orderId);
+            const response = await apiDeletePurchase(purchaseId);
             if (response.error) {
                 throw response.error;
             }

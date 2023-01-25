@@ -9,10 +9,7 @@ import {InventoryApi} from './apiSlice';
 
 export const PurchaseApi = InventoryApi.injectEndpoints({
   endpoints: build => ({
-    getPurchases: build.query<
-      PurchaseQueryResponse,
-      undefined | PurchaseQueryParams
-    >({
+    getPurchases: build.query<PurchaseQueryResponse,undefined | PurchaseQueryParams>({
       providesTags: ['purchases'],
       query: params => {
         return {
@@ -22,7 +19,7 @@ export const PurchaseApi = InventoryApi.injectEndpoints({
       },
     }),
     addPurchase: build.mutation<undefined, AddPurchaseDto>({
-      invalidatesTags: ['purchases', 'items', 'item', 'itemForOrder'],
+      invalidatesTags: ['purchases', 'items', 'item', 'itemForPurchase'],
       query: body => {
         return {
           url: '/purchase/',

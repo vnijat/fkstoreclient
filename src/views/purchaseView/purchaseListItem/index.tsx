@@ -2,6 +2,7 @@ import React, { memo, useMemo } from "react";
 import { Text, View } from "react-native";
 import CustomContextMenu from "../../../components/customContextMenu";
 import CustomPressable from "../../../components/customPressable";
+import { setIsPurchaseForEdit, setIsShowPurchaseModal, setPurchaseDataForPost } from "../../../modules/redux/purchaseSlicer";
 import { useAppDispatch } from "../../../modules/redux/store";
 import { PurchaseDto } from "../../../types/purchase";
 import { Colors } from "../../../utils/colors";
@@ -45,9 +46,9 @@ const PurchaseListItem = ({ data, onDeletePurchase }: IPurchaseListItem) => {
 
 
     const onPressItem = () => {
-        // dispatch(setPurchaseDataForPost({ ...data }));
-        // dispatch(setIsPurchaseForEdit(true));
-        // dispatch(setIsShowPurchaseModal(true));
+        dispatch(setPurchaseDataForPost({ ...data }));
+        dispatch(setIsPurchaseForEdit(true));
+        dispatch(setIsShowPurchaseModal(true));
     };
 
     const handleDelete = async () => {

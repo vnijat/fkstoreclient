@@ -4,12 +4,12 @@ import {Supplier} from './item';
 import {Order} from './projectOrder';
 
 interface AddPurchaseDto extends Common {
-  poInfo: string;
-  purchaseItems: PurchaseItem[];
-  detail: string;
-  supplierId: number;
-  paymentMethod: PaymentMethod;
-  status: PurchaseStatus;
+  poInfo?: string;
+  purchaseItems?: PurchaseItem[];
+  detail?: string;
+  supplierId?: number;
+  paymentMethod?: PaymentMethod;
+  status?: PurchaseStatus;
 }
 
 interface PurchaseItem extends Common {

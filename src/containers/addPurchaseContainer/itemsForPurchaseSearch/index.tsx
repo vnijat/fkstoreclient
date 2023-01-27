@@ -2,12 +2,14 @@ import React, { memo, useEffect, useMemo, useRef, useState } from "react";
 import { ScrollView, View } from "react-native";
 import { ActivityIndicator, Flyout, Text } from "react-native-windows";
 import { InputItem } from "../../../components/inputItem/index.windows";
+import { PaymentMethod } from "../../../enums/purchase";
 import { useItemForOrderQuery } from "../../../modules/api/orders.api";
+import { useGetItemForPurchaseQuery } from "../../../modules/api/purchase.api";
 import { addItemForOrder } from "../../../modules/redux/orderSlicer";
+import { addItemForPurchase } from "../../../modules/redux/purchaseSlicer";
 import { useAppDispatch } from "../../../modules/redux/store";
-import HELP from "../../../services/helpers";
 import { Colors } from "../../../utils/colors";
-import SearchContentItem from "../itemsForOrderSearchItem";
+import SearchContentItem from "../itemsForPurchaseSearchItem";
 import { getStyle } from "./style";
 
 
@@ -17,7 +19,7 @@ interface IItemsForOrderSearch {
 }
 
 
-const ItemsForOrderSearch = ({ }: IItemsForOrderSearch) => {
+const ItemsForPurchaseSearch = ({ }: IItemsForOrderSearch) => {
     const style = useMemo(() => getStyle(), []);
     let timeoutId = useRef<ReturnType<typeof setTimeout>>(null).current;
     const dispatch = useAppDispatch();
@@ -25,7 +27,7 @@ const ItemsForOrderSearch = ({ }: IItemsForOrderSearch) => {
     const [skip, setSkip] = useState(true);
     const [isShowContent, setShowContent] = useState(false);
     const searchRef = useRef(null);
-    const { data, isLoading, isUninitialized } = useItemForOrderQuery(value, {
+    const { data, isLoading, isUninitialized } = useGetItemForPurchaseQuery(value, {
         skip
     });
     const searchContentHeight = useMemo(
@@ -34,23 +36,23 @@ const ItemsForOrderSearch = ({ }: IItemsForOrderSearch) => {
                 ? 150
                 : (data?.length * 45)), [data?.length]);
 
-
     useEffect(() => {
         if (data?.length) {
             data.length > 1 && setShowContent(true);
             if (data?.length === 1) {
-                if (!data[0].inUse) {
-                    dispatch(addItemForOrder({
-                        itemId: data[0].id as number,
-                        unit: data[0].unit.name,
-                        name: data[0].name,
-                        quantity: 0,
-                        barcode: data[0].barcode,
-                        itemAtStock: data[0]?.quantity
-                    }));
-                } else {
-                    HELP.alertError(undefined, 'ITEM IN USE IN ANOTHER ORDER!!', 'PLEASE COMPLETE ACTIVE ORDER!');
-                }
+                dispatch(addItemForPurchase({
+                    itemId: data[0].id as number,
+                    unit: data[0].unit.name,
+                    name: data[0].name,
+                    quantity: 0,
+                    barcode: data[0].barcode,
+                    updateMainPrice: false,
+                    pricePerUnit: data[0].pricePerUnit,
+                    paymentMethod: PaymentMethod.CASH,
+                    fullfilled: false,
+                    supplierId: data[0].supplier.id || null,
+                    poInfo: ''
+                }));
             }
         }
     }, [data?.length]);
@@ -131,4 +133,4 @@ const ItemsForOrderSearch = ({ }: IItemsForOrderSearch) => {
 
 
 
-export default memo(ItemsForOrderSearch);
+export default memo(ItemsForPurchaseSearch);

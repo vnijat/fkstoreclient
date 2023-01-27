@@ -1,7 +1,9 @@
 // Need to use the React-specific entry point to import createApi
 import { BaseQueryFn, createApi, FetchArgs, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
-import { ItemQueryParams, ItemResponse, ItemResponseFull } from '../../types/item';
+import { ItemOptionForInputs, ItemQueryParams, ItemResponse, ItemResponseFull } from '../../types/item';
+import { IItemOptions } from '../redux/itemOptions';
 import { RootState } from '../redux/store';
+import { ApiTags } from './api.tags';
 
 // Define a service using a base URL and expected endpoints
 
@@ -41,7 +43,7 @@ export const InventoryApi = createApi({
                 };
             },
         }),
-        getItemInputs: build.query<undefined, any>({
+        getItemInputs: build.query<ItemOptionForInputs, undefined>({
             providesTags: ['itemInputs'],
             query: () => {
                 return {
@@ -97,20 +99,7 @@ export const InventoryApi = createApi({
             },
         }),
     }),
-    tagTypes: [
-        'items',
-        'itemInputs',
-        'itemOptions',
-        'clients',
-        'qrCode',
-        'item',
-        'projects',
-        'clientForPicker',
-        'orders',
-        'codeSuggestions',
-        'itemForOrder',
-        'projectsForPicker'
-    ]
+    tagTypes: ApiTags
 });
 
 export const {

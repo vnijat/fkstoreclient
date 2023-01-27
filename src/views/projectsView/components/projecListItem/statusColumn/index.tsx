@@ -10,7 +10,7 @@ import { getStyle } from "./styles";
 
 interface IProjectStatusColumn {
     status: ProjectStatus;
-    projectId: number;
+    projectId?: number;
 
 
 }

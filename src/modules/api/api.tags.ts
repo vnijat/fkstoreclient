@@ -13,4 +13,5 @@ export const ApiTags = [
   'projectsForPicker',
   'purchases',
   'itemForPurchase',
+  'projectOrders'
 ] as const;

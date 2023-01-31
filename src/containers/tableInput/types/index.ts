@@ -7,7 +7,7 @@ interface ITableConfig {
 }
 
 type RowDataType = {
-  [key: string]: string;
+  [key: string]: any;
 };
 
 export type {ITableConfig, RowDataType};

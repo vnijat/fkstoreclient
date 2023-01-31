@@ -30,19 +30,39 @@ const PurchaseListItem = ({ data, onDeletePurchase }: IPurchaseListItem) => {
 
 
     const rowData = useMemo(() => [
-        data.createdAt,
+        { data: data.createdAt, title: 'date' },
         data.detail,
-        data.totalItems,
+        Number(data.totalItems),
         currency.format(data.totalPrice),
         data.status
     ], [data]);
 
 
+    const RenderDateColumn = ({ date }: { date: Date | null; }) => {
+        const createdAtDate = date ? new Date(date).toLocaleDateString() : '';
+        if (createdAtDate.length) {
+            return (
+                <View style={style.dateColumnContainer}>
+                    < Text style={style.dateText}>
+                        {createdAtDate}
+                    </Text>
+                </View >
+            );
+        }
+        else {
+            return null;
+        }
+    };
+
+
+
+
     const compoundDataModifier = useMemo(() => (data: any, title: string) => {
         const compoundData: { [key: string]: JSX.Element; } = {
+            date: <RenderDateColumn date={data} />
         };
         return compoundData[title];
-    }, []);
+    }, [data]);
 
 
     const onPressItem = () => {

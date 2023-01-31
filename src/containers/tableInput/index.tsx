@@ -16,10 +16,11 @@ import { ITableConfig, RowDataType, } from "./types";
 interface ITableInput {
     tableData: RowDataType[];
     tableConfig: ITableConfig[];
-    getNewTableData: (data: RowDataType[]) => void;
+    getNewTableData?: (data: RowDataType[]) => void;
+    isDataEditable?: boolean;
 }
 
-const TableInput = ({ tableData, tableConfig, getNewTableData }: ITableInput) => {
+const TableInput = ({ tableData, tableConfig, getNewTableData, isDataEditable }: ITableInput) => {
     const style = useMemo(() => getStyle(), []);
     const { addToast } = useToast();
     const [data, setData] = useState<RowDataType[]>([...tableData]);
@@ -62,8 +63,9 @@ const TableInput = ({ tableData, tableConfig, getNewTableData }: ITableInput) =>
                     key={`${index}-inputs`}
                     defaultRowData={rowData}
                     tableInputConfigs={tableConfig}
+                    isEditable={isDataEditable}
                 />
-                {isLast &&
+                {isDataEditable && isLast &&
                     <>
                         <CustomPressable style={style.addRowButton} onPress={addRowToTable} onHoverOpacity key={`${index}-plus`}>
                             <Icon name={'circle-with-plus'} size={24} color={Colors.METALLIC_GOLD} />
@@ -75,7 +77,7 @@ const TableInput = ({ tableData, tableConfig, getNewTableData }: ITableInput) =>
                 }
             </View>);
         });
-    }, [data]);
+    }, [data, isDataEditable]);
 
     const renderColumnHeaderTitles = useMemo(() => columnHeaderTitles.map((title, index) => <HeaderColumn title={title} key={`${index}-${title}`} />), [columnHeaderTitles.length]);
 
@@ -135,28 +137,31 @@ const TableInput = ({ tableData, tableConfig, getNewTableData }: ITableInput) =>
 
     const renderActionButtons = useMemo(() => {
         const isDisabled = !isHasChanges || (!data.length && !isHasChanges);
-        return (
-            <View style={[style.actionButtonsContainer, isDisabled && { opacity: 0.5 }]}>
-                <CustomPressable
-                    style={style.actionButton}
-                    onHoverOpacity={!isDisabled}
-                    onPress={onPressReset}
-                    disabled={isDisabled}
-                >
-                    <Icon name={'back'} size={15} color={Colors.CARD_COLOR} />
-                </CustomPressable>
-                <CustomPressable
-                    style={style.actionButton}
-                    onHoverOpacity={!isDisabled}
-                    onPress={onPressSave}
-                    disabled={isDisabled}
-                >
-                    <Icon name={'check'} size={15} color={Colors.CARD_COLOR} />
-                </CustomPressable>
-            </View>
-        );
-
-    }, [isHasChanges, data]);
+        if (isDataEditable) {
+            return (
+                <View style={[style.actionButtonsContainer, isDisabled && { opacity: 0.5 }]}>
+                    <CustomPressable
+                        style={style.actionButton}
+                        onHoverOpacity={!isDisabled}
+                        onPress={onPressReset}
+                        disabled={isDisabled}
+                    >
+                        <Icon name={'back'} size={15} color={Colors.CARD_COLOR} />
+                    </CustomPressable>
+                    <CustomPressable
+                        style={style.actionButton}
+                        onHoverOpacity={!isDisabled}
+                        onPress={onPressSave}
+                        disabled={isDisabled}
+                    >
+                        <Icon name={'check'} size={15} color={Colors.CARD_COLOR} />
+                    </CustomPressable>
+                </View>
+            );
+        } else {
+            return null;
+        }
+    }, [isHasChanges, data, isDataEditable]);
 
 
 
@@ -169,7 +174,7 @@ const TableInput = ({ tableData, tableConfig, getNewTableData }: ITableInput) =>
                 <ScrollView style={{ flex: 1 }} contentContainerStyle={style.tableContent}
                     ref={scrollRef}
                 >
-                    {!data.length && <CustomPressable style={style.addButton} onPress={addRowToTable} onHoverOpacity>
+                    {isDataEditable && !data.length && <CustomPressable style={style.addButton} onPress={addRowToTable} onHoverOpacity>
                         <Icon name={'circle-with-plus'} size={24} color={Colors.METALLIC_GOLD} />
                     </CustomPressable>}
                     {renderDataToTable}

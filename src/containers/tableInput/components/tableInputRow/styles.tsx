@@ -6,7 +6,6 @@ export const getStyle = () => {
             flexDirection: 'row',
             justifyContent: 'space-evenly',
             alignItems: 'center',
-            marginHorizontal: 1
         }
 
     });

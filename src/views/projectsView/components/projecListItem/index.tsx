@@ -5,7 +5,7 @@ import { Alert } from "react-native-windows";
 import CustomContextMenu from "../../../../components/customContextMenu";
 import CustomPressable from "../../../../components/customPressable";
 import { useDeleteProjectMutation } from "../../../../modules/api/projects.api";
-import { setClientInfoData, setIsOpenClientInfoModal, setIsProjectForEdit, setIsShowProjectAddEditModal, setProjectDataForPost } from "../../../../modules/redux/projectSlicer";
+import { setClientInfoData, setIsOpenClientInfoModal, setIsProjectForEdit, setIsShowProjectAddEditModal, setIsShowProjectOrdersModal, setProjectDataForPost, setProjectIdForRequestOrders } from "../../../../modules/redux/projectSlicer";
 import { useAppDispatch } from "../../../../modules/redux/store";
 import HELP from "../../../../services/helpers";
 import { Client } from "../../../../types/client";
@@ -36,6 +36,8 @@ const ProjectListItem = ({ project }: IProjectslistItem) => {
         project.title.toUpperCase(),
         project.description?.toUpperCase(),
         currency.format(project.price),
+        { data: Number(project.totalOrders), title: 'orders', clickable: true },
+        currency.format(project.ordersTotalCost),
         currency.format(project.otherExpensesTotalCost),
         currency.format(project.totalPrice),
         currency.format(project.paid),
@@ -51,6 +53,27 @@ const ProjectListItem = ({ project }: IProjectslistItem) => {
         } else {
             HELP.alertError(undefined, 'Client is Unknown', 'Please Set Client For Project');
         }
+    };
+
+
+
+
+
+
+    const RenderOrdersColumn = ({ data }: { data: any; }) => {
+        const onPressOrdersCount = () => {
+            dispatch(setProjectIdForRequestOrders(project.id!));
+            dispatch(setIsShowProjectOrdersModal(true));
+        };
+
+        return <CustomPressable
+            onPress={onPressOrdersCount}
+            style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: Colors.DEFAULT_TEXT_COLOR, borderRadius: 3, paddingHorizontal: 5, paddingVertical: 2 }}
+        >
+            <Text style={{ fontSize: 10, textAlign: 'center', justifyContent: 'center' }}>
+                {data}
+            </Text>
+        </CustomPressable>;
     };
 
 
@@ -81,11 +104,10 @@ const ProjectListItem = ({ project }: IProjectslistItem) => {
 
     const RenderDeadlineColumn = ({ date }: { date: Date | null; }) => {
         const deadlineDate = date ? new Date(date).toLocaleDateString() : '';
-
         if (deadlineDate.length) {
             return (
-                <View style={{ justifyContent: 'center', paddingHorizontal: 2, paddingVertical: 2, borderRadius: 3, backgroundColor: Colors.DEFAULT_TEXT_COLOR, alignItems: 'center' }}>
-                    < Text style={{ color: Colors.CULTURED, fontSize: 12 }}>
+                <View style={style.dateColumnContainer}>
+                    < Text style={style.dateText}>
                         {deadlineDate}
                     </Text>
                 </View >
@@ -101,7 +123,8 @@ const ProjectListItem = ({ project }: IProjectslistItem) => {
         const compoundData: { [key: string]: JSX.Element; } = {
             client: <RenderClientColumn client={data} />,
             status: <StatusColumn status={data} projectId={project.id} />,
-            deadline: <RenderDeadlineColumn date={data} />
+            deadline: <RenderDeadlineColumn date={data} />,
+            orders: <RenderOrdersColumn data={data} />
         };
         return compoundData[title];
     }, [project.client, project.status, project.id]);
@@ -183,12 +206,12 @@ const ProjectListItem = ({ project }: IProjectslistItem) => {
 
     const contextMenuContent = useMemo(() => {
         return (
-            <View style={{ width: 150, maxHeight: 200, backgroundColor: Colors.CARD_COLOR, padding: 2 }}>
+            <View style={style.contextMenuContainer}>
                 {contextActionButtons.map((button, index) => {
                     return (
                         <CustomPressable
                             key={`${button.title}-${index}`}
-                            style={{ width: '100%', height: 30, flexDirection: 'row', backgroundColor: Colors.CARD_HEADER_COLOR, marginVertical: 1, alignItems: 'center', paddingHorizontal: 5 }}
+                            style={style.contexMenuItem}
                             onPress={button.onPress}
                             onHoverOpacity
                         >

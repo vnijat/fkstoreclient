@@ -2,6 +2,7 @@ import React, { memo, useEffect, useMemo, useRef, useState } from "react";
 import { ScrollView, View } from "react-native";
 import { ActivityIndicator, Flyout, Text } from "react-native-windows";
 import { InputItem } from "../../../components/inputItem/index.windows";
+import { OrderItemStatus } from "../../../enums/orderItemStatus";
 import { useItemForOrderQuery } from "../../../modules/api/orders.api";
 import { addItemForOrder } from "../../../modules/redux/orderSlicer";
 import { useAppDispatch } from "../../../modules/redux/store";
@@ -46,7 +47,10 @@ const ItemsForOrderSearch = ({ }: IItemsForOrderSearch) => {
                         name: data[0].name,
                         quantity: 0,
                         barcode: data[0].barcode,
-                        itemAtStock: data[0]?.quantity
+                        itemAtStock: data[0]?.quantity,
+                        pricePerUnit: data[0].pricePerUnit,
+                        status: OrderItemStatus.IN_USE,
+                        projectId: null
                     }));
                 } else {
                     HELP.alertError(undefined, 'ITEM IN USE IN ANOTHER ORDER!!', 'PLEASE COMPLETE ACTIVE ORDER!');

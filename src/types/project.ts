@@ -38,6 +38,8 @@ interface Project extends Common {
   paymentStatus: PaymentStatus;
   isSample: boolean;
   unPaid: number;
+  totalOrders: number;
+  ordersTotalCost: number;
 }
 
 type OtherExpensesType = {

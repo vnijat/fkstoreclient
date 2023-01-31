@@ -10,9 +10,10 @@ interface IColumnInput {
     inputValueFromRowData: string;
     isNumber?: boolean;
     isMoney?: boolean;
+    isEditable?: boolean;
 }
 
-const ColumnInput = ({ getInputValue, inputValueFromRowData = '', isNumber, isMoney }: IColumnInput) => {
+const ColumnInput = ({ getInputValue, inputValueFromRowData = '', isNumber, isMoney, isEditable }: IColumnInput) => {
     const style = useMemo(() => getStyle(isMoney), [isMoney]);
     const [inputValue, setInputValue] = useState(inputValueFromRowData);
 
@@ -36,6 +37,8 @@ const ColumnInput = ({ getInputValue, inputValueFromRowData = '', isNumber, isMo
                 value={inputValue}
                 onChangeText={onChangeText}
                 defaultValue={inputValueFromRowData}
+                editable={!!isEditable}
+                scrollEnabled={false}
                 maxLength={(isNumber || isMoney) ? 13 : 0}
             />
             {isMoney && <Text style={style.currency}>

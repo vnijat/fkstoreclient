@@ -165,7 +165,7 @@ const AddEditModal = ({
                                         {`${title}`.toUpperCase()}
                                     </Text>
                                 </View>
-                                <TableInput getNewTableData={(data: RowDataType[]) => setClientDataForPost(data, dtoKey)} tableData={dataForRequest[dtoKey!] ?? []} tableConfig={tableConfig ?? []} />
+                                <TableInput getNewTableData={(data: RowDataType[]) => setClientDataForPost(data, dtoKey)} tableData={dataForRequest[dtoKey!] ?? []} tableConfig={tableConfig ?? []} isDataEditable />
                             </View>
                         );
                     } else if (isCode) {

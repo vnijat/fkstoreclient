@@ -5,6 +5,7 @@ import {
   ProjectsQueryParams,
   ProjectsResponse,
 } from '../../types/project';
+import {OrderItem} from '../../types/projectOrder';
 import {InventoryApi} from './apiSlice';
 
 export const ProjectsApi = InventoryApi.injectEndpoints({
@@ -32,6 +33,14 @@ export const ProjectsApi = InventoryApi.injectEndpoints({
       query: () => {
         return {
           url: '/client/projects/picker',
+        };
+      },
+    }),
+    getProjectOrders: build.query<OrderItem[], number | undefined | string>({
+      providesTags: ['projectOrders'],
+      query: projectId => {
+        return {
+          url: `/client/project/orders/${projectId}`,
         };
       },
     }),
@@ -82,4 +91,5 @@ export const {
   useEditProjectMutation,
   useDeleteProjectMutation,
   useGetProjectsForPickerQuery,
+  useGetProjectOrdersQuery,
 } = ProjectsApi;

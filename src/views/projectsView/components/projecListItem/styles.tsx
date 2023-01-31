@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { Colors } from '../../../../utils/colors';
+import FONT from '../../../../utils/font';
 
 export const getStyle = () => {
     const style = StyleSheet.create({
@@ -39,6 +40,33 @@ export const getStyle = () => {
             height: 35,
             borderRadius: 32,
             backgroundColor: Colors.CARD_HEADER_COLOR
+        },
+        dateColumnContainer: {
+            justifyContent: 'center',
+            paddingHorizontal: 2,
+            paddingVertical: 2,
+            borderRadius: 3,
+            backgroundColor: Colors.DEFAULT_TEXT_COLOR,
+            alignItems: 'center'
+        },
+        dateText: {
+            color: Colors.CULTURED,
+            fontSize: FONT.FONT_SIZE_SMALL
+        },
+        contexMenuItem: {
+            width: '100%',
+            height: 30,
+            flexDirection: 'row',
+            backgroundColor: Colors.CARD_HEADER_COLOR,
+            marginVertical: 1,
+            alignItems: 'center',
+            paddingHorizontal: 5
+        },
+        contextMenuContainer: {
+            width: 150,
+            maxHeight: 200,
+            backgroundColor: Colors.CARD_COLOR,
+            padding: 2
         }
     });
 

@@ -33,14 +33,16 @@ export const getStyle = () => {
       fontSize: FONT.FONT_SIZE_MEDIUM
     },
     contentContainer: {
-      justifyContent: 'flex-start',
-      paddingHorizontal: 5,
-      flexDirection: 'row',
       flexWrap: 'wrap',
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingHorizontal: 5,
+      justifyContent: 'flex-start',
     },
     tableInputContainer: {
-      width: 460,
-      height: 200
+      width: '100%',
+      height: 200,
+      alignSelf: 'center'
     },
     tableInputTitleContainer: {
       flexDirection: 'row',

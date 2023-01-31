@@ -48,6 +48,23 @@ interface Supplier extends Common {
   email?: string;
 }
 
+interface ItemOptionForInputs {
+  category: optionsForInput[];
+  unit: optionsForInput[];
+  supplier: optionsForInput[];
+  store: optionsForInput[];
+  location: optionsForInput[];
+  color: optionsForInput[];
+  label: optionsForInput[];
+}
+
+type optionsForInput = {
+  id: number;
+  label: string | number;
+  storeId?: number;
+  nested?: optionsForInput[];
+};
+
 interface Barcode extends Common {
   code: string;
 }
@@ -128,4 +145,6 @@ export type {
   Category,
   ItemResponseFull,
   AddItemInterface,
+  ItemOptionForInputs,
+  Supplier,
 };

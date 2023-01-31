@@ -13,10 +13,10 @@ export const getStyle = (isMoney?: boolean) => {
         textinput: {
             color: Colors.DEFAULT_TEXT_COLOR,
             backgroundColor: Colors.CULTURED,
-            borderColor: 'transparent',
+            borderColor: Colors.CULTURED,
             borderWidth: 0,
             paddingLeft: isMoney ? 20 : 5,
-            paddingVertical: 5
+            paddingVertical: 5,
         },
         currency: {
             position: 'absolute',

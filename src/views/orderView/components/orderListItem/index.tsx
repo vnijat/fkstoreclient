@@ -31,7 +31,7 @@ const OrderListItem = ({ data, onDeleteOrder }: IOrderListItem) => {
 
 
     const rowData = useMemo(() => [
-        data.createdAt,
+        { data: data.createdAt, title: 'date' },
         data.detail,
         data.totalItems,
         currency.format(data.totalPrice),
@@ -39,11 +39,31 @@ const OrderListItem = ({ data, onDeleteOrder }: IOrderListItem) => {
     ], [data]);
 
 
+
+    const RenderDateColumn = ({ date }: { date: Date | null; }) => {
+        const createdAtDate = date ? new Date(date).toLocaleDateString() : '';
+        if (createdAtDate.length) {
+            return (
+                <View style={style.dateColumnContainer}>
+                    < Text style={style.dateText}>
+                        {createdAtDate}
+                    </Text>
+                </View >
+            );
+        }
+        else {
+            return null;
+        }
+    };
+
+
+
     const compoundDataModifier = useMemo(() => (data: any, title: string) => {
         const compoundData: { [key: string]: JSX.Element; } = {
+            date: <RenderDateColumn date={data} />
         };
         return compoundData[title];
-    }, []);
+    }, [data]);
 
 
     const onPressItem = () => {
@@ -58,80 +78,80 @@ const OrderListItem = ({ data, onDeleteOrder }: IOrderListItem) => {
         }
     };
 
-const contextActionButtons = [
-    {
-        title: 'DELETE', onPress: handleDelete
-    },
-];
+    const contextActionButtons = [
+        {
+            title: 'DELETE', onPress: handleDelete
+        },
+    ];
 
-const contextMenuContent = useMemo(() => {
-    return (
-        <View style={{ width: 150, maxHeight: 200, backgroundColor: Colors.CARD_COLOR, padding: 2 }}>
-            {contextActionButtons.map((button, index) => {
-                return (
-                    <CustomPressable
-                        key={`${button.title}-${index}`}
-                        style={{ width: '100%', height: 30, flexDirection: 'row', backgroundColor: Colors.CARD_HEADER_COLOR, marginVertical: 1, alignItems: 'center', paddingHorizontal: 5 }}
-                        onPress={button.onPress}
-                        onHoverOpacity
-                    >
-                        <Text style={{ color: Colors.DEFAULT_TEXT_COLOR }}>
-                            {button.title}
-                        </Text>
-                    </CustomPressable>
-                );
-            })
-            }
-        </View>
-    );
-}, [data]);
-
-
-const RenderColumnContent = ({ content, id }: { content: string | number | ICompundData; id: string; }) => {
-    return (
-        <>
-            <CustomPressable key={id} style={[style.columContent, { zIndex: 2 }]}
-                disabled
-            >
-                {
-                    (typeof content === 'object') && content !== null
-                        ?
-                        compoundDataModifier(content.data, content.title)
-                        :
-                        <View tooltip={content} >
-                            < Text key={`${content}-${id}`} style={style.columContentText} >
-                                {content}
+    const contextMenuContent = useMemo(() => {
+        return (
+            <View style={{ width: 150, maxHeight: 200, backgroundColor: Colors.CARD_COLOR, padding: 2 }}>
+                {contextActionButtons.map((button, index) => {
+                    return (
+                        <CustomPressable
+                            key={`${button.title}-${index}`}
+                            style={{ width: '100%', height: 30, flexDirection: 'row', backgroundColor: Colors.CARD_HEADER_COLOR, marginVertical: 1, alignItems: 'center', paddingHorizontal: 5 }}
+                            onPress={button.onPress}
+                            onHoverOpacity
+                        >
+                            <Text style={{ color: Colors.DEFAULT_TEXT_COLOR }}>
+                                {button.title}
                             </Text>
-                        </View>
+                        </CustomPressable>
+                    );
+                })
                 }
-            </CustomPressable>
-        </>
+            </View>
+        );
+    }, [data]);
+
+
+    const RenderColumnContent = ({ content, id }: { content: string | number | ICompundData; id: string; }) => {
+        return (
+            <>
+                <CustomPressable key={id} style={[style.columContent, { zIndex: 2 }]}
+                    disabled
+                >
+                    {
+                        (typeof content === 'object') && content !== null
+                            ?
+                            compoundDataModifier(content.data, content.title)
+                            :
+                            <View tooltip={content} >
+                                < Text key={`${content}-${id}`} style={style.columContentText} >
+                                    {content}
+                                </Text>
+                            </View>
+                    }
+                </CustomPressable>
+            </>
+        );
+    };
+
+
+
+    const renderRow = useMemo(() => {
+        return rowData.map((content, i) => {
+            return <RenderColumnContent content={content!} id={`${data.id}-${i}`} key={i} />;
+        });
+
+    }, [rowData]);
+
+
+
+
+    return (
+        <CustomPressable style={style.rowItem}
+            onHoverOpacity
+            onPress={onPressItem}
+        >
+            {renderRow}
+            <CustomContextMenu zIndex={3}>
+                {contextMenuContent}
+            </CustomContextMenu>
+        </CustomPressable>
     );
-};
-
-
-
-const renderRow = useMemo(() => {
-    return rowData.map((content, i) => {
-        return <RenderColumnContent content={content!} id={`${data.id}-${i}`} key={i} />;
-    });
-
-}, [rowData]);
-
-
-
-
-return (
-    <CustomPressable style={style.rowItem}
-        onHoverOpacity
-        onPress={onPressItem}
-    >
-        {renderRow}
-        <CustomContextMenu zIndex={3}>
-            {contextMenuContent}
-        </CustomContextMenu>
-    </CustomPressable>
-);
 
 
 };

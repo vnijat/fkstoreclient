@@ -147,7 +147,6 @@ export const InputItem: FC<IInputItem> = memo(
           disabledForEdit={disabledForEdit}
           canSelectParent={canSelectParent}
           isDeselectEnabled={isDeselectEnabled}
-
         />
       </>
       );
@@ -183,13 +182,12 @@ export const InputItem: FC<IInputItem> = memo(
       if (isCheckBox) {
         return (
           <CheckBox
-            value={!!inputValue}
+            value={inputValue as boolean}
             tintColor={Colors.CARD_COLOR}
             onValueChange={onCheckBoxValueChange}
             onCheckColor={Colors.CARD_HEADER_COLOR}
             onTintColor={Colors.CARD_HEADER_COLOR}
-            onFillColor={Colors.CULTURED}
-          />
+            onFillColor={Colors.CULTURED}          />
         );
       } else {
         return null;

@@ -120,6 +120,8 @@ const AddOrderCntainer = ({ }: IAddOrderContainer) => {
             if (response?.data) {
                 dispatch(setOrderDataForPost({ ...response.data }));
                 setTempOrderData({ ...response.data });
+            } else if (response?.error) {
+                HELP.alertError(response?.error);
             }
         } else {
             HELP.alertError(undefined, `Cant Reject`, `Order cart is empty`);

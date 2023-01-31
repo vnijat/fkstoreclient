@@ -9,6 +9,8 @@ export const ProjectColumnsTitle: IProjectColumnsTitle[] = [
     { title: 'Title', dtoKey: 'title', sortable: true },
     { title: 'Description', dtoKey: 'description' },
     { title: 'Price', dtoKey: 'price' },
+    { title: 'Total Orders', dtoKey: 'totalOrders' },
+    { title: 'Total Orders Cost', dtoKey: 'ordersTotalCost' },
     { title: 'Other Expenses', dtoKey: 'otherExpensesTotalCost' },
     { title: 'Total Price', dtoKey: 'totalPrice' },
     { title: 'Paid', dtoKey: 'paid' },

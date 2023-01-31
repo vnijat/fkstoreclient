@@ -10,6 +10,7 @@ import { Colors } from '../../utils/colors';
 import ClientInfoModal from './components/clientInfoModal';
 import ProjectAddEditModal from './components/projectAddEditModal';
 import ProjectList from './components/projectList';
+import ProjectOrdersInfoModal from './components/projectOrdersInfoModal';
 import ProjectSearch from './components/projectSearch';
 import { getStyle } from './styles';
 
@@ -31,6 +32,7 @@ const ProjectsView = ({ navigation }: IProjectsView) => {
 
     return (
         <View style={style.container}>
+            <ProjectOrdersInfoModal />
             <ProjectAddEditModal />
             <ClientInfoModal />
             <View style={{ flex: 1, paddingLeft: 90, paddingRight: 15, paddingVertical: 30 }}>

@@ -40,6 +40,7 @@ interface AddOrderDto {
 interface OrderQueryResponse {
   orders: ProjectOrder[];
   meta: Imeta;
+  ordersCount: number;
   orderBy: {sort: string; order: Order};
   orderStatus: OrderStatus;
 }

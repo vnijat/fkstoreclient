@@ -6,8 +6,18 @@ export const getStyle = () => {
     container: {
       flex: 1,
       backgroundColor: Colors.BACKGROUND_COLOR,
-      // alignItems: 'center'
     },
+    footerContainer: {
+      flex: 0.1,
+      backgroundColor: Colors.CARD_HEADER_COLOR,
+      justifyContent: 'center'
+    },
+    searchContainer: {
+      flex: 1,
+      paddingLeft: 90,
+      paddingRight: 15,
+      paddingVertical: 30
+    }
   });
 
   return style;

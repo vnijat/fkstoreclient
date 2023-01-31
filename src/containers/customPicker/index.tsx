@@ -160,17 +160,15 @@ const CustomPicker = ({
     }, [multipleSelectData?.length, singleSelectData?.length, getFilteredData?.length, searchText]);
 
 
-    const renderMultipleSelectItem = useMemo(
-        () =>
-            ({ item, index }: { item: IMultipleSelectData; index: number; }) => {
-                const { id, label } = item;
-                const isSelected = !!selectedIds?.includes(id);
-                return (
-                    <>
-                        <MultipleSelectItem {...{ id, index, label, isSelected, itemStyle, itemTextStyle, selectedIds, parent, selectedItemStyle, selectedItemTextStyle, onSelect }} nestedData={item?.nested} key={`${id}-${index}`} indent={0} />
-                    </>
-                );
-            },
+    const renderMultipleSelectItem = useCallback(({ item, index }: { item: IMultipleSelectData; index: number; }) => {
+        const { id, label } = item;
+        const isSelected = !!selectedIds?.includes(id);
+        return (
+            <>
+                <MultipleSelectItem {...{ id, index, label, isSelected, itemStyle, itemTextStyle, selectedIds, parent, selectedItemStyle, selectedItemTextStyle, onSelect }} nestedData={item?.nested} key={`${id}-${index}`} indent={0} />
+            </>
+        );
+    },
         [selectedIds, multipleSelectData?.length, parent, itemStyle]
     );
 
@@ -210,23 +208,21 @@ const CustomPicker = ({
     }, [singleSelected, singleSelectData?.length]);
 
 
-    const renderSingleSelectItem = useMemo(
-        () =>
-            ({ item, index }: { item: IsingelSelectData; index: number; }) => {
-                return (
-                    <>
-                        <SingleSelectItem
-                            {...{ isDeselectEnabled, itemStyle, selectedItemStyle, selectedItemTextStyle, itemTextStyle, singleSelected, disablePickerActionButtons, isEditable, index }}
-                            data={item}
-                            indent={0}
-                            onPressSingleItem={(data: IsingelSelectData) => onPressSingleItem(data)}
-                            onPressEditButton={(value?: string | number) => onPressEdit(value!)}
-                            canSelectParent={canSelectParent}
-                            key={`${index}-${item.label}`}
-                        />
-                    </>
-                );
-            },
+    const renderSingleSelectItem = useCallback(({ item, index }: { item: IsingelSelectData; index: number; }) => {
+        return (
+            <>
+                <SingleSelectItem
+                    {...{ isDeselectEnabled, itemStyle, selectedItemStyle, selectedItemTextStyle, itemTextStyle, singleSelected, disablePickerActionButtons, isEditable, index }}
+                    data={item}
+                    indent={0}
+                    onPressSingleItem={(data: IsingelSelectData) => onPressSingleItem(data)}
+                    onPressEditButton={(value?: string | number) => onPressEdit(value!)}
+                    canSelectParent={canSelectParent}
+                    key={`${index}-${item.label}`}
+                />
+            </>
+        );
+    },
         [singleSelected, singleSelectData?.length, itemStyle, selectedItemStyle, itemTextStyle, selectedItemTextStyle, isEditable, isDisabled, disablePickerActionButtons]
     );
 

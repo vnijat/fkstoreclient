@@ -10,10 +10,11 @@ interface ITableInputRow {
     getRowData: (rowData: RowDataType) => void;
     defaultRowData: RowDataType;
     tableInputConfigs: ITableConfig[];
+    isEditable?: boolean;
 }
 
 
-const TableInputRow = ({ getRowData, defaultRowData, tableInputConfigs }: ITableInputRow) => {
+const TableInputRow = ({ getRowData, defaultRowData, tableInputConfigs, isEditable }: ITableInputRow) => {
     const style = useMemo(() => getStyle(), []);
     const [rowData, setRowData] = useState<RowDataType>(defaultRowData);
 
@@ -33,6 +34,7 @@ const TableInputRow = ({ getRowData, defaultRowData, tableInputConfigs }: ITable
                         inputValueFromRowData={inputValueFromRowData}
                         isNumber={isNumber}
                         isMoney={isMoney}
+                        isEditable={isEditable}
                     />
                 );
             })}

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { View, ScrollView, FlatList } from "react-native";
 import { IProjectsForPicker } from "../../../types/project";
 import { OrderItem } from "../../../types/projectOrder";
@@ -15,15 +15,23 @@ interface IItemsForOrderList {
 const ItemsForOrderList = ({ orderItems, projectsData }: IItemsForOrderList) => {
 
 
+    const listItem = useCallback(({ item, index }: { item: OrderItem, index: number; }) => {
+        return <ItemsForOrderListItem
+            orderItem={item}
+            index={index}
+            key={`${index}`}
+            projectsData={projectsData ?? []} />;
+    }, []);
+
+
+
     return (
         <View style={{ flex: 1 }}>
             <FlatList
                 data={orderItems}
                 keyExtractor={(item) => item.itemId.toString()}
                 listKey={'orderList'}
-                renderItem={({ item, index }) => {
-                    return <ItemsForOrderListItem orderItem={item} index={index} key={`${index}`} projectsData={projectsData ?? []} />;
-                }}
+                renderItem={listItem}
             />
         </View>
     );

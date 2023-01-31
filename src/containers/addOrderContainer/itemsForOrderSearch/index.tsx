@@ -2,9 +2,11 @@ import React, { memo, useEffect, useMemo, useRef, useState } from "react";
 import { ScrollView, View } from "react-native";
 import { ActivityIndicator, Flyout, Text } from "react-native-windows";
 import { InputItem } from "../../../components/inputItem/index.windows";
+import { OrderItemStatus } from "../../../enums/orderItemStatus";
 import { useItemForOrderQuery } from "../../../modules/api/orders.api";
 import { addItemForOrder } from "../../../modules/redux/orderSlicer";
 import { useAppDispatch } from "../../../modules/redux/store";
+import HELP from "../../../services/helpers";
 import { Colors } from "../../../utils/colors";
 import SearchContentItem from "../itemsForOrderSearchItem";
 import { getStyle } from "./style";
@@ -33,18 +35,26 @@ const ItemsForOrderSearch = ({ }: IItemsForOrderSearch) => {
                 ? 150
                 : (data?.length * 45)), [data?.length]);
 
+
     useEffect(() => {
         if (data?.length) {
             data.length > 1 && setShowContent(true);
             if (data?.length === 1) {
-                dispatch(addItemForOrder({
-                    itemId: data[0].id as number,
-                    unit: data[0].unit.name,
-                    name: data[0].name,
-                    quantity: 0,
-                    barcode: data[0].barcode,
-                    itemAtStock: data[0]?.quantity
-                }));
+                if (!data[0].inUse) {
+                    dispatch(addItemForOrder({
+                        itemId: data[0].id as number,
+                        unit: data[0].unit.name,
+                        name: data[0].name,
+                        quantity: 0,
+                        barcode: data[0].barcode,
+                        itemAtStock: data[0]?.quantity,
+                        pricePerUnit: data[0].pricePerUnit,
+                        status: OrderItemStatus.IN_USE,
+                        projectId: null
+                    }));
+                } else {
+                    HELP.alertError(undefined, 'ITEM IN USE IN ANOTHER ORDER!!', 'PLEASE COMPLETE ACTIVE ORDER!');
+                }
             }
         }
     }, [data?.length]);

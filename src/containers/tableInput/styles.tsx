@@ -4,7 +4,7 @@ import { Colors } from '../../utils/colors';
 export const getStyle = () => {
     const style = StyleSheet.create({
         tableContainer: {
-            height: 200
+            minHeight: 200
         },
         tableHeaderContainer: {
             flexDirection: 'row',

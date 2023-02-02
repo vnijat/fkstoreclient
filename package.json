@@ -28,6 +28,7 @@
     "libphonenumber-js": "1.10.13",
     "react": "18.2.0",
     "react-native": "0.70.6",
+    "react-native-camera-kit": "^13.0.0",
     "react-native-gesture-handler": "2.6.2",
     "react-native-print": "0.10.0",
     "react-native-reanimated": "2.2.4",

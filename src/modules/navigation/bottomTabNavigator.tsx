@@ -7,6 +7,7 @@ import MIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { ItemsIcon } from '../../assets/icons/menuIcons';
 import ConfigsView from '../../mobile/views/configsView';
 import MainMobile from '../../mobile/views/mainView';
+import OrdersViewMobile from '../../mobile/views/ordersView';
 import ProductView from '../../mobile/views/productsView';
 import ScanView from '../../mobile/views/scanView';
 import { Colors } from '../../utils/colors';
@@ -25,6 +26,11 @@ export const BottomTabNavigator = () => {
             <Tab.Screen name={'Dashboard'} component={MainMobile} options={{
                 tabBarIcon: ({ color }) => {
                     return <Icon name={'grid'} size={25} color={color} />;
+                }
+            }} />
+            <Tab.Screen name={'Orders'} component={OrdersViewMobile} options={{
+                tabBarIcon: ({ color }) => {
+                    return <Icon name={'open-book'} size={25} color={color} />;
                 }
             }} />
             <Tab.Screen name={'Scan'} component={ScanView}

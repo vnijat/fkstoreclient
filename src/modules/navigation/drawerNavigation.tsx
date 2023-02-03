@@ -3,6 +3,7 @@ import React, { FC } from 'react';
 import { Pressable, StatusBar } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
 import ConfigsView from '../../mobile/views/configsView';
+import ProductInfoView from '../../mobile/views/productInfoView';
 import { Colors } from '../../utils/colors';
 import { BottomTabNavigator } from './bottomTabNavigator';
 import DrawerScreenOptions from './configs/drawerScreenOptions';

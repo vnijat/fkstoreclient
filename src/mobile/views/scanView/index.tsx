@@ -21,7 +21,7 @@ const ScanView = () => {
         // setCodeValue(codeFromScan);
         // }
         if (regEx.test(codeFromScan)) {
-            navigation.navigate('Products', { barcode: codeFromScan });
+            navigation.navigate('Info', { barcode: codeFromScan });
         } else {
             if (!alerted) {
                 Alert.alert("Wrong Barcode Type:", `Barcode Type Is Not Correct`, [

@@ -8,6 +8,7 @@ import { useAppDispatch } from "../../modules/redux/store";
 import Icon from "react-native-vector-icons/Entypo";
 import { Colors } from "../../utils/colors";
 import { setIsShowSettingsModal } from "../../modules/redux/appStateSlicer";
+import DrawerRoutes from "./components/drawerRoutes";
 
 interface ICustomDrawer {
     navigation: DrawerNavigationHelpers;
@@ -30,7 +31,7 @@ const CustomDrawer: FC<ICustomDrawer> = ({ navigation, currentRoute, routeNames 
 
     return (
         <View style={style.container}   >
-            <CustomDrawerItem navigation={navigation} routeNames={routeNames} currentRoute={currentRoute} />
+            <DrawerRoutes navigation={navigation} currentRoute={currentRoute} />
             <View style={style.bottomContainer}>
                 <CustomPressable
                     onPress={onPressConfigs}

@@ -31,11 +31,12 @@ const ProjectsView = ({ navigation }: IProjectsView) => {
     });
 
     return (
-        <View style={style.container}>
-            <ProjectOrdersInfoModal />
-            <ProjectAddEditModal />
-            <ClientInfoModal />
-            <View style={{ flex: 1, paddingLeft: 90, paddingRight: 15, paddingVertical: 30 }}>
+        <View style={{ flex: 1, flexDirection: 'row' }}>
+            <View style={{ flex: 0.05 }} />
+            <View style={style.container}>
+                <ProjectOrdersInfoModal />
+                <ProjectAddEditModal />
+                <ClientInfoModal />
                 <View style={{ flex: 0.2 }}>
                     <ProjectSearch searchValue={projectsQueryParams.search ?? ''} />
                 </View>
@@ -47,6 +48,7 @@ const ProjectsView = ({ navigation }: IProjectsView) => {
                 </View>
             </View>
         </View>
+
     );
 };
 export default ProjectsView;

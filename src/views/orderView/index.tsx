@@ -38,9 +38,10 @@ export const OrderView: FC<IorderView> = ({ navigation }) => {
 
 
     return (
-        <View style={style.container}>
-            {isOrderModalOpen && <AddEditOrderModal isOpen={isOrderModalOpen} onClose={onCloseOrderModal} />}
-            <View style={{ flex: 1, paddingLeft: 90, paddingRight: 15, paddingVertical: 30 }}>
+        <View style={{ flex: 1, flexDirection: 'row' }}>
+            <View style={{ flex: 0.05 }} />
+            <View style={style.container}>
+                {isOrderModalOpen && <AddEditOrderModal isOpen={isOrderModalOpen} onClose={onCloseOrderModal} />}
                 <View style={{ flex: 0.2 }}>
                     <OrderSearch searchValue={ordersQueryParams.search ?? ''} />
                 </View>

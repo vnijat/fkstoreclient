@@ -1,3 +1,4 @@
+import { Picker } from "@react-native-picker/picker";
 import React, { useState } from "react";
 import { View } from "react-native";
 import { useToast } from "react-native-rooster";
@@ -5,7 +6,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useSelector } from "react-redux";
 import { InputItem } from "../../../components/inputItem";
 import { PrimaryButton } from "../../../components/primaryButton";
-import { setApiURL } from "../../../modules/redux/configsSlicer";
+import { setApiURL, setLanguage } from "../../../modules/redux/configsSlicer";
 import { RootState, useAppDispatch } from "../../../modules/redux/store";
 import { Colors } from "../../../utils/colors";
 
@@ -15,13 +16,16 @@ const ConfigsView = () => {
     const dispatch = useAppDispatch();
     const { addToast } = useToast();
     const ApiUrl = useSelector((state: RootState) => state.configs.apiURL);
+    const appLang = useSelector((state: RootState) => state.configs.language);
     const [value, setValue] = useState(ApiUrl);
+    const [lang, setLang] = useState<'en-EN' | 'ru-RU' | 'az-AZ'>(appLang);
     const setApiValue = (value: string) => {
         setValue(value);
 
     };
     const onPressSave = () => {
         dispatch(setApiURL(value));
+        dispatch(setLanguage(lang));
         addToast({
             type: 'success',
             message: `Configs Saved`.toUpperCase(),
@@ -31,6 +35,18 @@ const ConfigsView = () => {
 
     const onPressReset = async () => {
         setValue(ApiUrl);
+        setLang(appLang);
+    };
+
+
+    const langPickData: { label: string, value: any; }[] = [
+        { label: 'AZ', value: 'az-AZ' },
+        { label: 'RU', value: 'ru-RU' },
+        { label: 'EN', value: 'en-EN' }
+    ];
+
+    const handleLangChange = (value: any, index: number) => {
+        setLang(value);
     };
 
     return (
@@ -42,8 +58,15 @@ const ConfigsView = () => {
                     inputTitle={'SERVER URL'}
                     placeHolder={'SERVER URL WITH PORT'}
                     height={30}
-
                 />
+                <Picker
+                    selectedValue={lang}
+                    onValueChange={handleLangChange}
+                >
+                    {langPickData.map((lang, index) => {
+                        return <Picker.Item key={`${lang.label}-${index}`} label={lang.label} value={lang.value} />;
+                    })}
+                </Picker>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-around', paddingHorizontal: 20, paddingTop: 20 }}>
                     <PrimaryButton
                         onPress={onPressReset}

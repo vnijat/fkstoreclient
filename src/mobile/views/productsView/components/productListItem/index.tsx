@@ -3,6 +3,7 @@ import { Pressable, Text, View } from "react-native";
 import { Colors } from "../../../../../utils/colors";
 import MIcon from "react-native-vector-icons/MaterialCommunityIcons";
 import { Item } from "../../../../../types/item";
+import { useNavigation } from "@react-navigation/native";
 
 
 interface IProductListItem {
@@ -11,7 +12,7 @@ interface IProductListItem {
 
 
 const ProductListItem = ({ data }: IProductListItem) => {
-
+    const navigation = useNavigation();
     const PRODUCT_INFO_ICONS = [
         {
             icon: <MIcon name={'cube-scan'} size={12} />,
@@ -39,8 +40,15 @@ const ProductListItem = ({ data }: IProductListItem) => {
         },
     ];
 
+    const onPressProduct = () => {
+        navigation.navigate('Info', { barcode: data.barcode });
+    };
+
     return (
-        <Pressable style={{ backgroundColor: Colors.CARD_HEADER_COLOR, height: 80, marginHorizontal: 5, marginVertical: 2, borderRadius: 3 }}>
+        <Pressable style={{ backgroundColor: Colors.CARD_HEADER_COLOR, height: 80, marginHorizontal: 5, marginVertical: 2, borderRadius: 3 }}
+            android_ripple={{ color: Colors.METALLIC_GOLD, }}
+            onPress={onPressProduct}
+        >
             <View style={{ flex: 1, flexDirection: 'row', paddingHorizontal: 5, paddingVertical: 5 }}>
                 <View style={{ flex: 0.5 }}>
                     <View style={{ flex: 0.7 }}>

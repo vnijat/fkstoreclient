@@ -8,6 +8,7 @@ export const getStyle = (width: number) => {
             backgroundColor: Colors.CARD_HEADER_COLOR,
             flex: 1,
             width: width * 0.05,
+            minWidth: 80
         },
         bottomContainer: {
             position: 'absolute',

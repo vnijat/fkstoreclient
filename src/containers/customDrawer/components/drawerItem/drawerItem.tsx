@@ -1,45 +1,50 @@
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import { Text, View } from "react-native";
-import Icon from "react-native-vector-icons/Entypo";
-import { AddItemIcon, ClientsIcon, DefaultMenuIcon, ItemsIcon, OrdersIcon, ProjectsIcon, PurchasesIcon } from "../../../../assets/icons/menuIcons";
 import CustomPressable from "../../../../components/customPressable";
 import { Colors } from "../../../../utils/colors";
+import FONT from "../../../../utils/font";
+import { IRouteData } from "../drawerRoutes";
 import { getStyle } from "./styles";
 
 interface CustomDrawerItemProps {
-    routeNames: string[];
+    onPressRoute: (route: string) => void;
     currentRoute: string;
-    navigation: any;
+    routeObject: IRouteData;
+    isChild?: boolean;
 }
 
-export const CustomDrawerItem: FC<CustomDrawerItemProps> = ({ navigation, routeNames, currentRoute }) => {
+const CustomDrawerItem: FC<CustomDrawerItemProps> = ({ currentRoute, onPressRoute, routeObject, isChild }) => {
+    const { title, routeName, icon, childRoutes } = routeObject;
+    const [isShowChild, setIsShowChild] = useState(false);
     const style = getStyle();
-    const ICON_SIZE = 30;
-    const drawerItem = routeNames.map((route) => {
-        const isSelected = currentRoute === route;
-        const itemContentColor = isSelected ? Colors.CARD_COLOR : Colors.DEFAULT_TEXT_COLOR;
-        const icons: any = {
-            Items: <ItemsIcon size={ICON_SIZE} color={itemContentColor} />,
-            Clients: <ClientsIcon size={ICON_SIZE} color={itemContentColor} />,
-            Orders: <OrdersIcon size={ICON_SIZE} color={itemContentColor} />,
-            Purchases: <PurchasesIcon size={ICON_SIZE} color={itemContentColor} />,
-            AddItem: <AddItemIcon size={ICON_SIZE} color={itemContentColor} />,
-            Projects: <ProjectsIcon size={ICON_SIZE} color={itemContentColor} />,
-            Default: <DefaultMenuIcon size={ICON_SIZE} color={itemContentColor} />,
-        };
-        return (
-            <CustomPressable onHoverOpacity key={route} style={[{ backgroundColor: isSelected ? Colors.METALLIC_GOLD : 'transparent' }, style.drawerItemLogo]} onPress={() => navigation.navigate(route)}>
-                {icons[route] ? icons[route] : icons['Default']}
-                <Text style={{ color: isSelected ? Colors.CARD_COLOR : Colors.DEFAULT_TEXT_COLOR, fontSize: 10, fontWeight: '700' }} >
-                    {route.toLocaleUpperCase()}
-                </Text>
-            </CustomPressable>
-        );
-    });
+    const isSelected = routeName === currentRoute;
+    const isSomeChildSelected = childRoutes?.length && childRoutes.some((child) => child.routeName === currentRoute);
+    const showChild = (isSelected || isSomeChildSelected) || isShowChild;
+    const onLongPress = () => {
+        setIsShowChild(state => !state);
+    };
 
+    const onPressHandler = () => {
+        onPressRoute(routeName);
+    };
     return (
         <>
-            {drawerItem}
+            <CustomPressable onHoverOpacity style={[{ backgroundColor: isSelected ? Colors.METALLIC_GOLD : 'transparent' }, isChild ? style.childDrawer : style.drawerItem]}
+                onLongPress={onLongPress}
+                onPress={onPressHandler}>
+                {icon(isSelected ? Colors.CARD_COLOR : Colors.DEFAULT_TEXT_COLOR)}
+                <Text style={{ color: isSelected ? Colors.CARD_COLOR : Colors.DEFAULT_TEXT_COLOR, fontSize: FONT.FONT_SIZE_SMALL, fontWeight: FONT.FONT_BOLD }} >
+                    {title.toLocaleUpperCase()}
+                </Text>
+            </CustomPressable>
+            {
+                childRoutes?.length && showChild &&
+                childRoutes.map((route, index) => {
+                    return <CustomDrawerItem routeObject={route} {...{ currentRoute, onPressRoute }} key={`${index} - ${route.routeName}`} isChild />;
+                })
+            }
         </>
     );
 };
+
+export default CustomDrawerItem;

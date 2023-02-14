@@ -1,12 +1,13 @@
 import React from 'react';
 import Icon from "react-native-vector-icons/Entypo";
+import MIcon from "react-native-vector-icons/MaterialCommunityIcons";
 import { IICON } from '../../types/icon';
 
 
 
-export const ItemsIcon = ({ size, color }: IICON) => {
+export const WarehouseIcon = ({ size, color }: IICON) => {
     return (
-        <Icon name="list" size={size} color={color} />
+        <MIcon name="warehouse" size={size} color={color} />
     );
 };
 

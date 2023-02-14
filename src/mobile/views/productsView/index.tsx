@@ -1,4 +1,5 @@
-import React from "react";
+import { RouteProp, useRoute } from "@react-navigation/native";
+import React, { useEffect } from "react";
 import { View, FlatList, Pressable, Dimensions, KeyboardAvoidingView, Platform, Text, ActivityIndicator } from "react-native";
 import MIcon from "react-native-vector-icons/MaterialCommunityIcons";
 import { shallowEqual, useSelector } from "react-redux";
@@ -13,6 +14,7 @@ import ProductListItem from "./components/productListItem";
 
 const ProductView = () => {
     const dispatch = useAppDispatch();
+    const { params } = useRoute<RouteProp<{ params: { barcode: string; }; }>>();
     const selectQueryParams = useSelector((state: RootState) => state.itemQuerySlicer, shallowEqual);
     const { data: query, error: fetchError, isLoading } = useGetAllItemsQuery(selectQueryParams, {
         selectFromResult: ({ data, isLoading, isUninitialized, error, currentData }) => ({
@@ -24,10 +26,16 @@ const ProductView = () => {
         pollingInterval: 5000
     });
 
+    useEffect(() => {
+        if (params?.barcode) {
+            dispatch(setItemQueryParams({ search: params.barcode, take: 10 }));
+        }
+    }, [params]);
+
     const handleSearch = (text: string) => {
         dispatch(setItemQueryParams({ search: text, take: 10 }));
     };
-    
+
     const PRODUCT_INFO_ICONS = [
         {
             icon: <MIcon name={'barcode'} size={18} />,
@@ -54,12 +62,21 @@ const ProductView = () => {
 
     const onReachToEnd = () => {
         const isHasNewData = query?.items.length < query?.meta?.count;
-        console.log('isHasNewData=>', isHasNewData);
         if (isHasNewData) {
             dispatch(setItemQueryParams({ take: (query?.meta.take ?? 10) + 10 }));
         }
     };
 
+
+    const EmptyList = () => {
+        return (
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <Text style={{ color: Colors.DEFAULT_TEXT_COLOR, fontSize: 14 }}>
+                    {selectQueryParams.search?.length ? 'Not Found' : 'No Data'}
+                </Text>
+            </View>
+        );
+    };
 
     return (
         <KeyboardAvoidingView style={{ flex: 1, backgroundColor: Colors.CARD_COLOR }}
@@ -96,6 +113,7 @@ const ProductView = () => {
                         data={query?.items}
                         keyExtractor={({ id }) => `${id}`}
                         renderItem={({ item }) => <ProductListItem data={item} />}
+                        ListEmptyComponent={<EmptyList />}
                     />
                 </View>
             </View>

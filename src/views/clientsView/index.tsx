@@ -32,20 +32,23 @@ export const ClientsView = ({ navigation }: IClientsViewProps) => {
 
     return (
         <>
-            <AddEditClientModal />
-            <View style={style.container}>
-                <View style={{ backgroundColor: Colors.CARD_COLOR, flex: 0.2 }}>
-                    <ClientListHeader
-                        searchValue={selectClientsQueryParams?.search ?? ''}
-                        clientTypeValue={queryData?.type as ClientType & 'all'}
-                        orderBy={queryData?.orderBy!}
-                    />
-                </View>
-                <ClientList data={queryData?.clients} />
-                <View style={{ backgroundColor: Colors.CARD_HEADER_COLOR, flex: 0.1, justifyContent: 'center' }}>
-                    <PaginationContainer actionFunction={setClientsQueryParams} meta={queryData?.meta ?? {}} />
-                </View>
+            <View style={{ flex: 1, flexDirection: 'row' }}>
+                <AddEditClientModal />
+                <View style={{ flex: 0.05 }} />
+                <View style={style.container}>
+                    <View style={{ backgroundColor: Colors.CARD_COLOR, flex: 0.2 }}>
+                        <ClientListHeader
+                            searchValue={selectClientsQueryParams?.search ?? ''}
+                            clientTypeValue={queryData?.type as ClientType & 'all'}
+                            orderBy={queryData?.orderBy!}
+                        />
+                    </View>
+                    <ClientList data={queryData?.clients} />
+                    <View style={{ backgroundColor: Colors.CARD_HEADER_COLOR, flex: 0.1, justifyContent: 'center' }}>
+                        <PaginationContainer actionFunction={setClientsQueryParams} meta={queryData?.meta ?? {}} />
+                    </View>
 
+                </View>
             </View>
         </>
     );

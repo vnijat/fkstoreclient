@@ -17,6 +17,7 @@ import ordersQueryParams from './orderQuerySlicer';
 import ordersSlicer from './orderSlicer';
 import purchaseQueryParams from './purchaseQuerySlicer';
 import purchaseSlicer from './purchaseSlicer';
+import tableConfigsSlicer from './tableConfigs';
 import { FLUSH, PAUSE, PERSIST, PersistConfig, persistReducer, persistStore, PURGE, REGISTER, REHYDRATE } from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -24,7 +25,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const persistConfig: PersistConfig<any> = {
     key: 'root',
     storage: AsyncStorage,
-    whitelist: ['configs']
+    version: 1,
+    whitelist: ['configs', 'tableConfigs'],
+    migrate: (state) => {
+        console.log("REDUX-PERSIST: Migrations Running");
+        return Promise.resolve(state);
+    }
 };
 
 const rootReducer = combineReducers(
@@ -44,7 +50,8 @@ const rootReducer = combineReducers(
         ordersSlicer,
         purchaseQueryParams,
         purchaseSlicer,
-        configs: configsSlicer
+        configs: configsSlicer,
+        tableConfigs: tableConfigsSlicer
     }
 );
 

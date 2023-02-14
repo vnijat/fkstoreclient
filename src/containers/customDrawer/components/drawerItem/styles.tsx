@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { Colors } from 'react-native/Libraries/NewAppScreen';
+import { Colors } from '../../../../utils/colors';
 
 export const getStyle = () => {
     const style = StyleSheet.create({
@@ -12,12 +12,20 @@ export const getStyle = () => {
             fontWeight: '700',
             fontSize: 22
         },
-        drawerItemLogo: {
+        drawerItem: {
             justifyContent: 'center',
             alignItems: 'center',
-            height:50,
+            height: 50,
             marginVertical: 5
         },
+        childDrawer: {
+            borderLeftWidth: 2,
+            borderColor: Colors.DEFAULT_TEXT_COLOR,
+            marginLeft: 2,
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: 50,
+        }
     });
 
     return style;

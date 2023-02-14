@@ -33,8 +33,8 @@ const CustomDrawerItem: FC<CustomDrawerItemProps> = ({ currentRoute, onPressRout
                 onLongPress={onLongPress}
                 onPress={onPressHandler}>
                 {icon(isSelected ? Colors.CARD_COLOR : Colors.DEFAULT_TEXT_COLOR)}
-                <Text style={{ color: isSelected ? Colors.CARD_COLOR : Colors.DEFAULT_TEXT_COLOR, fontSize: FONT.FONT_SIZE_SMALL, fontWeight: FONT.FONT_BOLD }} >
-                    {title.toLocaleUpperCase()}
+                <Text style={{ color: isSelected ? Colors.CARD_COLOR : Colors.DEFAULT_TEXT_COLOR, fontSize: FONT.FONT_SIZE_SMALL, fontWeight: FONT.FONT_BOLD, fontFamily: FONT.FONT_FAMILY }} >
+                    {title.toUpperCase()}
                 </Text>
             </CustomPressable>
             {

@@ -12,6 +12,7 @@ import { IsingelSelectData } from "../customPicker";
 import TableInput from "../tableInput";
 import { RowDataType } from "../tableInput/types";
 import CodeInput from "../../components/codeInput";
+import UseLanguage from "../../modules/lozalization/useLanguage.hook";
 
 interface IAddEditModal {
     /**  Pass Function For Post data to Api*/
@@ -94,7 +95,7 @@ const AddEditModal = ({
     const [tempDataForEdit, settempDataForEdit] = useState<any>();
     const [errorMessage, setErrorMessages] = useState<{ [key: string]: string[]; }>({});
     const inputRef = useRef<any>([]);
-
+    const lang = UseLanguage();
 
     useEffect(() => {
         if (isDataForEdit) {
@@ -148,6 +149,7 @@ const AddEditModal = ({
                         canSelectParent,
                         nullable
                     } = config;
+                    const inputTitle = (lang[dtoKey as keyof typeof lang] || lang[title?.toLowerCase() as keyof typeof lang]) ?? title;
                     const inputValue: string | boolean = dataForRequest[dtoKey!] || '';
                     const dataForPickerFromServer = (selectableData && selectableDataKey) ? (!!requiredDataName ? selectableData[selectableDataKey]?.filter((data: { [key: string]: any; }) => (data?.[requiredDataDtoKey!!] ? data?.[requiredDataDtoKey!!] : data?.[requiredDataDtoKey?.toLowerCase()!!]) == dataForRequest[requiredDataDtoKey!]) : selectableData[selectableDataKey]) : [];
                     const dataForPickerFromEnum = isEnum ? enumData : [];
@@ -162,7 +164,7 @@ const AddEditModal = ({
                             <View style={style.tableInputContainer} key={`${title}`}>
                                 <View style={style.tableInputTitleContainer}>
                                     <Text style={style.tableInputTitleText}>
-                                        {`${title}`.toUpperCase()}
+                                        {`${inputTitle}`.toUpperCase()}
                                     </Text>
                                 </View>
                                 <TableInput getNewTableData={(data: RowDataType[]) => setClientDataForPost(data, dtoKey)} tableData={dataForRequest[dtoKey!] ?? []} tableConfig={tableConfig ?? []} isDataEditable />
@@ -175,7 +177,7 @@ const AddEditModal = ({
                                 isDisableForEdit={disableForEdit}
                                 maxLength={maxLength}
                                 key={id}
-                                inputTitle={title}
+                                inputTitle={inputTitle}
                                 width={width}
                                 height={height}
                                 isDisabled={disabled}
@@ -190,7 +192,7 @@ const AddEditModal = ({
                     else {
                         return (
                             <InputItem
-                                inputTitle={title}
+                                inputTitle={inputTitle}
                                 key={id}
                                 isNumeric={isNumeric}
                                 placeHolder={placeHolder}
@@ -230,7 +232,7 @@ const AddEditModal = ({
             }
 
         }
-    }, [errorMessage, isShowModal, dataForRequest, selectableData, disablePickerActionButtons, tempDataForEdit]);
+    }, [errorMessage, isShowModal, dataForRequest, selectableData, disablePickerActionButtons, tempDataForEdit, lang]);
 
     const clearInputs = useCallback(() => {
         clearDataForRequest();
@@ -359,15 +361,12 @@ const AddEditModal = ({
             borderColor={modalBorderColor}
         >
             <View style={{ flex: 1 }}>
-                <Text style={style.headerText}>
-                    {dataTitle ?? ''}
-                </Text>
                 <View style={style.contentContainer}>
                     {renderInputs}
                 </View>
                 <View style={style.buttonsContainer}>
                     <PrimaryButton
-                        title={'Reset'}
+                        title={lang['reset'].toUpperCase()}
                         onPress={onPressReset}
                         buttonColor={Colors.CARD_HEADER_COLOR}
                         textColor={Colors.DEFAULT_TEXT_COLOR}
@@ -376,7 +375,7 @@ const AddEditModal = ({
                         width={80}
                     />
                     {(deleteFunction && tempDataForEdit) && < PrimaryButton
-                        title={'Delete'}
+                        title={lang['delete'].toUpperCase()}
                         onPress={handleDeleteButton}
                         buttonColor={Colors.INFRA_RED}
                         textColor={Colors.CULTURED}
@@ -386,7 +385,7 @@ const AddEditModal = ({
                     />}
                     {!!tempDataForEdit ?
                         <PrimaryButton
-                            title={'Save'}
+                            title={lang['update'].toUpperCase()}
                             onPress={onPressSave}
                             buttonColor={Colors.METALLIC_GOLD}
                             textColor={Colors.FLORAL_WHITE}
@@ -395,7 +394,7 @@ const AddEditModal = ({
                             width={80}
                         /> :
                         <PrimaryButton
-                            title={'Add'}
+                            title={lang['create'].toUpperCase()}
                             onPress={onPressAdd}
                             buttonColor={Colors.DEFAULT_TEXT_COLOR}
                             textColor={Colors.CULTURED}

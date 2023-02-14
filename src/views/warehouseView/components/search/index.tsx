@@ -9,12 +9,13 @@ import { InputItem } from '../../../../components/inputItem';
 import { PrimaryButton } from '../../../../components/primaryButton';
 import CustomPicker from '../../../../containers/customPicker';
 import { useGetItemInputsQuery } from '../../../../modules/api/apiSlice';
+import UseLanguage from '../../../../modules/lozalization/useLanguage.hook';
 import { setSelectedWithLabel, setFilterByParams, clearFilters } from '../../../../modules/redux/filterSlicer';
 import { setItemQueryParams } from '../../../../modules/redux/itemQuerySlicer';
 import { setIsShowAddEditModal } from '../../../../modules/redux/itemsSlicer';
 import { selectFilterByForPicker, selectSelectedWithLabel } from '../../../../modules/redux/selectors/filterSelector';
 import { useAppDispatch } from '../../../../modules/redux/store';
-import { FilterParamskey } from '../../../../types/item';
+import { FilterParamskey, ItemOptionForInputs } from '../../../../types/item';
 import { Colors } from '../../../../utils/colors';
 import { currency } from '../../../../utils/currency.windows';
 import FilterItem from './component/filterItems';
@@ -33,6 +34,7 @@ interface ISearchContainer {
 const SearchContainer: FC<ISearchContainer> = ({ searchValue, overallPrice, outOfStockParam }) => {
     const style = useMemo(() => getStyle(), []);
     const dispatch = useAppDispatch();
+    const lang = UseLanguage();
     const pickerFilterParams = useSelector(selectFilterByForPicker, shallowEqual);
     const selectedWithLabel = useSelector(selectSelectedWithLabel, shallowEqual);
     const searchInputRef = useRef(null);
@@ -59,7 +61,7 @@ const SearchContainer: FC<ISearchContainer> = ({ searchValue, overallPrice, outO
 
     }, [searchValue]);
 
-    const inWaitAnotherData = [{ title: 'location', waitsForDtokey: 'storeId', waitsForTitle: 'store' }];
+    const inWaitAnotherData = [{ title: lang['location'], waitsForDtokey: 'storeId', waitsForTitle: lang['store'] }];
 
 
     const renderFilterByPickers = useMemo(() => {
@@ -67,20 +69,21 @@ const SearchContainer: FC<ISearchContainer> = ({ searchValue, overallPrice, outO
             const titleArray = Object.keys(dataForFilterBy);
             if (titleArray.length) {
                 return titleArray.map((title, index) => {
-                    let data = dataForFilterBy[title];
+                    let data = dataForFilterBy[title as keyof ItemOptionForInputs];
+                    const pickerTitle = lang[title as keyof typeof lang] ? lang[title as keyof typeof lang] : title;
                     const waitsFor = inWaitAnotherData.find(item => item.title === title)?.waitsForDtokey;
                     const waitsForTitle = inWaitAnotherData.find(item => item.title === title)?.waitsForTitle;
                     let isDisabled = !!waitsFor?.length;
                     const requiredDataIds = !!waitsFor && pickerFilterParams[waitsFor as keyof typeof pickerFilterParams];
                     if (requiredDataIds.length) {
-                        data = dataForFilterBy[title]?.filter(item => requiredDataIds.includes(Number((item[waitsFor] || item[waitsFor.toLowerCase()]))));
+                        data = dataForFilterBy[title as keyof ItemOptionForInputs]?.filter(item => requiredDataIds.includes(Number((item[waitsFor] || item[waitsFor.toLowerCase()]))));
                         isDisabled = false;
                     }
                     const parent = `${title}Id` as keyof typeof pickerFilterParams;
                     const selectedIds = pickerFilterParams[parent];
                     return < CustomPicker
                         isDataSearchEnabled
-                        title={title}
+                        title={pickerTitle}
                         data={data}
                         onSelect={onSelectIdForFilter}
                         selectedIds={selectedIds}
@@ -97,7 +100,7 @@ const SearchContainer: FC<ISearchContainer> = ({ searchValue, overallPrice, outO
             return null;
         }
 
-    }, [dataForFilterBy, pickerFilterParams, inWaitAnotherData]);
+    }, [dataForFilterBy, pickerFilterParams, inWaitAnotherData, lang]);
 
 
 
@@ -152,13 +155,13 @@ const SearchContainer: FC<ISearchContainer> = ({ searchValue, overallPrice, outO
                     onHoverOpacity
                     style={style.clearButtonContainer}
                 >
-                    <View style={style.clearText} tooltip={'Clear Filters'}  >
+                    <View style={style.clearText} tooltip={lang['clearFilters']}  >
                         <ClearIcon size={22} color={isHasFitlerParams ? Colors.METALLIC_GOLD : Colors.DEFAULT_TEXT_COLOR} />
                     </View>
                 </CustomPressable>
                 <View style={style.rightContainer}>
                     <PrimaryButton
-                        title={'NEW ITEM'}
+                        title={lang['newProduct'].toUpperCase()}
                         onPress={onPressAddItem}
                         onHoverOpacity
                         textColor={Colors.CARD_COLOR}
@@ -167,7 +170,7 @@ const SearchContainer: FC<ISearchContainer> = ({ searchValue, overallPrice, outO
                     />
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                         <Text style={{ fontSize: 12, color: Colors.DEFAULT_TEXT_COLOR }}>
-                            {'OUT OF STOCK: '}
+                            {`${lang['outOfStock']}: `.toUpperCase()}
                         </Text>
                         <CheckBox
                             tintColor={Colors.CARD_HEADER_COLOR}
@@ -179,7 +182,7 @@ const SearchContainer: FC<ISearchContainer> = ({ searchValue, overallPrice, outO
 
                         />
                         <Text style={style.infoText}>
-                            {`OVERALL PRICE : `}
+                            {`${lang['overallPrice']} : `.toUpperCase()}
                             <Text style={{ color: Colors.METALLIC_GOLD }}>
                                 {currency.format(overallPrice)}
                             </Text>

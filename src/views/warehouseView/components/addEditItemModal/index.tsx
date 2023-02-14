@@ -83,7 +83,7 @@ const AddEditItemModal = () => {
                 setIsShowModal={setIsShowModal}
                 setDataForRequest={setDataForRequest}
                 setIsDataForEdit={setIsDataForEdit}
-                dataTitle={'ITEM'}
+                dataTitle={'product'}
                 pickerOnPressAddButton={pickerOnPressAddButton}
                 pickerOnPressEditButton={pickerOnPressEditButton}
                 isPickerItemEditable

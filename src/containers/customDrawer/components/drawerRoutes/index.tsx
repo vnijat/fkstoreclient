@@ -1,5 +1,7 @@
 import React from "react";
 import { ClientsIcon, OrdersIcon, ProjectsIcon, PurchasesIcon, WarehouseIcon } from "../../../../assets/icons/menuIcons";
+import { RouteNames } from "../../../../enums/routes";
+import UseLanguage from "../../../../modules/lozalization/useLanguage.hook";
 import CustomDrawerItem from "../drawerItem/drawerItem";
 
 
@@ -18,33 +20,34 @@ export interface IRouteData {
 
 const DrawerRoutes = ({ navigation, currentRoute }: IDrawerRoutes) => {
     const ICON_SIZE = 30;
+    const lang = UseLanguage();
 
     const drawerRoutesData: IRouteData[] = [
         {
-            title: 'Warehouse',
-            routeName: 'Items',
+            title: lang['wareHouse'],
+            routeName: RouteNames.WAREHOUSE,
             icon: (color: string) => <WarehouseIcon size={ICON_SIZE} color={color} />,
             childRoutes: [
                 {
-                    title: 'Orders',
-                    routeName: 'Orders',
+                    title: lang['orders'],
+                    routeName: RouteNames.ORDERS,
                     icon: (color: string) => <OrdersIcon size={ICON_SIZE} color={color} />,
                 },
                 {
-                    title: 'Purchases',
-                    routeName: 'Purchases',
+                    title: lang['purchases'],
+                    routeName: RouteNames.PURCHASES,
                     icon: (color: string) => <PurchasesIcon size={ICON_SIZE} color={color} />,
                 },
             ],
         },
         {
-            title: 'Clients',
-            routeName: 'Clients',
+            title: lang['clients'],
+            routeName: RouteNames.CLIENTS,
             icon: (color: string) => <ClientsIcon size={ICON_SIZE} color={color} />,
         },
         {
-            title: 'Projects',
-            routeName: 'Projects',
+            title: lang['projects'],
+            routeName: RouteNames.PROJECTS,
             icon: (color: string) => <ProjectsIcon size={ICON_SIZE} color={color} />,
         },
     ];

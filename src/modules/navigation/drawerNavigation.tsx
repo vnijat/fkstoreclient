@@ -2,22 +2,24 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import React, { FC } from 'react';
 import { Pressable, StatusBar } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
+import { RouteNames } from '../../enums/routes';
 import ConfigsView from '../../mobile/views/configsView';
 import ProductInfoView from '../../mobile/views/productInfoView';
+import { DrawerStackMobileParamlist } from '../../types/navigation';
 import { Colors } from '../../utils/colors';
 import { BottomTabNavigator } from './bottomTabNavigator';
 import DrawerScreenOptions from './configs/drawerScreenOptions';
 
 export const DrawerNavigation = ({ }) => {
-    const Drawer = createDrawerNavigator();
+    const Drawer = createDrawerNavigator<DrawerStackMobileParamlist>();
     return (
         <>
             <StatusBar backgroundColor={Colors.METALLIC_GOLD} />
-            <Drawer.Navigator initialRouteName='Home'
+            <Drawer.Navigator initialRouteName={RouteNames.HOME}
                 screenOptions={DrawerScreenOptions}
             >
-                <Drawer.Screen name="Home" component={BottomTabNavigator} />
-                <Drawer.Screen name="Config" component={ConfigsView}
+                <Drawer.Screen name={RouteNames.HOME} component={BottomTabNavigator} />
+                <Drawer.Screen name={RouteNames.CONFIG} component={ConfigsView}
                     options={{
                         headerShown: true
                     }}

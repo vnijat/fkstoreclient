@@ -5,6 +5,7 @@ const FONT = {
   FONT_SIZE_LARGE: 16,
   FONT_SIZE_MEGA: 18,
   FONT_BOLD: '700' as '700',
+  FONT_FAMILY: 'Calibri',
 };
 
 export default FONT;

@@ -4,6 +4,9 @@ import { Colors } from "../../../../../utils/colors";
 import MIcon from "react-native-vector-icons/MaterialCommunityIcons";
 import { Item } from "../../../../../types/item";
 import { useNavigation } from "@react-navigation/native";
+import { RouteNames } from "../../../../../enums/routes";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { RootStackMobileParamList } from "../../../../../types/navigation";
 
 
 interface IProductListItem {
@@ -12,7 +15,7 @@ interface IProductListItem {
 
 
 const ProductListItem = ({ data }: IProductListItem) => {
-    const navigation = useNavigation();
+    const navigation = useNavigation<StackNavigationProp<RootStackMobileParamList>>();
     const PRODUCT_INFO_ICONS = [
         {
             icon: <MIcon name={'cube-scan'} size={12} />,
@@ -41,7 +44,7 @@ const ProductListItem = ({ data }: IProductListItem) => {
     ];
 
     const onPressProduct = () => {
-        navigation.navigate('Info', { barcode: data.barcode });
+        navigation.navigate(RouteNames.PRODUCT_INFO, { barcode: data.barcode });
     };
 
     return (

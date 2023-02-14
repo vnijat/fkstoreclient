@@ -2,7 +2,6 @@ import React, { FC, useMemo, } from "react";
 import { Text, useWindowDimensions, View } from "react-native";
 import { getStyle } from "./styles";
 import { DrawerNavigationHelpers } from "@react-navigation/drawer/lib/typescript/src/types";
-import { CustomDrawerItem } from "./components/drawerItem/drawerItem";
 import CustomPressable from "../../components/customPressable";
 import { useAppDispatch } from "../../modules/redux/store";
 import Icon from "react-native-vector-icons/Entypo";

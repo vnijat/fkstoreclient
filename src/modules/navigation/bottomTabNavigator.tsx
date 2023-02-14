@@ -5,7 +5,7 @@ import { Pressable } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
 import MIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useSelector } from 'react-redux';
-import { ItemsIcon } from '../../assets/icons/menuIcons';
+import { WarehouseIcon } from '../../assets/icons/menuIcons';
 import ConfigsView from '../../mobile/views/configsView';
 import MainMobile from '../../mobile/views/mainView';
 import OrdersViewMobile from '../../mobile/views/ordersView';
@@ -23,20 +23,20 @@ import BottomTabScreenOptions from './configs/bottomTabScreenOptions';
 
 export const BottomTabNavigator = () => {
     const Tab = createBottomTabNavigator();
-    const T = UseLanguage();
+    const lang = UseLanguage();
     return (
         <Tab.Navigator initialRouteName='Home' screenOptions={BottomTabScreenOptions}>
             <Tab.Screen name={'Dashboard'} component={MainMobile} options={{
                 tabBarIcon: ({ color }) => {
                     return <Icon name={'grid'} size={25} color={color} />;
                 },
-                tabBarLabel: T['dashBoard']
+                tabBarLabel: lang['dashBoard']
             }} />
             <Tab.Screen name={'Orders'} component={OrdersViewMobile} options={{
                 tabBarIcon: ({ color }) => {
                     return <Icon name={'open-book'} size={25} color={color} />;
                 },
-                tabBarLabel: T['orders']
+                tabBarLabel: lang['orders']
 
             }} />
             <Tab.Screen name={'Scan'} component={ScanView}
@@ -44,15 +44,15 @@ export const BottomTabNavigator = () => {
                     tabBarIcon: ({ color }) => {
                         return <MIcon name={'barcode-scan'} size={25} color={color} />;
                     },
-                    tabBarLabel: T['scan']
-                }}   
+                    tabBarLabel: lang['scan']
+                }}
             />
             <Tab.Screen name={'Products'} component={ProductView}
                 options={{
                     tabBarIcon: ({ color }) => {
-                        return <ItemsIcon size={25} color={color} />;
+                        return <WarehouseIcon size={25} color={color} />;
                     },
-                    tabBarLabel: T['products']
+                    tabBarLabel: lang['products']
 
                 }}
             />

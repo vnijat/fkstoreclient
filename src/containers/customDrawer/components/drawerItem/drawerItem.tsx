@@ -1,9 +1,6 @@
 import React, { FC, useState } from "react";
 import { Text, View } from "react-native";
-import Icon from "react-native-vector-icons/Entypo";
-import { AddItemIcon, ClientsIcon, DefaultMenuIcon, OrdersIcon, ProjectsIcon, PurchasesIcon, WarehouseIcon } from "../../../../assets/icons/menuIcons";
 import CustomPressable from "../../../../components/customPressable";
-import UseLanguage from "../../../../modules/lozalization/useLanguage.hook";
 import { Colors } from "../../../../utils/colors";
 import FONT from "../../../../utils/font";
 import { IRouteData } from "../drawerRoutes";
@@ -21,7 +18,8 @@ const CustomDrawerItem: FC<CustomDrawerItemProps> = ({ currentRoute, onPressRout
     const [isShowChild, setIsShowChild] = useState(false);
     const style = getStyle();
     const isSelected = routeName === currentRoute;
-    const showChild = isSelected || isShowChild;
+    const isSomeChildSelected = childRoutes?.length && childRoutes.some((child) => child.routeName === currentRoute);
+    const showChild = (isSelected || isSomeChildSelected) || isShowChild;
     const onLongPress = () => {
         setIsShowChild(state => !state);
     };
@@ -49,4 +47,4 @@ const CustomDrawerItem: FC<CustomDrawerItemProps> = ({ currentRoute, onPressRout
     );
 };
 
-export default CustomDrawerItem;;;;
+export default CustomDrawerItem;

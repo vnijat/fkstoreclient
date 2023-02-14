@@ -106,7 +106,7 @@ export const PagePagination: FC<IPagePAgination> = ({
     } else {
       return null;
     }
-  }, [page, pageCountToNumbers.length, pageCount]);
+  }, [page, pageCountToNumbers.length, pageCount, onPressPageNumber]);
 
   const renderPages = useMemo(() => {
     return (

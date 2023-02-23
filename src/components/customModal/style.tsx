@@ -10,7 +10,7 @@ export const getStyle = (width?: number, borderColor?: string) => {
             borderRadius: 3,
             borderWidth: 2,
             borderColor: borderColor || Colors.CARD_HEADER_COLOR,
-            zIndex: 1
+            zIndex: 1,
         },
         closeButton: {
             position: 'absolute',

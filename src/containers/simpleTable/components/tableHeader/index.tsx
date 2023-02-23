@@ -1,3 +1,4 @@
+import React from "react";
 import { Text, View } from "react-native-windows";
 import UseLanguage from "../../../../modules/lozalization/useLanguage.hook";
 import { Colors } from "../../../../utils/colors";
@@ -19,7 +20,7 @@ const TableHeader = <T extends ITableRowData>({ tableDataConfig }: ITableHeader<
         <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', paddingHorizontal: 10 }}>
             {headerNames?.map((title, index) => {
                 return (
-                    <View style={{ flex: 1, padding: 5, minWidth: 200 }} key={`${index}`}>
+                    <View style={{ flex: 1, padding: 5, minWidth: 200, maxWidth: 250 }} key={`${index}`}>
                         <Text style={{ color: Colors.DEFAULT_TEXT_COLOR, fontSize: FONT.FONT_SIZE_MEDIUM, fontFamily: FONT.FONT_FAMILY, fontWeight: FONT.FONT_BOLD }}>
                             {title?.toUpperCase()}
                         </Text>

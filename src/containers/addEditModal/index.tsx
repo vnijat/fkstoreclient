@@ -4,7 +4,6 @@ import { Colors } from "../../utils/colors";
 import { InputItem } from "../../components/inputItem/index.windows";
 import { PrimaryButton } from "../../components/primaryButton";
 import HELP from "../../services/helpers";
-import { useToast } from "react-native-rooster";
 import CustomModal from "../../components/customModal";
 import { getStyle } from "./styles";
 import { InputsConfig } from "../../types/inputsconfig";
@@ -12,6 +11,8 @@ import { IsingelSelectData } from "../customPicker";
 import TableInput from "../tableInput";
 import { RowDataType } from "../tableInput/types";
 import CodeInput from "../../components/codeInput";
+import UseLanguage from "../../modules/lozalization/useLanguage.hook";
+import Toast from "react-native-toast-message";
 
 interface IAddEditModal {
     /**  Pass Function For Post data to Api*/
@@ -90,11 +91,10 @@ const AddEditModal = ({
     modalBorderColor
 }: IAddEditModal) => {
     const style = getStyle();
-    const { addToast } = useToast();
     const [tempDataForEdit, settempDataForEdit] = useState<any>();
     const [errorMessage, setErrorMessages] = useState<{ [key: string]: string[]; }>({});
     const inputRef = useRef<any>([]);
-
+    const lang = UseLanguage();
 
     useEffect(() => {
         if (isDataForEdit) {
@@ -148,6 +148,7 @@ const AddEditModal = ({
                         canSelectParent,
                         nullable
                     } = config;
+                    const inputTitle = (lang[dtoKey as keyof typeof lang] || lang[title?.toLowerCase() as keyof typeof lang]) ?? title;
                     const inputValue: string | boolean = dataForRequest[dtoKey!] || '';
                     const dataForPickerFromServer = (selectableData && selectableDataKey) ? (!!requiredDataName ? selectableData[selectableDataKey]?.filter((data: { [key: string]: any; }) => (data?.[requiredDataDtoKey!!] ? data?.[requiredDataDtoKey!!] : data?.[requiredDataDtoKey?.toLowerCase()!!]) == dataForRequest[requiredDataDtoKey!]) : selectableData[selectableDataKey]) : [];
                     const dataForPickerFromEnum = isEnum ? enumData : [];
@@ -162,7 +163,7 @@ const AddEditModal = ({
                             <View style={style.tableInputContainer} key={`${title}`}>
                                 <View style={style.tableInputTitleContainer}>
                                     <Text style={style.tableInputTitleText}>
-                                        {`${title}`.toUpperCase()}
+                                        {`${inputTitle}`.toUpperCase()}
                                     </Text>
                                 </View>
                                 <TableInput getNewTableData={(data: RowDataType[]) => setClientDataForPost(data, dtoKey)} tableData={dataForRequest[dtoKey!] ?? []} tableConfig={tableConfig ?? []} isDataEditable />
@@ -175,7 +176,7 @@ const AddEditModal = ({
                                 isDisableForEdit={disableForEdit}
                                 maxLength={maxLength}
                                 key={id}
-                                inputTitle={title}
+                                inputTitle={inputTitle}
                                 width={width}
                                 height={height}
                                 isDisabled={disabled}
@@ -190,7 +191,7 @@ const AddEditModal = ({
                     else {
                         return (
                             <InputItem
-                                inputTitle={title}
+                                inputTitle={inputTitle}
                                 key={id}
                                 isNumeric={isNumeric}
                                 placeHolder={placeHolder}
@@ -222,6 +223,7 @@ const AddEditModal = ({
                                 disabledForEdit={disableForEdit}
                                 canSelectParent={canSelectParent}
                                 isDeselectEnabled={nullable}
+                                requiredText={requiredText}
                             />
                         );
                     }
@@ -230,7 +232,7 @@ const AddEditModal = ({
             }
 
         }
-    }, [errorMessage, isShowModal, dataForRequest, selectableData, disablePickerActionButtons, tempDataForEdit]);
+    }, [errorMessage, isShowModal, dataForRequest, selectableData, disablePickerActionButtons, tempDataForEdit, lang]);
 
     const clearInputs = useCallback(() => {
         clearDataForRequest();
@@ -269,17 +271,12 @@ const AddEditModal = ({
                 if (response.error) {
                     throw response.error;
                 }
-                await addToast({
-                    type: 'success',
-                    message: `${dataTitle ?? ''} deleted`.toUpperCase(),
-                    title: "Success"
-                });
+                HELP.showToast('success', `${dataTitle ?? ''} Deleted`.toUpperCase(), "Deleted");
                 onCloseModal();
             } catch (error) {
                 console.log(`onPressAdd${dataTitle}`, error);
                 if (error?.status === 400) {
                     setErrorMessages(HELP.modifieErrorMessage(error));
-
                 }
                 else {
                     if (error?.data.message) {
@@ -298,17 +295,12 @@ const AddEditModal = ({
             if (response.error) {
                 throw response.error;
             }
-            await addToast({
-                type: 'success',
-                message: `new ${dataTitle ?? ''} added`.toUpperCase(),
-                title: "Success"
-            });
+            HELP.showToast('success', `new ${dataTitle ?? ''} added`.toUpperCase(), "Added");
             clearWithoutClosingModal();
         } catch (error) {
             console.log(`onPressAdd${dataTitle}`, error);
             if (error?.status === 400) {
                 setErrorMessages(HELP.modifieErrorMessage(error));
-
             }
             else {
                 if (error?.data.message) {
@@ -326,12 +318,8 @@ const AddEditModal = ({
                 if (response.error) {
                     throw response.error;
                 }
+                HELP.showToast('success', `${dataTitle ?? ''} updated`.toUpperCase(), "Updated");
                 onCloseModal();
-                await addToast({
-                    type: 'success',
-                    message: `${response?.data?.message ?? dataTitle}`.toUpperCase(),
-                    title: "Success"
-                });
             } catch (error) {
                 console.log(`onPressSave${dataTitle}`, error);
                 if (error?.status === 400) {
@@ -359,15 +347,12 @@ const AddEditModal = ({
             borderColor={modalBorderColor}
         >
             <View style={{ flex: 1 }}>
-                <Text style={style.headerText}>
-                    {dataTitle ?? ''}
-                </Text>
                 <View style={style.contentContainer}>
                     {renderInputs}
                 </View>
                 <View style={style.buttonsContainer}>
                     <PrimaryButton
-                        title={'Reset'}
+                        title={lang['reset'].toUpperCase()}
                         onPress={onPressReset}
                         buttonColor={Colors.CARD_HEADER_COLOR}
                         textColor={Colors.DEFAULT_TEXT_COLOR}
@@ -376,7 +361,7 @@ const AddEditModal = ({
                         width={80}
                     />
                     {(deleteFunction && tempDataForEdit) && < PrimaryButton
-                        title={'Delete'}
+                        title={lang['delete'].toUpperCase()}
                         onPress={handleDeleteButton}
                         buttonColor={Colors.INFRA_RED}
                         textColor={Colors.CULTURED}
@@ -386,7 +371,7 @@ const AddEditModal = ({
                     />}
                     {!!tempDataForEdit ?
                         <PrimaryButton
-                            title={'Save'}
+                            title={lang['update'].toUpperCase()}
                             onPress={onPressSave}
                             buttonColor={Colors.METALLIC_GOLD}
                             textColor={Colors.FLORAL_WHITE}
@@ -395,7 +380,7 @@ const AddEditModal = ({
                             width={80}
                         /> :
                         <PrimaryButton
-                            title={'Add'}
+                            title={lang['create'].toUpperCase()}
                             onPress={onPressAdd}
                             buttonColor={Colors.DEFAULT_TEXT_COLOR}
                             textColor={Colors.CULTURED}

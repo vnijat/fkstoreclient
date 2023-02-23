@@ -1,5 +1,5 @@
 import React, { FC, useMemo, } from "react";
-import { Text, useWindowDimensions, View } from "react-native";
+import { Image, Text, useWindowDimensions, View } from "react-native";
 import { getStyle } from "./styles";
 import { DrawerNavigationHelpers } from "@react-navigation/drawer/lib/typescript/src/types";
 import CustomPressable from "../../components/customPressable";
@@ -21,16 +21,15 @@ const CustomDrawer: FC<ICustomDrawer> = ({ navigation, currentRoute, routeNames 
     const style = useMemo(() => getStyle(width), [width]);
 
 
-
     const onPressConfigs = () => {
         dispatch(setIsShowSettingsModal(true));
     };
 
-
-
     return (
         <View style={style.container}   >
-            <DrawerRoutes navigation={navigation} currentRoute={currentRoute} />
+            <View>
+                <DrawerRoutes navigation={navigation} currentRoute={currentRoute} />
+            </View>
             <View style={style.bottomContainer}>
                 <CustomPressable
                     onPress={onPressConfigs}
@@ -38,9 +37,7 @@ const CustomDrawer: FC<ICustomDrawer> = ({ navigation, currentRoute, routeNames 
                     style={style.configButton} >
                     <Icon name='cog' size={30} color={Colors.DEFAULT_TEXT_COLOR} />
                 </CustomPressable>
-                <Text style={style.logoText}>
-                    {'FK'}
-                </Text >
+                <Image source={require('../../assets/logo/LOGO.svg')} resizeMode={'contain'} style={{ height: 60 }} />
             </View>
         </View >
     );

@@ -8,14 +8,11 @@ export const getStyle = (width: number) => {
             backgroundColor: Colors.CARD_HEADER_COLOR,
             flex: 1,
             width: width * 0.05,
-            minWidth: 80
+            minWidth: 80,
+            justifyContent: 'space-between'
         },
         bottomContainer: {
-            position: 'absolute',
-            height: 40,
-            width: '100%',
-            bottom: 15,
-            justifyContent: 'center',
+            justifyContent: 'space-between',
             alignItems: 'center',
         },
         logoText: {
@@ -31,7 +28,8 @@ export const getStyle = (width: number) => {
         },
         configButton: {
             justifyContent: 'center',
-            alignItems: 'center'
+            alignItems: 'center',
+            marginBottom: 20
         }
     });
 

@@ -23,6 +23,7 @@ import { inputsForItemOptions } from '../../configs/ItemOptionsInputConfigs';
 import SingleSelectItem from './components/singleSelectItem';
 import { useAppDispatch } from '../../modules/redux/store';
 import { FilterParamskey } from '../../types/item';
+import UseLanguage from '../../modules/lozalization/useLanguage.hook';
 
 export interface IsingelSelectData {
     id?: number;
@@ -103,6 +104,7 @@ const CustomPicker = ({
     const [isShowContent, setShowContent] = useState(false);
     const [searchText, setSearchText] = useState('');
     const buttonRef = useRef(null);
+    const lang = UseLanguage();
 
 
     const getFilteredData = useMemo(() => {
@@ -119,6 +121,7 @@ const CustomPicker = ({
 
     const onPress = useCallback(() => {
         if (isDisabled) {
+            console.log("requiredText==>", requiredText);
             HELP.alertError(undefined, 'Requires field before select', requiredText);
         } else if (disabledForEdit) {
             HELP.alertError(undefined, 'You cant edit this field');
@@ -203,9 +206,9 @@ const CustomPicker = ({
     const singleSelectedTitle = useMemo(() => {
         if (singleSelectData?.length) {
             const selected = HELP.flatNestedCategories(singleSelectData).filter((item) => item.value == singleSelected)[0];
-            return selected?.label ?? 'select';
-        } else return 'no data';
-    }, [singleSelected, singleSelectData?.length]);
+            return selected?.label ?? lang['select'];
+        } else return lang['noData'];
+    }, [singleSelected, singleSelectData?.length, lang]);
 
 
     const renderSingleSelectItem = useCallback(({ item, index }: { item: IsingelSelectData; index: number; }) => {
@@ -297,7 +300,7 @@ const CustomPicker = ({
                             ListEmptyComponent={renerListEmptyComponent}
                         />
                     )}
-                    {isAddButton && <PrimaryButton onPress={onPressAdd} title={'Add new'.toUpperCase()} textColor={Colors.DEFAULT_TEXT_COLOR} buttonColor={Colors.CARD_HEADER_COLOR} height={30} disabled={disablePickerActionButtons} />}
+                    {isAddButton && <PrimaryButton onPress={onPressAdd} title={lang['addNew'].toUpperCase()} textColor={Colors.DEFAULT_TEXT_COLOR} buttonColor={Colors.CARD_HEADER_COLOR} height={30} disabled={disablePickerActionButtons} />}
                 </View>
             </Flyout>
         </>

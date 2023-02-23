@@ -20,13 +20,15 @@ import purchaseSlicer from './purchaseSlicer';
 import tableConfigsSlicer from './tableConfigs';
 import { FLUSH, PAUSE, PERSIST, PersistConfig, persistReducer, persistStore, PURGE, REGISTER, REHYDRATE } from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
 
 
 const persistConfig: PersistConfig<any> = {
     key: 'root',
     storage: AsyncStorage,
-    version: 1,
+    version: 2,
     whitelist: ['configs', 'tableConfigs'],
+    stateReconciler: autoMergeLevel2,
     migrate: (state) => {
         console.log("REDUX-PERSIST: Migrations Running");
         return Promise.resolve(state);

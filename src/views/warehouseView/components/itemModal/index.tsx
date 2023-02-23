@@ -4,8 +4,6 @@ import Icon from "react-native-vector-icons/Entypo";
 import { useSelector } from "react-redux";
 import DataField from "./components/dataField";
 import { getStyle } from "./style";
-import RNPrint from 'react-native-print';
-import { useToast } from "react-native-rooster";
 import CustomModal from "../../../../components/customModal";
 import { PrimaryButton } from "../../../../components/primaryButton";
 import { useGetItemQuery, InventoryApi } from "../../../../modules/api/apiSlice";
@@ -13,6 +11,7 @@ import { setIsShowItemModal } from "../../../../modules/redux/itemsSlicer";
 import { RootState, useAppDispatch } from "../../../../modules/redux/store";
 import { currency } from "../../../../utils/currency.windows";
 import { Colors } from "../../../../utils/colors";
+import HELP from "../../../../services/helpers";
 
 
 interface IItemModal {
@@ -21,7 +20,6 @@ interface IItemModal {
 
 const ItemModal = ({ }: IItemModal) => {
     const style = useMemo(() => getStyle(), []);
-    const { addToast } = useToast();
     const apiURL = useSelector((state: RootState) => state.configs.apiURL);
     const dispatch = useAppDispatch();
     const itemId = useSelector((state: RootState) => state.itemsSlicer.itemIdForFullResponse);
@@ -43,17 +41,9 @@ const ItemModal = ({ }: IItemModal) => {
     const onPressPrint = async () => {
         const response = await dispatch(InventoryApi.endpoints.printBarcode.initiate({ itemId: itemId! }));
         if (response?.data) {
-            await addToast({
-                type: 'success',
-                message: `${response?.data.message}`.toUpperCase(),
-                title: "Success"
-            });
+            HELP.showToast('success', `${response?.data?.message}`.toUpperCase(), "Print Job Sent");
         } else {
-            await addToast({
-                type: 'error',
-                message: `${response?.error?.data}`.toUpperCase(),
-                title: "Error"
-            });
+            HELP.alertError(response?.error);
         }
 
     };

@@ -59,7 +59,7 @@ export const InventoryApi = createApi({
                     method: 'DELETE'
                 };
             },
-            invalidatesTags: ['items', 'itemForOrder', 'item']
+            invalidatesTags: ['items', 'itemForOrder', 'item', 'codeSuggestions']
         }),
         getItemQrCode: build.query<undefined, number>({
             query: (id) => {

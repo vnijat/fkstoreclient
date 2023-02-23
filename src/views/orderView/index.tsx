@@ -1,16 +1,16 @@
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { FC } from 'react';
+import React, { FC, useCallback } from 'react';
 import { View } from 'react-native';
-import { useSelector } from 'react-redux';
 import PaginationContainer from '../../containers/paginationContainer';
-import { useGetOrdersQuery } from '../../modules/api/orders.api';
-import { setOrdersQueryParams } from '../../modules/redux/orderQuerySlicer';
-import { setIsShowOrderModal } from '../../modules/redux/orderSlicer';
-import { RootState, useAppDispatch } from '../../modules/redux/store';
+import SimpleTable from '../../containers/simpleTable';
+import { IContextMenuButton } from '../../containers/simpleTable/types';
+import { ProjectOrder } from '../../types/projectOrder';
 import { Colors } from '../../utils/colors';
 import AddEditOrderModal from './components/addEditOrderModal';
 import OrderList from './components/orderList';
 import OrderSearch from './components/orderSearch';
+import OrderDataProvider from './provider/data';
+import OrderLogicProvider from './provider/logic';
 import { getStyle } from './styles';
 
 
@@ -19,37 +19,49 @@ interface IorderView {
 }
 
 export const OrderView: FC<IorderView> = ({ navigation }) => {
+    const { queryData: { data: queryData, isLoading },
+        ordersQueryParams,
+        tableConfigs,
+        isShowOrderModal, } = OrderDataProvider();
+    const {
+        onPressRowItem,
+        onResetTable,
+        setNewTableConfig,
+        onCloseModal,
+        handleOndeleteOrder,
+        handlePagination
+    } = OrderLogicProvider();
     const style = getStyle();
-    const dispatch = useAppDispatch();
-    const ordersQueryParams = useSelector((state: RootState) => state.ordersQueryParams);
-    const isOrderModalOpen = useSelector((state: RootState) => state.ordersSlicer.isShowOrderModal);
-    const { data: queryData } = useGetOrdersQuery(ordersQueryParams, {
-        selectFromResult: ({ data, isLoading, isUninitialized, error }) => ({
-            data,
+
+    const tableContextMenuButtons: IContextMenuButton<ProjectOrder>[] = [
+        {
+            title: 'Delete',
+            onPress: handleOndeleteOrder
         }
-        ),
-        pollingInterval: 5000
-    });
-
-    const onCloseOrderModal = () => {
-        dispatch(setIsShowOrderModal(false));
-    };
-
-
+    ];
 
     return (
         <View style={{ flex: 1, flexDirection: 'row' }}>
             <View style={{ flex: 0.05 }} />
             <View style={style.container}>
-                {isOrderModalOpen && <AddEditOrderModal isOpen={isOrderModalOpen} onClose={onCloseOrderModal} />}
-                <View style={{ flex: 0.2 }}>
+                {isShowOrderModal && <AddEditOrderModal isOpen={isShowOrderModal} onClose={onCloseModal} />}
+                <View style={{ flexShrink: 1 }}>
                     <OrderSearch searchValue={ordersQueryParams.search ?? ''} />
                 </View>
-                <View style={{ flex: 0.7 }}>
-                    <OrderList data={queryData?.orders ?? []} />
+                <View style={{ flex: 1 }}>
+                    {/* <OrderList data={queryData?.orders ?? []} /> */}
+                    <SimpleTable
+                        tableData={queryData?.orders ?? []}
+                        tableDataConfig={tableConfigs}
+                        onResetTable={onResetTable}
+                        getNewTableConfig={setNewTableConfig}
+                        onPressRow={onPressRowItem}
+                        contextMenuButtons={tableContextMenuButtons}
+                        isLoading={isLoading}
+                    />
                 </View>
                 <View style={{ flex: 0.1, backgroundColor: Colors.CARD_HEADER_COLOR, justifyContent: 'center' }}>
-                    <PaginationContainer actionFunction={setOrdersQueryParams} meta={queryData?.meta!} />
+                    <PaginationContainer paginationHandler={handlePagination} meta={queryData?.meta!} />
                 </View>
             </View>
         </View>

@@ -1,24 +1,27 @@
 import { StyleSheet } from 'react-native';
 import { Colors } from '../../../../utils/colors';
+import FONT from '../../../../utils/font';
 
 export const getStyle = () => {
     const style = StyleSheet.create({
         container: {
-            marginBottom: 10,
-            justifyContent: 'space-between',
+            flexGrow: 1,
+            paddingVertical: 5,
+            paddingHorizontal: 5,
         },
         search: {
-            paddingHorizontal: 20,
-            minHeight: 50,
-            maxHeight: 300,
-            flexDirection: 'row',
+        },
+        topContainer: {
+            flexShrink: 1
+        },
+        bottomContainer: {
+            justifyContent: 'center',
+            flexGrow: 1
         },
         sortBy: {
             flexDirection: 'row',
-            marginBottom: 10,
             alignItems: 'center',
             flexWrap: 'wrap',
-            paddingLeft: 17,
         },
         filterByText: {
             color: Colors.DEFAULT_TEXT_COLOR,
@@ -48,9 +51,6 @@ export const getStyle = () => {
         filterItemsContainer: {
             flexDirection: 'row',
             paddingHorizontal: 17,
-            maxHeight: 300,
-            minHeight: 40,
-            paddingTop: 5,
             flexWrap: 'wrap',
         },
         filterByIconContainer: {
@@ -63,18 +63,31 @@ export const getStyle = () => {
             alignItems: 'center',
             marginHorizontal: 5
         },
-        rightContainer: {
+        bottomRightContainer: {
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'space-between',
-            flex: 1,
+            flex: 0.4,
             flexWrap: 'wrap',
             paddingHorizontal: 10
         },
+        bottomLeftContainer: {
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flex: 0.6,
+            flexWrap: 'wrap',
+            paddingHorizontal: 10
+        },
+        sortByPickers: {
+            flexDirection: 'row',
+            flexGrow: 1
+        },
         infoText: {
             color: Colors.DEFAULT_TEXT_COLOR,
-            fontSize: 12,
-            fontWeight: '700',
+            fontSize: FONT.FONT_SIZE_MEDIUM,
+            fontWeight: FONT.FONT_BOLD,
+            fontFamily: FONT.FONT_FAMILY
         }
     });
 

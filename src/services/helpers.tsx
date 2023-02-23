@@ -9,6 +9,8 @@ import { Colors } from "../utils/colors";
 import countries from 'i18n-iso-countries';
 import { IsingelSelectData } from "../containers/customPicker";
 import { Item } from "../types/item";
+import Toast from "react-native-toast-message";
+import { ToastVariants } from "../types/toast";
 
 countries.registerLocale(require('i18n-iso-countries/langs/en.json'));
 countries.registerLocale(require('i18n-iso-countries/langs/az.json'));
@@ -31,12 +33,11 @@ const modifieErrorMessage = (error: any) => {
 
 
 
-
-const modifyItemForEdit = (data: any[] | any, itemId?: number) => {
+const modifyItemForEdit = <T extends { [key: string]: any; }>(data: T[] | T, itemId?: number) => {
     const itemForPost: any = {};
-    const selectedItem: Item = Array.isArray(data) ? data.filter(item => item.id === itemId)[0] : data;
+    const selectedItem: T = Array.isArray(data) ? data.filter(item => item.id === itemId)[0] : data;
     for (let key in selectedItem) {
-        const objectValue = selectedItem[key as keyof Item];
+        const objectValue = selectedItem[key as keyof T];
         const isObject = objectValue && typeof objectValue === 'object';
         if (isObject) {
             itemForPost[`${key}Id`] = objectValue?.id?.toString();
@@ -59,6 +60,23 @@ const alertPromise = (title: string, message: string) => {
 };
 
 
+const getSlicesForPaginationPage = (currentPage: number, pageCount: number, show?: number) => {
+    const maxToshow = show || 5;
+    let diffFromMax = 2;
+    let diff = pageCount! - currentPage;
+    if (diff <= 2) {
+        for (let i = maxToshow; diff >= 0; i--) {
+            diff--;
+            diffFromMax = i;
+        }
+    }
+    const sliceStart = currentPage >= maxToshow ? currentPage - diffFromMax : 0;
+    const sliceEnd = currentPage >= maxToshow ? currentPage + 3 : maxToshow;
+
+    return { sliceStart, sliceEnd };
+};
+
+
 
 const getNestedCategoriesIds = (tree: IMultipleSelectData[]) => {
     return tree?.reduce((acc, curr) => {
@@ -73,7 +91,6 @@ const getNestedCategoriesIds = (tree: IMultipleSelectData[]) => {
 };
 
 const isNotSameValue = (value1: number | boolean | string, value2: number | boolean | string) => {
-    console.log("value1===>>>", value1, 'value2', value2);
     if (typeof value1 === 'boolean' && typeof value2 === 'boolean') {
         return value1 !== value2;
     } else if (!(isNaN(Number(value1)) && isNaN(Number(value2)))) {
@@ -155,12 +172,18 @@ const getProjectStatusIcons = (status: ProjectStatus, size?: number, color?: str
 };
 
 const alertError = (error?: { status: string, data: { message: string; }; }, title?: string, message?: string) => {
-    Alert.alert(title || `Conflict Status Code  ${error?.status}` || '', message || error?.data.message || '', [
-        {
-            text: 'Ok',
-            onPress: () => { }
-        },
-    ]);
+    const errorTitle = title || `Conflict Status Code  ${error?.status}` || '';
+    const errorMessage = message || error?.data.message || '';
+    showToast('error', errorMessage, errorTitle, 5000);
+};
+
+const showToast = (toastType: ToastVariants, message: string, title?: string, duration?: number) => {
+    Toast.show({
+        type: toastType,
+        text1: title || '',
+        text2: message || '',
+        visibilityTime: duration || 3000,
+    });
 };
 
 const getCountriesForPicker = () => Object.keys(countryobjects).map((key) => ({ value: key, label: countryobjects[key] }));
@@ -179,7 +202,9 @@ const HELP = {
     mapNestedForPicker,
     getNestedDataValues,
     alertError,
-    isNotSameValue
+    isNotSameValue,
+    getSlicesForPaginationPage,
+    showToast
 };
 
 export default HELP;

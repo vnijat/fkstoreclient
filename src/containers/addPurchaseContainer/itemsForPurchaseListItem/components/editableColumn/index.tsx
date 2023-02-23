@@ -31,7 +31,6 @@ const EditableColumn = ({ value, setValue, atStock, isCheckBox, isNumeric, disab
         }
     };
     useEffect(() => {
-        console.log("isNotSameValue===>>>", HELP.isNotSameValue(value, inputValue));
         if (HELP.isNotSameValue(value, inputValue)) {
             setValue(inputValue);
         }

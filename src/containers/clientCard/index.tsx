@@ -5,7 +5,6 @@ import { ClientType } from '../../enums/clientType';
 import { IICON } from '../../types/icon';
 import { Colors } from '../../utils/colors';
 import { parsePhoneNumber } from 'libphonenumber-js';
-
 import { getStyle } from "./styles";
 import ProjectInfo from './components/projectInfo';
 import Icon from 'react-native-vector-icons/Entypo';
@@ -13,7 +12,6 @@ import ActionModal from './components/actionModal';
 import CustomPressable from '../../components/customPressable';
 import { RootState, useAppDispatch } from '../../modules/redux/store';
 import { useDeleteClientMutation } from '../../modules/api/clients.api';
-import { useToast } from 'react-native-rooster';
 import HELP from '../../services/helpers';
 import { setClientForPost, setIsClientForEdit, setIsShowClientModal } from '../../modules/redux/clientsSlicer';
 import { useSelector } from 'react-redux';
@@ -51,7 +49,6 @@ const ClientCard = ({
     const isClientModalOpen = useSelector((state: RootState) => state.clientSlicer.isShowClientModal);
     const dispatch = useAppDispatch();
     const [apiDeleteClient] = useDeleteClientMutation();
-    const { addToast } = useToast();
 
     const infoIconOptions: IICON = {
         size: 22,
@@ -83,13 +80,10 @@ const ClientCard = ({
         try {
             await HELP.alertPromise('do you want to delete Client?', 'you cant recover deleted Client');
             const response = await apiDeleteClient(Number(id));
-            await addToast({
-                type: 'success',
-                message: `${response?.data?.message}`.toUpperCase(),
-                title: "Success"
-            });
+            HELP.showToast('success', `${response?.data?.message}`.toUpperCase(), "Deleted");
         } catch (erorr) {
             console.log("On delete Client==>>", erorr);
+            HELP.alertError(erorr);
         }
 
     };

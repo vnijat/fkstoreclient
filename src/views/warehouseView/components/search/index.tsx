@@ -1,7 +1,6 @@
 import CheckBox from '@react-native-community/checkbox';
 import React, { FC, useMemo, useRef, useState } from 'react';
-import { Text, View } from 'react-native';
-import { cos } from 'react-native-reanimated';
+import { Text, View, ScrollView } from 'react-native';
 import { shallowEqual, useSelector } from 'react-redux';
 import { ClearIcon } from '../../../../assets/icons/searchContainerIcons';
 import CustomPressable from '../../../../components/customPressable';
@@ -18,51 +17,49 @@ import { useAppDispatch } from '../../../../modules/redux/store';
 import { FilterParamskey, ItemOptionForInputs } from '../../../../types/item';
 import { Colors } from '../../../../utils/colors';
 import { currency } from '../../../../utils/currency.windows';
+import FONT from '../../../../utils/font';
+import WareHouseDataProvider from '../../provider/data';
+import WareHouseLogicProvider from '../../provider/logic';
 import FilterItem from './component/filterItems';
 import { getStyle } from './styles';
 
 
 
 interface ISearchContainer {
-    searchValue: string;
-    overallPrice: number;
-    outOfStockParam?: boolean;
-
+    logicProvider: ReturnType<typeof WareHouseLogicProvider>;
+    dataProvider: ReturnType<typeof WareHouseDataProvider>;
 }
 
 
-const SearchContainer: FC<ISearchContainer> = ({ searchValue, overallPrice, outOfStockParam }) => {
-    const style = useMemo(() => getStyle(), []);
-    const dispatch = useAppDispatch();
-    const lang = UseLanguage();
-    const pickerFilterParams = useSelector(selectFilterByForPicker, shallowEqual);
-    const selectedWithLabel = useSelector(selectSelectedWithLabel, shallowEqual);
-    const searchInputRef = useRef(null);
-    const isHasFitlerParams = useMemo(() => Object.values(pickerFilterParams).some((item) => item.length), [pickerFilterParams]);
-    const { data: dataForFilterBy } = useGetItemInputsQuery(undefined, {
-        selectFromResult: ({ data }) => ({
-            data
+const SearchContainer: FC<ISearchContainer> = ({ logicProvider, dataProvider }) => {
+    const {
+        pickerFilterParams,
+        selectedFilterParamsWithLabel,
+        isSomeParamSelected,
+        dataForFilterBy,
+        wareHouseQueryParams,
+        queryData: {
+            data: queryData
         }
-        ),
-        pollingInterval: 5000
-    });
+    } = dataProvider;
+    const {
+        handleFilterParamSelect,
+        handleSearchValueChange,
+        handleClearFilters,
+        handleCreateNew,
+        handleOutofstockSelect
+    } = logicProvider;
 
-    const onInputvalueChange = (text: string) => {
-        dispatch(setItemQueryParams({ search: text, page: 1 }));
-    };
-
-    const onSelectIdForFilter = (selected: { id: number; label: string; parent: FilterParamskey; }) => {
-        dispatch(setSelectedWithLabel(selected));
-        dispatch(setFilterByParams({ id: selected.id, parent: selected.parent }));
-    };
+    const style = useMemo(() => getStyle(), []);
+    const lang = UseLanguage();
+    const searchInputRef = useRef(null);
 
     const renderSearch = useMemo(() => {
-        return <InputItem width={'100%'} setValue={onInputvalueChange} inputValue={searchValue || ''} inputRef={(r) => searchInputRef.current = r} isSearch={true} />;
+        return <InputItem width={'100%'} setValue={(value) => handleSearchValueChange(value as string)} inputValue={wareHouseQueryParams?.search || ''} inputRef={(r) => searchInputRef.current = r} isSearch={true} />;
 
-    }, [searchValue]);
+    }, [wareHouseQueryParams?.search]);
 
     const inWaitAnotherData = [{ title: lang['location'], waitsForDtokey: 'storeId', waitsForTitle: lang['store'] }];
-
 
     const renderFilterByPickers = useMemo(() => {
         if (dataForFilterBy) {
@@ -85,7 +82,7 @@ const SearchContainer: FC<ISearchContainer> = ({ searchValue, overallPrice, outO
                         isDataSearchEnabled
                         title={pickerTitle}
                         data={data}
-                        onSelect={onSelectIdForFilter}
+                        onSelect={handleFilterParamSelect}
                         selectedIds={selectedIds}
                         parent={parent}
                         key={index}
@@ -104,94 +101,92 @@ const SearchContainer: FC<ISearchContainer> = ({ searchValue, overallPrice, outO
 
 
 
-    const clearFiler = async () => {
-        if (isHasFitlerParams || searchValue.trim().length) {
-            dispatch(clearFilters());
-            dispatch(setItemQueryParams({ search: '', page: 1 }));
+    const clearFiler = () => {
+        if (isSomeParamSelected || wareHouseQueryParams?.search?.trim().length) {
+            handleClearFilters();
         }
     };
 
 
-    const removeFromFiltered = (selected: { id: number; label: string; parent: FilterParamskey; }) => {
-        dispatch(setSelectedWithLabel(selected));
-        dispatch(setFilterByParams({ id: selected.id, parent: selected.parent }));
-    };
-
     const renderFilterItems = useMemo(() => {
-        if (selectedWithLabel.length) {
-            return selectedWithLabel.map((item: { id: number, label: string, parent: FilterParamskey; }, index: number) => {
+        if (selectedFilterParamsWithLabel.length) {
+            return selectedFilterParamsWithLabel.map((item: { id: number, label: string, parent: FilterParamskey; }, index: number) => {
                 const { id, label, parent } = item;
-                return <FilterItem label={label} key={index} onPress={() => removeFromFiltered({ id, label, parent })} />;
+                return <FilterItem label={label} key={index} onPress={() => handleFilterParamSelect({ id, label, parent })} />;
             });
         } else {
             return null;
         }
 
-    }, [selectedWithLabel.length]);
+    }, [selectedFilterParamsWithLabel.length]);
 
-
-    const onPressAddItem = () => {
-        dispatch(setIsShowAddEditModal(true));
-
-    };
-
-    const handleOutofstockSelect = (value: boolean) => {
-        dispatch(setItemQueryParams({ outOfStock: value, page: 1 }));
-    };
 
     return (
         <View style={style.container}>
-            <View style={style.filterItemsContainer}>
-                {renderFilterItems}
-            </View>
-            <View style={style.search}>
-                <View style={{ flex: 1 }}>
+            < View style={style.topContainer}>
+                <View style={{ flexShrink: 1, maxHeight: 40 }}>
+                    <ScrollView >
+                        <View style={style.filterItemsContainer}>
+                            {renderFilterItems}
+                        </View>
+                    </ScrollView>
+                </View>
+                <View style={style.search}>
                     {renderSearch}
                 </View>
             </View>
-            <View style={style.sortBy}>
-                {renderFilterByPickers}
-                <CustomPressable onPress={clearFiler}
-                    onHoverOpacity
-                    style={style.clearButtonContainer}
-                >
-                    <View style={style.clearText} tooltip={lang['clearFilters']}  >
-                        <ClearIcon size={22} color={isHasFitlerParams ? Colors.METALLIC_GOLD : Colors.DEFAULT_TEXT_COLOR} />
+            < View style={style.bottomContainer}>
+                <View style={style.sortBy}>
+                    <View style={style.bottomLeftContainer}>
+                        <View style={style.sortByPickers}>
+                            {renderFilterByPickers}
+                        </View>
+                        <CustomPressable onPress={clearFiler}
+                            onHoverOpacity
+                            style={style.clearButtonContainer}
+                        >
+                            <View style={style.clearText} tooltip={lang['clearFilters']}  >
+                                <ClearIcon size={22} color={isSomeParamSelected ? Colors.METALLIC_GOLD : Colors.DEFAULT_TEXT_COLOR} />
+                            </View>
+                        </CustomPressable>
                     </View>
-                </CustomPressable>
-                <View style={style.rightContainer}>
-                    <PrimaryButton
-                        title={lang['newProduct'].toUpperCase()}
-                        onPress={onPressAddItem}
-                        onHoverOpacity
-                        textColor={Colors.CARD_COLOR}
-                        buttonColor={Colors.DEFAULT_TEXT_COLOR}
-                        borderRadius={2}
-                    />
-                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                        <Text style={{ fontSize: 12, color: Colors.DEFAULT_TEXT_COLOR }}>
-                            {`${lang['outOfStock']}: `.toUpperCase()}
-                        </Text>
-                        <CheckBox
-                            tintColor={Colors.CARD_HEADER_COLOR}
-                            onFillColor={Colors.CARD_HEADER_COLOR}
-                            onCheckColor={Colors.METALLIC_GOLD}
-                            onTintColor={Colors.CARD_COLOR}
-                            value={outOfStockParam}
-                            onValueChange={handleOutofstockSelect}
-
-                        />
-                        <Text style={style.infoText}>
-                            {`${lang['overallPrice']} : `.toUpperCase()}
-                            <Text style={{ color: Colors.METALLIC_GOLD }}>
-                                {currency.format(overallPrice)}
+                    <View style={style.bottomRightContainer}>
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <Text style={style.infoText}>
+                                {`${lang['outOfStock']}: `.toUpperCase()}
                             </Text>
-                        </Text>
-                    </View>
+                            <CheckBox
+                                tintColor={Colors.CARD_HEADER_COLOR}
+                                onFillColor={Colors.CARD_HEADER_COLOR}
+                                onCheckColor={Colors.METALLIC_GOLD}
+                                onTintColor={Colors.CARD_COLOR}
+                                value={queryData?.outOfStock}
+                                onValueChange={handleOutofstockSelect}
 
+                            />
+                            <Text style={style.infoText}>
+                                {`${lang['overallPrice']} : `.toUpperCase()}
+                                <Text style={{ color: Colors.METALLIC_GOLD }}>
+                                    {currency.format(queryData?.sumTotal!)}
+                                </Text>
+                            </Text>
+                        </View>
+
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <PrimaryButton
+                                title={lang['newProduct'].toUpperCase()}
+                                onPress={handleCreateNew}
+                                onHoverOpacity
+                                textColor={Colors.CARD_COLOR}
+                                buttonColor={Colors.DEFAULT_TEXT_COLOR}
+                                borderRadius={2}
+                            />
+                        </View>
+
+                    </View>
                 </View>
             </View>
-        </View>
+        </View >
 
     );
 };

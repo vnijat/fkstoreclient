@@ -14,7 +14,7 @@ interface ITableColumn {
 
 
 const TableColumn = ({ value, type }: ITableColumn) => {
-  
+
     const columns = {
         numeric: NumericColumn,
         money: MoneyColumn,
@@ -24,7 +24,7 @@ const TableColumn = ({ value, type }: ITableColumn) => {
     const ColumnComponent = columns[type];
 
     return (
-        <View style={{ minWidth: 200, flexDirection: 'row', justifyContent: 'center', backgroundColor: 'transparent' }}>
+        <View style={{ flex: 1, flexDirection: 'row', maxWidth: 250, minWidth: 200 }}>
             <ColumnComponent value={value} />
         </View>
     );

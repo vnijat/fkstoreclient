@@ -4,7 +4,6 @@ import { Colors } from "../../utils/colors";
 import { InputItem } from "../../components/inputItem/index.windows";
 import { PrimaryButton } from "../../components/primaryButton";
 import HELP from "../../services/helpers";
-import { useToast } from "react-native-rooster";
 import CustomModal from "../../components/customModal";
 import { getStyle } from "./styles";
 import { InputsConfig } from "../../types/inputsconfig";
@@ -13,6 +12,7 @@ import TableInput from "../tableInput";
 import { RowDataType } from "../tableInput/types";
 import CodeInput from "../../components/codeInput";
 import UseLanguage from "../../modules/lozalization/useLanguage.hook";
+import Toast from "react-native-toast-message";
 
 interface IAddEditModal {
     /**  Pass Function For Post data to Api*/
@@ -91,7 +91,6 @@ const AddEditModal = ({
     modalBorderColor
 }: IAddEditModal) => {
     const style = getStyle();
-    const { addToast } = useToast();
     const [tempDataForEdit, settempDataForEdit] = useState<any>();
     const [errorMessage, setErrorMessages] = useState<{ [key: string]: string[]; }>({});
     const inputRef = useRef<any>([]);
@@ -224,6 +223,7 @@ const AddEditModal = ({
                                 disabledForEdit={disableForEdit}
                                 canSelectParent={canSelectParent}
                                 isDeselectEnabled={nullable}
+                                requiredText={requiredText}
                             />
                         );
                     }
@@ -271,17 +271,12 @@ const AddEditModal = ({
                 if (response.error) {
                     throw response.error;
                 }
-                await addToast({
-                    type: 'success',
-                    message: `${dataTitle ?? ''} deleted`.toUpperCase(),
-                    title: "Success"
-                });
+                HELP.showToast('success', `${dataTitle ?? ''} Deleted`.toUpperCase(), "Deleted");
                 onCloseModal();
             } catch (error) {
                 console.log(`onPressAdd${dataTitle}`, error);
                 if (error?.status === 400) {
                     setErrorMessages(HELP.modifieErrorMessage(error));
-
                 }
                 else {
                     if (error?.data.message) {
@@ -300,17 +295,12 @@ const AddEditModal = ({
             if (response.error) {
                 throw response.error;
             }
-            await addToast({
-                type: 'success',
-                message: `new ${dataTitle ?? ''} added`.toUpperCase(),
-                title: "Success"
-            });
+            HELP.showToast('success', `new ${dataTitle ?? ''} added`.toUpperCase(), "Added");
             clearWithoutClosingModal();
         } catch (error) {
             console.log(`onPressAdd${dataTitle}`, error);
             if (error?.status === 400) {
                 setErrorMessages(HELP.modifieErrorMessage(error));
-
             }
             else {
                 if (error?.data.message) {
@@ -328,12 +318,8 @@ const AddEditModal = ({
                 if (response.error) {
                     throw response.error;
                 }
+                HELP.showToast('success', `${dataTitle ?? ''} updated`.toUpperCase(), "Updated");
                 onCloseModal();
-                await addToast({
-                    type: 'success',
-                    message: `${response?.data?.message ?? dataTitle}`.toUpperCase(),
-                    title: "Success"
-                });
             } catch (error) {
                 console.log(`onPressSave${dataTitle}`, error);
                 if (error?.status === 400) {

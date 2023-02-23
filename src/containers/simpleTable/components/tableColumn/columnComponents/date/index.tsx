@@ -7,11 +7,15 @@ interface IDateColumn {
 
 
 const DateColumn = ({ value }: IDateColumn) => {
+    const date = new Date(value);
+
     return (
         <View style={{ flex: 1, padding: 5 }}>
-            <Text style={{ color: Colors.DEFAULT_TEXT_COLOR }}>
-                {value}
-            </Text>
+            <View style={{ backgroundColor: Colors.DEFAULT_TEXT_COLOR, borderRadius: 3, paddingVertical: 3, width: 80, justifyContent: 'center', alignItems: 'center' }}>
+                <Text style={{ color: Colors.CARD_COLOR }}>
+                    {date?.toLocaleDateString()}
+                </Text>
+            </View>
         </View>
     );
 

@@ -1,7 +1,5 @@
 import React, { memo, useMemo } from "react";
 import { Text, View } from "react-native";
-import { useToast } from "react-native-rooster";
-import { Alert } from "react-native-windows";
 import CustomContextMenu from "../../../../components/customContextMenu";
 import CustomPressable from "../../../../components/customPressable";
 import { useDeleteProjectMutation } from "../../../../modules/api/projects.api";
@@ -28,7 +26,6 @@ interface ICompundData {
 
 const ProjectListItem = ({ project }: IProjectslistItem) => {
     const style = useMemo(() => getStyle(), []);
-    const { addToast } = useToast();
     const dispatch = useAppDispatch();
     const [apiDeleteProject] = useDeleteProjectMutation();
     const rowData = useMemo(() => [
@@ -176,17 +173,9 @@ const ProjectListItem = ({ project }: IProjectslistItem) => {
             if (response.error) {
                 throw response.error;
             }
-            await addToast({
-                type: 'success',
-                message: `Project deleted`.toUpperCase(),
-                title: "Success"
-            });
+            HELP.showToast('success', `Project deleted`.toUpperCase(), 'Deleted');
         } catch (error) {
-            await addToast({
-                type: 'error',
-                message: `${error?.data?.message?.toString() || error?.toString()}`.toUpperCase(),
-                title: "CANCEL"
-            });
+            HELP.alertError(error);
         }
 
     };

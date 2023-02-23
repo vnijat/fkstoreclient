@@ -33,11 +33,11 @@ const OrderSearchContainer = ({ searchValue }: IOrderSearchContainer) => {
 
     return (
         <>
-            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', backgroundColor: Colors.CARD_COLOR, paddingHorizontal: 20 }}>
-                <View style={{ flex: 0.4 }}>
-                    <InputItem inputValue={searchValue ?? ''} setValue={setSearchValue} isSearch />
+            <View style={{ flexGrow: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', backgroundColor: Colors.CARD_COLOR, paddingHorizontal: 10, paddingVertical: 10 }}>
+                <View style={{ flex: 0.4, justifyContent: 'center' }}>
+                    <InputItem inputValue={searchValue ?? ''} setValue={setSearchValue} isSearch height={30} />
                 </View>
-                <View style={{ flex: 0.6, paddingLeft: 10 }}>
+                <View style={{ flex: 0.6, paddingLeft: 10, justifyContent: 'center' }}>
                     <PrimaryButton onPress={onPressAddOrder} onHoverOpacity width={100} title={'NEW ORDER'} height={30} borderRadius={1} />
                 </View>
             </View>
@@ -46,4 +46,4 @@ const OrderSearchContainer = ({ searchValue }: IOrderSearchContainer) => {
 
 };
 
-export default memo(OrderSearchContainer);
+export default memo(OrderSearchContainer);  

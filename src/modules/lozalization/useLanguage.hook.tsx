@@ -16,6 +16,7 @@ function UseLanguage() {
                 save: 'Save',
                 reset: 'Reset',
                 delete: 'Delete',
+                deleted: 'Deleted',
                 add: 'Add',
                 orders: "Orders",
                 scan: 'Scan',
@@ -43,8 +44,8 @@ function UseLanguage() {
                 purchasePrice: 'Stock price',
                 wareHouse: 'Warehouse',
                 store: 'Store',
-                outOfStock: 'Out щf stock',
-                overallPrice: 'Overall зrice',
+                outOfStock: 'Out of stock',
+                overallPrice: 'Overall price',
                 clearFilters: 'Clear filters',
                 newProduct: 'New Product',
                 addNew: 'Add New',
@@ -52,13 +53,25 @@ function UseLanguage() {
                 update: 'Update',
                 code: 'Product Code',
                 select: 'Select',
-                noData: 'no data'
+                noData: 'No data',
+                alert: {
+                    onDelete: {
+                        product: {
+                            message: 'Product deleted from warehouse data',
+                            title: 'Deleted'
+                        }
+                    },
+                    onSucces: {
+
+                    }
+                }
             },
             ru: {
                 dashBoard: 'Панел',
                 save: 'Сохранить',
                 reset: 'Сбросить',
-                delete: 'Delete',
+                delete: 'Удалить',
+                deleted: 'Удалено',
                 add: 'Add',
                 orders: "Заказы",
                 scan: 'Сканировать',
@@ -95,7 +108,18 @@ function UseLanguage() {
                 update: 'Обновить',
                 code: 'Код продукта',
                 select: 'Выберите',
-                noData: 'Нет данных'
+                noData: 'Нет данных',
+                alert: {
+                    onDelete: {
+                        product: {
+                            message: 'Товар удален из складских данных',
+                            title: 'Удалено'
+                        }
+                    },
+                    onSucces: {
+
+                    }
+                }
             },
             az: {
                 dashBoard: 'Panel',
@@ -103,6 +127,7 @@ function UseLanguage() {
                 save: 'Yadda Saxla',
                 reset: 'Sıfırla',
                 delete: 'Sil',
+                deleted: 'Silindi',
                 add: 'Əlavə et',
                 scan: ' Skan edin',
                 products: 'Məhsullar',
@@ -138,7 +163,18 @@ function UseLanguage() {
                 update: 'Yenilə',
                 code: 'Məhsul kodu',
                 select: 'Seçin',
-                noData: 'Məlumat yoxdur'
+                noData: 'Məlumat yoxdur',
+                alert: {
+                    onDelete: {
+                        product: {
+                            message: 'Məhsul anbar məlumatından silindi',
+                            title: 'Silindi'
+                        }
+                    },
+                    onSucces: {
+
+                    }
+                }
             }
         },
         {

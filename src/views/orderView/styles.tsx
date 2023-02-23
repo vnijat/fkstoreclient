@@ -9,7 +9,8 @@ export const getStyle = () => {
       // alignItems: 'center'
       paddingLeft: 20,
       paddingRight: 15,
-      paddingVertical: 30
+      paddingVertical: 30,
+      paddingTop: 20,
     },
   });
 

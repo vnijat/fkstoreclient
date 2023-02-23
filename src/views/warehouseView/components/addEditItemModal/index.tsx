@@ -8,14 +8,17 @@ import { addItemOption, IItemOptions, setIsOpenOptionModal, setIsOptionForEdit, 
 import { clearItemForPosting, setIsItemForEdit, setIsShowAddEditModal, setItemForPost } from "../../../../modules/redux/itemsSlicer";
 import { RootState, useAppDispatch } from "../../../../modules/redux/store";
 import { AddItemInterface } from "../../../../types/item";
+import WareHouseDataProvider from "../../provider/data";
+import WareHouseLogicProvider from "../../provider/logic";
 import AddEditItemOptionsModal from "../addEditItemOptionsModal";
 
 
 
+interface IAddEditItemModal {
+}
 
 
-
-const AddEditItemModal = () => {
+const AddEditItemModal = ({ }: IAddEditItemModal) => {
     const dispatch = useAppDispatch();
     const isItemForEdit = useSelector((state: RootState) => state.itemsSlicer.isItemForEdit);
     const isShowItemModal = useSelector((state: RootState) => state.itemsSlicer.isShowAddEditModal);

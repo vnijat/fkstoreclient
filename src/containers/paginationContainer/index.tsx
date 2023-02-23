@@ -9,38 +9,37 @@ import { getStyle } from "./styles";
 
 interface IPaginationContainer {
     meta: Imeta;
-    actionFunction: Function;
+    paginationHandler: (data: Imeta) => void;
 }
 
 
-const PaginationContainer = ({ meta, actionFunction }: IPaginationContainer) => {
+const PaginationContainer = ({ meta, paginationHandler }: IPaginationContainer) => {
     const style = getStyle();
-    const dispatch = useAppDispatch();
 
     const onPressNext = useCallback((data: Imeta) => {
-        dispatch(actionFunction(data));
+        paginationHandler(data);
     }, []);
 
 
     const onPressPrevious = useCallback((data: Imeta) => {
-        dispatch(actionFunction(data));
+        paginationHandler(data);
     }, []);
 
 
     const onPressToLast = useCallback((data: Imeta) => {
-        dispatch(actionFunction(data));
+        paginationHandler(data);
     }, []);
 
     const onPressToFirst = useCallback((data: Imeta) => {
-        dispatch(actionFunction(data));
+        paginationHandler(data);
     }, []);
 
     const setPage = useCallback((data: Imeta) => {
-        dispatch(actionFunction(data));
+        paginationHandler(data);
     }, []);
 
     const onSelectTakeValue = useCallback((data: Imeta) => {
-        dispatch(actionFunction(data));
+        paginationHandler(data);
     }, []);
 
 

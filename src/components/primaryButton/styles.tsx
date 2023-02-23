@@ -15,7 +15,8 @@ export const getStyle = (textColor?: string, buttonColor?: string, disabled?: bo
             opacity: disabled ? 0.3 : 1,
             textAlign: 'center',
             fontFamily: FONT.FONT_FAMILY,
-            fontSize: FONT.FONT_SIZE_MEDIUM
+            fontSize: FONT.FONT_SIZE_MEDIUM,
+            fontWeight: FONT.FONT_BOLD
         }
 
     });

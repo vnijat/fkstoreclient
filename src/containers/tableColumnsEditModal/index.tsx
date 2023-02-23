@@ -1,42 +1,74 @@
 import CheckBox from '@react-native-community/checkbox';
-import { View, Text } from 'react-native';
+import { useEffect, useMemo, useState } from 'react';
+import { View, Text, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
-import { useSelector } from "react-redux";
 import CustomModal from "../../components/customModal";
 import CustomPressable from "../../components/customPressable";
 import { RootState, useAppDispatch } from "../../modules/redux/store";
 import { setIsHideTableColumn, setMoveColumn } from '../../modules/redux/tableConfigs';
+import HELP from '../../services/helpers';
 import { Colors } from '../../utils/colors';
+import { ITableDataConfig, ITableRowData } from '../simpleTable/types';
+import TableColumnEditItem from './components/tableColumnItem';
+import { getStyle } from './style';
 
 
 
-interface ITableColumnsEditModal {
+interface ITableColumnsEditModal<T> {
     isSwohModal: boolean;
     onClose: () => void;
+    tableDataConfigs: ITableDataConfig<T>[];
+    getTableConfigsNewState?: (tableData: ITableDataConfig<T>[]) => void;
 }
 
 
-const TableColumnsEditModal = ({ onClose, isSwohModal }: ITableColumnsEditModal) => {
-    const tableConfig = useSelector((state: RootState) => state.tableConfigs.item);
-    const dispatch = useAppDispatch();
+const TableColumnsEditModal = <T extends ITableRowData>({ onClose, isSwohModal, tableDataConfigs, getTableConfigsNewState }: ITableColumnsEditModal<T>) => {
+    const [tableConfig, setTableConfig] = useState([...tableDataConfigs]);
+    const style = useMemo(() => getStyle(), []);
+
+    useEffect(() => {
+        getTableConfigsNewState && getTableConfigsNewState(tableConfig);
+    }, [tableConfig]);
+
 
     const onCloseModal = () => {
         onClose();
     };
 
 
-    const onChangeValue = (value: boolean, index: number) => {
-        dispatch(setIsHideTableColumn({ tableName: 'item', value, index }));
+    const handleChekBoxValueChange = (value: boolean, index: number) => {
+        setTableConfig((prevState) => {
+            const configs = [...prevState];
+            const column = { ...configs[index] };
+            column.hidden = value;
+            configs[index] = column;
+            return configs;
+        });
     };
 
 
+
     const onPressUp = (currentIndex: number, newIndex: number) => {
-        dispatch(setMoveColumn({ tableName: 'item', currentIndex, newIndex }));
+        setTableConfig((prevState) => {
+            const configs = [...prevState];
+            const columnCurrent = { ...configs[currentIndex] };
+            const columnNew = { ...configs[newIndex] };
+            configs[newIndex] = columnCurrent;
+            configs[currentIndex] = columnNew;
+            return configs;
+        });
 
     };
 
     const onPressDown = (currentIndex: number, newIndex: number) => {
-        dispatch(setMoveColumn({ tableName: 'item', currentIndex, newIndex }));
+        setTableConfig((prevState) => {
+            const configs = [...prevState];
+            const columnCurrent = { ...configs[currentIndex] };
+            const columnNew = { ...configs[newIndex] };
+            configs[newIndex] = columnCurrent;
+            configs[currentIndex] = columnNew;
+            return configs;
+        });
     };
 
     return (
@@ -46,41 +78,26 @@ const TableColumnsEditModal = ({ onClose, isSwohModal }: ITableColumnsEditModal)
             isDissmissEnabled={false}
             width={600}
         >
-            <View style={{ flex: 1, paddingHorizontal: 10, flexWrap: 'wrap' }}>
-                {tableConfig?.length && tableConfig.map((column, index) => {
-                    const isCanMoveUp = index !== 0;
-                    const isCanMoveDown = index !== (tableConfig?.length - 1);
-                    return (
-                        <View
-                            key={`${index}`}
-                            style={{ height: 40, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', maxWidth: 200 }}
-                        >
-                            <View style={{ flex: 0.1, marginRight: 5 }}>
-                                <CheckBox
-                                    value={!column?.hidden}
-                                    onValueChange={(value) => onChangeValue(!value, index)}
-                                />
-                            </View>
-                            <View style={{ flex: 0.9, flexDirection: 'row', alignItems: 'center' }}>
-                                <Text style={{ color: Colors.DEFAULT_TEXT_COLOR }}>
-                                    {column?.headerTitle}
-                                </Text>
-                                <CustomPressable
-                                    disabled={!isCanMoveUp}
-                                    onPress={() => onPressUp(index, index - 1)}
-                                >
-                                    <Icon name={'chevron-small-up'} color={Colors.DEFAULT_TEXT_COLOR} size={18} />
-                                </CustomPressable>
-                                <CustomPressable
-                                    disabled={!isCanMoveDown}
-                                    onPress={() => onPressDown(index, index + 1)}
-                                >
-                                    <Icon name={'chevron-small-down'} color={Colors.DEFAULT_TEXT_COLOR} size={18} />
-                                </CustomPressable>
-                            </View>
-                        </View>
-                    );
-                })}
+            <View style={{ flex: 1, paddingHorizontal: 10 }}>
+                <View style={{ height: 400, flexWrap: 'wrap' }}>
+                    {tableConfig?.length && tableConfig.map((column, index) => {
+                        const cantMoveUp = index === 0;
+                        const cantMoveDown = index === (tableConfig?.length - 1);
+                        return (
+                            <TableColumnEditItem
+                                cantMoveDown={cantMoveDown}
+                                cantMoveUp={cantMoveUp}
+                                chekBoxValue={!column?.hidden}
+                                onCheckBoxValueChanged={(value) => handleChekBoxValueChange(!value, index)}
+                                onMoveDown={() => onPressDown(index, index + 1)}
+                                onMoveUp={() => onPressUp(index, index - 1)}
+                                title={column.headerTitle}
+                                key={`${index}`}
+                            />
+                        );
+                    })}
+                </View>
+
             </View>
         </CustomModal>
     );

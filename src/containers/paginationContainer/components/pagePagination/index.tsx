@@ -4,7 +4,9 @@ import Icon from 'react-native-vector-icons/Entypo';
 import CustomPressable from '../../../../components/customPressable';
 import { Imeta } from '../../../../types/common/common';
 import { Colors } from '../../../../utils/colors';
-import CustomPicker from '../../../customPicker';
+import CustomPicker, { IsingelSelectData } from '../../../customPicker';
+import PageButton from '../pageButton';
+import PagesContainer from '../pagesContainer';
 
 import { IpaginationTakeOptions, paginationTakeOptions } from './configs';
 import { getStyle } from './styles';
@@ -41,16 +43,7 @@ export const PagePagination: FC<IPagePAgination> = ({
   onSelectTakeValue,
   setPage
 }) => {
-  const styles = getStyle();
-  const pageCountToNumbers = useMemo(() => {
-    let pageArray = [];
-    if (pageCount) {
-      for (let num = 1; num <= pageCount; num++) {
-        pageArray.push(num);
-      }
-    }
-    return pageArray;
-  }, [pageCount]);
+  const styles = useMemo(() => getStyle(), []);
 
   const showedItemsCount = useMemo(
     () =>
@@ -62,60 +55,10 @@ export const PagePagination: FC<IPagePAgination> = ({
     [take, showedItemCount, hasNextPage],
   );
 
-  const onPressPageNumber = useCallback((pageNumber: number) => {
+  const onPressPageNumber = (pageNumber: number) => {
     setPage({ page: pageNumber });
-  }, []);
+  };
 
-  const renderPageNumbers = useMemo(() => {
-    if (page && pageCountToNumbers?.length) {
-      let diffFromMax = 2;
-      let diff = pageCount! - page;
-      if (diff <= 2) {
-        for (let i = 5; diff >= 0; i--) {
-          diff--;
-          diffFromMax = i;
-        }
-      }
-      const sliceStart = page >= 5 ? page - diffFromMax : 0;
-      const sliceEnd = page >= 5 ? page + 3 : 5;
-
-      return pageCountToNumbers
-        ?.slice(sliceStart, sliceEnd)
-        .map((item, index) => {
-          const selectedPage = item === page;
-          return (
-            <CustomPressable
-              onHoverOpacity
-              key={index}
-              onPress={() => onPressPageNumber(Number(item))}
-              style={[
-                {
-                  backgroundColor: selectedPage
-                    ? Colors.DEFAULT_TEXT_COLOR
-                    : Colors.CARD_COLOR,
-                },
-                styles.pageButtons,
-              ]}
-              pressedStyle={styles.pageNumberPressed}>
-              <Text style={[styles.pageText, !selectedPage && { color: Colors.DEFAULT_TEXT_COLOR }]} key={`${index}-${item}`}>
-                {item}
-              </Text>
-            </CustomPressable>
-          );
-        });
-    } else {
-      return null;
-    }
-  }, [page, pageCountToNumbers.length, pageCount, onPressPageNumber]);
-
-  const renderPages = useMemo(() => {
-    return (
-      <View
-        style={styles.pageNumbersContainer}>
-        {renderPageNumbers}
-      </View>
-    );
-  }, [pageCountToNumbers.length, page]);
 
   const onPressAlignLeft = () => {
     const toFirstPage = page! + 1 - page!;
@@ -135,7 +78,7 @@ export const PagePagination: FC<IPagePAgination> = ({
     onPressToLast({ page: toLastPage });
   };
 
-  const onChangeTakeParams = (item: IpaginationTakeOptions) => {
+  const onChangeTakeParams = (item: IsingelSelectData) => {
     onSelectTakeValue && onSelectTakeValue({ take: Number(item.value), page: 1 });
   };
 
@@ -187,7 +130,7 @@ export const PagePagination: FC<IPagePAgination> = ({
     <View style={styles.paginationContainer}>
       <View style={styles.paginationLeftContainer}>
         {renderLeftButtons}
-        {renderPages}
+        <PagesContainer pageCount={pageCount ?? 0} currentPage={page ?? 0} setNewPage={onPressPageNumber} />
         {renderRightButtons}
       </View>
       <View

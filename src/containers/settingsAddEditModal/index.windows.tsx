@@ -7,6 +7,7 @@ import { PrimaryButton } from "../../components/primaryButton";
 import { setIsShowSettingsModal } from "../../modules/redux/appStateSlicer";
 import { setApiURL, setLanguage } from "../../modules/redux/configsSlicer";
 import { RootState, useAppDispatch } from "../../modules/redux/store";
+import HELP from "../../services/helpers";
 import { Colors } from "../../utils/colors";
 import CustomPicker, { IsingelSelectData } from "../customPicker";
 
@@ -37,6 +38,7 @@ const SettingsAddEditModal = () => {
         dispatch(setApiURL(value));
         dispatch(setLanguage(lang));
         dispatch(setIsShowSettingsModal(false));
+        HELP.showToast('info', `Settings Saved`, 'Saved');
     };
 
     const onPressReset = async () => {

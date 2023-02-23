@@ -1,20 +1,19 @@
 import { Picker } from "@react-native-picker/picker";
 import React, { useState } from "react";
 import { View } from "react-native";
-import { useToast } from "react-native-rooster";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useSelector } from "react-redux";
 import { InputItem } from "../../../components/inputItem";
 import { PrimaryButton } from "../../../components/primaryButton";
 import { setApiURL, setLanguage } from "../../../modules/redux/configsSlicer";
 import { RootState, useAppDispatch } from "../../../modules/redux/store";
+import HELP from "../../../services/helpers";
 import { Colors } from "../../../utils/colors";
 
 
 
 const ConfigsView = () => {
     const dispatch = useAppDispatch();
-    const { addToast } = useToast();
     const ApiUrl = useSelector((state: RootState) => state.configs.apiURL);
     const appLang = useSelector((state: RootState) => state.configs.language);
     const [value, setValue] = useState(ApiUrl);
@@ -26,11 +25,7 @@ const ConfigsView = () => {
     const onPressSave = () => {
         dispatch(setApiURL(value));
         dispatch(setLanguage(lang));
-        addToast({
-            type: 'success',
-            message: `Configs Saved`.toUpperCase(),
-            title: "Success"
-        });
+        HELP.showToast('info', `Configs Saved`.toUpperCase(), "Saved");
     };
 
     const onPressReset = async () => {

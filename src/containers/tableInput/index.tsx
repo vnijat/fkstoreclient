@@ -1,10 +1,9 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Text, TextInput, View } from "react-native";
-import { useToast } from "react-native-rooster";
 import Icon from "react-native-vector-icons/Entypo";
 import { ScrollView } from "react-native-windows";
 import CustomPressable from "../../components/customPressable";
-import { PrimaryButton } from "../../components/primaryButton";
+import HELP from "../../services/helpers";
 import { Colors } from "../../utils/colors";
 import { currency } from "../../utils/currency.windows";
 import HeaderColumn from "./components/headerColumn";
@@ -22,7 +21,6 @@ interface ITableInput {
 
 const TableInput = ({ tableData, tableConfig, getNewTableData, isDataEditable }: ITableInput) => {
     const style = useMemo(() => getStyle(), []);
-    const { addToast } = useToast();
     const [data, setData] = useState<RowDataType[]>([...tableData]);
     const scrollRef = useRef(null);
     const columnHeaderTitles = useMemo(() => tableConfig.map(item => item.headerTitle), [tableConfig]);
@@ -98,11 +96,7 @@ const TableInput = ({ tableData, tableConfig, getNewTableData, isDataEditable }:
         const notEmptyRow = data.filter((rowData) => Object.keys(rowData).every(keys => !!rowData[keys].toString().length));
         if (isHasChanges) {
             getNewTableData && getNewTableData(notEmptyRow);
-            await addToast({
-                type: 'success',
-                message: `Table Data Saved`.toUpperCase(),
-                title: "Success"
-            });
+            HELP.showToast('info', `Table Data Saved`.toUpperCase(), 'Saved');
         }
     };
 

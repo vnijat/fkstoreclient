@@ -150,7 +150,7 @@ export const InputItem: FC<IInputItem> = memo(
         />
       </>
       );
-    }, [inputValue, canSelectParent, dataForPicker, isErorr, isPickerItemEditable, isDisabled, disablePickerActionButtons, disabledForEdit]);
+    }, [inputValue, canSelectParent, dataForPicker, isErorr, isPickerItemEditable, isDisabled, disablePickerActionButtons, disabledForEdit, requiredText]);
 
 
     const renderTextInput = useMemo(() => {
@@ -187,7 +187,7 @@ export const InputItem: FC<IInputItem> = memo(
             onValueChange={onCheckBoxValueChange}
             onCheckColor={Colors.CARD_HEADER_COLOR}
             onTintColor={Colors.CARD_HEADER_COLOR}
-            onFillColor={Colors.CULTURED}          />
+            onFillColor={Colors.CULTURED} />
         );
       } else {
         return null;

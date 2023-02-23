@@ -57,14 +57,6 @@ const ItemsForPurchaseSearch = ({ }: IItemsForOrderSearch) => {
         }
     }, [data?.length]);
 
-    const handleSearch = (text: string) => {
-        setSearchValue(text?.trim());
-        setSkip(true);
-        if (text?.trim() === '') {
-            setShowContent(false);
-        }
-        clearTimeout(timeoutId as ReturnType<typeof setTimeout>);
-    };
 
     useEffect(() => {
         if (!!value.trim().length) {
@@ -78,6 +70,15 @@ const ItemsForPurchaseSearch = ({ }: IItemsForOrderSearch) => {
             clearTimeout(timeoutId as ReturnType<typeof setTimeout>);
         };
     }, [value]);
+
+    const handleSearch = (text: string) => {
+        setSearchValue(text?.trim());
+        setSkip(true);
+        if (text?.trim() === '') {
+            setShowContent(false);
+        }
+        clearTimeout(timeoutId as ReturnType<typeof setTimeout>);
+    };
 
     const handleContentDissmiss = () => {
         setShowContent(false);

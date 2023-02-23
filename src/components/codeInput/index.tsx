@@ -36,14 +36,6 @@ const CodeInput = ({ inputValue, maxLength, width, height, categoryId, errorDeta
     const { data: codeSuggestion, error: fetchError, isLoading, isUninitialized } = useGetItemCodeSuggestionsQuery({ itemCode: inputValue, categoryId: categoryId as number }, {
     });
 
-    const onChangeText = (text: string) => {
-        const isCode = regExPatterns.IS_CODE;
-        if ((isCode.test(text) || text === '') && (inputValue !== text)) {
-            isCode.test(text) && !isOpenSuggested && setIsOpenSuggested(true);
-            getCodeValue(text);
-            (text === '') && setIsOpenSuggested(false);
-        }
-    };
 
     useEffect(() => {
         if (isEditable) {
@@ -63,6 +55,16 @@ const CodeInput = ({ inputValue, maxLength, width, height, categoryId, errorDeta
             clearTimeout(timeoutId as ReturnType<typeof setTimeout>);
         };
     }, [codeSuggestion?.lastCodes[0]?.code, categoryId, isEditable]);
+
+
+    const onChangeText = (text: string) => {
+        const isCode = regExPatterns.IS_CODE;
+        if ((isCode.test(text) || text === '') && (inputValue !== text)) {
+            isCode.test(text) && !isOpenSuggested && setIsOpenSuggested(true);
+            getCodeValue(text);
+            (text === '') && setIsOpenSuggested(false);
+        }
+    };
 
 
     const onDissmisSuggested = () => {

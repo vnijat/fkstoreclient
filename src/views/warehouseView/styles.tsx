@@ -13,18 +13,19 @@ export const getStyle = () => {
     },
     listContainer: {
       flex: 0.9,
-      backgroundColor: Colors.BACKGROUND_COLOR
+      backgroundColor: Colors.BACKGROUND_COLOR,
     },
     searchContainer: {
       backgroundColor: Colors.CARD_COLOR,
-      flexShrink: 0.2
     },
     footContainer: {
       flex: 0.1,
       backgroundColor: Colors.CARD_HEADER_COLOR,
       justifyContent: 'center'
     },
-    listTable: { flexGrow: 1 }
+    listTable: {
+      flex: 1
+    }
   });
 
   return style;

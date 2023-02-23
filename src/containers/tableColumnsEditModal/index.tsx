@@ -1,6 +1,6 @@
 import CheckBox from '@react-native-community/checkbox';
-import { useEffect, useMemo, useState } from 'react';
-import { View, Text, Alert } from 'react-native';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { View, Text, Alert, Animated, PanResponder } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
 import CustomModal from "../../components/customModal";
 import CustomPressable from "../../components/customPressable";
@@ -25,6 +25,7 @@ interface ITableColumnsEditModal<T> {
 const TableColumnsEditModal = <T extends ITableRowData>({ onClose, isSwohModal, tableDataConfigs, getTableConfigsNewState }: ITableColumnsEditModal<T>) => {
     const [tableConfig, setTableConfig] = useState([...tableDataConfigs]);
     const style = useMemo(() => getStyle(), []);
+    const itemsRef = useRef([]).current;
 
     useEffect(() => {
         getTableConfigsNewState && getTableConfigsNewState(tableConfig);
@@ -34,6 +35,9 @@ const TableColumnsEditModal = <T extends ITableRowData>({ onClose, isSwohModal, 
     const onCloseModal = () => {
         onClose();
     };
+
+
+
 
 
     const handleChekBoxValueChange = (value: boolean, index: number) => {
@@ -70,7 +74,7 @@ const TableColumnsEditModal = <T extends ITableRowData>({ onClose, isSwohModal, 
             return configs;
         });
     };
-
+    console.log("ITEMSREF==>>", itemsRef[0]);
     return (
         <CustomModal
             isShowModal={isSwohModal}
@@ -83,7 +87,9 @@ const TableColumnsEditModal = <T extends ITableRowData>({ onClose, isSwohModal, 
                     {tableConfig?.length && tableConfig.map((column, index) => {
                         const cantMoveUp = index === 0;
                         const cantMoveDown = index === (tableConfig?.length - 1);
+
                         return (
+
                             <TableColumnEditItem
                                 cantMoveDown={cantMoveDown}
                                 cantMoveUp={cantMoveUp}
@@ -92,7 +98,9 @@ const TableColumnsEditModal = <T extends ITableRowData>({ onClose, isSwohModal, 
                                 onMoveDown={() => onPressDown(index, index + 1)}
                                 onMoveUp={() => onPressUp(index, index - 1)}
                                 title={column.headerTitle}
+                                index={index}
                                 key={`${index}`}
+                                itemRef={itemsRef}
                             />
                         );
                     })}

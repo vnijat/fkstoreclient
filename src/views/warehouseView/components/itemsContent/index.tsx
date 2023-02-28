@@ -176,13 +176,13 @@ const ItemsContent: FC<ItemsContentProps> = ({ id, itemIndex, selectBulk, data }
                 {contextActionButtons.map((button, index) => {
                     return (
                         <CustomPressable
-                            key={`${button.title}-${index}`}
+                            key={`${button?.title}-${index}`}
                             style={style.contextMenuButton}
                             onPress={button.onPress}
                             onHoverOpacity
                         >
                             <Text style={style.contextMenuButtonText}>
-                                {button.title}
+                                {button?.title}
                             </Text>
                         </CustomPressable>
                     );

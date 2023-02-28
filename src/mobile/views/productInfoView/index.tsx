@@ -63,7 +63,7 @@ const ProductInfoView = ({ }: IOrdersViewMobile) => {
                         < DataField title={'Barcode'} value={data?.barcode} />
                         <DataField title={'Name'} value={data?.name} />
                         <DataField title={'Description'} value={data?.description} />
-                        <DataField title={'Category'} value={data?.category.title} />
+                        <DataField title={'Category'} value={data?.category?.title} />
                         <DataField title={'Location'} value={`(${data?.store.name}) ${data?.location.code}`} />
                         <DataField title={'Supplier'} value={data?.supplier.name} />
                         <DataField title={'Color'} value={data?.color.name} />

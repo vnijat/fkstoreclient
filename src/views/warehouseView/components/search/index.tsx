@@ -68,8 +68,8 @@ const SearchContainer: FC<ISearchContainer> = ({ logicProvider, dataProvider }) 
                 return titleArray.map((title, index) => {
                     let data = dataForFilterBy[title as keyof ItemOptionForInputs];
                     const pickerTitle = lang[title as keyof typeof lang] ? lang[title as keyof typeof lang] : title;
-                    const waitsFor = inWaitAnotherData.find(item => item.title === title)?.waitsForDtokey;
-                    const waitsForTitle = inWaitAnotherData.find(item => item.title === title)?.waitsForTitle;
+                    const waitsFor = inWaitAnotherData.find(item => item?.title === title)?.waitsForDtokey;
+                    const waitsForTitle = inWaitAnotherData.find(item => item?.title === title)?.waitsForTitle;
                     let isDisabled = !!waitsFor?.length;
                     const requiredDataIds = !!waitsFor && pickerFilterParams[waitsFor as keyof typeof pickerFilterParams];
                     if (requiredDataIds.length) {

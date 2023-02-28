@@ -12,7 +12,7 @@ export const getStyle = () => {
             width: 180,
             borderWidth: 1,
             borderColor: Colors.CARD_HEADER_COLOR,
-            margin: 1,
+            margin: 3,
             borderRadius: 3,
         },
         checkBoxContainer: {

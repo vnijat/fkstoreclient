@@ -11,6 +11,7 @@ import { Colors } from '../../utils/colors';
 import { ITableDataConfig, ITableRowData } from '../simpleTable/types';
 import TableColumnEditItem from './components/tableColumnItem';
 import { getStyle } from './style';
+import { IListItemLayoutData } from './types';
 
 
 
@@ -25,7 +26,7 @@ interface ITableColumnsEditModal<T> {
 const TableColumnsEditModal = <T extends ITableRowData>({ onClose, isSwohModal, tableDataConfigs, getTableConfigsNewState }: ITableColumnsEditModal<T>) => {
     const [tableConfig, setTableConfig] = useState([...tableDataConfigs]);
     const style = useMemo(() => getStyle(), []);
-    const itemsRef = useRef([]).current;
+    const [listItemsData, setListItemsData] = useState<IListItemLayoutData[]>([]);
 
     useEffect(() => {
         getTableConfigsNewState && getTableConfigsNewState(tableConfig);
@@ -37,8 +38,13 @@ const TableColumnsEditModal = <T extends ITableRowData>({ onClose, isSwohModal, 
     };
 
 
-
-
+    const getItemLayoutData = (index: number, data: any) => {
+        setListItemsData((prev) => {
+            const newData = [...prev];
+            newData[index] = data;
+            return newData;
+        });
+    };
 
     const handleChekBoxValueChange = (value: boolean, index: number) => {
         setTableConfig((prevState) => {
@@ -50,21 +56,7 @@ const TableColumnsEditModal = <T extends ITableRowData>({ onClose, isSwohModal, 
         });
     };
 
-
-
-    const onPressUp = (currentIndex: number, newIndex: number) => {
-        setTableConfig((prevState) => {
-            const configs = [...prevState];
-            const columnCurrent = { ...configs[currentIndex] };
-            const columnNew = { ...configs[newIndex] };
-            configs[newIndex] = columnCurrent;
-            configs[currentIndex] = columnNew;
-            return configs;
-        });
-
-    };
-
-    const onPressDown = (currentIndex: number, newIndex: number) => {
+    const swipeItems = (currentIndex: number, newIndex: number) => {
         setTableConfig((prevState) => {
             const configs = [...prevState];
             const columnCurrent = { ...configs[currentIndex] };
@@ -74,7 +66,8 @@ const TableColumnsEditModal = <T extends ITableRowData>({ onClose, isSwohModal, 
             return configs;
         });
     };
-    console.log("ITEMSREF==>>", itemsRef[0]);
+
+
     return (
         <CustomModal
             isShowModal={isSwohModal}
@@ -85,22 +78,16 @@ const TableColumnsEditModal = <T extends ITableRowData>({ onClose, isSwohModal, 
             <View style={{ flex: 1, paddingHorizontal: 10 }}>
                 <View style={{ height: 400, flexWrap: 'wrap' }}>
                     {tableConfig?.length && tableConfig.map((column, index) => {
-                        const cantMoveUp = index === 0;
-                        const cantMoveDown = index === (tableConfig?.length - 1);
-
                         return (
-
                             <TableColumnEditItem
-                                cantMoveDown={cantMoveDown}
-                                cantMoveUp={cantMoveUp}
                                 chekBoxValue={!column?.hidden}
                                 onCheckBoxValueChanged={(value) => handleChekBoxValueChange(!value, index)}
-                                onMoveDown={() => onPressDown(index, index + 1)}
-                                onMoveUp={() => onPressUp(index, index - 1)}
                                 title={column.headerTitle}
                                 index={index}
                                 key={`${index}`}
-                                itemRef={itemsRef}
+                                setListItemsData={getItemLayoutData}
+                                listItemsData={listItemsData}
+                                swipeItems={swipeItems}
                             />
                         );
                     })}

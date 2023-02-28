@@ -97,7 +97,7 @@ const ProjectStatusColumn = ({ status: currentStatus, projectId }: IProjectStatu
                                 <CustomPressable style={style.iconContainer}
                                     onPress={() => onSelect(status.value)}
                                     onHoverOpacity
-                                    tooltip={status.title}
+                                    tooltip={status?.title}
                                 >
                                     <View style={style.iconButton}>
                                         {HELP.getProjectStatusIcons(status.value, 20)}

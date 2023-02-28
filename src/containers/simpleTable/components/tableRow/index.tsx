@@ -47,7 +47,7 @@ const TableRow = <T extends ITableRowData>({ tableRowData, tableDataConfig, cont
             {tableDataConfig.map((tableConfig, index) => {
                 const { dtoKey, isObject, objectDtoKey, type, customColumnKey } = tableConfig;
                 if (tableConfig?.hidden) return null;
-                const value = dtoKey ? (isObject ? tableRowData[dtoKey][objectDtoKey!] : tableRowData[dtoKey]) : tableRowData;
+                const value = dtoKey ? (isObject ? (tableRowData[dtoKey][objectDtoKey!] ?? '') : tableRowData[dtoKey]) : tableRowData;
                 if (customColumnKey && customColumns && customColumns[customColumnKey]) {
                     const CustomColumn = customColumns[customColumnKey];
                     return (

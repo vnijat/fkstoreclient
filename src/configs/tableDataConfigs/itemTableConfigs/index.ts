@@ -59,16 +59,28 @@ export const itemTableDataConfigs: ITableDataConfig<Item>[] = [
     hidden: false,
   },
   {
-    headerTitle: 'Price',
-    dtoKey: 'pricePerUnit',
+    headerTitle: 'Cost Price',
+    dtoKey: 'costPrice',
     type: 'money',
     hidden: false,
   },
   {
-    headerTitle: 'Total Price',
-    dtoKey: 'totalPrice',
+    headerTitle: 'Total Cost Price',
+    dtoKey: 'totalCostPrice',
     type: 'money',
     hidden: false,
+  },
+  {
+    headerTitle: 'Sell Price',
+    dtoKey: 'sellPrice',
+    type: 'money',
+    hidden: true,
+  },
+  {
+    headerTitle: 'Total Sell Price',
+    dtoKey: 'totalSellPrice',
+    type: 'money',
+    hidden: true,
   },
   {
     headerTitle: 'Supplier',

@@ -6,8 +6,8 @@ export const getStyle = () => {
     const style = StyleSheet.create({
         container: {
             flexGrow: 1,
-            paddingVertical: 5,
-            paddingHorizontal: 5,
+            paddingVertical: 10,
+            paddingHorizontal: 10,
         },
         search: {
         },

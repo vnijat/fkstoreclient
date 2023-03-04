@@ -8,31 +8,29 @@ import { ITableConfig, RowDataType } from "../../../../containers/tableInput/typ
 import { useGetProjectOrdersQuery } from "../../../../modules/api/projects.api";
 import { setIsShowProjectOrdersModal } from "../../../../modules/redux/projectSlicer";
 import { RootState, useAppDispatch } from "../../../../modules/redux/store";
+import { Project } from "../../../../types/project";
+import { OrderItem } from "../../../../types/projectOrder";
 import { Colors } from "../../../../utils/colors";
+import ProjectDataProvider from "../../provider/data";
+import ProjectLogicProvider from "../../provider/logic";
 import { getStyle } from "./styles";
 
 
 
 interface IProectOrdersInfoModal {
-
+    logicProvider: ReturnType<typeof ProjectLogicProvider>;
+    dataProvider: ReturnType<typeof ProjectDataProvider>;
 }
 
 
-const ProjectOrdersInfoModal = ({ }: IProectOrdersInfoModal) => {
+const ProjectOrdersInfoModal = ({ logicProvider, dataProvider }: IProectOrdersInfoModal) => {
+    const { handleOnCloseProjectOrdersModal } = logicProvider;
+    const { projectOrdersData: { data, isLoading }, isShowProjectOrdersModal } = dataProvider;
     const style = useMemo(() => getStyle(), []);
     const dispatch = useAppDispatch();
-    const isShowModal = useSelector((state: RootState) => state.projectSlicer.isShowProjectOrdersModal);
-    const projectId = useSelector((state: RootState) => state.projectSlicer.projectIdForRequestOrders);
-    const { data, isLoading } = useGetProjectOrdersQuery(projectId, {
-        selectFromResult: ({ data, isLoading, isUninitialized }) => ({
-            data,
-            isLoading: isUninitialized ? true : isLoading
-        }
-        ),
-        skip: !isShowModal
-    });
 
-    const tableConfig: ITableConfig[] = [
+    const tableConfig: ITableConfig<OrderItem>[] = [
+        { headerTitle: 'ORDER DATE', dtoKey: 'updatedAt', isDate: true },
         { headerTitle: 'NAME', dtoKey: 'name' },
         { headerTitle: 'BARCODE', dtoKey: 'barcode' },
         { headerTitle: 'UNIT', dtoKey: 'unit', },
@@ -41,18 +39,16 @@ const ProjectOrdersInfoModal = ({ }: IProectOrdersInfoModal) => {
         { headerTitle: 'COST ', dtoKey: 'totalPrice', isMoney: true, isSumTotal: true },
     ];
 
-    const onCloseModal = () => {
-        dispatch(setIsShowProjectOrdersModal(false));
-    };
+
 
     return (
         <CustomModal
-            isShowModal={isShowModal}
+            isShowModal={isShowProjectOrdersModal}
             isDissmissEnabled={false}
             width={1200}
-            closeModal={onCloseModal}
+            closeModal={handleOnCloseProjectOrdersModal}
         >
-            {isShowModal && <View style={{ flex: 1, maxHeight: 700 }}>
+            {isShowProjectOrdersModal && <View style={{ flex: 1, maxHeight: 700 }}>
                 <Text style={{ alignSelf: 'center', fontSize: 14, color: Colors.DEFAULT_TEXT_COLOR }}>
                     {'ORDERS'}
                 </Text>

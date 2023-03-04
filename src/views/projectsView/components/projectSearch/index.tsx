@@ -1,47 +1,33 @@
 import React, { memo, useMemo, useState } from "react";
 import { View } from "react-native";
-import { Alert } from "react-native-windows";
 import { InputItem } from "../../../../components/inputItem/index.windows";
 import { PrimaryButton } from "../../../../components/primaryButton";
-import TableInput from "../../../../containers/tableInput";
-import { ITableConfig } from "../../../../containers/tableInput/types";
-import { setProjectsQueryParams } from "../../../../modules/redux/projectQuerySlicer";
-import { setIsShowProjectAddEditModal } from "../../../../modules/redux/projectSlicer";
-import { useAppDispatch } from "../../../../modules/redux/store";
 import { Colors } from "../../../../utils/colors";
+import ProjectDataProvider from "../../provider/data";
+import ProjectLogicProvider from "../../provider/logic";
 import { getStyle } from "./styles";
 
 
 
 interface IProjectSearchCotnainer {
-    searchValue: string;
-
-
-
-
+    logicProvider: ReturnType<typeof ProjectLogicProvider>;
+    dataProvider: ReturnType<typeof ProjectDataProvider>;
 }
 
 
-const ProjectSearchContainer = ({ searchValue }: IProjectSearchCotnainer) => {
+const ProjectSearchContainer = ({ logicProvider, dataProvider }: IProjectSearchCotnainer) => {
+    const { handleSearchInput, handleButtonCreateProject } = logicProvider;
+    const { projectsQueryParams } = dataProvider;
     const style = useMemo(() => getStyle(), []);
-    const dispatch = useAppDispatch();
-
-    const setSearchValue = (text: string) => {
-        dispatch(setProjectsQueryParams({ page: 1, search: text }));
-    };
-
-    const onPressAddProject = () => {
-        dispatch(setIsShowProjectAddEditModal(true));
-    };
 
     return (
         <>
             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', backgroundColor: Colors.CARD_COLOR, paddingHorizontal: 20 }}>
                 <View style={{ flex: 0.4 }}>
-                    <InputItem inputValue={searchValue ?? ''} setValue={setSearchValue} isSearch />
+                    <InputItem inputValue={projectsQueryParams?.search ?? ''} setValue={(value) => handleSearchInput(value as string)} isSearch height={30} />
                 </View>
                 <View style={{ flex: 0.6, paddingLeft: 10 }}>
-                    <PrimaryButton onPress={onPressAddProject} onHoverOpacity width={100} title={'ADD PROJECT'} height={30} borderRadius={1} />
+                    <PrimaryButton onPress={handleButtonCreateProject} onHoverOpacity width={100} title={'CREATE PROJECT'} height={30} borderRadius={1} />
                 </View>
             </View>
         </>

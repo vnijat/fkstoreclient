@@ -34,7 +34,7 @@ const ItemsForPurchaseSearchItem = ({ data, setShowContent }: IItemsForPurchaseS
     ], [data]);
 
 
-    const setItemForOrder = () => {
+    const setItemForPurchase = () => {
         if (!data.inUse) {
             dispatch(addItemForPurchase({
                 itemId: data.id as number,
@@ -42,7 +42,7 @@ const ItemsForPurchaseSearchItem = ({ data, setShowContent }: IItemsForPurchaseS
                 name: data.name,
                 quantity: 0,
                 barcode: data.barcode,
-                pricePerUnit: data.pricePerUnit,
+                pricePerUnit: data.costPrice,
                 fullfilled: false,
                 supplierId: data.supplier.id || null,
                 paymentMethod: PaymentMethod.CASH,
@@ -81,7 +81,7 @@ const ItemsForPurchaseSearchItem = ({ data, setShowContent }: IItemsForPurchaseS
 
     return (
         <CustomPressable
-            onPress={setItemForOrder}
+            onPress={setItemForPurchase}
             style={style.searchedItemContainer}
         >
             {renderRow}

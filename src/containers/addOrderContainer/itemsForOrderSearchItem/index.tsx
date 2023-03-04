@@ -41,7 +41,7 @@ const ItemsForOrderSearchItem = ({ data, setShowContent }: IItemsForOrderSearchI
                 quantity: 0,
                 barcode: data.barcode,
                 itemAtStock: data?.quantity,
-                pricePerUnit: data.pricePerUnit,
+                pricePerUnit: data.costPrice,
                 status: OrderItemStatus.IN_USE,
                 projectId: null
             }));

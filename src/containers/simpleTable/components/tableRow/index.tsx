@@ -51,7 +51,7 @@ const TableRow = <T extends ITableRowData>({ tableRowData, tableDataConfig, cont
                 if (customColumnKey && customColumns && customColumns[customColumnKey]) {
                     const CustomColumn = customColumns[customColumnKey];
                     return (
-                        <View style={{ flex: 1 }} key={`${index}`}>
+                        <View style={style.customColumnContainer} key={`${index}`}>
                             <CustomColumn data={tableRowData} />
                         </View>
                     );

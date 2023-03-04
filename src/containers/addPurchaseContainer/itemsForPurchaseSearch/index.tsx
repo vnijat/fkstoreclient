@@ -47,7 +47,7 @@ const ItemsForPurchaseSearch = ({ }: IItemsForOrderSearch) => {
                     quantity: 0,
                     barcode: data[0].barcode,
                     updateMainPrice: false,
-                    pricePerUnit: data[0].pricePerUnit,
+                    pricePerUnit: data[0].costPrice,
                     paymentMethod: PaymentMethod.CASH,
                     fullfilled: false,
                     supplierId: data[0].supplier.id || null,

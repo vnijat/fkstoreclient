@@ -7,7 +7,8 @@ interface AddItemInterface {
   name: string;
   code?: string;
   description?: string;
-  pricePerUnit?: string;
+  costPrice?: string;
+  sellPrice?: string;
   quantity?: string;
   unitId?: string;
   supplierId?: string;
@@ -103,7 +104,8 @@ interface Label extends Common {
 interface Item extends Common {
   name: string;
   description: string;
-  pricePerUnit: number;
+  costPrice: number;
+  sellPrice: number;
   quantity: number;
   code: string;
   barcode: string;
@@ -113,7 +115,8 @@ interface Item extends Common {
   location: Location;
   store: Store;
   color: Color;
-  totalPrice: number;
+  totalCostPrice: number;
+  totalSellPrice: number;
   outOfStock: boolean;
   label: Label;
   inUse: boolean;

@@ -1,23 +1,15 @@
 import CheckBox from '@react-native-community/checkbox';
 import React, { FC, useMemo, useRef, useState } from 'react';
 import { Text, View, ScrollView } from 'react-native';
-import { shallowEqual, useSelector } from 'react-redux';
 import { ClearIcon } from '../../../../assets/icons/searchContainerIcons';
 import CustomPressable from '../../../../components/customPressable';
 import { InputItem } from '../../../../components/inputItem';
 import { PrimaryButton } from '../../../../components/primaryButton';
 import CustomPicker from '../../../../containers/customPicker';
-import { useGetItemInputsQuery } from '../../../../modules/api/apiSlice';
 import UseLanguage from '../../../../modules/lozalization/useLanguage.hook';
-import { setSelectedWithLabel, setFilterByParams, clearFilters } from '../../../../modules/redux/filterSlicer';
-import { setItemQueryParams } from '../../../../modules/redux/itemQuerySlicer';
-import { setIsShowAddEditModal } from '../../../../modules/redux/itemsSlicer';
-import { selectFilterByForPicker, selectSelectedWithLabel } from '../../../../modules/redux/selectors/filterSelector';
-import { useAppDispatch } from '../../../../modules/redux/store';
 import { FilterParamskey, ItemOptionForInputs } from '../../../../types/item';
 import { Colors } from '../../../../utils/colors';
 import { currency } from '../../../../utils/currency.windows';
-import FONT from '../../../../utils/font';
 import WareHouseDataProvider from '../../provider/data';
 import WareHouseLogicProvider from '../../provider/logic';
 import FilterItem from './component/filterItems';
@@ -55,11 +47,11 @@ const SearchContainer: FC<ISearchContainer> = ({ logicProvider, dataProvider }) 
     const searchInputRef = useRef(null);
 
     const renderSearch = useMemo(() => {
-        return <InputItem width={'100%'} setValue={(value) => handleSearchValueChange(value as string)} inputValue={wareHouseQueryParams?.search || ''} inputRef={(r) => searchInputRef.current = r} isSearch={true} />;
+        return <InputItem width={'100%'} setValue={(value) => handleSearchValueChange(value as string)} inputValue={wareHouseQueryParams?.search || ''} inputRef={(r) => searchInputRef.current = r} isSearch={true} height={30} />;
 
     }, [wareHouseQueryParams?.search]);
 
-    const inWaitAnotherData = [{ title: lang['location'], waitsForDtokey: 'storeId', waitsForTitle: lang['store'] }];
+    const inWaitAnotherData = [{ dtoKey: 'location', title: lang['location'], waitsForDtokey: 'storeId', waitsForTitle: lang['store'] }];
 
     const renderFilterByPickers = useMemo(() => {
         if (dataForFilterBy) {
@@ -68,8 +60,8 @@ const SearchContainer: FC<ISearchContainer> = ({ logicProvider, dataProvider }) 
                 return titleArray.map((title, index) => {
                     let data = dataForFilterBy[title as keyof ItemOptionForInputs];
                     const pickerTitle = lang[title as keyof typeof lang] ? lang[title as keyof typeof lang] : title;
-                    const waitsFor = inWaitAnotherData.find(item => item?.title === title)?.waitsForDtokey;
-                    const waitsForTitle = inWaitAnotherData.find(item => item?.title === title)?.waitsForTitle;
+                    const waitsFor = inWaitAnotherData.find(item => item?.dtoKey === title)?.waitsForDtokey;
+                    const waitsForTitle = inWaitAnotherData.find(item => item?.dtoKey === title)?.waitsForTitle;
                     let isDisabled = !!waitsFor?.length;
                     const requiredDataIds = !!waitsFor && pickerFilterParams[waitsFor as keyof typeof pickerFilterParams];
                     if (requiredDataIds.length) {

@@ -5,36 +5,29 @@ import { PrimaryButton } from "../../../components/primaryButton";
 import { setPurchaseQueryParams } from "../../../modules/redux/purchaseQuerySlicer";
 import { setIsShowPurchaseModal } from "../../../modules/redux/purchaseSlicer";
 import { useAppDispatch } from "../../../modules/redux/store";
+import PurchaseDataProvider from "../provider/data";
+import PurchaseLogicProvider from "../provider/logic";
 import { getStyle } from "./styles";
 
 
 
 interface IPurchaseSearchContainer {
-    searchValue: string;
-
-
-
-
+    logicProvider: ReturnType<typeof PurchaseLogicProvider>;
+    dataProvider: ReturnType<typeof PurchaseDataProvider>;
 }
 
 
-const PurchaseSearchContainer = ({ searchValue }: IPurchaseSearchContainer) => {
+const PurchaseSearchContainer = ({ logicProvider, dataProvider }: IPurchaseSearchContainer) => {
+    const { purchaseQueryParams } = dataProvider;
+    const { handleSearchInput, onPressAddPurchase } = logicProvider;
     const style = useMemo(() => getStyle(), []);
-    const dispatch = useAppDispatch();
 
-    const setSearchValue = (text: string) => {
-        dispatch(setPurchaseQueryParams({ page: 1, search: text }));
-    };
-
-    const onPressAddPurchase = () => {
-        dispatch(setIsShowPurchaseModal(true));
-    };
 
     return (
         <>
             <View style={style.container}>
                 <View style={style.searchInputContainer}>
-                    <InputItem inputValue={searchValue ?? ''} setValue={setSearchValue} isSearch />
+                    <InputItem inputValue={purchaseQueryParams.search ?? ''} setValue={(value) => handleSearchInput(value as string)} isSearch height={30} />
                 </View>
                 <View style={style.actionButtonContainer}>
                     <PrimaryButton onPress={onPressAddPurchase}

@@ -14,6 +14,13 @@ export const getStyle = () => {
             margin: 1,
             alignItems: 'center',
             paddingHorizontal: 10,
+        },
+        customColumnContainer: {
+            flex: 1,
+            flexDirection: 'row',
+            maxWidth: 250,
+            minWidth: 200,
+            zIndex: 3
         }
 
     });

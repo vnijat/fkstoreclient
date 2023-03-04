@@ -16,7 +16,7 @@ interface AddClientProject {
   isSample?: boolean;
   otherExpenses?: OtherExpensesType[];
   status: ProjectStatus;
-  orders: OrderItem[];
+  orders?: OrderItem[];
 }
 
 interface IProjectsForPicker {
@@ -40,6 +40,7 @@ interface Project extends Common {
   unPaid: number;
   totalOrders: number;
   ordersTotalCost: number;
+  orders?: OrderItem[];
 }
 
 type OtherExpensesType = {

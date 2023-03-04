@@ -7,7 +7,7 @@ interface ITableDataConfig<T> {
     headerTitle: string;
     /**
      * rowData key for recieveing value to columnComponent
-     * if undefined will recieve full rowData object ?: useful when want to use customColumn
+     * if undefined will recieve full rowData object ?: useful when want to use standartColumn
      * optional if want to use customColumnKey
      * 
      */

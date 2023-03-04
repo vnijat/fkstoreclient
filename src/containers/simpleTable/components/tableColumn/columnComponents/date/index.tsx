@@ -11,11 +11,11 @@ const DateColumn = ({ value }: IDateColumn) => {
 
     return (
         <View style={{ flex: 1, padding: 5 }}>
-            <View style={{ backgroundColor: Colors.DEFAULT_TEXT_COLOR, borderRadius: 3, paddingVertical: 3, width: 80, justifyContent: 'center', alignItems: 'center' }}>
+            {value && <View style={{ backgroundColor: Colors.DEFAULT_TEXT_COLOR, borderRadius: 3, paddingVertical: 3, width: 80, justifyContent: 'center', alignItems: 'center' }}>
                 <Text style={{ color: Colors.CARD_COLOR }}>
                     {date?.toLocaleDateString()}
                 </Text>
-            </View>
+            </View>}
         </View>
     );
 

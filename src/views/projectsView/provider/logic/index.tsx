@@ -2,7 +2,7 @@ import { ITableDataConfig } from "../../../../containers/simpleTable/types";
 import { ProjectStatus } from "../../../../enums/projectStatus";
 import { useDeleteProjectMutation, useEditProjectMutation } from "../../../../modules/api/projects.api";
 import { setProjectsQueryParams } from "../../../../modules/redux/projectQuerySlicer";
-import { setClientInfoData, setIsOpenClientInfoModal, setIsProjectForEdit, setIsShowProjectAddEditModal, setIsShowProjectOrdersModal, setProjectDataForPost, setProjectIdForRequestOrders } from "../../../../modules/redux/projectSlicer";
+import { setClientInfoData, setIsOpenClientInfoModal, setIsProjectForEdit, setIsShowOtherExpensesModal, setIsShowProjectAddEditModal, setIsShowProjectOrdersModal, setProjectDataForPost, setProjectIdForRequest, setProjectIdForRequestOrders } from "../../../../modules/redux/projectSlicer";
 import { useAppDispatch } from "../../../../modules/redux/store";
 import { resetTable, setNewTableConfigs } from "../../../../modules/redux/tableConfigs";
 import HELP from "../../../../services/helpers";
@@ -49,7 +49,6 @@ function ProjectLogicProvider() {
 
     async function handleDeleteProject(data: Project) {
         try {
-            await HELP.alertPromise('are you sure to delete Project?', 'all the other expenses will deletet too');
             const response = await apiDeleteProject([data?.id!]);
             if (response.error) {
                 throw response.error;
@@ -72,10 +71,17 @@ function ProjectLogicProvider() {
     function handleOnCloseProjectOrdersModal() {
         dispatch(setIsShowProjectOrdersModal(false));
     }
+    function handleOnCloseOtherExpensesModal() {
+        dispatch(setIsShowOtherExpensesModal(false));
+    }
 
     function handleOnPressOrdersCounts(data: Project) {
-        dispatch(setProjectIdForRequestOrders(data.id!));
+        dispatch(setProjectIdForRequest(data.id!));
         dispatch(setIsShowProjectOrdersModal(true));
+    }
+    function handleOnPressOtherExpenses(data: Project) {
+        dispatch(setProjectIdForRequest(data.id!));
+        dispatch(setIsShowOtherExpensesModal(true));
     }
 
     async function handleProjectStatusChange(projectId: number, status: ProjectStatus) {
@@ -103,7 +109,9 @@ function ProjectLogicProvider() {
         handleProjectStatusChange,
         handleOnPressClient,
         handleOnCloseProjectOrdersModal,
-        handleOnPressOrdersCounts
+        handleOnPressOrdersCounts,
+        handleOnPressOtherExpenses,
+        handleOnCloseOtherExpensesModal
     };
 
 

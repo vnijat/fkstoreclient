@@ -115,12 +115,6 @@ export const itemTableDataConfigs: ITableDataConfig<Item>[] = [
     hidden: true,
   },
   {
-    headerTitle: 'Date',
-    hidden: true,
-    dtoKey: 'createdAt',
-    type: 'date',
-  },
-  {
     headerTitle: 'SKU',
     hidden: true,
     dtoKey: 'skuCode',

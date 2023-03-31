@@ -1,5 +1,5 @@
-import React, { memo, useMemo, useState } from "react";
-import { Text, View } from "react-native";
+import React, { memo, useMemo, useRef, useState } from "react";
+import { Text, View, Animated, Pressable, Easing } from "react-native";
 import { CompletedIcon, DeclinedIcon, InProgressIcon, ShowIcon, TotalProjcetsIcon } from "../../../../assets/icons/clientCardIcons";
 import CustomPressable from "../../../../components/customPressable";
 import { ProjectStatus } from "../../../../enums/projectStatus";
@@ -18,10 +18,8 @@ interface IProjectInfo {
 
 const ProjectInfo = ({ projectsCompleted, projectsDeclined, projectsInProgress, totalProjects }: IProjectInfo) => {
     const style = useMemo(() => getStyle(), []);
-
+    const animatedValue = useRef(new Animated.Value(0.3)).current;
     const ICON_SIZE = 16;
-    const [isShowProjects, setIsShowProjects] = useState(false);
-
     const projectsInfo = [
         {
             value: totalProjects,
@@ -49,6 +47,23 @@ const ProjectInfo = ({ projectsCompleted, projectsDeclined, projectsInProgress, 
         },
     ];
 
+
+    const startAnimatedOpacity = () => {
+        Animated.timing(animatedValue, {
+            toValue: 1,
+            useNativeDriver: true,
+            duration: 300,
+        }).start();
+    };
+
+    const endAnimatedOpacity = () => {
+        Animated.timing(animatedValue, {
+            toValue: 0.3,
+            useNativeDriver: true,
+            duration: 500,
+        }).start();
+    };
+
     return (
         <View>
             <View style={style.projectInfoTitleContainer}>
@@ -56,38 +71,39 @@ const ProjectInfo = ({ projectsCompleted, projectsDeclined, projectsInProgress, 
                     <Text style={style.projectInfoButtonText}>
                         {'Projects'.toUpperCase()}
                     </Text>
-                    <CustomPressable style={style.projectInfoIconButton}
-                        onPress={() => setIsShowProjects((prevValue) => !prevValue)}
-                    >
-                        <ShowIcon size={14} color={Colors.OLD_GOLD} />
-                    </CustomPressable>
                 </View>
             </View>
-            <View style={[style.projectInfoContentContainer, { opacity: isShowProjects ? 1 : 0 }]}>
-                {
-                    projectsInfo.map((info, index) => {
-                        const { value, icon, color, title } = info;
-                        return (
-                            <View key={index} style={style.infoItemContainer}>
-                                <View key={index} style={[style.infoIconContiner, { borderColor: color }]}>
-                                    <View style={style.infoIcon}>
-                                        {icon}
+            <Animated.View style={{ opacity: animatedValue }}>
+                <Pressable
+                    onHoverIn={startAnimatedOpacity}
+                    onHoverOut={endAnimatedOpacity}
+                    style={style.projectInfoContentContainer}
+                >
+                    {
+                        projectsInfo.map((info, index) => {
+                            const { value, icon, color, title } = info;
+                            return (
+                                <View key={index} style={style.infoItemContainer}>
+                                    <View key={index} style={[style.infoIconContiner, { borderColor: color }]}>
+                                        <View style={style.infoIcon}>
+                                            {icon}
+                                        </View>
+                                    </View>
+                                    <View style={style.infoContentContainer}>
+                                        <Text style={style.infoTitleText}>
+                                            {title}
+                                        </Text>
+                                        <Text style={style.infoValueText}>
+                                            {value}
+                                        </Text>
                                     </View>
                                 </View>
-                                <View style={style.infoContentContainer}>
-                                    <Text style={style.infoTitleText}>
-                                        {title}
-                                    </Text>
-                                    <Text style={style.infoValueText}>
-                                        {value}
-                                    </Text>
-                                </View>
-                            </View>
-                        );
-                    })
-                }
-            </View>
-        </View>
+                            );
+                        })
+                    }
+                </Pressable >
+            </Animated.View >
+        </View >
     );
 
 };

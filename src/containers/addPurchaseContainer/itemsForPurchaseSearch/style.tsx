@@ -23,7 +23,7 @@ export const getStyle = () => {
             backgroundColor: Colors.CULTURED,
         },
         searchContainer: {
-            paddingTop: 5
+            paddingTop: 5,
         }
     });
 

@@ -26,6 +26,14 @@ const ProjectStatusColumn = ({ data, logicProvider, dataProvider }: IProjectStat
     const [apiEditProject] = useEditProjectMutation();
     const [isOpen, setIsOpen] = useState(false);
 
+    const projectStatuses = [
+        { title: 'COMPLETED', value: ProjectStatus.COMPLETED, borderColor: Colors.COMPLETED_COLOR },
+        { title: 'IN PROGRESS', value: ProjectStatus.INPROGRESS, borderColor: Colors.INPROGRESS_COLOR },
+        { title: 'DECLINED', value: ProjectStatus.DECLINED, borderColor: Colors.DECLINED_COLOR }
+    ];
+
+    const currentStatusBorderColor = useMemo(() => projectStatuses.find(status => status.value === currentStatus)?.borderColor, [currentStatus]);
+
     useEffect(() => {
         isOpen ? animationOnOpen() : animationOnClose();
     }, [isOpen]);
@@ -63,11 +71,9 @@ const ProjectStatusColumn = ({ data, logicProvider, dataProvider }: IProjectStat
         ]
     };
 
-    const projectStatuses = [
-        { title: 'COMPLETED', value: ProjectStatus.COMPLETED },
-        { title: 'IN PROGRESS', value: ProjectStatus.INPROGRESS },
-        { title: 'DECLINED', value: ProjectStatus.DECLINED }
-    ];
+
+
+
 
     const onSelect = async (newStatus: ProjectStatus) => {
         await handleProjectStatusChange(data.id!, newStatus).then(() => setIsOpen(false));
@@ -75,13 +81,13 @@ const ProjectStatusColumn = ({ data, logicProvider, dataProvider }: IProjectStat
 
     return (
         <>
-            <CustomPressable style={style.iconContainer}
+            <CustomPressable style={[style.iconContainer, { borderColor: currentStatusBorderColor }]}
                 tooltip={currentStatus.toUpperCase()}
                 onPress={onPressIcon}
                 onHoverOpacity
             >
-                <View style={style.iconButton} >
-                    {HELP.getProjectStatusIcons(currentStatus, 20)}
+                <View style={[style.iconButton]} >
+                    {HELP.getProjectStatusIcons(currentStatus, 20, currentStatusBorderColor)}
                 </View>
             </CustomPressable >
             <Animated.View style={[style.animatedIconSelector, { ...animatedStle }]}
@@ -92,13 +98,13 @@ const ProjectStatusColumn = ({ data, logicProvider, dataProvider }: IProjectStat
                         <View key={`${status.value}`}
                         >
                             {isNotSelected ?
-                                <CustomPressable style={style.iconContainer}
+                                <CustomPressable style={[style.iconContainer, { borderColor: status.borderColor }]}
                                     onPress={() => onSelect(status.value)}
                                     onHoverOpacity
                                     tooltip={status?.title}
                                 >
                                     <View style={style.iconButton}>
-                                        {HELP.getProjectStatusIcons(status.value, 20)}
+                                        {HELP.getProjectStatusIcons(status.value, 20, status.borderColor)}
                                     </View>
                                 </CustomPressable>
                                 : null}

@@ -1,5 +1,5 @@
 import React from "react";
-import { ClientsIcon, OrdersIcon, ProjectsIcon, PurchasesIcon, WarehouseIcon } from "../../../../assets/icons/menuIcons";
+import { ClientsIcon, OrdersIcon, ProjectsIcon, PurchasesIcon, TrackIcon, WarehouseIcon } from "../../../../assets/icons/menuIcons";
 import { RouteNames } from "../../../../enums/routes";
 import UseLanguage from "../../../../modules/lozalization/useLanguage.hook";
 import CustomDrawerItem from "../drawerItem/drawerItem";
@@ -49,6 +49,11 @@ const DrawerRoutes = ({ navigation, currentRoute }: IDrawerRoutes) => {
             title: lang['projects'],
             routeName: RouteNames.PROJECTS,
             icon: (color: string) => <ProjectsIcon size={ICON_SIZE} color={color} />,
+        },
+        {
+            title: lang['trackView'],
+            routeName: RouteNames.TRACKVIEW,
+            icon: (color: string) => <TrackIcon size={ICON_SIZE} color={color} />,
         },
     ];
 

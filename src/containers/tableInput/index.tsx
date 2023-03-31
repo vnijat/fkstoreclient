@@ -12,30 +12,34 @@ import { getStyle } from "./styles";
 import { ITableConfig, RowDataType, } from "./types";
 
 
-interface ITableInput {
-    tableData: RowDataType[];
-    tableConfig: ITableConfig[];
-    getNewTableData?: (data: RowDataType[]) => void;
+interface ITableInput<T> {
+    tableData: RowDataType<T>[];
+    tableConfig: ITableConfig<T>[];
+    getNewTableData?: (data: RowDataType<T>[]) => void;
     isDataEditable?: boolean;
 }
 
-const TableInput = ({ tableData, tableConfig, getNewTableData, isDataEditable }: ITableInput) => {
+const TableInput = <T extends any>({ tableData, tableConfig, getNewTableData, isDataEditable }: ITableInput<T>) => {
     const style = useMemo(() => getStyle(), []);
-    const [data, setData] = useState<RowDataType[]>([...tableData]);
+    const [data, setData] = useState<RowDataType<T>[]>([...tableData]);
     const scrollRef = useRef(null);
     const columnHeaderTitles = useMemo(() => tableConfig.map(item => item.headerTitle), [tableConfig]);
     const isHasChanges = useMemo(() => JSON.stringify(tableData) !== JSON.stringify(data), [tableData, data]);
     const emptyRow = useMemo(() => tableConfig.reduce((acc, curr) => {
         acc[curr.dtoKey] = '';
         return acc;
-    }, {} as RowDataType), [tableConfig.length]);
+    }, {} as RowDataType<T>), [tableConfig.length]);
 
+
+
+    useEffect(() => {
+        setData([...tableData]);
+    }, [tableData]);
 
     const addRowToTable = () => {
         setData(prev => [...prev, emptyRow]);
         setTimeout(() => scrollRef?.current.scrollToEnd(), 100);
     };
-
     const removeRowFromTable = () => {
         if (data?.length) {
             setData((prev) => {

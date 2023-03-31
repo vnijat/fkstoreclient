@@ -146,6 +146,10 @@ export const PagePagination: FC<IPagePAgination> = ({
             singleSelectData={paginationTakeOptions}
             singleSelected={take}
             singleOnSelect={onChangeTakeParams}
+            itemStyle={styles.pickerItem}
+            itemTextStyle={styles.pickerItemText}
+            selectedItemStyle={styles.pickeritemSelected}
+            selectedItemTextStyle={styles.pickerItemSelectedText}
             buttonStyle={styles.pickerButton}
             title={'show'}
           />

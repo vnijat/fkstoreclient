@@ -10,10 +10,10 @@ export const getStyle = () => {
             flexDirection: 'row',
             justifyContent: 'space-evenly',
             alignItems: 'center',
-            height: 40,
+            height: 50,
         },
         columnContainer: {
-            height: 30,
+            height: 50,
             justifyContent: 'center',
             alignItems: 'flex-start',
             margin: 1,

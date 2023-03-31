@@ -6,7 +6,8 @@ export const getStyle = () => {
     const style = StyleSheet.create({
         container: {
             flex: 1,
-            height: 700
+            height: 700,
+            padding: 5
         },
 
         infoTitle: {
@@ -68,7 +69,18 @@ export const getStyle = () => {
                 Colors.CARD_HEADER_COLOR,
             borderRightWidth: 1,
             justifyContent: 'flex-end',
-            alignItems: 'flex-end'
+            alignItems: 'flex-end',
+        },
+        bottemLeftTitle: {
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginBottom: 5
+        },
+        bottemLeftTitleText: {
+            fontSize: FONT.FONT_SIZE_LARGE,
+            fontFamily: FONT.FONT_FAMILY,
+            color: Colors.DEFAULT_TEXT_COLOR,
+            fontWeight: FONT.FONT_BOLD
         },
         bottomActionButton: {
             marginRight: 10

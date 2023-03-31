@@ -7,14 +7,15 @@ export const getStyle = () => {
         container: {
             flexDirection: 'row',
             alignItems: 'center',
-            borderRadius: 3
-
+            borderRadius: 3,
+            backgroundColor: Colors.CARD_HEADER_COLOR,
         },
         columContentText: {
             maxHeight: 40,
             color: Colors.DEFAULT_TEXT_COLOR,
-            fontSize: 12,
-            fontWeight: '400',
+            fontSize: FONT.FONT_SIZE_MEDIUM,
+            fontWeight: FONT.FONT_BOLD,
+            fontFamily: FONT.FONT_FAMILY,
             width: 90,
         },
         clientIconContainer: {
@@ -24,7 +25,7 @@ export const getStyle = () => {
             width: 35,
             height: 35,
             borderRadius: 32,
-            backgroundColor: Colors.CARD_HEADER_COLOR
+            backgroundColor: Colors.CARD_COLOR
         },
     });
 

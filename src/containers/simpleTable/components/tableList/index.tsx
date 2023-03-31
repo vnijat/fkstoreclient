@@ -17,17 +17,19 @@ interface ITableList<T> {
     onPressRow?: (data: T, rowIndex: number) => void;
     customColumns?: ICustomColumn<T>;
     isLoading?: boolean;
+    columnWidth?: number,
+    rowHeight?: number;
 
 }
 
 
-const TableList = <T extends ITableRowData>({ tableDataConfig, tableData, isLoading, contextMenuButtons, onPressRow, customColumns }: ITableList<T>) => {
+const TableList = <T extends ITableRowData>({ tableDataConfig, tableData, isLoading, rowHeight, columnWidth, contextMenuButtons, onPressRow, customColumns }: ITableList<T>) => {
     const { width } = useWindowDimensions();
     const listItem = useCallback(({ item, index }) => {
         return (
-            <TableRow tableRowData={item} tableDataConfig={tableDataConfig} {...{ contextMenuButtons, onPressRow, customColumns }} rowIndex={index} />
+            <TableRow tableRowData={item} tableDataConfig={tableDataConfig} {...{ contextMenuButtons, onPressRow, rowHeight, columnWidth, customColumns, }} rowIndex={index} />
         );
-    }, [tableDataConfig, contextMenuButtons, customColumns]);
+    }, [tableDataConfig, contextMenuButtons, customColumns, rowHeight, columnWidth,]);
 
     return (
         <View style={{ flex: 1 }}>

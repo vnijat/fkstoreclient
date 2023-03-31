@@ -42,10 +42,9 @@ const ItemsForOrderListItem = ({ orderItem, index, projectsData }: IItemsForOrde
         const orderItemSatusValues = orderItem.fullfilled ? valuesWithoutInuse : values;
         return orderItemSatusValues.map((status) => ({ value: status, label: status.toUpperCase() }));
     }, [orderItem.fullfilled]);
-
-
     const rowData: IrowData[] = useMemo(() => [
         { value: (1 + (index ?? 0)), },
+        { value: orderItem?.store?.name },
         { value: (orderItem.fullfilled && orderItem.project) ? `${orderItem.project?.title}` + `${orderItem.project.isSample ? '(sample)' : ''}` : orderItem.projectId, selectable: !orderItem.fullfilled, selectableData: projectsData, searchEnabled: true, dtoKey: 'projectId', isDeselectEnabled: true },
         { value: orderItem.name },
         { value: orderItem.barcode, },
@@ -53,7 +52,7 @@ const ItemsForOrderListItem = ({ orderItem, index, projectsData }: IItemsForOrde
         { value: orderItem.unit, },
         { value: Number(orderItem.quantity), editable: !orderItem.fullfilled },
         { value: orderItem.status, selectable: !orderItem.fullfilled, selectableData: orderItemStatusData, dtoKey: 'status' },
-    ], [orderItem.status, orderItem.projectId, orderItem.project, orderItem.quantity, orderItem.fullfilled]);
+    ], [orderItem.status, orderItem.projectId, orderItem.store, orderItem.project, orderItem.quantity, orderItem.fullfilled]);
 
 
     const handleOnChangeEditableColumn = (text: string) => {

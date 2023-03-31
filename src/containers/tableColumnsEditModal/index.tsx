@@ -75,7 +75,7 @@ const TableColumnsEditModal = <T extends ITableRowData>({ onClose, isSwohModal, 
             isDissmissEnabled={false}
             width={600}
         >
-            <View style={{ flex: 1, paddingHorizontal: 10 }}>
+            <View style={{ flex: 1, padding:5 }}>
                 <View style={{ height: 400, flexWrap: 'wrap' }}>
                     {tableConfig?.length && tableConfig.map((column, index) => {
                         return (

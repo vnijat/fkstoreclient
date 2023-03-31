@@ -16,8 +16,6 @@ function OrderDataProvider() {
         pollingInterval: 5000
     });
 
-
-
     return {
         queryData: { data: queryData, isLoading },
         tableConfigs,

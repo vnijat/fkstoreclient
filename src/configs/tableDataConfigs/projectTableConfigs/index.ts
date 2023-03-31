@@ -32,16 +32,51 @@ export const projectTableDataConfigs: ITableDataConfig<Project>[] = [
     customColumnKey: 'order',
   },
   {
+    headerTitle: 'Other Expenses',
+    customColumnKey: 'otherExpenses',
+    hidden: false,
+  },
+  {
     headerTitle: 'Orders Cost Total',
     dtoKey: 'ordersTotalCost',
     type: 'money',
     hidden: false,
   },
   {
-    headerTitle: 'Total price',
-    dtoKey: 'totalPrice',
+    headerTitle: 'Other Expenses Cost',
+    dtoKey: 'otherExpensesTotalCost',
     type: 'money',
     hidden: false,
+  },
+  {
+    headerTitle: 'Expenses Total Cost',
+    dtoKey: 'totalExpensesCost',
+    type: 'money',
+    hidden: false,
+  },
+  {
+    headerTitle: 'Price',
+    dtoKey: 'price',
+    type: 'money',
+    hidden: false,
+  },
+  {
+    headerTitle: 'Paid',
+    dtoKey: 'paid',
+    type: 'money',
+    hidden: true,
+  },
+  {
+    headerTitle: 'Un Paid',
+    dtoKey: 'unPaid',
+    type: 'money',
+    hidden: true,
+  },
+  {
+    headerTitle: 'Payment Status',
+    dtoKey: 'paymentStatus',
+    type: 'text',
+    hidden: true,
   },
   {
     headerTitle: 'Deadline',

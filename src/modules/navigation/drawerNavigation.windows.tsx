@@ -8,6 +8,7 @@ import PurchaseView from '../../views/purchaseView';
 import { RouteNames } from '../../enums/routes';
 import WareHouseView from '../../views/warehouseView';
 import { DrawerStackParamlist } from '../../types/navigation';
+import InventoryTrackView from '../../views/inventoryTrackView';
 
 export const DrawerNavigation: FC<any> = () => {
     const Drawer = createDrawerNavigator<DrawerStackParamlist>();
@@ -24,6 +25,7 @@ export const DrawerNavigation: FC<any> = () => {
             <Drawer.Screen name={RouteNames.PROJECTS} component={ProjectsView} />
             <Drawer.Screen name={RouteNames.ORDERS} component={OrderView} />
             <Drawer.Screen name={RouteNames.PURCHASES} component={PurchaseView} />
+            <Drawer.Screen name={RouteNames.TRACKVIEW} component={InventoryTrackView} />
         </Drawer.Navigator>
     );
 };

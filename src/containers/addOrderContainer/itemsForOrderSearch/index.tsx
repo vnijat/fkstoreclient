@@ -50,7 +50,9 @@ const ItemsForOrderSearch = ({ }: IItemsForOrderSearch) => {
                         itemAtStock: data[0]?.quantity,
                         pricePerUnit: data[0].costPrice,
                         status: OrderItemStatus.IN_USE,
-                        projectId: null
+                        projectId: null,
+                        storeId: data[0].store.id,
+                        store: data[0].store
                     }));
                 } else {
                     HELP.alertError(undefined, 'ITEM IN USE IN ANOTHER ORDER!!', 'PLEASE COMPLETE ACTIVE ORDER!');

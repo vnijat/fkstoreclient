@@ -1,5 +1,8 @@
 import {Order} from '../enums/order.enum';
 import {Common, Imeta} from './common/common';
+import {InventoryTrackData} from './inventoryTrack';
+import {OrderItem} from './projectOrder';
+import {PurchaseItem} from './purchase';
 interface AddItemInterface {
   id?: number | null;
   createdAt?: string | null;
@@ -125,6 +128,7 @@ interface Item extends Common {
 interface ItemResponseFull extends Omit<Item, 'category'> {
   qrCode: Buffer;
   category: 'string';
+  transactions: InventoryTrackData[];
 }
 
 interface ItemResponse {
@@ -150,4 +154,5 @@ export type {
   AddItemInterface,
   ItemOptionForInputs,
   Supplier,
+  Store,
 };

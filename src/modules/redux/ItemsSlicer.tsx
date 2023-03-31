@@ -10,6 +10,7 @@ interface ItemsSlicerInterface {
     isShowItemModal: boolean;
     isShowAddEditModal: boolean;
     itemIdForFullResponse?: number;
+    addEditModalCalledFrom: 'warehouse' | 'purchase';
 }
 
 const initialState = {
@@ -21,7 +22,8 @@ const initialState = {
     isItemForEdit: false,
     isShowItemModal: false,
     itemIdForFullResponse: undefined,
-    isShowAddEditModal: false
+    isShowAddEditModal: false,
+    addEditModalCalledFrom: 'warehouse'
 } as ItemsSlicerInterface;
 
 const itemsSlicer = createSlice({
@@ -65,6 +67,9 @@ const itemsSlicer = createSlice({
         setIsShowAddEditModal: (state, action: PayloadAction<boolean>) => {
             state.isShowAddEditModal = action.payload;
         },
+        setFromWhereAddEditModalCalled: (state, action: PayloadAction<'warehouse' | 'purchase'>) => {
+            state.addEditModalCalledFrom = action.payload;
+        }
     },
 });
 
@@ -78,6 +83,7 @@ export const {
     setItemValueForPost,
     clearItemForPosting,
     setItemIdForFullResponse,
-    setIsShowAddEditModal
+    setIsShowAddEditModal,
+    setFromWhereAddEditModalCalled
 } = itemsSlicer.actions;
 export default itemsSlicer.reducer;

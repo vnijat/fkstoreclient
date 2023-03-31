@@ -10,7 +10,8 @@ interface IProjectSlicer {
     isOpenClientInfoModal: boolean;
     clientInfoData: Client;
     isShowProjectOrdersModal: boolean;
-    projectIdForRequestOrders?: number | string;
+    isShowOtherExpensesModal: boolean;
+    projectIdForRequest?: number | string;
 }
 
 
@@ -20,8 +21,9 @@ const initialState = {
     isProjectForEdit: false,
     isShowProjectAddEditModal: false,
     isOpenClientInfoModal: false,
+    isShowOtherExpensesModal: false,
     isShowProjectOrdersModal: false,
-    projectIdForRequestOrders: undefined,
+    projectIdForRequest: undefined,
     clientInfoData: {}
 } as IProjectSlicer;
 
@@ -50,8 +52,11 @@ const projectSlicer = createSlice({
         setIsShowProjectOrdersModal: (state, action: PayloadAction<boolean>) => {
             state.isShowProjectOrdersModal = action.payload;
         },
-        setProjectIdForRequestOrders: (state, action: PayloadAction<number | string>) => {
-            state.projectIdForRequestOrders = action.payload;
+        setIsShowOtherExpensesModal: (state, action: PayloadAction<boolean>) => {
+            state.isShowOtherExpensesModal = action.payload;
+        },
+        setProjectIdForRequest: (state, action: PayloadAction<number | string>) => {
+            state.projectIdForRequest = action.payload;
         },
 
     }
@@ -65,6 +70,7 @@ export const {
     setIsOpenClientInfoModal,
     setClientInfoData,
     setIsShowProjectOrdersModal,
-    setProjectIdForRequestOrders,
+    setProjectIdForRequest,
+    setIsShowOtherExpensesModal
 } = projectSlicer.actions;
 export default projectSlicer.reducer;

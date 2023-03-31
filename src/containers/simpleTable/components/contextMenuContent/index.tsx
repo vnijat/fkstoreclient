@@ -31,7 +31,7 @@ const TableContextMenuContent = <T extends ITableRowData>({ contextMenuButtons, 
                         onHoverOpacity
                     >
                         <Text style={style.contextMenuItemText}>
-                            {button.title}
+                            {button.title.toUpperCase()}
                         </Text>
                     </CustomPressable>
                 );

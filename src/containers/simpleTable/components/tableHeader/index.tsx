@@ -1,27 +1,34 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Text, View } from "react-native-windows";
 import UseLanguage from "../../../../modules/lozalization/useLanguage.hook";
+import HELP from "../../../../services/helpers";
 import { Colors } from "../../../../utils/colors";
 import FONT from "../../../../utils/font";
 import { ITableDataConfig, ITableRowData } from "../../types";
+import { getStyle } from "./styles";
 
 
 
 interface ITableHeader<T> {
     tableDataConfig: ITableDataConfig<T>[];
+    columnWidth?: number;
 }
 
-const TableHeader = <T extends ITableRowData>({ tableDataConfig }: ITableHeader<T>) => {
+const TableHeader = <T extends ITableRowData>({ tableDataConfig, columnWidth }: ITableHeader<T>) => {
+    const style = useMemo(() => getStyle(columnWidth), [columnWidth]);
     const lang = UseLanguage();
     const withoutHidden = tableDataConfig?.filter(data => !data?.hidden);
-    const headerNames = withoutHidden?.map((tableData) => lang[tableData.dtoKey as keyof typeof lang] ? lang[tableData.dtoKey as keyof typeof lang] : tableData?.headerTitle);
+    const headerNames = withoutHidden?.map((tableData) => {
+        const headerTitle = HELP.modifyTextForLangSelect(tableData.headerTitle);
+        return lang[headerTitle as keyof typeof lang] ?? tableData.headerTitle;
+    });
 
     return (
-        <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', paddingHorizontal: 10 }}>
+        <View style={style.container}>
             {headerNames?.map((title, index) => {
                 return (
-                    <View style={{ flex: 1, padding: 5, minWidth: 200, maxWidth: 250 }} key={`${index}`}>
-                        <Text style={{ color: Colors.DEFAULT_TEXT_COLOR, fontSize: FONT.FONT_SIZE_MEDIUM, fontFamily: FONT.FONT_FAMILY, fontWeight: FONT.FONT_BOLD }}>
+                    <View style={style.headerColumn} key={`${index}`}>
+                        <Text style={style.headerText}>
                             {title?.toUpperCase()}
                         </Text>
                     </View>

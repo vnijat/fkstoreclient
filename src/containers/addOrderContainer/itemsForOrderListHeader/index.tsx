@@ -1,6 +1,5 @@
 import { useMemo } from "react";
 import { Text, View } from "react-native";
-import { Colors } from "../../../utils/colors";
 import ITEMS_FORORDER_LIST from "./configs";
 import { getStyle } from "./style";
 

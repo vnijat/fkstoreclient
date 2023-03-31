@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "1.17.11",
+    "@react-native-clipboard/clipboard": "^1.11.2",
     "@react-native-community/checkbox": "0.5.14",
     "@react-native-community/datetimepicker": "6.7.0",
     "@react-native-picker/picker": "^2.4.8",
@@ -25,6 +26,7 @@
     "@types/react-redux": "7.1.24",
     "@types/redux-persist": "^4.3.1",
     "axios": "1.2.0",
+    "date-fns": "^2.29.3",
     "i18n-iso-countries": "7.5.0",
     "libphonenumber-js": "1.10.13",
     "localized-strings": "^0.2.4",

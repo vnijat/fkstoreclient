@@ -30,7 +30,7 @@ export const getStyle = (textColor?: string, buttonColor?: string) => {
         pickerButton: {
             minWidth: 60,
             maxWidth: 200,
-            height: 25,
+            height: 30,
             margin: 1,
             padding: 1,
             flexDirection: 'row',
@@ -39,6 +39,23 @@ export const getStyle = (textColor?: string, buttonColor?: string) => {
             borderWidth: 1,
             borderColor: Colors.CARD_COLOR,
             justifyContent: 'space-between'
+        },
+        pickerItem: {
+            padding: 2,
+        },
+        pickerItemText: {
+            fontSize: FONT.FONT_SIZE_MEDIUM,
+            fontFamily: FONT.FONT_FAMILY,
+            color: Colors.DEFAULT_TEXT_COLOR
+        },
+        pickeritemSelected: {
+            padding: 2,
+            backgroundColor: Colors.CARD_HEADER_COLOR
+        },
+        pickerItemSelectedText: {
+            fontSize: FONT.FONT_SIZE_MEDIUM,
+            fontFamily: FONT.FONT_FAMILY,
+            color: Colors.DEFAULT_TEXT_COLOR
         },
         pageNumbersContainer: {
             flexDirection: 'row',

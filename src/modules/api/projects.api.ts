@@ -44,6 +44,14 @@ export const ProjectsApi = InventoryApi.injectEndpoints({
         };
       },
     }),
+    getOtherExpenses: build.query<OrderItem[], number | undefined | string>({
+      providesTags: ['otherExpenses'],
+      query: projectId => {
+        return {
+          url: `/client/project/otherExpenses/${projectId}`,
+        };
+      },
+    }),
     addProject: build.mutation<Project, AddClientProject>({
       query: body => {
         return {
@@ -66,6 +74,7 @@ export const ProjectsApi = InventoryApi.injectEndpoints({
         {type: 'projects', id: arg.id},
         'projectsForPicker',
         'clients',
+        'otherExpenses',
       ],
     }),
     deleteProject: build.mutation<undefined, number[]>({
@@ -92,4 +101,5 @@ export const {
   useDeleteProjectMutation,
   useGetProjectsForPickerQuery,
   useGetProjectOrdersQuery,
+  useGetOtherExpensesQuery,
 } = ProjectsApi;

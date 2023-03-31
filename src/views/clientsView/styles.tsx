@@ -6,12 +6,9 @@ export const getStyle = () => {
     container: {
       flex: 0.95,
       backgroundColor: Colors.BACKGROUND_COLOR,
-      // alignItems: 'center',
-      paddingTop: 60,
       paddingLeft: 20,
       paddingRight: 20,
-      paddingBottom: 20
-
+      paddingVertical: 30,
     },
   });
 

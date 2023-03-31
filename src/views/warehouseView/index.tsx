@@ -34,7 +34,8 @@ const WareHouseView: FC<any> = ({ navigation }) => {
     onPressEdit,
     onResetTable,
     setNewTableConfig,
-    handleDeleteWareHouseItems
+    handleDeleteWareHouseItems,
+    handleCopyBarcode
   } = logicProvider;
   const style = getStyle();
 
@@ -50,10 +51,11 @@ const WareHouseView: FC<any> = ({ navigation }) => {
   const onPressDeleteItem = async (data: Item) => {
     await handleDeleteWareHouseItems([data.id!], lang);
   };
-  
+
   const tableContextMenuButtons: IContextMenuButton<Item>[] = useMemo(() => [
     { title: 'Edit', onPress: onPressEdit },
-    { title: 'Delete', onPress: onPressDeleteItem }
+    { title: 'Delete', onPress: onPressDeleteItem },
+    { title: 'Copy Barcode', onPress: handleCopyBarcode }
   ], [lang]);
 
 
@@ -69,7 +71,7 @@ const WareHouseView: FC<any> = ({ navigation }) => {
     <View style={{ flex: 1, flexDirection: 'row' }}>
       <View style={{ flex: 0.05 }} />
       <View style={style.container}>
-        <AddEditItemModal />
+        {/* <AddEditItemModal /> */}
         <ItemModal />
         <View style={style.listContainer}>
           <View style={style.searchContainer}>

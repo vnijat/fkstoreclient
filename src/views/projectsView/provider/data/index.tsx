@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { useGetProjectOrdersQuery, useGetProjectsQuery } from "../../../../modules/api/projects.api";
+import { useGetOtherExpensesQuery, useGetProjectOrdersQuery, useGetProjectsQuery } from "../../../../modules/api/projects.api";
 import { RootState } from "../../../../modules/redux/store";
 
 
@@ -8,7 +8,8 @@ function ProjectDataProvider() {
     const projectTableDataConfig = useSelector((state: RootState) => state.tableConfigs.project);
     const projectsQueryParams = useSelector((state: RootState) => state.projectQuery);
     const isShowProjectOrdersModal = useSelector((state: RootState) => state.projectSlicer.isShowProjectOrdersModal);
-    const projectId = useSelector((state: RootState) => state.projectSlicer.projectIdForRequestOrders);
+    const isShowOtherExpensesModal = useSelector((state: RootState) => state.projectSlicer.isShowOtherExpensesModal);
+    const projectId = useSelector((state: RootState) => state.projectSlicer.projectIdForRequest);
     const { data: queryData, isLoading } = useGetProjectsQuery(projectsQueryParams, {
         selectFromResult: ({ data, isLoading, isUninitialized, error }) => ({
             data,
@@ -17,6 +18,7 @@ function ProjectDataProvider() {
         ),
         pollingInterval: 5000
     });
+
     const { data: projectOrders, isLoading: isProjectOrdersLoading } = useGetProjectOrdersQuery(projectId, {
         selectFromResult: ({ data, isLoading, isUninitialized }) => ({
             data,
@@ -24,6 +26,15 @@ function ProjectDataProvider() {
         }
         ),
         skip: !isShowProjectOrdersModal
+    });
+
+    const { data: otherExpenses, isLoading: otherExpensesLoading } = useGetOtherExpensesQuery(projectId, {
+        selectFromResult: ({ data, isLoading, isUninitialized }) => ({
+            data,
+            isLoading: isUninitialized ? true : isLoading
+        }
+        ),
+        skip: !isShowOtherExpensesModal
     });
 
 
@@ -39,7 +50,12 @@ function ProjectDataProvider() {
             data: projectOrders,
             isLoading: isProjectOrdersLoading
         },
+        otherExpensesData: {
+            data: otherExpenses,
+            isLoading: otherExpensesLoading
+        },
         isShowProjectOrdersModal,
+        isShowOtherExpensesModal
     };
 
 

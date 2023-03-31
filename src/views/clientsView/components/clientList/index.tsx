@@ -16,7 +16,7 @@ interface IClientList {
 const ClientList = ({ data }: IClientList) => {
     const style = useMemo(() => getStyle(), []);
     return (
-        <View style={{ backgroundColor: Colors.BACKGROUND_COLOR, flex: 1, alignItems: 'center' }}>
+        <View style={{ backgroundColor: Colors.BACKGROUND_COLOR, flexGrow: 1, alignItems: 'center' }}>
             <FlatList
                 data={data}
                 keyExtractor={({ id }) => `${id}`}

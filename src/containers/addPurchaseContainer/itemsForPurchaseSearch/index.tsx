@@ -2,9 +2,11 @@ import React, { memo, useEffect, useMemo, useRef, useState } from "react";
 import { ScrollView, View } from "react-native";
 import { ActivityIndicator, Flyout, Text } from "react-native-windows";
 import { InputItem } from "../../../components/inputItem/index.windows";
+import { PrimaryButton } from "../../../components/primaryButton";
 import { PaymentMethod } from "../../../enums/purchase";
 import { useItemForOrderQuery } from "../../../modules/api/orders.api";
 import { useGetItemForPurchaseQuery } from "../../../modules/api/purchase.api";
+import { setFromWhereAddEditModalCalled, setIsShowAddEditModal } from "../../../modules/redux/itemsSlicer";
 import { addItemForOrder } from "../../../modules/redux/orderSlicer";
 import { addItemForPurchase } from "../../../modules/redux/purchaseSlicer";
 import { useAppDispatch } from "../../../modules/redux/store";
@@ -51,7 +53,9 @@ const ItemsForPurchaseSearch = ({ }: IItemsForOrderSearch) => {
                     paymentMethod: PaymentMethod.CASH,
                     fullfilled: false,
                     supplierId: data[0].supplier.id || null,
-                    poInfo: ''
+                    poInfo: '',
+                    storeId: data[0].store.id!,
+                    store: data[0].store
                 }));
             }
         }
@@ -86,6 +90,11 @@ const ItemsForPurchaseSearch = ({ }: IItemsForOrderSearch) => {
         clearTimeout(timeoutId as ReturnType<typeof setTimeout>);
     };
 
+    const handleNewPrdouct = () => {
+        dispatch(setFromWhereAddEditModalCalled('purchase'));
+        dispatch(setIsShowAddEditModal(true));
+    };
+
     return (
         <>
             <View style={style.searchContainer}
@@ -111,6 +120,16 @@ const ItemsForPurchaseSearch = ({ }: IItemsForOrderSearch) => {
                     }
 
                 </View>}
+                <View style={{ alignSelf: 'flex-end', paddingRight: 20 }}>
+                    <PrimaryButton title={'NEW PRODUCT'}
+                        onPress={handleNewPrdouct}
+                        onHoverOpacity
+                        width={120}
+                        height={30}
+                        borderRadius={3}
+                        buttonColor={Colors.DEFAULT_TEXT_COLOR}
+                    />
+                </View>
             </View>
             <Flyout
                 target={searchRef.current}

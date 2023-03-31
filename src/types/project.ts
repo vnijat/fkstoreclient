@@ -40,14 +40,16 @@ interface Project extends Common {
   unPaid: number;
   totalOrders: number;
   ordersTotalCost: number;
+  totalExpenses: number;
+  totalExpensesCost: number;
   orders?: OrderItem[];
 }
 
-type OtherExpensesType = {
+interface OtherExpensesType extends Common {
   title: string;
   description?: string;
   cost: number;
-};
+}
 
 interface ProjectsQueryParams {
   search?: string;

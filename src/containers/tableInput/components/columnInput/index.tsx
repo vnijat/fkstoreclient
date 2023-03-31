@@ -11,11 +11,12 @@ interface IColumnInput {
     isNumber?: boolean;
     isMoney?: boolean;
     isEditable?: boolean;
+    isDate?: boolean;
 }
 
-const ColumnInput = ({ getInputValue, inputValueFromRowData = '', isNumber, isMoney, isEditable }: IColumnInput) => {
+const ColumnInput = ({ getInputValue, inputValueFromRowData = '', isNumber, isMoney, isEditable, isDate }: IColumnInput) => {
     const style = useMemo(() => getStyle(isMoney), [isMoney]);
-    const [inputValue, setInputValue] = useState(inputValueFromRowData);
+    const [inputValue, setInputValue] = useState(isDate ? new Date(inputValueFromRowData).toLocaleDateString() : inputValueFromRowData);
 
     const onChangeText = (text: string) => {
         const isNum = regExPatterns.IS_NUMERIC;
@@ -29,7 +30,6 @@ const ColumnInput = ({ getInputValue, inputValueFromRowData = '', isNumber, isMo
             getInputValue(text);
         }
     };
-
     return (
         <View style={style.inputContainer}>
             <TextInput

@@ -1,5 +1,5 @@
 import RNDateTimePicker, { DateTimePickerEvent } from "@react-native-community/datetimepicker";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { View } from "react-native";
 import { Colors } from "../../utils/colors";
 
@@ -14,6 +14,11 @@ interface IDateTimePicker {
 const DateTimePicker = ({ dateValue, getDate }: IDateTimePicker) => {
     const [date, setDate] = useState(dateValue ? new Date(dateValue) : new Date());
 
+
+
+    useEffect(() => {
+        setDate(dateValue ? new Date(dateValue) : new Date());
+    }, [dateValue]);
 
     const onChangeDate = (event: DateTimePickerEvent, date?: Date) => {
         date && setDate(date);

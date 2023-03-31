@@ -3,6 +3,8 @@ import { ActivityIndicator, Text, View } from "react-native";
 import { useSelector } from "react-redux";
 import CustomModal from "../../../../components/customModal";
 import customModal from "../../../../components/customModal";
+import SimpleTable from "../../../../containers/simpleTable";
+import { ITableDataConfig } from "../../../../containers/simpleTable/types";
 import TableInput from "../../../../containers/tableInput";
 import { ITableConfig, RowDataType } from "../../../../containers/tableInput/types";
 import { useGetProjectOrdersQuery } from "../../../../modules/api/projects.api";
@@ -27,19 +29,17 @@ const ProjectOrdersInfoModal = ({ logicProvider, dataProvider }: IProectOrdersIn
     const { handleOnCloseProjectOrdersModal } = logicProvider;
     const { projectOrdersData: { data, isLoading }, isShowProjectOrdersModal } = dataProvider;
     const style = useMemo(() => getStyle(), []);
-    const dispatch = useAppDispatch();
 
-    const tableConfig: ITableConfig<OrderItem>[] = [
-        { headerTitle: 'ORDER DATE', dtoKey: 'updatedAt', isDate: true },
-        { headerTitle: 'NAME', dtoKey: 'name' },
-        { headerTitle: 'BARCODE', dtoKey: 'barcode' },
-        { headerTitle: 'UNIT', dtoKey: 'unit', },
-        { headerTitle: 'QUANTITY', dtoKey: 'quantity', isNumber: true },
-        { headerTitle: 'PRICE', dtoKey: 'pricePerUnit', isMoney: true },
-        { headerTitle: 'COST ', dtoKey: 'totalPrice', isMoney: true, isSumTotal: true },
+    const tableConfig: ITableDataConfig<OrderItem>[] = [
+        { headerTitle: 'ORDER DATE', dtoKey: 'updatedAt', type: 'date', hidden: false },
+        { headerTitle: 'NAME', dtoKey: 'name', type: 'text', hidden: false },
+        { headerTitle: 'Store', dtoKey: 'store', type: 'text', isObject: true, objectDtoKey: 'name', hidden: false },
+        { headerTitle: 'BARCODE', dtoKey: 'barcode', type: 'text', hidden: false },
+        { headerTitle: 'UNIT', dtoKey: 'unit', type: 'text', hidden: false },
+        { headerTitle: 'QUANTITY', dtoKey: 'quantity', type: 'numeric', hidden: false },
+        { headerTitle: 'PRICE', dtoKey: 'pricePerUnit', type: 'money', hidden: false },
+        { headerTitle: 'COST ', dtoKey: 'totalPrice', type: 'money', hidden: false },
     ];
-
-
 
     return (
         <CustomModal
@@ -47,13 +47,11 @@ const ProjectOrdersInfoModal = ({ logicProvider, dataProvider }: IProectOrdersIn
             isDissmissEnabled={false}
             width={1200}
             closeModal={handleOnCloseProjectOrdersModal}
+            borderColor={Colors.DEFAULT_TEXT_COLOR}
         >
-            {isShowProjectOrdersModal && <View style={{ flex: 1, maxHeight: 700 }}>
-                <Text style={{ alignSelf: 'center', fontSize: 14, color: Colors.DEFAULT_TEXT_COLOR }}>
-                    {'ORDERS'}
-                </Text>
-                {isLoading ? <ActivityIndicator size={'large'} color={Colors.METALLIC_GOLD} /> : <TableInput tableData={data} tableConfig={tableConfig} />}
-            </View>}
+            <View style={{ height: 400, backgroundColor: Colors.CARD_HEADER_COLOR, padding: 5 }}>
+                <SimpleTable tableData={data ?? []} tableDataConfig={tableConfig} isLoading={isLoading} rowHeight={40} />
+            </View>
         </CustomModal>
     );
 

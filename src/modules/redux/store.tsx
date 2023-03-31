@@ -18,6 +18,9 @@ import ordersSlicer from './orderSlicer';
 import purchaseQueryParams from './purchaseQuerySlicer';
 import purchaseSlicer from './purchaseSlicer';
 import tableConfigsSlicer from './tableConfigs';
+import inventoryTrackSlicer from './inventoryTrackSlicer';
+import invventoryTrackQueryParams from './inventoryTrackQueryParams';
+
 import { FLUSH, PAUSE, PERSIST, PersistConfig, persistReducer, persistStore, PURGE, REGISTER, REHYDRATE } from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
@@ -52,6 +55,8 @@ const rootReducer = combineReducers(
         ordersSlicer,
         purchaseQueryParams,
         purchaseSlicer,
+        invventoryTrackQueryParams,
+        inventoryTrackSlicer,
         configs: configsSlicer,
         tableConfigs: tableConfigsSlicer
     }

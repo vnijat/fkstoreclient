@@ -15,6 +15,7 @@ type DrawerStackParamlist = {
   [RouteNames.PROJECTS]: undefined;
   [RouteNames.PURCHASES]: undefined;
   [RouteNames.WAREHOUSE]: undefined;
+  [RouteNames.TRACKVIEW]: undefined;
 };
 
 type DrawerStackMobileParamlist = {

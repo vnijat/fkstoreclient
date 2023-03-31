@@ -186,7 +186,29 @@ const showToast = (toastType: ToastVariants, message: string, title?: string, du
     });
 };
 
+
+/**
+* @returns Text formatted to lower camelCase 
+*/
+const modifyTextForLangSelect = (text: string) => {
+    const lowerCaseText = text.toLowerCase();
+    const regExFindAfterSpace = new RegExp(/(?!^)\b\w/, 'gi');
+    const regExfindSpaces = new RegExp(/\s/, 'gi');
+    return lowerCaseText.replace(regExFindAfterSpace, (v) => v.toUpperCase()).replace(regExfindSpaces, '');
+};
+
+
 const getCountriesForPicker = () => Object.keys(countryobjects).map((key) => ({ value: key, label: countryobjects[key] }));
+
+const getUTCAddTZ = (date: Date) => {
+    const minutsToMilliSeconds = date.getTimezoneOffset() * 60000;
+    return new Date(date.getTime() + minutsToMilliSeconds);
+};
+
+const getUTCSubTZ = (date: Date) => {
+    const minutsToMilliSeconds = date.getTimezoneOffset() * 60000;
+    return new Date(date.getTime() - minutsToMilliSeconds);
+};
 
 
 const HELP = {
@@ -204,7 +226,10 @@ const HELP = {
     alertError,
     isNotSameValue,
     getSlicesForPaginationPage,
-    showToast
+    showToast,
+    modifyTextForLangSelect,
+    getUTCAddTZ,
+    getUTCSubTZ
 };
 
 export default HELP;

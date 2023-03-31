@@ -18,12 +18,14 @@ interface ITableRow<T> {
     rowIndex: number;
     onPressRow?: (data: T, rowIndex: number) => void;
     customColumns?: ICustomColumn<T>;
+    rowHeight?: number;
+    columnWidth?: number;
 }
 
 
-const TableRow = <T extends ITableRowData>({ tableRowData, tableDataConfig, contextMenuButtons, rowIndex, onPressRow, customColumns }: ITableRow<T>) => {
-    const style = useMemo(() => getStyle(), []);
-
+const TableRow = <T extends ITableRowData>({ tableRowData, tableDataConfig, rowHeight, columnWidth, contextMenuButtons, rowIndex, onPressRow, customColumns }: ITableRow<T>) => {
+    const style = useMemo(() => getStyle(rowHeight, columnWidth), [rowHeight, columnWidth]);
+    const rowOnhoverOpacity = useMemo(() => !!contextMenuButtons?.length || !!onPressRow, [contextMenuButtons, onPressRow]);
 
     const handleRowOnpress = () => {
         onPressRow && onPressRow(tableRowData, rowIndex);
@@ -33,10 +35,10 @@ const TableRow = <T extends ITableRowData>({ tableRowData, tableDataConfig, cont
     return (
         <CustomPressable
             style={style.container}
-            onHoverOpacity
+            onHoverOpacity={rowOnhoverOpacity}
             onPress={handleRowOnpress}
         >
-            {contextMenuButtons?.length &&
+            {!!contextMenuButtons?.length &&
                 <CustomContextMenu >
                     <TableContextMenuContent
                         contextMenuButtons={contextMenuButtons}
@@ -47,7 +49,7 @@ const TableRow = <T extends ITableRowData>({ tableRowData, tableDataConfig, cont
             {tableDataConfig.map((tableConfig, index) => {
                 const { dtoKey, isObject, objectDtoKey, type, customColumnKey } = tableConfig;
                 if (tableConfig?.hidden) return null;
-                const value = dtoKey ? (isObject ? (tableRowData[dtoKey][objectDtoKey!] ?? '') : tableRowData[dtoKey]) : tableRowData;
+                const value = dtoKey ? (isObject ? (tableRowData[dtoKey] ? tableRowData[dtoKey][objectDtoKey!] : '-') : tableRowData[dtoKey]) : tableRowData;
                 if (customColumnKey && customColumns && customColumns[customColumnKey]) {
                     const CustomColumn = customColumns[customColumnKey];
                     return (
@@ -57,7 +59,7 @@ const TableRow = <T extends ITableRowData>({ tableRowData, tableDataConfig, cont
                     );
                 } else if (type) {
                     return (
-                        <TableColumn key={`${index}`} value={value} type={type} />
+                        <TableColumn key={`${index}`} value={value} type={type} columnWidth={columnWidth} />
                     );
                 } else {
                     return null;

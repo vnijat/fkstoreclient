@@ -25,6 +25,7 @@ const ItemsForOrderSearchItem = ({ data, setShowContent }: IItemsForOrderSearchI
     const style = useMemo(() => getStyle(), []);
     const dispatch = useAppDispatch();
     const rowData = useMemo(() => [
+        { value: data.store.name, title: 'Store' },
         { value: data.name, title: 'Name' },
         { value: data.barcode, title: 'Barcode' },
         { value: data.unit.symbol, title: 'Unit' },
@@ -43,7 +44,9 @@ const ItemsForOrderSearchItem = ({ data, setShowContent }: IItemsForOrderSearchI
                 itemAtStock: data?.quantity,
                 pricePerUnit: data.costPrice,
                 status: OrderItemStatus.IN_USE,
-                projectId: null
+                projectId: null,
+                storeId: data?.store?.id,
+                store: data.store
             }));
             setShowContent && setShowContent(false);
         } else {

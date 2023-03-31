@@ -48,9 +48,11 @@ interface ISimpleTable<T> {
      * Is table data loading
      */
     isLoading?: boolean;
+    rowHeight?: number;
+    columnWidth?: number;
 }
 
-const SimpleTable = <T extends ITableRowData>({ tableData, tableDataConfig, selectableRow, isLoading, contextMenuButtons, onResetTable, onPressRow, customColumns, getNewTableConfig }: ISimpleTable<T>) => {
+const SimpleTable = <T extends ITableRowData>({ tableData, tableDataConfig, rowHeight, columnWidth, selectableRow, isLoading, contextMenuButtons, onResetTable, onPressRow, customColumns, getNewTableConfig }: ISimpleTable<T>) => {
     const listScrollOffset = new Animated.Value(0);
     const headerScrollRef = useRef(null);
     const listScrollRef = useRef(null);
@@ -143,17 +145,17 @@ const SimpleTable = <T extends ITableRowData>({ tableData, tableDataConfig, sele
                 <>
                     {showEditModal && <TableColumnsEditModal onClose={onCloseEditModal} isSwohModal={showEditModal} tableDataConfigs={tableConfigs} getTableConfigsNewState={(newState) => setTableConfigs([...newState])} />}
                     <View style={{ flex: 0.1 }}>
-                        <View style={style.tableConfigButton} >
+                        {getNewTableConfig && <View style={style.tableConfigButton} >
                             <ActionModal pressableComponent={actionModalPressable} >
                                 {actionModalContent}
                             </ActionModal>
-                        </View>
+                        </View>}
                         <Animated.ScrollView horizontal ref={headerScrollRef}
                             showsHorizontalScrollIndicator={false}
                             scrollEnabled={false}
                             contentContainerStyle={{ flexGrow: 1 }}
                         >
-                            <TableHeader tableDataConfig={tableConfigs} />
+                            <TableHeader tableDataConfig={tableConfigs} {...{ rowHeight, columnWidth, }} />
                         </Animated.ScrollView>
                     </View>
                     <View style={{ flex: 0.9 }}>
@@ -163,7 +165,7 @@ const SimpleTable = <T extends ITableRowData>({ tableData, tableDataConfig, sele
                             onScroll={listOnScroll}
                             contentContainerStyle={{ flexGrow: 1 }}
                         >
-                            <TableList tableData={tableData} tableDataConfig={tableConfigs}  {...{ contextMenuButtons, onPressRow, customColumns, isLoading }} />
+                            <TableList tableData={tableData} tableDataConfig={tableConfigs}  {...{ contextMenuButtons, onPressRow, customColumns, isLoading, rowHeight, columnWidth, }} />
                         </Animated.ScrollView>
                     </View>
                 </>

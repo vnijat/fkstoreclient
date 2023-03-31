@@ -1,3 +1,4 @@
+import Clipboard from "@react-native-clipboard/clipboard";
 import { ITableDataConfig } from "../../../../containers/simpleTable/types";
 import { useDeleteManyItemsMutation } from "../../../../modules/api/apiSlice";
 import UseLanguage from "../../../../modules/lozalization/useLanguage.hook";
@@ -44,6 +45,12 @@ function WareHouseLogicProvider() {
     function handleSearchValueChange(value: string) {
         dispatch(setItemQueryParams({ search: value, page: 1 }));
 
+    }
+
+
+    function handleCopyBarcode(data: Item) {
+        Clipboard.setString(data.barcode);
+        HELP.showToast('success', 'barcode Copied to Clipboard', `${data.barcode}`);
     }
 
     async function handleDeleteWareHouseItems(itemIds: number[], lang?: ReturnType<typeof UseLanguage>) {
@@ -96,7 +103,8 @@ function WareHouseLogicProvider() {
         handleClearFilters,
         handleCreateNew,
         handleOutofstockSelect,
-        handleDeleteWareHouseItems
+        handleDeleteWareHouseItems,
+        handleCopyBarcode
     };
 }
 

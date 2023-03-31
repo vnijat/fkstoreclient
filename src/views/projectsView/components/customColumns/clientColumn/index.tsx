@@ -3,6 +3,7 @@ import { Text, View } from "react-native";
 import CustomPressable from "../../../../../components/customPressable";
 import HELP from "../../../../../services/helpers";
 import { Project } from "../../../../../types/project";
+import { Colors } from "../../../../../utils/colors";
 import { getStyle } from "./styles";
 
 
@@ -27,11 +28,12 @@ const ProjectClientColumn = ({ data, onPressClient }: IProjectClientColumn) => {
             <CustomPressable
                 style={style.container}
                 onPress={onPressIcon}
+                tooltip={'Click to View'}
             >
-                <View style={style.clientIconContainer} tooltip={client?.type}>
-                    {HELP.getClientTypeIcons(client?.type, 18)}
+                <View style={style.clientIconContainer}>
+                    {HELP.getClientTypeIcons(client?.type, 18, Colors.DEFAULT_TEXT_COLOR)}
                 </View>
-                <View tooltip={clientInfo} >
+                <View >
                     <Text style={style.columContentText} >
                         {clientInfo.toUpperCase()}
                     </Text>

@@ -12,6 +12,11 @@ import { RootState, useAppDispatch } from "../../../../modules/redux/store";
 import { currency } from "../../../../utils/currency.windows";
 import { Colors } from "../../../../utils/colors";
 import HELP from "../../../../services/helpers";
+import SimpleTable from "../../../../containers/simpleTable";
+import { ICustomColumn, ITableDataConfig } from "../../../../containers/simpleTable/types";
+import { InventoryTrackData } from "../../../../types/inventoryTrack";
+import TrackStatusColumn from "../../../inventoryTrackView/components/customColumns/statusColumn";
+import FONT from "../../../../utils/font";
 
 
 interface IItemModal {
@@ -34,6 +39,31 @@ const ItemModal = ({ }: IItemModal) => {
         dispatch(setIsShowItemModal(false));
     };
 
+
+    const tableDataConfig: ITableDataConfig<InventoryTrackData>[] = [
+        {
+            headerTitle: 'Date',
+            dtoKey: 'updatedat',
+            hidden: false,
+            type: 'date'
+        },
+        {
+            headerTitle: 'Quantity',
+            dtoKey: 'quantity',
+            type: 'numeric',
+            hidden: false
+        },
+        {
+            headerTitle: 'Status',
+            customColumnKey: 'status',
+            hidden: false
+        }
+    ];
+
+    const customColumn: ICustomColumn<InventoryTrackData> = {
+        status: ({ data }) => <TrackStatusColumn data={data} />
+    };
+
     const onPressGetBarcodePdf = async () => {
         Linking.openURL(`${apiURL}/item/barcode/pdf/${itemId}`);
     };
@@ -47,13 +77,14 @@ const ItemModal = ({ }: IItemModal) => {
         }
 
     };
-
+    
     return (
         <CustomModal
             isShowModal={isShowModal}
             isDissmissEnabled={false}
             closeModal={onCloseModal}
             width={1000}
+            borderColor={Colors.DEFAULT_TEXT_COLOR}
         >
             <View style={style.container}>
                 {(isShowModal && data) ? <>
@@ -64,7 +95,7 @@ const ItemModal = ({ }: IItemModal) => {
                             <DataField title={'Category'} value={data?.category!} />
                             <View style={{ flexDirection: 'row' }}>
                                 <DataField title={'Unit'} value={data?.unit.name!} width={100} />
-                                <DataField title={'Quantity'} value={Number(data?.quantity!)} width={100} />
+                                <DataField title={'At Stock'} value={Number(data?.quantity!)} width={100} />
                                 <DataField title={'Cost Price'} value={currency.format(Number(data?.costPrice!))} width={100} />
                                 <DataField title={'Total Cost Price'} value={currency.format(Number(data?.totalCostPrice!))} width={100} />
                             </View>
@@ -94,7 +125,20 @@ const ItemModal = ({ }: IItemModal) => {
                     </View>
                     <View style={style.contentBottomContainer}>
                         <View style={style.contentBottomLeft}>
-                            <View style={style.bottomActionButton}>
+                            <View style={{ height: 280 }}>
+                                <View style={style.bottemLeftTitle}>
+                                    <Text style={style.bottemLeftTitleText}>
+                                        {'Transactions'.toUpperCase()}
+                                    </Text>
+                                </View>
+                                <View style={{ flexShrink: 1, backgroundColor: Colors.CARD_HEADER_COLOR, }}>
+                                    <SimpleTable
+                                        tableData={data.transactions}
+                                        tableDataConfig={tableDataConfig}
+                                        customColumns={customColumn}
+                                        rowHeight={35}
+                                    />
+                                </View>
                             </View>
                         </View>
                         <View style={style.bottomRightContainer}>

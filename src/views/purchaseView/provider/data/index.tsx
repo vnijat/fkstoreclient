@@ -17,7 +17,6 @@ function PurchaseDataProvider() {
         ),
         pollingInterval: 5000
     });
-
     const isPurchaseModalOpen = useSelector((state: RootState) => state.purchaseSlicer.isShowPurchaseModal);
 
     return {

@@ -1,9 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { inventoryTrackTableConfig } from '../../configs/tableDataConfigs/inventoryTrackTableConfigs';
 import { itemTableDataConfigs } from '../../configs/tableDataConfigs/itemTableConfigs';
 import { orderTableDataConfigs } from '../../configs/tableDataConfigs/orderTableConfigs';
 import { projectTableDataConfigs } from '../../configs/tableDataConfigs/projectTableConfigs';
 import { purchaseTableDataConfigs } from '../../configs/tableDataConfigs/purchaseTableConfigs';
 import { ITableDataConfig } from '../../containers/simpleTable/types';
+import { InventoryTrackData } from '../../types/inventoryTrack';
 import { Item } from '../../types/item';
 import { Project } from '../../types/project';
 import { ProjectOrder } from '../../types/projectOrder';
@@ -14,6 +16,7 @@ export interface ITableConfigsSlicer {
     order: ITableDataConfig<ProjectOrder>[];
     purchase: ITableDataConfig<PurchaseDto>[];
     project: ITableDataConfig<Project>[];
+    inventoryTrack: ITableDataConfig<InventoryTrackData>[];
 
 }
 
@@ -23,7 +26,8 @@ const initialState = {
     item: itemTableDataConfigs,
     order: orderTableDataConfigs,
     purchase: purchaseTableDataConfigs,
-    project: projectTableDataConfigs
+    project: projectTableDataConfigs,
+    inventoryTrack: inventoryTrackTableConfig
 } as ITableConfigsSlicer;
 
 const tableConfigsSlicer = createSlice({

@@ -33,6 +33,7 @@ export const OrdersApi = InventoryApi.injectEndpoints({
         'itemForOrder',
         'projects',
         'projectOrders',
+        'inventoryTrackData',
       ],
       query: body => {
         return {
@@ -43,7 +44,7 @@ export const OrdersApi = InventoryApi.injectEndpoints({
       },
     }),
     deleteOrder: build.mutation<undefined, number>({
-      invalidatesTags: ['orders'],
+      invalidatesTags: ['orders', 'inventoryTrackData'],
       query: orderId => {
         return {
           url: `/order/${orderId}`,
@@ -59,6 +60,7 @@ export const OrdersApi = InventoryApi.injectEndpoints({
         'itemForOrder',
         'projects',
         'projectOrders',
+        'inventoryTrackData',
       ],
       query: ({body, id}) => {
         return {

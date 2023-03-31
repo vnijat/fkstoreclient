@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Text } from "react-native";
 import CustomPressable from "../../../../../components/customPressable";
 import { Project } from "../../../../../types/project";
-import { Colors } from "../../../../../utils/colors";
+import { getStyle } from "./styles";
 
 
 
@@ -14,16 +14,17 @@ interface IProjectOrdersColumn {
 }
 
 const ProjectOrdersColumn = ({ data, handleOnPressOrdersCounts }: IProjectOrdersColumn) => {
-
+    const style = useMemo(() => getStyle(), []);
     const onPressOrdersCount = () => {
         handleOnPressOrdersCounts(data);
     };
 
     return (<CustomPressable
         onPress={onPressOrdersCount}
-        style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: Colors.DEFAULT_TEXT_COLOR, borderRadius: 3, paddingHorizontal: 5, paddingVertical: 2 }}
+        tooltip={'Click to View'}
+        style={style.container}
     >
-        <Text style={{ fontSize: 10, textAlign: 'center', justifyContent: 'center' }}>
+        <Text style={style.text}>
             {Number(data?.totalOrders)}
         </Text>
     </CustomPressable>);

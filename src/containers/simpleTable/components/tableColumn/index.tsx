@@ -10,10 +10,11 @@ import TextColumn from "./columnComponents/text";
 interface ITableColumn {
     value: any;
     type: ITableDataTypes;
+    columnWidth?: number;
 }
 
 
-const TableColumn = ({ value, type }: ITableColumn) => {
+const TableColumn = ({ value, type, columnWidth }: ITableColumn) => {
 
     const columns = {
         numeric: NumericColumn,
@@ -24,7 +25,7 @@ const TableColumn = ({ value, type }: ITableColumn) => {
     const ColumnComponent = columns[type];
 
     return (
-        <View style={{ flex: 1, flexDirection: 'row', maxWidth: 250, minWidth: 200 }}>
+        <View style={{ flex: 1, flexDirection: 'row', maxWidth: columnWidth || 250, minWidth: 200 }}>
             <ColumnComponent value={value} />
         </View>
     );

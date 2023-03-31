@@ -2,6 +2,7 @@ import {Order} from '../enums/order.enum';
 import {OrderItemStatus} from '../enums/orderItemStatus';
 import {OrderStatus} from '../enums/orderStatus';
 import {Common, Imeta} from './common/common';
+import {Store} from './item';
 import {Project} from './project';
 
 interface ProjectOrder extends Common {
@@ -16,6 +17,7 @@ interface ProjectOrder extends Common {
 interface OrderItem extends Common {
   id?: number;
   itemId: number;
+  storeId?: number;
   name: string;
   barcode: string;
   unit: string;
@@ -27,6 +29,7 @@ interface OrderItem extends Common {
   project?: Project;
   itemAtStock?: number;
   fullfilled?: boolean;
+  store: Store;
   status?: OrderItemStatus;
 }
 

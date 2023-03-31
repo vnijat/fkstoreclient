@@ -106,7 +106,7 @@ const AddEditModal = ({
 
 
     const setClientDataForPost = useCallback((
-        inputValue: string | RowDataType[] | boolean | Date,
+        inputValue: string | RowDataType<any>[] | boolean | Date,
         objectKey: string,
     ) => {
         errorMessage[objectKey] &&
@@ -148,7 +148,7 @@ const AddEditModal = ({
                         canSelectParent,
                         nullable
                     } = config;
-                    const inputTitle = (lang[dtoKey as keyof typeof lang] || lang[title?.toLowerCase() as keyof typeof lang]) ?? title;
+                    const inputTitle = lang[HELP.modifyTextForLangSelect(title ?? '') as keyof typeof lang] ?? title;
                     const inputValue: string | boolean = dataForRequest[dtoKey!] || '';
                     const dataForPickerFromServer = (selectableData && selectableDataKey) ? (!!requiredDataName ? selectableData[selectableDataKey]?.filter((data: { [key: string]: any; }) => (data?.[requiredDataDtoKey!!] ? data?.[requiredDataDtoKey!!] : data?.[requiredDataDtoKey?.toLowerCase()!!]) == dataForRequest[requiredDataDtoKey!]) : selectableData[selectableDataKey]) : [];
                     const dataForPickerFromEnum = isEnum ? enumData : [];
@@ -166,7 +166,7 @@ const AddEditModal = ({
                                         {`${inputTitle}`.toUpperCase()}
                                     </Text>
                                 </View>
-                                <TableInput getNewTableData={(data: RowDataType[]) => setClientDataForPost(data, dtoKey)} tableData={dataForRequest[dtoKey!] ?? []} tableConfig={tableConfig ?? []} isDataEditable />
+                                <TableInput getNewTableData={(data: RowDataType<any>[]) => setClientDataForPost(data, dtoKey)} tableData={dataForRequest[dtoKey!] ?? []} tableConfig={tableConfig ?? []} isDataEditable />
                             </View>
                         );
                     } else if (isCode) {

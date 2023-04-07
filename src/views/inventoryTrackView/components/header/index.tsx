@@ -23,11 +23,6 @@ const TrackHeader = ({ logicProvider, dataProvider }: ITrackHeader) => {
         isLoading
     } } = dataProvider;
 
-
-    const getDates = (data: { startDate: Date; endDate: Date; }) => {
-        console.log("data--->>>", data);
-    };
-
     const renderDatePicker = useMemo(() => {
         if (data?.inventoryStartDate) {
             return <MulitDateTimePicker getDates={handleDateChange} startDate={data?.inventoryStartDate} />;
@@ -35,6 +30,7 @@ const TrackHeader = ({ logicProvider, dataProvider }: ITrackHeader) => {
             return null;
         }
     }, [data?.inventoryStartDate]);
+    
 
     return (
         <View style={style.container}>

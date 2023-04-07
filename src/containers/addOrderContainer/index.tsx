@@ -104,8 +104,6 @@ const AddOrderCntainer = ({ }: IAddOrderContainer) => {
             if (response?.data) {
                 dispatch(setOrderDataForPost({ ...response.data }));
                 setTempOrderData({ ...response.data });
-            } else {
-
             }
         }
         else {

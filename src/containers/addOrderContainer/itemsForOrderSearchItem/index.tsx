@@ -35,19 +35,7 @@ const ItemsForOrderSearchItem = ({ data, setShowContent }: IItemsForOrderSearchI
 
     const setItemForOrder = () => {
         if (!data.inUse) {
-            dispatch(addItemForOrder({
-                itemId: data.id as number,
-                unit: data.unit.name,
-                name: data.name,
-                quantity: 0,
-                barcode: data.barcode,
-                itemAtStock: data?.quantity,
-                pricePerUnit: data.costPrice,
-                status: OrderItemStatus.IN_USE,
-                projectId: null,
-                storeId: data?.store?.id,
-                store: data.store
-            }));
+            dispatch(addItemForOrder(data));
             setShowContent && setShowContent(false);
         } else {
             HELP.alertError(undefined, 'Item is in another Order, Please complete another order first');

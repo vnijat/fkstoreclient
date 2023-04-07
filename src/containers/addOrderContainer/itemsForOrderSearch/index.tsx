@@ -41,19 +41,7 @@ const ItemsForOrderSearch = ({ }: IItemsForOrderSearch) => {
             data.length > 1 && setShowContent(true);
             if (data?.length === 1) {
                 if (!data[0].inUse) {
-                    dispatch(addItemForOrder({
-                        itemId: data[0].id as number,
-                        unit: data[0].unit.name,
-                        name: data[0].name,
-                        quantity: 0,
-                        barcode: data[0].barcode,
-                        itemAtStock: data[0]?.quantity,
-                        pricePerUnit: data[0].costPrice,
-                        status: OrderItemStatus.IN_USE,
-                        projectId: null,
-                        storeId: data[0].store.id,
-                        store: data[0].store
-                    }));
+                    dispatch(addItemForOrder(data[0]));
                 } else {
                     HELP.alertError(undefined, 'ITEM IN USE IN ANOTHER ORDER!!', 'PLEASE COMPLETE ACTIVE ORDER!');
                 }

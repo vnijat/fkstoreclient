@@ -51,7 +51,7 @@ const AddEditItemModal = ({ }: IAddEditItemModal) => {
 
         }
     };
-    
+
     const setDataForRequest = (data: { [key: string]: string | number; }) => {
         dispatch(setItemForPost(data));
     };
@@ -82,21 +82,7 @@ const AddEditItemModal = ({ }: IAddEditItemModal) => {
 
 
     const addNewProductToPurchaseList = (data: Item) => {
-        dispatch(dispatch(addItemForPurchase({
-            itemId: data.id as number,
-            unit: data.unit.name,
-            name: data.name,
-            quantity: 0,
-            barcode: data.barcode,
-            updateMainPrice: false,
-            pricePerUnit: data.costPrice,
-            paymentMethod: PaymentMethod.CASH,
-            fullfilled: false,
-            supplierId: data.supplier.id || null,
-            poInfo: '',
-            storeId: data.store.id!,
-            store: data.store
-        })));
+        dispatch(dispatch(addItemForPurchase(data)));
     };
 
 

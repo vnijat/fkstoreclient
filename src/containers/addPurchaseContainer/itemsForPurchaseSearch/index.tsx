@@ -3,11 +3,8 @@ import { ScrollView, View } from "react-native";
 import { ActivityIndicator, Flyout, Text } from "react-native-windows";
 import { InputItem } from "../../../components/inputItem/index.windows";
 import { PrimaryButton } from "../../../components/primaryButton";
-import { PaymentMethod } from "../../../enums/purchase";
-import { useItemForOrderQuery } from "../../../modules/api/orders.api";
 import { useGetItemForPurchaseQuery } from "../../../modules/api/purchase.api";
 import { setFromWhereAddEditModalCalled, setIsShowAddEditModal } from "../../../modules/redux/itemsSlicer";
-import { addItemForOrder } from "../../../modules/redux/orderSlicer";
 import { addItemForPurchase } from "../../../modules/redux/purchaseSlicer";
 import { useAppDispatch } from "../../../modules/redux/store";
 import { Colors } from "../../../utils/colors";
@@ -42,21 +39,7 @@ const ItemsForPurchaseSearch = ({ }: IItemsForOrderSearch) => {
         if (data?.length) {
             data.length > 1 && setShowContent(true);
             if (data?.length === 1) {
-                dispatch(addItemForPurchase({
-                    itemId: data[0].id as number,
-                    unit: data[0].unit.name,
-                    name: data[0].name,
-                    quantity: 0,
-                    barcode: data[0].barcode,
-                    updateMainPrice: false,
-                    pricePerUnit: data[0].costPrice,
-                    paymentMethod: PaymentMethod.CASH,
-                    fullfilled: false,
-                    supplierId: data[0].supplier.id || null,
-                    poInfo: '',
-                    storeId: data[0].store.id!,
-                    store: data[0].store
-                }));
+                dispatch(addItemForPurchase(data[0]));
             }
         }
     }, [data?.length]);

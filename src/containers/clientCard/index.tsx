@@ -79,7 +79,6 @@ const ClientCard = ({
 
     const onPressDelete = async () => {
         try {
-            await HELP.alertPromise('do you want to delete Client?', 'you cant recover deleted Client');
             const response = await apiDeleteClient(Number(id));
             if (response.error) {
                 throw response.error;

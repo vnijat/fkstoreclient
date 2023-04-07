@@ -77,7 +77,7 @@ const ItemModal = ({ }: IItemModal) => {
         }
 
     };
-    
+
     return (
         <CustomModal
             isShowModal={isShowModal}
@@ -118,8 +118,8 @@ const ItemModal = ({ }: IItemModal) => {
                                 </Text>
                             </View>
                             <View style={style.barcodeActionsButton}>
-                                <PrimaryButton onPress={onPressGetBarcodePdf} title={'Get PDF'} width={100} />
-                                <PrimaryButton onPress={onPressPrint} title={'Print'} width={100} />
+                                <PrimaryButton onPress={onPressGetBarcodePdf} title={'Get PDF'} width={100} onHoverOpacity />
+                                <PrimaryButton onPress={onPressPrint} title={'Print'} width={100} onHoverOpacity />
                             </View>
                         </View>
                     </View>

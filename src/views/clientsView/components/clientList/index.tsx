@@ -2,7 +2,7 @@ import React, { memo, useMemo } from "react";
 import { FlatList, View } from "react-native";
 import ClientCard from "../../../../containers/clientCard";
 import { ClientType } from "../../../../enums/clientType";
-import { Client } from "../../../../types/clientsQuery";
+import { Client } from "../../../../types/client";
 import { Colors } from "../../../../utils/colors";
 import { getStyle } from "./styles";
 

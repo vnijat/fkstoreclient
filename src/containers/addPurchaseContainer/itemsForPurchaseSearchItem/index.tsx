@@ -37,21 +37,7 @@ const ItemsForPurchaseSearchItem = ({ data, setShowContent }: IItemsForPurchaseS
 
     const setItemForPurchase = () => {
         if (!data.inUse) {
-            dispatch(addItemForPurchase({
-                itemId: data.id as number,
-                unit: data.unit.name,
-                name: data.name,
-                quantity: 0,
-                barcode: data.barcode,
-                pricePerUnit: data.costPrice,
-                fullfilled: false,
-                supplierId: data.supplier.id || null,
-                paymentMethod: PaymentMethod.CASH,
-                updateMainPrice: false,
-                poInfo: '',
-                storeId: data.store.id!,
-                store: data.store,
-            }));
+            dispatch(addItemForPurchase(data));
             setShowContent && setShowContent(false);
         } else {
             HELP.alertError(undefined, 'Item in active  Order, Please complete order first');

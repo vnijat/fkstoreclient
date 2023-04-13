@@ -1,3 +1,9 @@
+import {
+  areaMeasures,
+  dimensionMeasures,
+  volumeMeasures,
+  weightMeasures,
+} from '../enums/itemProperties';
 import {Order} from '../enums/order.enum';
 import {Common, Imeta} from './common/common';
 import {InventoryTrackData} from './inventoryTrack';
@@ -20,6 +26,7 @@ interface AddItemInterface {
   labelId?: string;
   storeId?: string;
   colorId?: string;
+  properties: ProductAttributesDto;
 }
 
 interface ItemQueryParams {
@@ -131,6 +138,21 @@ interface ItemResponseFull extends Omit<Item, 'category'> {
   transactions: InventoryTrackData[];
 }
 
+interface ProductAttributesDto extends Common {
+  height?: number;
+  width?: number;
+  length?: number;
+  weight?: number;
+  volume?: number;
+  area?: number;
+  areaMeasure?: areaMeasures;
+  dimensionMeasure?: dimensionMeasures;
+  weightMeasure?: weightMeasures;
+  volumeMeasure?: volumeMeasures;
+  supplierColorVariant?: string;
+  supplierProductArticule?: string;
+}
+
 interface ItemResponse {
   items: Item[];
   itemsCount: number;
@@ -155,4 +177,5 @@ export type {
   ItemOptionForInputs,
   Supplier,
   Store,
+  ProductAttributesDto,
 };

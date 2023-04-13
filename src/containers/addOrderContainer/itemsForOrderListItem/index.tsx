@@ -96,7 +96,6 @@ const ItemsForOrderListItem = ({ orderItem, index, projectsData }: IItemsForOrde
     }, [orderItem]);
 
     const getSelectedValue = (value: string, dtoKey: string) => {
-        console.log("getSelectedValue--->>", value);
         dispatch(updateItemForOrder({ itemId: orderItem.itemId, data: { [dtoKey]: value } }));
     };
 

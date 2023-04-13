@@ -12,7 +12,6 @@ import TableInput from "../tableInput";
 import { RowDataType } from "../tableInput/types";
 import CodeInput from "../../components/codeInput";
 import UseLanguage from "../../modules/lozalization/useLanguage.hook";
-import Toast from "react-native-toast-message";
 
 interface IAddEditModal {
     /**  Pass Function For Post data to Api*/
@@ -64,6 +63,8 @@ interface IAddEditModal {
     deleteFunction?: (Ids: number[]) => Promise<any>;
 
     modalBorderColor?: string;
+
+    customComponent?: { [key: string]: () => JSX.Element; };
 }
 
 
@@ -88,7 +89,8 @@ const AddEditModal = ({
     disablePickerActionButtons,
     modalWidth,
     deleteFunction,
-    modalBorderColor
+    modalBorderColor,
+    customComponent
 }: IAddEditModal) => {
     const style = getStyle();
     const [tempDataForEdit, settempDataForEdit] = useState<any>();
@@ -105,7 +107,7 @@ const AddEditModal = ({
 
 
 
-    const setClientDataForPost = useCallback((
+    const setDataForPost = useCallback((
         inputValue: string | RowDataType<any>[] | boolean | Date,
         objectKey: string,
     ) => {
@@ -146,7 +148,8 @@ const AddEditModal = ({
                         requiredText,
                         isDisableForEdit,
                         canSelectParent,
-                        nullable
+                        nullable,
+                        customComponentKeyName
                     } = config;
                     const inputTitle = lang[HELP.modifyTextForLangSelect(title ?? '') as keyof typeof lang] ?? title;
                     const inputValue: string | boolean = dataForRequest[dtoKey!] || '';
@@ -166,7 +169,7 @@ const AddEditModal = ({
                                         {`${inputTitle}`.toUpperCase()}
                                     </Text>
                                 </View>
-                                <TableInput getNewTableData={(data: RowDataType<any>[]) => setClientDataForPost(data, dtoKey)} tableData={dataForRequest[dtoKey!] ?? []} tableConfig={tableConfig ?? []} isDataEditable />
+                                <TableInput getNewTableData={(data: RowDataType<any>[]) => setDataForPost(data, dtoKey!)} tableData={dataForRequest[dtoKey!] ?? []} tableConfig={tableConfig ?? []} isDataEditable />
                             </View>
                         );
                     } else if (isCode) {
@@ -181,12 +184,20 @@ const AddEditModal = ({
                                 height={height}
                                 isDisabled={disabled}
                                 requiredDataText={requiredText}
-                                getCodeValue={inputValue => setClientDataForPost(inputValue, dtoKey)}
+                                getCodeValue={inputValue => setDataForPost(inputValue, dtoKey!)}
                                 categoryId={dataForRequest['categoryId']}
                                 isError={isError}
                                 errorDetail={errorDetail}
                             />
                         );
+                    }
+                    else if (customComponentKeyName) {
+                        if ((customComponent && customComponent[customComponentKeyName])) {
+                            const CustomComponent = customComponent[customComponentKeyName];
+                            return <CustomComponent />;
+                        } else {
+                            return null;
+                        }
                     }
                     else {
                         return (
@@ -202,7 +213,7 @@ const AddEditModal = ({
                                 inputRef={r => (inputRef.current[id] = r)}
                                 inputValue={inputValue}
                                 setValue={inputValue =>
-                                    setClientDataForPost(inputValue, dtoKey)
+                                    setDataForPost(inputValue, dtoKey!)
                                 }
                                 id={id}
                                 isPickerAddButton={isPickerAddButton}
@@ -274,7 +285,7 @@ const AddEditModal = ({
                 HELP.showToast('success', `${dataTitle ?? ''} Deleted`.toUpperCase(), "Deleted");
                 onCloseModal();
             } catch (error) {
-                console.log(`onPressAdd${dataTitle}`, error);
+                console.log(`onPressAdd ${dataTitle}`, error);
                 if (error?.status === 400) {
                     setErrorMessages(HELP.modifieErrorMessage(error));
                 }

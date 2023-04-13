@@ -1,7 +1,7 @@
 import {ITableConfig} from '../containers/tableInput/types';
 
 interface InputsConfig {
-  dtoKey: string;
+  dtoKey?: string;
   title?: string;
   isNumeric?: boolean;
   maxLength?: number;
@@ -15,15 +15,16 @@ interface InputsConfig {
   requiredDataDtoKey?: string;
   requiredText?: string;
   isEnum?: boolean;
-  enumData?: {label: string; value: string | number}[];
   isTableInput?: boolean;
-  tableConfig?: ITableConfig[];
+  tableConfig?: ITableConfig<any>[];
   isCheckBox?: boolean;
   isDate?: boolean;
   isDisableForEdit?: boolean;
   isCode?: boolean;
-  canSelectParent?: boolean;
   nullable?: boolean;
+  enumData?: {label: string; value: string | number}[];
+  canSelectParent?: boolean;
+  customComponentKeyName?: string;
 }
 
 export type {InputsConfig};

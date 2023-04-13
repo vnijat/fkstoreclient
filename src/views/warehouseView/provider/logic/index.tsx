@@ -48,11 +48,6 @@ function WareHouseLogicProvider() {
     }
 
 
-    function handleCopyBarcode(data: Item) {
-        Clipboard.setString(data.barcode);
-        HELP.showToast('success', 'barcode Copied to Clipboard', `${data.barcode}`);
-    }
-
     async function handleDeleteWareHouseItems(itemIds: number[], lang?: ReturnType<typeof UseLanguage>) {
         try {
             const response = await apiDelete(itemIds);
@@ -104,7 +99,6 @@ function WareHouseLogicProvider() {
         handleCreateNew,
         handleOutofstockSelect,
         handleDeleteWareHouseItems,
-        handleCopyBarcode
     };
 }
 

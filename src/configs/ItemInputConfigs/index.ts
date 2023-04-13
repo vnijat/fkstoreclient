@@ -74,6 +74,10 @@ const inputsConfig: InputsConfig[] = [
     dtoKey: 'costPrice',
   },
   {
+    title: 'Product Attributes',
+    customComponentKeyName: 'productAttributes',
+  },
+  {
     title: 'Sell Price',
     isNumeric: true,
     maxLength: 16,

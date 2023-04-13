@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { AddItemInterface } from '../../types/item';
+import { AddItemInterface, ProductAttributesDto } from '../../types/item';
 import { ItemForPostDefaults } from '../../utils/defaults';
 
 interface ItemsSlicerInterface {
@@ -69,6 +69,9 @@ const itemsSlicer = createSlice({
         },
         setFromWhereAddEditModalCalled: (state, action: PayloadAction<'warehouse' | 'purchase'>) => {
             state.addEditModalCalledFrom = action.payload;
+        },
+        setProductAttributes: (state, action: PayloadAction<ProductAttributesDto>) => {
+            Object.assign(state.itemforPost.properties, action.payload);
         }
     },
 });
@@ -84,6 +87,7 @@ export const {
     clearItemForPosting,
     setItemIdForFullResponse,
     setIsShowAddEditModal,
-    setFromWhereAddEditModalCalled
+    setFromWhereAddEditModalCalled,
+    setProductAttributes
 } = itemsSlicer.actions;
 export default itemsSlicer.reducer;

@@ -134,7 +134,7 @@ const AddPurchaseContainer = ({ }: IAddPurchaseContainer) => {
             [PurchaseStatus.IN_PROGRESS]: Colors.INPROGRESS_COLOR
         };
         return purchaseData.status && colors[purchaseData.status];
-    }, [PurchaseStatus]);
+    }, [PurchaseStatus, purchaseData.status]);
 
     const renderActionButtons = useMemo(() => {
         if (tempData) {

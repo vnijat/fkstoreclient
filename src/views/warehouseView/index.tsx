@@ -35,7 +35,6 @@ const WareHouseView: FC<any> = ({ navigation }) => {
     onResetTable,
     setNewTableConfig,
     handleDeleteWareHouseItems,
-    handleCopyBarcode
   } = logicProvider;
   const style = getStyle();
 
@@ -55,7 +54,6 @@ const WareHouseView: FC<any> = ({ navigation }) => {
   const tableContextMenuButtons: IContextMenuButton<Item>[] = useMemo(() => [
     { title: 'Edit', onPress: onPressEdit },
     { title: 'Delete', onPress: onPressDeleteItem },
-    { title: 'Copy Barcode', onPress: handleCopyBarcode }
   ], [lang]);
 
 

@@ -26,7 +26,7 @@ export const getStyle = (height?: number | string, backgroundColor?: string, wid
         },
         valueText: {
             color: Colors.DEFAULT_TEXT_COLOR,
-            fontSize: FONT.FONT_SIZE_MEDIUM,
+            fontSize: FONT.FONT_SIZE_SMALL,
             padding: 5
         }
 

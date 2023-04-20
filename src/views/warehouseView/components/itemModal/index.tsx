@@ -23,6 +23,12 @@ interface IItemModal {
 }
 
 
+interface propertiesData {
+    title: string;
+    value?: string;
+    width?: number;
+}
+
 const ItemModal = ({ }: IItemModal) => {
     const style = useMemo(() => getStyle(), []);
     const apiURL = useSelector((state: RootState) => state.configs.apiURL);
@@ -38,6 +44,27 @@ const ItemModal = ({ }: IItemModal) => {
     const onCloseModal = () => {
         dispatch(setIsShowItemModal(false));
     };
+
+
+    const propertiesData = useMemo(() => {
+        let properties: propertiesData[] = [];
+        if (data?.properties) {
+            const { dimensionMeasure, volumeMeasure, volume, width, height, length, area, areaMeasure, weight, weightMeasure, supplierColorVariant, supplierProductArticule } = data?.properties;
+            const dimensionsData = `l: ${Number(length)} w: ${Number(width)} h: ${Number(height)}`;
+            const areaData = `${Number(area)}`;
+            const volumeData = `${Number(volume)}`;
+            const weightData = `${Number(weight)}`;
+            properties = [
+                { title: `Dimensions (${dimensionMeasure})`, value: dimensionsData, width: 150 },
+                { title: `Area (${areaMeasure})`, value: areaData },
+                { title: `Volume (${volumeMeasure})`, value: volumeData },
+                { title: `Weight (${weightMeasure})`, value: weightData },
+                { title: 'Color/Variant', value: supplierColorVariant },
+                { title: 'Aritcule', value: supplierProductArticule },
+            ];
+        }
+        return properties;
+    }, [data?.properties]);
 
 
     const tableDataConfig: ITableDataConfig<InventoryTrackData>[] = [
@@ -91,18 +118,25 @@ const ItemModal = ({ }: IItemModal) => {
                     <View style={style.contentTopContainer}>
                         <View style={style.contentTopLeftContainer}>
                             <DataField title={'Name'} value={data?.name!} />
-                            <DataField title={'Description'} value={data?.description!} height={100} />
+                            <DataField title={'Description'} value={data?.description!} height={60} />
                             <DataField title={'Category'} value={data?.category!} />
                             <View style={{ flexDirection: 'row' }}>
                                 <DataField title={'Unit'} value={data?.unit.name!} width={100} />
                                 <DataField title={'At Stock'} value={Number(data?.quantity!)} width={100} />
                                 <DataField title={'Cost Price'} value={currency.format(Number(data?.costPrice!))} width={100} />
-                                <DataField title={'Total Cost Price'} value={currency.format(Number(data?.totalCostPrice!))} width={100} />
+
                             </View>
                             <View style={{ flexDirection: 'row' }}>
                                 <DataField title={'Color'} value={data?.color.name!} width={100} />
                                 <DataField title={'Store'} value={data?.store.name!} width={100} />
                                 <DataField title={'Location'} value={data?.location.code!} width={100} />
+                            </View>
+                            <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+                                {propertiesData?.map((data, index) => {
+                                    return (
+                                        <DataField title={data.title} value={data.value as string} width={data?.width || 100} key={`${index}`} />
+                                    );
+                                })}
                             </View>
                         </View>
                         <View style={style.contentTopRightContainer}>

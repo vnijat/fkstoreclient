@@ -194,7 +194,9 @@ const AddEditModal = ({
                     else if (customComponentKeyName) {
                         if ((customComponent && customComponent[customComponentKeyName])) {
                             const CustomComponent = customComponent[customComponentKeyName];
-                            return <CustomComponent />;
+                            return (
+                                <CustomComponent key={`${id}`} />
+                            );
                         } else {
                             return null;
                         }

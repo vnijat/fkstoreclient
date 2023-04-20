@@ -39,9 +39,15 @@ const inputsConfig: InputsConfig[] = [
     maxLength: 120,
     placeHolder: 'Description',
     width: 470,
-    height: 150,
+    height: 60,
     multiLine: true,
     dtoKey: 'description',
+  },
+  {
+    title: 'Product Attributes',
+    dtoKey: 'properties',
+    customComponentKeyName: 'productAttributes',
+    width: 470,
   },
 
   {
@@ -73,10 +79,7 @@ const inputsConfig: InputsConfig[] = [
     multiLine: false,
     dtoKey: 'costPrice',
   },
-  {
-    title: 'Product Attributes',
-    customComponentKeyName: 'productAttributes',
-  },
+
   {
     title: 'Sell Price',
     isNumeric: true,

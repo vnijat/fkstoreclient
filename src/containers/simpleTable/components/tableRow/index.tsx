@@ -47,19 +47,19 @@ const TableRow = <T extends ITableRowData>({ tableRowData, tableDataConfig, rowH
                     />
                 </CustomContextMenu>}
             {tableDataConfig.map((tableConfig, index) => {
-                const { dtoKey, isObject, objectDtoKey, type, customColumnKey } = tableConfig;
+                const { dtoKey, isObject, objectDtoKey, type, customColumnKey, isAboveContextMenu } = tableConfig;
                 if (tableConfig?.hidden) return null;
                 const value = dtoKey ? (isObject ? (tableRowData[dtoKey] ? tableRowData[dtoKey][objectDtoKey!] : '-') : tableRowData[dtoKey]) : tableRowData;
                 if (customColumnKey && customColumns && customColumns[customColumnKey]) {
                     const CustomColumn = customColumns[customColumnKey];
                     return (
-                        <View style={style.customColumnContainer} key={`${index}`}>
+                        <View style={style.customColumnContainer} key={`${index}`}  >
                             <CustomColumn data={tableRowData} />
                         </View>
                     );
                 } else if (type) {
                     return (
-                        <TableColumn key={`${index}`} value={value} type={type} columnWidth={columnWidth} />
+                        <TableColumn key={`${index}`} value={value} type={type} columnWidth={columnWidth} {...{ isAboveContextMenu }} />
                     );
                 } else {
                     return null;

@@ -52,8 +52,8 @@ const itemsSlicer = createSlice({
             Object.assign(state.itemforPost, action.payload);
         },
         clearItemForPosting: (state) => {
-            const { id, updatedAt, createdAt, name, description, code, costPrice, quantity, sellPrice, ...rest } = state.itemforPost;
-            state.itemforPost = { name: '', description: '', code: '', costPrice: undefined, sellPrice: undefined, quantity: undefined, ...rest };
+            const { id, updatedAt, createdAt, name, description, code, costPrice, quantity, sellPrice, properties, ...rest } = state.itemforPost;
+            state.itemforPost = { name: '', description: '', code: '', costPrice: undefined, sellPrice: undefined, quantity: undefined, properties: ItemForPostDefaults.properties, ...rest };
         },
         setItemForPost: (state, action: PayloadAction<{ [key: string]: any; }>) => {
             Object.assign(state.itemforPost, action.payload);

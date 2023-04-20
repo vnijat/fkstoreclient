@@ -27,6 +27,7 @@ export const itemTableDataConfigs: ITableDataConfig<Item>[] = [
     dtoKey: 'barcode',
     type: 'text',
     hidden: false,
+    isAboveContextMenu: true,
   },
   {
     headerTitle: 'Color',

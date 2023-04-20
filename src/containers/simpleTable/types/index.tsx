@@ -41,6 +41,9 @@ interface ITableDataConfig<T> {
      * Table component must recieve custom column components inside object with key {[customColumnKey]:({T})=>Component<T>}
      */
     customColumnKey?: string;
+
+    isAboveContextMenu?: boolean;
+
 }
 
 type ITableDataTypes = 'numeric' | 'money' | 'text' | 'date';

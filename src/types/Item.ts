@@ -130,6 +130,7 @@ interface Item extends Common {
   outOfStock: boolean;
   label: Label;
   inUse: boolean;
+  properties: ProductAttributesDto;
 }
 
 interface ItemResponseFull extends Omit<Item, 'category'> {

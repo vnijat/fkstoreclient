@@ -65,11 +65,11 @@ const WareHouseView: FC<any> = ({ navigation }) => {
       paginationHandler={paginationHandler} />;
   }, [queryData?.meta]);
 
+
   return (
     <View style={{ flex: 1, flexDirection: 'row' }}>
       <View style={{ flex: 0.05 }} />
       <View style={style.container}>
-        {/* <AddEditItemModal /> */}
         <ItemModal />
         <View style={style.listContainer}>
           <View style={style.searchContainer}>

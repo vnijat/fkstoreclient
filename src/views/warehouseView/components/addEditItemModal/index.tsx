@@ -2,6 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { inputsConfig } from "../../../../configs/ItemInputConfigs";
 import AddEditModal from "../../../../containers/addEditModal";
+import ProductsAttributesInput from "../../../../containers/productAttributesInput";
 import { PaymentMethod } from "../../../../enums/purchase";
 import { useAddItemMutation, useEditItemMutation, useGetItemInputsQuery } from "../../../../modules/api/apiSlice";
 import { ItemOptionsApi } from "../../../../modules/api/itemOptions.api";
@@ -98,6 +99,10 @@ const AddEditItemModal = ({ }: IAddEditItemModal) => {
     };
 
 
+    const customInputComponent = {
+        productAttributes: ProductsAttributesInput
+    };
+
     return (
         <>
             < AddEditItemOptionsModal />
@@ -120,6 +125,7 @@ const AddEditItemModal = ({ }: IAddEditItemModal) => {
                 isPickerSearchEnabled
                 isShowModal={isShowItemModal}
                 modalBorderColor={Colors.DEFAULT_TEXT_COLOR}
+                customComponent={customInputComponent}
             />}
         </>
     );

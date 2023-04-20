@@ -1,4 +1,3 @@
-import Clipboard from "@react-native-clipboard/clipboard";
 import { ITableDataConfig } from "../../../../containers/simpleTable/types";
 import { useDeleteManyItemsMutation } from "../../../../modules/api/apiSlice";
 import UseLanguage from "../../../../modules/lozalization/useLanguage.hook";
@@ -10,6 +9,7 @@ import { resetTable, setNewTableConfigs } from "../../../../modules/redux/tableC
 import HELP from "../../../../services/helpers";
 import { Imeta } from "../../../../types/common/common";
 import { FilterParamskey, Item } from "../../../../types/item";
+import { ItemForPostDefaults } from "../../../../utils/defaults";
 
 
 
@@ -47,7 +47,6 @@ function WareHouseLogicProvider() {
 
     }
 
-
     async function handleDeleteWareHouseItems(itemIds: number[], lang?: ReturnType<typeof UseLanguage>) {
         try {
             const response = await apiDelete(itemIds);
@@ -70,9 +69,11 @@ function WareHouseLogicProvider() {
     }
 
     function onPressEdit(data: Item) {
-        const itemForPost = HELP.modifyItemForEdit(data, data.id);
+        const { properties, ...rest } = data;
+        const itemForPost = HELP.modifyItemForEdit(rest, rest.id);
+        const productProperties = properties ?? ItemForPostDefaults.properties;
         dispatch(setIsItemForEdit(true));
-        dispatch(setItemForPost(itemForPost));
+        dispatch(setItemForPost({ ...itemForPost, properties: productProperties }));
         dispatch(setIsShowAddEditModal(true));
         dispatch(setIsEditMode(false));
     }

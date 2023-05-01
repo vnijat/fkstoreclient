@@ -1,17 +1,10 @@
 import React, { memo, useMemo, useState } from "react";
-import { View } from "react-native";
+import { View, Text } from "react-native";
 import Icon from "react-native-vector-icons/Entypo";
-import { Text } from "react-native-windows";
 import CustomPressable from "../../../../components/customPressable";
 import { InputItem } from "../../../../components/inputItem/index.windows";
-import AddClientModal from "../../../../containers/addClient";
 import CustomPicker, { IsingelSelectData } from "../../../../containers/customPicker";
-import { ClientSort } from "../../../../enums/clientSort";
-import { ClientType } from "../../../../enums/clientType";
 import { Order } from "../../../../enums/order.enum";
-import { setClientsQueryParams } from "../../../../modules/redux/clientsQuerySlicer";
-import { setIsShowClientModal } from "../../../../modules/redux/clientsSlicer";
-import { useAppDispatch } from "../../../../modules/redux/store";
 import { Colors } from "../../../../utils/colors";
 import ClientDataProvider from "../../provider/data";
 import ClientLogicProvider from "../../provider/logic";

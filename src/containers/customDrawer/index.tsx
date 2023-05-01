@@ -7,19 +7,18 @@ import { useAppDispatch } from "../../modules/redux/store";
 import Icon from "react-native-vector-icons/Entypo";
 import { Colors } from "../../utils/colors";
 import { setIsShowSettingsModal } from "../../modules/redux/appStateSlicer";
-import DrawerRoutes from "./components/drawerRoutes";
+import NavigationRoutes from "./components/drawerRoutes";
 
-interface ICustomDrawer {
+interface ISideBar {
     navigation: DrawerNavigationHelpers;
     currentRoute: string;
     routeNames: Array<string>;
 }
 
-const CustomDrawer: FC<ICustomDrawer> = ({ navigation, currentRoute, routeNames }) => {
+const SideBar: FC<ISideBar> = ({ navigation, currentRoute, routeNames }) => {
     const { width } = useWindowDimensions();
     const dispatch = useAppDispatch();
     const style = useMemo(() => getStyle(width), [width]);
-
 
     const onPressConfigs = () => {
         dispatch(setIsShowSettingsModal(true));
@@ -28,7 +27,7 @@ const CustomDrawer: FC<ICustomDrawer> = ({ navigation, currentRoute, routeNames 
     return (
         <View style={style.container}   >
             <View>
-                <DrawerRoutes navigation={navigation} currentRoute={currentRoute} />
+                <NavigationRoutes navigation={navigation} currentRoute={currentRoute} />
             </View>
             <View style={style.bottomContainer}>
                 <CustomPressable
@@ -43,4 +42,4 @@ const CustomDrawer: FC<ICustomDrawer> = ({ navigation, currentRoute, routeNames 
     );
 
 };
-export default CustomDrawer;
+export default SideBar;

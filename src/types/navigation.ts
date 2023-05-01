@@ -1,8 +1,12 @@
 import {RouteNames} from '../enums/routes';
 
 type RootStackParamList = {
-  [RouteNames.DRAWER]: undefined;
-};
+  [RouteNames.CLIENTS]: undefined;
+  [RouteNames.ORDERS]: undefined;
+  [RouteNames.PROJECTS]: undefined;
+  [RouteNames.PURCHASES]: undefined;
+  [RouteNames.WAREHOUSE]: undefined;
+  [RouteNames.TRACKVIEW]: undefined;};
 
 type RootStackMobileParamList = {
   [RouteNames.DRAWER]: undefined;

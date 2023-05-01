@@ -23,7 +23,6 @@ const ProjectStatusColumn = ({ data, logicProvider, dataProvider }: IProjectStat
     const { handleProjectStatusChange } = logicProvider;
     const style = useMemo(() => getStyle(), []);
     const animatedValue = useRef(new Animated.Value(-30)).current;
-    const [apiEditProject] = useEditProjectMutation();
     const [isOpen, setIsOpen] = useState(false);
 
     const projectStatuses = [

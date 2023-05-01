@@ -117,7 +117,7 @@ const AddEditModal = ({
                 return { ...prev };
             });
         setDataForRequest({ [objectKey]: inputValue });
-    }, [errorMessage, dataForRequest]);
+    }, [errorMessage, dataForRequest, setDataForRequest]);
 
 
 

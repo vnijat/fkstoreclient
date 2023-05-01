@@ -3,16 +3,9 @@ import React, { useEffect, useMemo, useState } from "react";
 import { FlatList, Text, View, ActivityIndicator, StyleSheet } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useSelector } from "react-redux";
-import CustomPressable from "../../../components/customPressable";
-import SimpleTable from "../../../containers/simpleTable";
-import { ICustomColumn, ITableDataConfig } from "../../../containers/simpleTable/types";
 import { InventoryApi, useGetItemQuery } from "../../../modules/api/apiSlice";
-import { useGetOrdersQuery } from "../../../modules/api/orders.api";
 import { RootState, useAppDispatch } from "../../../modules/redux/store";
-import { InventoryTrackData } from "../../../types/inventoryTrack";
 import { Item, ItemResponseFull } from "../../../types/item";
-import { ProjectOrder } from "../../../types/projectOrder";
 import { Colors } from "../../../utils/colors";
 import FONT from "../../../utils/font";
 import TrackStatusColumn from "../../../views/inventoryTrackView/components/customColumns/statusColumn";
@@ -43,8 +36,6 @@ const ProductInfoView = ({ }: IProductInfoView) => {
             console.log("error-getData->", error);
         }
     };
-    console.log("data", data);
-
 
     useEffect(() => {
         if (params?.barcode) {
@@ -72,7 +63,7 @@ const ProductInfoView = ({ }: IProductInfoView) => {
         );
     };
 
-
+    
     const renderTransactions = useMemo(() => {
         return (
             data?.transactions.map((data, index) => {
@@ -109,7 +100,6 @@ const ProductInfoView = ({ }: IProductInfoView) => {
                     </View>
                 );
             })
-
         );
     }, [data?.transactions]);
 

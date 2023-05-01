@@ -6,10 +6,13 @@ export const getStyle = (width: number) => {
     const style = StyleSheet.create({
         container: {
             backgroundColor: Colors.CARD_HEADER_COLOR,
-            flex: 1,
+            // flex: 1,
             width: width * 0.05,
             minWidth: 80,
-            justifyContent: 'space-between'
+            justifyContent: 'space-between',
+            position: 'absolute',
+            zIndex: 3,
+            height: '100%'
         },
         bottomContainer: {
             justifyContent: 'space-between',

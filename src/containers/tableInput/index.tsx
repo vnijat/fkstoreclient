@@ -96,8 +96,8 @@ const TableInput = <T extends any>({ tableData, tableConfig, getNewTableData, is
     }, [tableConfig]);
 
 
-    const onPressSave = async () => {
-        const notEmptyRow = data.filter((rowData) => Object.keys(rowData).every(keys => !!rowData[keys].toString().length));
+    const onPressSave = () => {
+        const notEmptyRow = data.filter((rowData) => Object.keys(rowData).every(keys => (rowData[keys] === null || !!rowData[keys]?.toString().length)));
         if (isHasChanges) {
             getNewTableData && getNewTableData(notEmptyRow);
             HELP.showToast('info', `Table Data Saved`.toUpperCase(), 'Saved');

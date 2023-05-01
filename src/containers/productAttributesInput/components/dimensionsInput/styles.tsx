@@ -1,5 +1,4 @@
 import { StyleSheet } from 'react-native';
-import { color } from 'react-native-reanimated';
 import { Colors } from '../../../../utils/colors';
 import FONT from '../../../../utils/font';
 

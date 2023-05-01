@@ -8,15 +8,18 @@ import { Provider } from 'react-redux';
 import { persistor, store } from './modules/redux/store';
 import { PersistGate } from 'redux-persist/integration/react';
 import ToastConfig from './configs/toast';
+import { navigationRef } from './modules/navigation/rootNavigation.windows';
 
 LogBox.ignoreLogs(["EventEmitter.removeListener", 'Reanimated 2']);
+
+
 
 const App: FC<any> = () => {
 
   return (
     <Provider store={store}>
       <PersistGate persistor={persistor} loading={null}>
-        <NavigationContainer>
+        <NavigationContainer ref={navigationRef} >
           <RootNavigation />
         </NavigationContainer>
       </PersistGate>

@@ -16,6 +16,7 @@ interface IDefaultScreenOptions {
 const BottomTabScreenOptions = ({ navigation, route }: IDefaultScreenOptions): BottomTabNavigationOptions => ({
     tabBarActiveTintColor: Colors.METALLIC_GOLD,
     tabBarInactiveTintColor: Colors.DEFAULT_TEXT_COLOR,
+    tabBarHideOnKeyboard: true,
     tabBarStyle: {
         backgroundColor: Colors.CARD_COLOR,
     },

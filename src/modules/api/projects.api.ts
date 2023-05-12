@@ -60,7 +60,7 @@ export const ProjectsApi = InventoryApi.injectEndpoints({
           method: 'POST',
         };
       },
-      invalidatesTags: ['projects', 'projectsForPicker'],
+      invalidatesTags: ['projects', 'projectsForPicker', 'otherExpenses'],
     }),
     editProject: build.mutation<Project, {id: number; body: AddClientProject}>({
       query: ({id, body}) => {

@@ -21,7 +21,7 @@ function ClientLogicProvider() {
     }
 
     function handleSearchInput(value: string) {
-        dispatch(setClientsQueryParams({ page: 1, search: text.trim() }));
+        dispatch(setClientsQueryParams({ page: 1, search: value.trim() }));
 
     }
 

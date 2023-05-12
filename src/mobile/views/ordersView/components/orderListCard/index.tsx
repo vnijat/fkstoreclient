@@ -12,11 +12,12 @@ import { getStyle } from "../../styles";
 interface IOrderListCard {
     data: ProjectOrder;
     onPressCard?: () => void;
+    index: number;
 }
 
 
 
-const OrderListCard = ({ data, onPressCard }: IOrderListCard) => {
+const OrderListCard = ({ data, onPressCard, index }: IOrderListCard) => {
     const style = useMemo(() => getStyle(), []);
 
     const orderUpdateDate = format(new Date(data.createdAt!), 'd MMM / yyyy');
@@ -65,7 +66,7 @@ const OrderListCard = ({ data, onPressCard }: IOrderListCard) => {
                     </View>
                     <View style={style.detailContainer}>
                         <Text style={style.detailText} adjustsFontSizeToFit={true}>
-                            {data.detail}
+                            {data.detail?.length ? data.detail : `ID: ${data.id}`}
                         </Text>
                     </View>
                 </View>

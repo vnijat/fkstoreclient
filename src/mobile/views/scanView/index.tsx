@@ -6,6 +6,7 @@ import { CameraScreen } from "react-native-camera-kit";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useGetItemQuery } from "../../../modules/api/apiSlice";
 import { Colors } from "../../../utils/colors";
+import { regExPatterns } from "../../../utils/validation";
 
 
 
@@ -15,11 +16,8 @@ const ScanView = () => {
     const navigation = useNavigation<StackNavigationProp<any>>();
     const isFoucused = useIsFocused();
     const onReadBarcode = (event: any) => {
-        const regEx = new RegExp(/^(\d{4,6})-(\d{6})-(\d{6})/, 'g');
+        const regEx = new RegExp(regExPatterns.IS_BARCODE, 'g');
         const codeFromScan = event.nativeEvent.codeStringValue;
-        // if (codeValue !== codeFromScan) {
-        // setCodeValue(codeFromScan);
-        // }
         if (regEx.test(codeFromScan)) {
             navigation.navigate('Info', { barcode: codeFromScan });
         } else {
@@ -30,12 +28,6 @@ const ScanView = () => {
                 setAlerted(true);
             }
         }
-        // if (!alerted) {
-        //     Alert.alert("BARCODE:", `barcode:${codeFromScan}`, [
-        //         { onPress: () => { setAlerted(false); } }
-        //     ]);
-        //     setAlerted(true);
-        // }
     };
 
     return (

@@ -9,7 +9,7 @@ import HELP from "../../../../services/helpers";
 
 function WareHouseDataProvider() {
     const dispatch = useAppDispatch();
-    const wareHouseQueryParams = useSelector((state: RootState) => state.itemQuerySlicer, shallowEqual);
+    const wareHouseQueryParams = useSelector((state: RootState) => state.itemQuerySlicer);
     const wareHouseQueryFilterParams = useSelector(selectFilterbyForQuery, shallowEqual);
     const wareHouseTableConfigs = useSelector((state: RootState) => state.tableConfigs.item);
     const pickerFilterParams = useSelector(selectFilterByForPicker, shallowEqual);

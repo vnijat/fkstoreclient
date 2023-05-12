@@ -1,11 +1,12 @@
 import { ITableDataConfig } from "../../../../containers/simpleTable/types";
 import { useDeleteOrderMutation } from "../../../../modules/api/orders.api";
 import { setOrdersQueryParams } from "../../../../modules/redux/orderQuerySlicer";
-import { setIsOrderForEdit, setIsShowOrderModal, setOrderDataForPost } from "../../../../modules/redux/orderSlicer";
+import { addItemForOrder, clearOrderDataForPost, setIsOrderForEdit, setIsShowOrderModal, setOrderDataForPost, updateItemForOrder } from "../../../../modules/redux/orderSlicer";
 import { useAppDispatch } from "../../../../modules/redux/store";
 import { resetTable, setNewTableConfigs } from "../../../../modules/redux/tableConfigs";
 import HELP from "../../../../services/helpers";
 import { Imeta } from "../../../../types/common/common";
+import { Item } from "../../../../types/item";
 import { ProjectOrder } from "../../../../types/projectOrder";
 
 
@@ -13,7 +14,6 @@ import { ProjectOrder } from "../../../../types/projectOrder";
 function OrderLogicProvider() {
     const dispatch = useAppDispatch();
     const [apiDeleteOrder] = useDeleteOrderMutation();
-
 
 
     function onResetTable() {
@@ -39,6 +39,7 @@ function OrderLogicProvider() {
 
     }
 
+
     async function deleteOrder(orderId: number): Promise<void> {
         try {
             const response = await apiDeleteOrder(orderId);
@@ -63,6 +64,17 @@ function OrderLogicProvider() {
 
     }
 
+    function handleAddProductForOrder(product: Item) {
+        dispatch(addItemForOrder(product));
+    }
+
+    function handdleCreateNewOrder() {
+        dispatch(clearOrderDataForPost());
+    }
+
+    function handleUpdateProductInOrder(value: { data: { [key: string]: any; }, itemId: number; }) {
+        dispatch(updateItemForOrder(value));
+    }
 
 
     return {
@@ -71,7 +83,10 @@ function OrderLogicProvider() {
         onCloseModal,
         setNewTableConfig,
         handleOndeleteOrder,
-        handlePagination
+        handlePagination,
+        handleAddProductForOrder,
+        handdleCreateNewOrder,
+        handleUpdateProductInOrder
     };
 
 };

@@ -18,10 +18,9 @@ interface IOrdersCartListCard {
 
 
 const OrdersCartListCard = ({ data, index, onValueChange }: IOrdersCartListCard) => {
-    const { name, barcode, itemId, fullfilled, unit, } = data;
-    const style = useMemo(() => getStyle(), []);
+    const { name, barcode, itemId, fullfilled, unit, itemAtStock } = data;
+    const style = useMemo(() => getStyle(fullfilled), [fullfilled]);
     const quantityValue = parseFloat(data.quantity).toString();
-    const inputBackground = useMemo(() => fullfilled ? 'transparent' : Colors.CARD_COLOR, [fullfilled]);
 
     const handleValueChange = (value: any, dtoKey: keyof OrderItem) => {
         let dataValue = value;
@@ -49,37 +48,53 @@ const OrdersCartListCard = ({ data, index, onValueChange }: IOrdersCartListCard)
     };
 
 
+    const renderAvailableAtStock = useMemo(() => {
+        if (fullfilled) {
+            return null;
+        }
+        return (<View style={style.atStockContainer}>
+            <Text style={style.atStockText}>
+                {`${parseFloat(itemAtStock?.toString() ?? 0)}`.toUpperCase()}
+                <Text style={{ fontSize: FONT.FONT_SIZE_VERY_SMALL, }}>
+                    {` max.`.toUpperCase()}
+                </Text>
+            </Text>
+        </View>);
+    }, [itemAtStock, fullfilled]);
+
+
     return (
-        <View style={{ height: 70, margin: 2, backgroundColor: Colors.CARD_HEADER_COLOR, elevation: 1, marginHorizontal: 5, borderRadius: 3, padding: 5 }}>
-            <View style={{ position: 'absolute', top: 0, left: 0, width: 20, height: 20, padding: 2, backgroundColor: Colors.CARD_COLOR, borderRadius: 20, borderTopLeftRadius: 0, justifyContent: 'center', alignItems: 'center' }}>
-                <Text style={{ fontSize: FONT.FONT_SIZE_VERY_SMALL, textAlign: 'center', color: Colors.DEFAULT_TEXT_COLOR, fontWeight: FONT.FONT_BOLD }}>
+        <View style={style.cartItemContainer}>
+            <View style={style.cartItemNumber}>
+                <Text style={style.cartItemNumberText}>
                     {index + 1}
                 </Text>
             </View>
-            <View style={{ flex: 1, }}>
-                <View style={{ flex: 0.7, flexDirection: 'row' }}>
-                    <View style={{ flex: 0.4 }}>
-                        <View style={{ marginTop: 15 }}>
-                            <Text style={{ fontSize: FONT.FONT_SIZE_SMALL, color: Colors.DEFAULT_TEXT_COLOR }} adjustsFontSizeToFit>
+            {renderAvailableAtStock}
+            <View style={style.cartItemContentContainer}>
+                <View style={style.contentTop}>
+                    <View style={style.contentTopLeft}>
+                        <View style={style.productNameContainer}>
+                            <Text style={style.productNameText} adjustsFontSizeToFit>
                                 {name}
                             </Text>
                         </View>
                     </View>
-                    <View style={{ flex: 0.6, justifyContent: 'flex-end', flexDirection: 'row', alignItems: 'center' }}>
-                        <Text style={{ marginRight: 3, fontSize: FONT.FONT_SIZE_VERY_SMALL, color: Colors.DEFAULT_TEXT_COLOR }}>
+                    <View style={style.contentTopRight}>
+                        <Text style={style.productUnitText}>
                             {`${unit}`.toUpperCase()}
                         </Text>
                         <TextInput
                             keyboardType={'number-pad'}
                             onEndEditing={onEndEditingTextInput}
-                            style={{ color: Colors.DEFAULT_TEXT_COLOR, backgroundColor: inputBackground, height: 30, padding: 1, marginRight: 5, borderRadius: 3, textAlign: 'center', minWidth: 30, fontSize: FONT.FONT_SIZE_SMALL }}
+                            style={style.quantityInput}
                             editable={!fullfilled}
                             maxLength={13}
                             defaultValue={quantityValue}
                         />
                     </View>
                 </View>
-                <View style={{ flex: 0.3, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                <View style={style.contentBottom}>
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                         <BarcodeIcon />
                         <Text style={{ color: Colors.DEFAULT_TEXT_COLOR, fontWeight: FONT.FONT_BOLD, fontSize: FONT.FONT_SIZE_SMALL }}>

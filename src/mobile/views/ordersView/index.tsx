@@ -1,12 +1,15 @@
 import BottomSheet, { BottomSheetBackdrop, BottomSheetFlatList, BottomSheetScrollView, BottomSheetTextInput } from "@gorhom/bottom-sheet";
 import { format } from "date-fns";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { FlatList, Text, View, ActivityIndicator, Keyboard } from "react-native";
+import { FlatList, Text, View, ActivityIndicator, Keyboard, TextInput } from "react-native";
+import MIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/Entypo";
 import CustomPressable from "../../../components/customPressable";
+import { PrimaryButton } from "../../../components/primaryButton";
+import { OrderStatus } from "../../../enums/orderStatus";
 import { Item } from "../../../types/item";
-import { OrderItem, ProjectOrder } from "../../../types/projectOrder";
+import { AddOrderDto, OrderItem, ProjectOrder } from "../../../types/projectOrder";
 import { Colors } from "../../../utils/colors";
 import FONT from "../../../utils/font";
 import OrderDataProvider from "../../../views/orderView/provider/data";
@@ -15,25 +18,37 @@ import SearchWithDropDown from "../../components/searchWithDropDown";
 import ProductListItem from "../productsView/components/productListItem";
 import OrderListCard from "./components/orderListCard";
 import OrdersCartListCard from "./components/ordersCartListCard";
+import { getStyle } from "./styles";
+import { RootStackMobileParamList } from "../../../types/navigation";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { RouteNames } from "../../../enums/routes";
 
 interface IOrdersViewMobile {
-
+    navigation: StackNavigationProp<RootStackMobileParamList>;
 
 }
 
-const OrdersViewMobile = ({ }: IOrdersViewMobile) => {
+const OrdersViewMobile = ({ navigation }: IOrdersViewMobile) => {
+    const style = useMemo(() => getStyle(), []);
     const dataProvider = OrderDataProvider();
     const logicProvider = OrderLogicProvider();
     const { queryData: { data, isLoading },
         searchProductForOrder,
         orderDataForPost
     } = dataProvider;
-    const { handlePagination, handleAddProductForOrder, onPressRowItem, handdleCreateNewOrder, handleUpdateProductInOrder } = logicProvider;
+    const { handlePagination,
+        handleAddProductForOrder,
+        onPressRowItem,
+        handdleCreateNewOrder,
+        handleUpdateProductInOrder,
+        handleSetOrderDataForPost
+    } = logicProvider;
     const [isLoadMore, setLoadMore] = useState(false);
     const bottomSheetRef = useRef<BottomSheet>(null);
     const snapPoints = useMemo(() => ['80%'], []);
     const [isHideSearchResuts, setHideSearchResults] = useState(false);
     const [searchResult, setSearchResult] = useState<Item[]>();
+    const isOrderInprogress = useMemo(() => OrderStatus.PENDING === orderDataForPost.status, [orderDataForPost]);
 
     useEffect(() => {
         if (isLoadMore) {
@@ -48,6 +63,11 @@ const OrdersViewMobile = ({ }: IOrdersViewMobile) => {
             }, 300);
         }
     }, [isLoading]);
+
+
+    const hanldeOrderValueChange = (value: any, dtoKey: keyof AddOrderDto) => {
+        handleSetOrderDataForPost({ [dtoKey]: value });
+    };
 
 
     const handleProductSearch = async (value: string) => {
@@ -71,6 +91,7 @@ const OrdersViewMobile = ({ }: IOrdersViewMobile) => {
             {...props}
             disappearsOnIndex={-1}
             appearsOnIndex={1}
+            pressBehavior={'none'}
         />
     ), []);
 
@@ -85,6 +106,32 @@ const OrdersViewMobile = ({ }: IOrdersViewMobile) => {
         handdleCreateNewOrder();
         bottomSheetRef.current?.expand();
     };
+
+
+    const hanldeCreateOrder = () => {
+
+    };
+
+    const hanldeUpdateOrder = () => {
+
+    };
+
+    const handleConfirmOrder = () => {
+
+    };
+
+    const listFooter = useCallback(() => {
+        if (isOrderInprogress && orderDataForPost.orderItems?.length) {
+            return (
+                <View style={{ width: '100%', height: 60, bottom: 0, marginTop: 5, justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', paddingHorizontal: 10 }}>
+                    <PrimaryButton title={'CREATE'} onPress={hanldeCreateOrder} borderRadius={3} buttonColor={Colors.METALLIC_GOLD} />
+                    <PrimaryButton title={'UPDATE'} onPress={hanldeUpdateOrder} borderRadius={3} buttonColor={Colors.DEFAULT_TEXT_COLOR} />
+                    <PrimaryButton title={'CONFIRM'} onPress={handleConfirmOrder} borderRadius={3} buttonColor={Colors.COMPLETED_COLOR} />
+                </View >
+            );
+        }
+    }, [isOrderInprogress, orderDataForPost.orderItems]);
+
 
     const renderLoadingMore = useMemo(() => {
         if (isLoadMore) {
@@ -108,6 +155,28 @@ const OrdersViewMobile = ({ }: IOrdersViewMobile) => {
     }, [isLoadMore]);
 
 
+    const rednderOrderDetailInput = useMemo(() => {
+        if (!!orderDataForPost.orderItems?.length) {
+            return (
+                <View style={{ minHeight: 60, width: '100%', paddingHorizontal: 5, paddingTop: 5, marginBottom: 5 }}>
+                    <Text style={{ color: Colors.DEFAULT_TEXT_COLOR, fontSize: FONT.FONT_SIZE_SMALL }}>
+                        {'ORDER DETAIL'}
+                    </Text>
+                    <TextInput
+                        style={{ borderRadius: 3, backgroundColor: Colors.CARD_HEADER_COLOR, padding: 3, height: 40, color: Colors.DEFAULT_TEXT_COLOR }}
+                        multiline={true}
+                        onChangeText={(value) => hanldeOrderValueChange(value, 'detail')}
+                        textAlignVertical={'top'}
+                        value={orderDataForPost.detail ?? ''}
+                        editable={isOrderInprogress}
+                    />
+                </View>
+            );
+        };
+    }, [isOrderInprogress, orderDataForPost.detail, orderDataForPost.orderItems]);
+
+
+
     const onCardValueChange = (value: { data: { [key in keyof OrderItem]?: any; }, itemId: number; }) => {
         handleUpdateProductInOrder(value);
     };
@@ -115,6 +184,11 @@ const OrdersViewMobile = ({ }: IOrdersViewMobile) => {
     const handleOnCloseSheet = () => {
         Keyboard.dismiss();
     };
+
+    const handleOnpressScan = () => {
+        navigation.navigate(RouteNames.SCAN);
+    };
+
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: Colors.CARD_COLOR }} >
@@ -138,37 +212,60 @@ const OrdersViewMobile = ({ }: IOrdersViewMobile) => {
             {renderLoadingMore}
             <BottomSheet
                 ref={bottomSheetRef}
+                handleComponent={() => {
+                    return (
+                        <View style={{ height: 20, backgroundColor: Colors.CARD_COLOR, borderTopLeftRadius: 10, borderTopRightRadius: 10 }}>
+                            <CustomPressable
+                                onPress={() => bottomSheetRef.current?.close()}
+                                style={{ position: 'absolute', top: -20, height: 40, width: 40, borderRadius: 40, backgroundColor: Colors.CARD_COLOR, elevation: 2, alignSelf: 'center', justifyContent: 'center', alignItems: 'center' }}>
+                                <MIcon name={'window-close'} size={20} color={Colors.METALLIC_GOLD} />
+                            </CustomPressable>
+                        </View>
+                    );
+                }}
                 index={-1}
                 onClose={handleOnCloseSheet}
                 snapPoints={snapPoints}
-                enablePanDownToClose
+                // enablePanDownToClose
                 containerStyle={{ zIndex: 4 }}
                 backdropComponent={bottomSheetBackDrop}
-                handleStyle={{ backgroundColor: Colors.CARD_COLOR, elevation: 2, borderTopEndRadius: 10, borderTopStartRadius: 10 }}
+            // handleStyle={{ backgroundColor: Colors.CARD_COLOR, elevation: 2, borderTopEndRadius: 10, borderTopStartRadius: 10 }}
             >
                 <View style={{ flex: 1, backgroundColor: Colors.CARD_COLOR }} >
-                    <View >
-                        <SearchWithDropDown
-                            hideDropDwon={isHideSearchResuts}
-                            getSearchValue={handleProductSearch}
-                        >
-                            <BottomSheetScrollView keyboardShouldPersistTaps={'always'} contentContainerStyle={{ paddingVertical: 5 }} indicatorStyle={'black'} showsVerticalScrollIndicator={true}>
-                                {!!searchResult?.length && searchResult.map((product, index) => {
-                                    return (
-                                        <ProductListItem key={`product ${index}`} data={product} onPress={() => onPressSearchedProduct(product)} />
-                                    );
-                                })}
-                            </BottomSheetScrollView>
-                        </SearchWithDropDown>
+                    <View style={{ flexDirection: 'row' }}>
+                        {isOrderInprogress &&
+                            <>
+                                < SearchWithDropDown
+                                    hideDropDwon={isHideSearchResuts}
+                                    getSearchValue={handleProductSearch}
+                                    searchPlaceHolder={'Type product barcode or name :'}
+                                >
+                                    <BottomSheetScrollView keyboardShouldPersistTaps={'always'} contentContainerStyle={{ paddingVertical: 5 }} indicatorStyle={'black'} showsVerticalScrollIndicator={true}>
+                                        {!!searchResult?.length && searchResult.map((product, index) => {
+                                            return (
+                                                <ProductListItem key={`product ${index}`} data={product} onPress={() => onPressSearchedProduct(product)} />
+                                            );
+                                        })}
+                                    </BottomSheetScrollView>
+                                </SearchWithDropDown>
+                                <CustomPressable style={{ width: 30, justifyContent: 'center', alignItems: 'center', marginRight: 5 }}
+                                    onPress={handleOnpressScan}
+                                >
+                                    <MIcon name={'barcode-scan'} size={30} color={Colors.METALLIC_GOLD} />
+                                </CustomPressable>
+                            </>
+                        }
                     </View>
+                    {rednderOrderDetailInput}
                     <BottomSheetFlatList
                         data={orderDataForPost.orderItems}
                         keyExtractor={(item, index) => `${item.id}-${index}`}
+                        ListFooterComponent={listFooter}
                         renderItem={({ item, index }) => <OrdersCartListCard data={item}  {...{ index }} onValueChange={onCardValueChange} />}
                     />
                 </View>
             </BottomSheet>
-        </SafeAreaView>
+        </SafeAreaView >
 
     );
 };

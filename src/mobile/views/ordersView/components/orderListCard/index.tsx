@@ -6,7 +6,7 @@ import CustomPressable from "../../../../../components/customPressable";
 import { OrderStatus } from "../../../../../enums/orderStatus";
 import { ProjectOrder } from "../../../../../types/projectOrder";
 import { Colors } from "../../../../../utils/colors";
-import { getStyle } from "../../styles";
+import { getStyle } from "./styles";
 
 
 interface IOrderListCard {

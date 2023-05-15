@@ -7,7 +7,7 @@ import { resetTable, setNewTableConfigs } from "../../../../modules/redux/tableC
 import HELP from "../../../../services/helpers";
 import { Imeta } from "../../../../types/common/common";
 import { Item } from "../../../../types/item";
-import { ProjectOrder } from "../../../../types/projectOrder";
+import { AddOrderDto, ProjectOrder } from "../../../../types/projectOrder";
 
 
 
@@ -76,6 +76,10 @@ function OrderLogicProvider() {
         dispatch(updateItemForOrder(value));
     }
 
+    function handleSetOrderDataForPost(data: AddOrderDto) {
+        dispatch(setOrderDataForPost(data));
+    }
+
 
     return {
         onPressRowItem,
@@ -86,7 +90,8 @@ function OrderLogicProvider() {
         handlePagination,
         handleAddProductForOrder,
         handdleCreateNewOrder,
-        handleUpdateProductInOrder
+        handleUpdateProductInOrder,
+        handleSetOrderDataForPost
     };
 
 };

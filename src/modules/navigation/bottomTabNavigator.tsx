@@ -25,7 +25,7 @@ export const BottomTabNavigator = () => {
     const Tab = createBottomTabNavigator();
     const lang = UseLanguage();
     return (
-        <Tab.Navigator initialRouteName='Home' screenOptions={BottomTabScreenOptions}>
+        <Tab.Navigator initialRouteName='Home' screenOptions={BottomTabScreenOptions} backBehavior={'history'}>
             <Tab.Screen name={'Dashboard'} component={MainMobile} options={{
                 tabBarIcon: ({ color }) => {
                     return <Icon name={'grid'} size={25} color={color} />;

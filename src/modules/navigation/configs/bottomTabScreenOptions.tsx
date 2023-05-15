@@ -19,12 +19,14 @@ const BottomTabScreenOptions = ({ navigation, route }: IDefaultScreenOptions): B
     tabBarHideOnKeyboard: true,
     tabBarStyle: {
         backgroundColor: Colors.CARD_COLOR,
+        paddingBottom: 5
     },
     headerStyle: { backgroundColor: Colors.CARD_COLOR, shadowColor: Colors.METALLIC_GOLD, shadowOffset: { height: 7, width: 0 }, shadowRadius: 9, shadowOpacity: 0.5, elevation: 16 },
     headerTitleStyle: { color: Colors.DEFAULT_TEXT_COLOR },
     headerTitleAlign: 'center',
     headerLeft: () => <HeaderLeft navigation={navigation} />,
-    headerRight: () => <HeaderRight navigation={navigation} />
+    headerRight: () => <HeaderRight navigation={navigation} />,
+
 });
 
 export default BottomTabScreenOptions;

@@ -10,4 +10,6 @@ export enum RouteNames {
   CONFIG = 'Config',
   TRACKVIEW = 'TrackView',
   SCAN = 'Scan',
+  DASHBOARD = 'Dashboard',
+  PRODUCTS = 'Products',
 }

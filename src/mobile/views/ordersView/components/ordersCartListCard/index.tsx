@@ -8,7 +8,7 @@ import { OrderItem } from "../../../../../types/projectOrder";
 import { Colors } from "../../../../../utils/colors";
 import FONT from "../../../../../utils/font";
 import { getStyle } from "./styles";
-
+import SwipeableItem from 'react-native-swipeable-item';
 
 interface IOrdersCartListCard {
     data: OrderItem;
@@ -64,66 +64,66 @@ const OrdersCartListCard = ({ data, index, onValueChange }: IOrdersCartListCard)
 
 
     return (
-        <View style={style.cartItemContainer}>
-            <View style={style.cartItemNumber}>
-                <Text style={style.cartItemNumberText}>
-                    {index + 1}
-                </Text>
-            </View>
-            {renderAvailableAtStock}
-            <View style={style.cartItemContentContainer}>
-                <View style={style.contentTop}>
-                    <View style={style.contentTopLeft}>
-                        <View style={style.productNameContainer}>
-                            <Text style={style.productNameText} adjustsFontSizeToFit>
-                                {name}
+            <View style={style.cartItemContainer}>
+                <View style={style.cartItemNumber}>
+                    <Text style={style.cartItemNumberText}>
+                        {index + 1}
+                    </Text>
+                </View>
+                {renderAvailableAtStock}
+                <View style={style.cartItemContentContainer}>
+                    <View style={style.contentTop}>
+                        <View style={style.contentTopLeft}>
+                            <View style={style.productNameContainer}>
+                                <Text style={style.productNameText} adjustsFontSizeToFit>
+                                    {name}
+                                </Text>
+                            </View>
+                        </View>
+                        <View style={style.contentTopRight}>
+                            <Text style={style.productUnitText}>
+                                {`${unit}`.toUpperCase()}
                             </Text>
+                            <TextInput
+                                keyboardType={'number-pad'}
+                                onEndEditing={onEndEditingTextInput}
+                                style={style.quantityInput}
+                                editable={!fullfilled}
+                                maxLength={13}
+                                defaultValue={quantityValue}
+                            />
                         </View>
                     </View>
-                    <View style={style.contentTopRight}>
-                        <Text style={style.productUnitText}>
-                            {`${unit}`.toUpperCase()}
-                        </Text>
-                        <TextInput
-                            keyboardType={'number-pad'}
-                            onEndEditing={onEndEditingTextInput}
-                            style={style.quantityInput}
-                            editable={!fullfilled}
-                            maxLength={13}
-                            defaultValue={quantityValue}
-                        />
-                    </View>
-                </View>
-                <View style={style.contentBottom}>
-                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                        <BarcodeIcon />
-                        <Text style={{ color: Colors.DEFAULT_TEXT_COLOR, fontWeight: FONT.FONT_BOLD, fontSize: FONT.FONT_SIZE_SMALL }}>
-                            {barcode}
-                        </Text>
-                    </View>
-                    <View style={{ flexDirection: 'row', justifyContent: 'flex-end', flexShrink: 1 }}>
-                        {checkBoxesData.map((status, index) => {
-                            if (!status.selected && fullfilled) {
-                                return null;
-                            }
-                            return (
-                                <View style={{ flexDirection: 'row', alignItems: 'center' }} key={`${index}`}>
-                                    <Text style={{ color: Colors.DEFAULT_TEXT_COLOR, fontSize: FONT.FONT_SIZE_VERY_SMALL, }}>
-                                        {status.title.toUpperCase()}
-                                    </Text>
-                                    <CheckBox
-                                        onValueChange={(value) => handleCheckBoxValue(index, value)}
-                                        value={status.selected}
-                                        disabled={fullfilled}
-                                        tintColors={{ true: fullfilled ? Colors.COMPLETED_COLOR : Colors.METALLIC_GOLD, false: Colors.CARD_COLOR }}
-                                    />
-                                </View>
-                            );
-                        })}
+                    <View style={style.contentBottom}>
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <BarcodeIcon />
+                            <Text style={{ color: Colors.DEFAULT_TEXT_COLOR, fontWeight: FONT.FONT_BOLD, fontSize: FONT.FONT_SIZE_SMALL }}>
+                                {barcode}
+                            </Text>
+                        </View>
+                        <View style={{ flexDirection: 'row', justifyContent: 'flex-end', flexShrink: 1 }}>
+                            {checkBoxesData.map((status, index) => {
+                                if (!status.selected && fullfilled) {
+                                    return null;
+                                }
+                                return (
+                                    <View style={{ flexDirection: 'row', alignItems: 'center' }} key={`${index}`}>
+                                        <Text style={{ color: Colors.DEFAULT_TEXT_COLOR, fontSize: FONT.FONT_SIZE_VERY_SMALL, }}>
+                                            {status.title.toUpperCase()}
+                                        </Text>
+                                        <CheckBox
+                                            onValueChange={(value) => handleCheckBoxValue(index, value)}
+                                            value={status.selected}
+                                            disabled={fullfilled}
+                                            tintColors={{ true: fullfilled ? Colors.COMPLETED_COLOR : Colors.METALLIC_GOLD, false: Colors.CARD_COLOR }}
+                                        />
+                                    </View>
+                                );
+                            })}
+                        </View>
                     </View>
                 </View>
             </View>
-        </View>
     );
 };
 

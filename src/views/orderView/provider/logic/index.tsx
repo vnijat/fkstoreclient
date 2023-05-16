@@ -1,5 +1,5 @@
 import { ITableDataConfig } from "../../../../containers/simpleTable/types";
-import { useDeleteOrderMutation } from "../../../../modules/api/orders.api";
+import { OrdersApi, useAddOrderMutation, useDeleteOrderMutation } from "../../../../modules/api/orders.api";
 import { setOrdersQueryParams } from "../../../../modules/redux/orderQuerySlicer";
 import { addItemForOrder, clearOrderDataForPost, setIsOrderForEdit, setIsShowOrderModal, setOrderDataForPost, updateItemForOrder } from "../../../../modules/redux/orderSlicer";
 import { useAppDispatch } from "../../../../modules/redux/store";
@@ -7,13 +7,14 @@ import { resetTable, setNewTableConfigs } from "../../../../modules/redux/tableC
 import HELP from "../../../../services/helpers";
 import { Imeta } from "../../../../types/common/common";
 import { Item } from "../../../../types/item";
-import { AddOrderDto, ProjectOrder } from "../../../../types/projectOrder";
+import { AddOrderDto, Order, ProjectOrder } from "../../../../types/projectOrder";
 
 
 
 function OrderLogicProvider() {
     const dispatch = useAppDispatch();
     const [apiDeleteOrder] = useDeleteOrderMutation();
+    const [apiAddOrder] = useAddOrderMutation();
 
 
     function onResetTable() {
@@ -80,6 +81,27 @@ function OrderLogicProvider() {
         dispatch(setOrderDataForPost(data));
     }
 
+    async function addScannedProductToOrder(barcode: string) {
+        const response = await dispatch(OrdersApi.endpoints.itemForOrder.initiate(barcode, { forceRefetch: true }));
+        if (response.data?.length === 1) {
+            const productForOrder = response.data[0];
+            dispatch(addItemForOrder(productForOrder));
+            HELP.showToast('success', `Product ${barcode} added to Order`, `${productForOrder.name}`);
+        } else {
+            HELP.showToast('info', `${barcode}  not found or out of stock`, 'NOT FOUND');
+        }
+    }
+
+    async function handlePostNewOrderData(data: AddOrderDto) {
+        const response = await apiAddOrder(data);
+        console.log("response===>>", response);
+    }
+
+    async function handleUpdateOrder(data: AddOrderDto) {
+
+    }
+
+
 
     return {
         onPressRowItem,
@@ -91,7 +113,10 @@ function OrderLogicProvider() {
         handleAddProductForOrder,
         handdleCreateNewOrder,
         handleUpdateProductInOrder,
-        handleSetOrderDataForPost
+        handleSetOrderDataForPost,
+        addScannedProductToOrder,
+        handlePostNewOrderData,
+        handleUpdateOrder
     };
 
 };

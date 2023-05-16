@@ -19,12 +19,12 @@ import ProductListItem from "../productsView/components/productListItem";
 import OrderListCard from "./components/orderListCard";
 import OrdersCartListCard from "./components/ordersCartListCard";
 import { getStyle } from "./styles";
-import { RootStackMobileParamList } from "../../../types/navigation";
+import { BottomTabMobileStack, RootStackMobileParamList } from "../../../types/navigation";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RouteNames } from "../../../enums/routes";
 
 interface IOrdersViewMobile {
-    navigation: StackNavigationProp<RootStackMobileParamList>;
+    navigation: StackNavigationProp<BottomTabMobileStack>;
 
 }
 
@@ -41,7 +41,8 @@ const OrdersViewMobile = ({ navigation }: IOrdersViewMobile) => {
         onPressRowItem,
         handdleCreateNewOrder,
         handleUpdateProductInOrder,
-        handleSetOrderDataForPost
+        handleSetOrderDataForPost,
+        addScannedProductToOrder
     } = logicProvider;
     const [isLoadMore, setLoadMore] = useState(false);
     const bottomSheetRef = useRef<BottomSheet>(null);
@@ -120,6 +121,19 @@ const OrdersViewMobile = ({ navigation }: IOrdersViewMobile) => {
 
     };
 
+    const onCardValueChange = (value: { data: { [key in keyof OrderItem]?: any; }, itemId: number; }) => {
+        handleUpdateProductInOrder(value);
+    };
+
+    const handleOnCloseSheet = () => {
+        Keyboard.dismiss();
+    };
+
+    const handleOnpressScan = () => {
+        navigation.navigate(RouteNames.SCAN, { isFromOrder: true, addScannedProductToOrder });
+    };
+
+
     const listFooter = useCallback(() => {
         if (isOrderInprogress && orderDataForPost.orderItems?.length) {
             return (
@@ -177,25 +191,26 @@ const OrdersViewMobile = ({ navigation }: IOrdersViewMobile) => {
 
 
 
-    const onCardValueChange = (value: { data: { [key in keyof OrderItem]?: any; }, itemId: number; }) => {
-        handleUpdateProductInOrder(value);
+
+    const bottomSheetHandler = () => {
+        return (
+            <View style={{ height: 20, backgroundColor: Colors.CARD_COLOR, borderTopLeftRadius: 10, borderTopRightRadius: 10, elevation: 2 }}>
+                <CustomPressable
+                    onPress={() => bottomSheetRef.current?.close()}
+                    style={{ position: 'absolute', top: -20, height: 40, width: 40, borderRadius: 40, backgroundColor: Colors.CARD_COLOR, elevation: 2, alignSelf: 'center', justifyContent: 'center', alignItems: 'center' }}>
+                    <MIcon name={'window-close'} size={20} color={Colors.METALLIC_GOLD} />
+                </CustomPressable>
+            </View>
+        );
     };
 
-    const handleOnCloseSheet = () => {
-        Keyboard.dismiss();
-    };
-
-    const handleOnpressScan = () => {
-        navigation.navigate(RouteNames.SCAN);
-    };
 
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: Colors.CARD_COLOR }} >
             <CustomPressable
-                android_ripple={{ color: Colors.METALLIC_GOLD, radius: 22 }}
                 onPress={handleNewOrder}
-                style={{ position: 'absolute', height: 50, width: 50, borderRadius: 50, justifyContent: 'center', alignItems: 'center', backgroundColor: Colors.CARD_COLOR, bottom: 15, right: 15, zIndex: 1, elevation: 3, borderWidth: 2, borderColor: Colors.DEFAULT_TEXT_COLOR }}>
+                style={{ position: 'absolute', height: 50, width: 50, borderRadius: 50, justifyContent: 'center', alignItems: 'center', backgroundColor: Colors.CARD_COLOR, bottom: 15, right: 15, zIndex: 1, elevation: 3, }}>
                 <Icon name={'plus'} size={30} color={Colors.METALLIC_GOLD} />
             </CustomPressable>
             <FlatList
@@ -212,24 +227,12 @@ const OrdersViewMobile = ({ navigation }: IOrdersViewMobile) => {
             {renderLoadingMore}
             <BottomSheet
                 ref={bottomSheetRef}
-                handleComponent={() => {
-                    return (
-                        <View style={{ height: 20, backgroundColor: Colors.CARD_COLOR, borderTopLeftRadius: 10, borderTopRightRadius: 10 }}>
-                            <CustomPressable
-                                onPress={() => bottomSheetRef.current?.close()}
-                                style={{ position: 'absolute', top: -20, height: 40, width: 40, borderRadius: 40, backgroundColor: Colors.CARD_COLOR, elevation: 2, alignSelf: 'center', justifyContent: 'center', alignItems: 'center' }}>
-                                <MIcon name={'window-close'} size={20} color={Colors.METALLIC_GOLD} />
-                            </CustomPressable>
-                        </View>
-                    );
-                }}
+                handleComponent={bottomSheetHandler}
                 index={-1}
                 onClose={handleOnCloseSheet}
                 snapPoints={snapPoints}
-                // enablePanDownToClose
                 containerStyle={{ zIndex: 4 }}
                 backdropComponent={bottomSheetBackDrop}
-            // handleStyle={{ backgroundColor: Colors.CARD_COLOR, elevation: 2, borderTopEndRadius: 10, borderTopStartRadius: 10 }}
             >
                 <View style={{ flex: 1, backgroundColor: Colors.CARD_COLOR }} >
                     <View style={{ flexDirection: 'row' }}>

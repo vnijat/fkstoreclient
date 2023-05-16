@@ -3,9 +3,11 @@ import React, { useEffect, useMemo, useState } from "react";
 import { FlatList, Text, View, ActivityIndicator, StyleSheet } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { RouteNames } from "../../../enums/routes";
 import { InventoryApi, useGetItemQuery } from "../../../modules/api/apiSlice";
 import { RootState, useAppDispatch } from "../../../modules/redux/store";
 import { Item, ItemResponseFull } from "../../../types/item";
+import { BottomTabMobileStack, RootStackMobileParamList } from "../../../types/navigation";
 import { Colors } from "../../../utils/colors";
 import FONT from "../../../utils/font";
 import TrackStatusColumn from "../../../views/inventoryTrackView/components/customColumns/statusColumn";
@@ -15,7 +17,7 @@ interface IProductInfoView {
 }
 
 const ProductInfoView = ({ }: IProductInfoView) => {
-    const { params } = useRoute<RouteProp<{ params: { barcode: string; }; }>>();
+    const { params: { barcode } } = useRoute<RouteProp<RootStackMobileParamList, RouteNames.PRODUCT_INFO>>();
     const dispatch = useAppDispatch();
     const [data, setData] = useState<ItemResponseFull>();
 
@@ -33,15 +35,15 @@ const ProductInfoView = ({ }: IProductInfoView) => {
                 }
             }
         } catch (error) {
-            console.log("error-getData->", error);
+            console.log("ProductInfoView===>error-getData->", error);
         }
     };
 
     useEffect(() => {
-        if (params?.barcode) {
-            getData(params.barcode);
+        if (barcode) {
+            getData(barcode);
         }
-    }, [params.barcode]);
+    }, [barcode]);
 
 
     const DataField = ({ title, value, isMoney }: { title: string, value: any; isMoney?: boolean; }) => {
@@ -63,7 +65,7 @@ const ProductInfoView = ({ }: IProductInfoView) => {
         );
     };
 
-    
+
     const renderTransactions = useMemo(() => {
         return (
             data?.transactions.map((data, index) => {

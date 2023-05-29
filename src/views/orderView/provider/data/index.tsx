@@ -24,7 +24,7 @@ function OrderDataProvider() {
     async function searchProductForOrder(searchValue: string) {
         let data: Item[] = [];
         if (searchValue) {
-            const response = await dispatch(OrdersApi.endpoints.itemForOrder.initiate(searchValue));
+            const response = await dispatch(OrdersApi.endpoints.itemForOrder.initiate(searchValue, { forceRefetch: true }));
             if (response.isError) {
                 HELP.alertError(undefined, 'Search Error');
             } else {

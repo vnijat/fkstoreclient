@@ -1,5 +1,5 @@
 import CheckBox from "@react-native-community/checkbox";
-import React, { useMemo, useRef, useState } from "react";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 import { Text, View, TextInput, NativeSyntheticEvent, TextInputEndEditingEventData } from "react-native";
 import { BarcodeIcon } from "../../../../../assets/icons/productIcons";
 import { OrderItemStatus } from "../../../../../enums/orderItemStatus";
@@ -9,23 +9,29 @@ import { Colors } from "../../../../../utils/colors";
 import FONT from "../../../../../utils/font";
 import { getStyle } from "./styles";
 import SwipeableItem from 'react-native-swipeable-item';
+import { Swipeable } from "react-native-gesture-handler";
+import CustomPressable from "../../../../../components/customPressable";
 
 interface IOrdersCartListCard {
     data: OrderItem;
     index: number;
     onValueChange?: (value: { data: { [k in keyof OrderItem]?: any }, itemId: number; }) => void;
+    handleRemove?: (itemId: number) => void;
 }
 
 
-const OrdersCartListCard = ({ data, index, onValueChange }: IOrdersCartListCard) => {
+const OrdersCartListCard = ({ data, index, onValueChange, handleRemove }: IOrdersCartListCard) => {
     const { name, barcode, itemId, fullfilled, unit, itemAtStock } = data;
     const style = useMemo(() => getStyle(fullfilled), [fullfilled]);
-    const quantityValue = parseFloat(data.quantity).toString();
+    const quantityValue = useMemo(() => parseFloat(data.quantity).toString(), [data.quantity]);
+    const swipeRef = useRef<Swipeable>(null);
+    const quantityInputRef = useRef<TextInput>(null);
 
     const handleValueChange = (value: any, dtoKey: keyof OrderItem) => {
         let dataValue = value;
         if (dtoKey === 'quantity') {
             dataValue = (Number(value) > Number(data?.itemAtStock)) ? data.itemAtStock : (value === '') ? '0' : value;
+            quantityInputRef.current?.setNativeProps({ text: parseFloat(dataValue).toString() });
         }
         onValueChange && onValueChange({ data: { [dtoKey]: dataValue, }, itemId });
     };
@@ -62,8 +68,30 @@ const OrdersCartListCard = ({ data, index, onValueChange }: IOrdersCartListCard)
         </View>);
     }, [itemAtStock, fullfilled]);
 
+    const renderInput = useMemo(() => {
+        return (
+            <TextInput
+                ref={quantityInputRef}
+                keyboardType={'number-pad'}
+                onEndEditing={onEndEditingTextInput}
+                style={style.quantityInput}
+                editable={!fullfilled}
+                maxLength={13}
+                defaultValue={quantityValue}
+            />
+        );
+    }, [quantityValue, fullfilled, onEndEditingTextInput]);
 
-    return (
+
+
+    const onPressRemove = useCallback(() => {
+        swipeRef.current?.close();
+        handleRemove && handleRemove(itemId);
+    }, []);
+
+
+    const CardContainer = () => {
+        return (
             <View style={style.cartItemContainer}>
                 <View style={style.cartItemNumber}>
                     <Text style={style.cartItemNumberText}>
@@ -84,14 +112,7 @@ const OrdersCartListCard = ({ data, index, onValueChange }: IOrdersCartListCard)
                             <Text style={style.productUnitText}>
                                 {`${unit}`.toUpperCase()}
                             </Text>
-                            <TextInput
-                                keyboardType={'number-pad'}
-                                onEndEditing={onEndEditingTextInput}
-                                style={style.quantityInput}
-                                editable={!fullfilled}
-                                maxLength={13}
-                                defaultValue={quantityValue}
-                            />
+                            {renderInput}
                         </View>
                     </View>
                     <View style={style.contentBottom}>
@@ -124,8 +145,41 @@ const OrdersCartListCard = ({ data, index, onValueChange }: IOrdersCartListCard)
                     </View>
                 </View>
             </View>
+        );
+    };
+
+
+    const renderRightAction = () => {
+        if (fullfilled) {
+            return null;
+        }
+        return (
+            <View style={{}}>
+                <CustomPressable
+                    onPress={onPressRemove}
+                    style={{ width: 80, height: 80, backgroundColor: Colors.DECLINED_COLOR, justifyContent: "center", alignItems: 'center', margin: 2, borderRadius: 3, padding: 2 }}>
+                    <Text style={{ fontSize: FONT.FONT_SIZE_MEDIUM, color: Colors.CARD_COLOR }}>
+                        {'REMOVE'}
+                    </Text>
+                </CustomPressable>
+            </View>
+        );
+    };
+
+
+    return (
+        <>
+            <Swipeable
+                ref={swipeRef}
+                renderRightActions={renderRightAction}
+                overshootFriction={8}
+
+            >
+                <CardContainer />
+            </Swipeable>
+        </>
     );
 };
 
 
-export default OrdersCartListCard;
+export default OrdersCartListCard;;

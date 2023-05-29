@@ -36,19 +36,24 @@ const OrdersViewMobile = ({ navigation }: IOrdersViewMobile) => {
         searchProductForOrder,
         orderDataForPost
     } = dataProvider;
-    const { handlePagination,
-        handleAddProductForOrder,
+    const {
         onPressRowItem,
+        addScannedProductToOrder,
+        handleAddProductForOrder,
+        handlePagination,
         handdleCreateNewOrder,
         handleUpdateProductInOrder,
         handleSetOrderDataForPost,
-        addScannedProductToOrder
+        hanldeDeleteProductFromOrder,
+        handlePostNewOrderData,
+        handleUpdateOrder
     } = logicProvider;
     const [isLoadMore, setLoadMore] = useState(false);
     const bottomSheetRef = useRef<BottomSheet>(null);
     const snapPoints = useMemo(() => ['80%'], []);
     const [isHideSearchResuts, setHideSearchResults] = useState(false);
     const [searchResult, setSearchResult] = useState<Item[]>();
+    const [isProductForOrderLoading, setIsProductForSearchLoading] = useState(false);
     const isOrderInprogress = useMemo(() => OrderStatus.PENDING === orderDataForPost.status, [orderDataForPost]);
 
     useEffect(() => {
@@ -70,10 +75,11 @@ const OrdersViewMobile = ({ navigation }: IOrdersViewMobile) => {
         handleSetOrderDataForPost({ [dtoKey]: value });
     };
 
-
     const handleProductSearch = async (value: string) => {
-        const products = await searchProductForOrder(value);
-        setSearchResult(products);
+        setIsProductForSearchLoading(true);
+        const data = await searchProductForOrder(value);
+        setSearchResult(data);
+        setIsProductForSearchLoading(false);
     };
 
     const onPressSearchedProduct = (data: Item) => {
@@ -109,16 +115,16 @@ const OrdersViewMobile = ({ navigation }: IOrdersViewMobile) => {
     };
 
 
-    const hanldeCreateOrder = () => {
-
+    const hanldeCreateOrder = async () => {
+        await handlePostNewOrderData(orderDataForPost);
     };
 
-    const hanldeUpdateOrder = () => {
-
+    const hanldeUpdateOrder = async () => {
+        await handleUpdateOrder({ ...orderDataForPost });
     };
 
-    const handleConfirmOrder = () => {
-
+    const handleConfirmOrder = async () => {
+        await handleUpdateOrder({ ...orderDataForPost, status: OrderStatus.COMPLETED });
     };
 
     const onCardValueChange = (value: { data: { [key in keyof OrderItem]?: any; }, itemId: number; }) => {
@@ -135,16 +141,24 @@ const OrdersViewMobile = ({ navigation }: IOrdersViewMobile) => {
 
 
     const listFooter = useCallback(() => {
+        const isShowCreateButton = isOrderInprogress && !orderDataForPost.id;
+        const isOrderCreated = orderDataForPost.id;
         if (isOrderInprogress && orderDataForPost.orderItems?.length) {
             return (
-                <View style={{ width: '100%', height: 60, bottom: 0, marginTop: 5, justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', paddingHorizontal: 10 }}>
-                    <PrimaryButton title={'CREATE'} onPress={hanldeCreateOrder} borderRadius={3} buttonColor={Colors.METALLIC_GOLD} />
-                    <PrimaryButton title={'UPDATE'} onPress={hanldeUpdateOrder} borderRadius={3} buttonColor={Colors.DEFAULT_TEXT_COLOR} />
-                    <PrimaryButton title={'CONFIRM'} onPress={handleConfirmOrder} borderRadius={3} buttonColor={Colors.COMPLETED_COLOR} />
+                <View style={{ width: '100%', height: 60, bottom: 0, marginTop: 5, justifyContent: 'space-evenly', flexDirection: 'row', alignItems: 'center', paddingHorizontal: 10 }}>
+                    {isShowCreateButton && <PrimaryButton title={'CREATE'} onPress={hanldeCreateOrder} borderRadius={3} buttonColor={Colors.METALLIC_GOLD} />}
+                    {isOrderCreated &&
+                        <>
+                            <PrimaryButton android_ripple={{ color: Colors.METALLIC_GOLD }} title={'UPDATE'} onPress={hanldeUpdateOrder} borderRadius={3} buttonColor={Colors.DEFAULT_TEXT_COLOR} />
+                            <PrimaryButton android_ripple={{ color: Colors.METALLIC_GOLD }} title={'CONFIRM'} onPress={handleConfirmOrder} borderRadius={3} buttonColor={Colors.COMPLETED_COLOR} />
+                        </>
+                    }
                 </View >
             );
+        } else {
+            return null;
         }
-    }, [isOrderInprogress, orderDataForPost.orderItems]);
+    }, [isOrderInprogress, orderDataForPost.orderItems, orderDataForPost.status, orderDataForPost]);
 
 
     const renderLoadingMore = useMemo(() => {
@@ -169,7 +183,7 @@ const OrdersViewMobile = ({ navigation }: IOrdersViewMobile) => {
     }, [isLoadMore]);
 
 
-    const rednderOrderDetailInput = useMemo(() => {
+    const renderOrderDetailInput = useMemo(() => {
         if (!!orderDataForPost.orderItems?.length) {
             return (
                 <View style={{ minHeight: 60, width: '100%', paddingHorizontal: 5, paddingTop: 5, marginBottom: 5 }}>
@@ -205,6 +219,19 @@ const OrdersViewMobile = ({ navigation }: IOrdersViewMobile) => {
     };
 
 
+    const renderDropDownSearch = useMemo(() => {
+        return (
+            < SearchWithDropDown
+                searchResultData={searchResult!}
+                searchPlaceHolder={'Type product barcode or name :'}
+                onPressItem={onPressSearchedProduct}
+                isDataLoading={isProductForOrderLoading}
+                searchResultListItem={({ data }) => <ProductListItem data={data} />}
+                getSearchValue={handleProductSearch} />
+        );
+    }, [searchResult?.length, isProductForOrderLoading, isHideSearchResuts]);
+
+
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: Colors.CARD_COLOR }} >
@@ -232,25 +259,14 @@ const OrdersViewMobile = ({ navigation }: IOrdersViewMobile) => {
                 onClose={handleOnCloseSheet}
                 snapPoints={snapPoints}
                 containerStyle={{ zIndex: 4 }}
+                enableContentPanningGesture={false}
                 backdropComponent={bottomSheetBackDrop}
             >
                 <View style={{ flex: 1, backgroundColor: Colors.CARD_COLOR }} >
                     <View style={{ flexDirection: 'row' }}>
                         {isOrderInprogress &&
                             <>
-                                < SearchWithDropDown
-                                    hideDropDwon={isHideSearchResuts}
-                                    getSearchValue={handleProductSearch}
-                                    searchPlaceHolder={'Type product barcode or name :'}
-                                >
-                                    <BottomSheetScrollView keyboardShouldPersistTaps={'always'} contentContainerStyle={{ paddingVertical: 5 }} indicatorStyle={'black'} showsVerticalScrollIndicator={true}>
-                                        {!!searchResult?.length && searchResult.map((product, index) => {
-                                            return (
-                                                <ProductListItem key={`product ${index}`} data={product} onPress={() => onPressSearchedProduct(product)} />
-                                            );
-                                        })}
-                                    </BottomSheetScrollView>
-                                </SearchWithDropDown>
+                                {renderDropDownSearch}
                                 <CustomPressable style={{ width: 30, justifyContent: 'center', alignItems: 'center', marginRight: 5 }}
                                     onPress={handleOnpressScan}
                                 >
@@ -259,12 +275,13 @@ const OrdersViewMobile = ({ navigation }: IOrdersViewMobile) => {
                             </>
                         }
                     </View>
-                    {rednderOrderDetailInput}
+                    {renderOrderDetailInput}
                     <BottomSheetFlatList
                         data={orderDataForPost.orderItems}
                         keyExtractor={(item, index) => `${item.id}-${index}`}
                         ListFooterComponent={listFooter}
-                        renderItem={({ item, index }) => <OrdersCartListCard data={item}  {...{ index }} onValueChange={onCardValueChange} />}
+                        keyboardShouldPersistTaps={'handled'}
+                        renderItem={({ item, index }) => <OrdersCartListCard data={item}  {...{ index }} onValueChange={onCardValueChange} handleRemove={hanldeDeleteProductFromOrder} />}
                     />
                 </View>
             </BottomSheet>

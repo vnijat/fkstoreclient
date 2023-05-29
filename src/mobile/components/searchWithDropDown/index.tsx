@@ -1,26 +1,29 @@
-import React, { useEffect, useRef, useState } from "react";
-import { View, ScrollView } from "react-native";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { View, ScrollView, ActivityIndicator } from "react-native";
+import CustomPressable from "../../../components/customPressable";
 import { InputItem } from "../../../components/inputItem";
 import { Colors } from "../../../utils/colors";
+import { getStyle } from "./styles";
 
 
-interface ISearchWithDropDown {
-    children?: React.ReactNode;
+interface ISearchWithDropDown<T> {
     getSearchValue: (value: string) => void;
-    hideDropDwon?: boolean;
     searchPlaceHolder?: string;
+    searchResultData: T[];
+    searchResultListItem: ({ data }: { data: T; }) => JSX.Element;
+    onPressItem: (data: T) => void;
+    isDataLoading: boolean;
 }
 
 
 
-const SearchWithDropDown = ({ children, getSearchValue, hideDropDwon, searchPlaceHolder }: ISearchWithDropDown) => {
+const SearchWithDropDown = <T extends { [key: string]: any; }>({ getSearchValue, searchPlaceHolder, searchResultData, searchResultListItem, onPressItem, isDataLoading }: ISearchWithDropDown<T>) => {
+    const style = useMemo(() => getStyle(), []);
     const [showDropDown, setShowDropDown] = useState(false);
     let timeoutId = useRef<ReturnType<typeof setTimeout>>(null).current;
     const [searchValue, setSearchValue] = useState('');
+    const SearchResultItem = searchResultListItem;
 
-    useEffect(() => {
-        hideDropDwon && setShowDropDown(false);
-    }, [hideDropDwon]);
 
     useEffect(() => {
         timeoutId = setTimeout(() => {
@@ -46,21 +49,42 @@ const SearchWithDropDown = ({ children, getSearchValue, hideDropDwon, searchPlac
         setShowDropDown(false);
     };
 
+    const handleOnpressItem = (data: T) => {
+        setShowDropDown(false);
+        onPressItem(data);
+    };
+
+
     return (
         <View style={{ flexGrow: 1 }}>
             <InputItem
                 setValue={handleSearch}
                 inputValue={searchValue}
-                // isSearch
                 height={30}
                 placeHolder={searchPlaceHolder}
                 placeholderTextColor={Colors.DEFAULT_TEXT_COLOR}
                 onBlur={handleInputOnblur}
             />
-            {showDropDown && children && < View style={{ position: 'absolute', width: '97%', height: 250, backgroundColor: Colors.CARD_COLOR, elevation: 3, zIndex: 3, top: 40, alignSelf: 'center', borderBottomLeftRadius: 20, borderBottomRightRadius: 20, overflow: 'hidden' }}>
-                {children}
-            </View>}
-        </View >
+            {showDropDown &&
+                < View style={style.dropDownContainer}>
+                    <ScrollView keyboardShouldPersistTaps={'handled'} contentContainerStyle={{ paddingVertical: 5 }}>
+                        {
+                            isDataLoading
+                                ? <ActivityIndicator color={Colors.METALLIC_GOLD} size={'small'} />
+                                :
+                                !!searchResultData?.length && searchResultData.map((data, index) => {
+                                    return (
+                                        <CustomPressable onPress={() => handleOnpressItem(data)} android_ripple={{ color: Colors.METALLIC_GOLD }} key={`${index}-result`}>
+                                            <SearchResultItem data={data} key={`${index}`} />
+                                        </CustomPressable>
+                                    );
+                                })
+
+                        }
+                    </ScrollView>
+                </View>
+            }
+        </View>
     );
 };
 

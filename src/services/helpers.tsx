@@ -11,10 +11,12 @@ import { IsingelSelectData } from "../containers/customPicker";
 import { Item } from "../types/item";
 import Toast from "react-native-toast-message";
 import { ToastVariants } from "../types/toast";
+import Sound from "react-native-sound";
 
 countries.registerLocale(require('i18n-iso-countries/langs/en.json'));
 countries.registerLocale(require('i18n-iso-countries/langs/az.json'));
 const countryobjects = countries.getNames('en', { select: 'official' });
+const scanSignal = new Sound('scan.mp3', Sound.MAIN_BUNDLE)
 
 const modifieErrorMessage = (error: any) => {
     return error.data.message.reduce((errorObject: { [key: string]: string[]; }, message: string,) => {
@@ -59,6 +61,10 @@ const alertPromise = (title: string, message: string) => {
     });
 };
 
+
+const playScanSound = () => {
+    scanSignal.play();
+};
 
 const getSlicesForPaginationPage = (currentPage: number, pageCount: number, show?: number) => {
     const maxToshow = show || 5;
@@ -229,7 +235,8 @@ const HELP = {
     showToast,
     modifyTextForLangSelect,
     getUTCAddTZ,
-    getUTCSubTZ
+    getUTCSubTZ,
+    playScanSound
 };
 
 export default HELP;

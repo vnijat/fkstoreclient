@@ -1,8 +1,13 @@
 import { RouteProp, useRoute } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
 import React, { useEffect, useMemo, useState } from "react";
 import { View, FlatList, Pressable, Dimensions, KeyboardAvoidingView, Platform, Text, ActivityIndicator } from "react-native";
 import MIcon from "react-native-vector-icons/MaterialCommunityIcons";
+import CustomPressable from "../../../components/customPressable";
 import { InputItem } from "../../../components/inputItem";
+import { RouteNames } from "../../../enums/routes";
+import { Item } from "../../../types/item";
+import { RootStackMobileParamList } from "../../../types/navigation";
 import { Colors } from "../../../utils/colors";
 import FONT from "../../../utils/font";
 import WareHouseDataProvider from "../../../views/warehouseView/provider/data";
@@ -12,7 +17,12 @@ import { getStyle } from "./syles";
 
 
 
-const ProductView = () => {
+interface IProductView {
+    navigation: StackNavigationProp<RootStackMobileParamList>;
+}
+
+
+const ProductView = ({ navigation }: IProductView) => {
     const style = useMemo(() => getStyle(), []);
     const dataProvider = WareHouseDataProvider();
     const logicProvider = WareHouseLogicProvider();
@@ -131,6 +141,10 @@ const ProductView = () => {
         );
     }, [wareHouseQueryParams?.search]);
 
+    const handleOnpressProduct = (data: Item) => {
+        navigation.navigate(RouteNames.PRODUCT_INFO, { barcode: data.barcode });
+    };
+
 
     return (
         <KeyboardAvoidingView style={style.container}
@@ -148,7 +162,13 @@ const ProductView = () => {
                         onEndReachedThreshold={0.5}
                         data={query?.items}
                         refreshing={true}
-                        renderItem={({ item }) => <ProductListItem data={item} />}
+                        renderItem={({ item }) => {
+                            return (
+                                <CustomPressable onPress={() => handleOnpressProduct(item)} android_ripple={{ color: Colors.METALLIC_GOLD }}>
+                                    <ProductListItem data={item} />
+                                </CustomPressable>
+                            );
+                        }}
                         ListEmptyComponent={<EmptyList />}
                     />
                     {renderLoadingMore}

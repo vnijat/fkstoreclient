@@ -15,7 +15,7 @@ export const getStyle = (fullfilled?: boolean) => {
             elevation: 1,
             marginHorizontal: 5,
             borderRadius: 3,
-            padding: 5
+            padding: 5,
         },
         cartItemNumber: {
             position: 'absolute',
@@ -86,8 +86,10 @@ export const getStyle = (fullfilled?: boolean) => {
             right: 0,
             top: 0,
             width: 80,
-            borderTopRightRadius: 0,
+            borderTopRightRadius: 3,
             borderTopLeftRadius: 0,
+            borderBottomRightRadius: 0,
+            elevation:2,
             borderRadius: 3,
             backgroundColor: Colors.METALLIC_GOLD
 

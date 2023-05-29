@@ -1,12 +1,8 @@
 import React, { memo, useMemo } from "react";
-import { Pressable, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import { Colors } from "../../../../../utils/colors";
 import MIcon from "react-native-vector-icons/MaterialCommunityIcons";
 import { Item } from "../../../../../types/item";
-import { useNavigation } from "@react-navigation/native";
-import { RouteNames } from "../../../../../enums/routes";
-import { StackNavigationProp } from "@react-navigation/stack";
-import { RootStackMobileParamList } from "../../../../../types/navigation";
 import { getStyle } from "./styles";
 import FONT from "../../../../../utils/font";
 import { BarcodeIcon } from "../../../../../assets/icons/productIcons";
@@ -14,13 +10,12 @@ import { BarcodeIcon } from "../../../../../assets/icons/productIcons";
 
 interface IProductListItem {
     data: Item;
-    onPress?: () => void;
 }
 
 
-const ProductListItem = ({ data, onPress }: IProductListItem) => {
+const ProductListItem = ({ data }: IProductListItem) => {
     const style = useMemo(() => getStyle(), []);
-    const navigation = useNavigation<StackNavigationProp<RootStackMobileParamList>>();
+
     const PRODUCT_INFO_ICONS = [
         {
             icon: <MIcon name={'cube-scan'} size={12} color={Colors.DEFAULT_TEXT_COLOR} />,
@@ -44,36 +39,26 @@ const ProductListItem = ({ data, onPress }: IProductListItem) => {
         },
     ];
 
-    const onPressProduct = () => {
-        if (onPress) {
-            onPress();
-        } else {
-            navigation.navigate(RouteNames.PRODUCT_INFO, { barcode: data.barcode });
-        }
-    };
 
     return (
-        <Pressable style={style.container}
-            android_ripple={{ color: Colors.METALLIC_GOLD, }}
-            onPress={onPressProduct}
-        >
+        <View style={style.container}>
             <View style={style.contentContainer}>
                 <View style={{ flex: 0.7 }}>
                     <View style={{ flex: 0.7 }}>
                         <Text style={style.productNameText} numberOfLines={3} >
-                            {data.name.toUpperCase()}
+                            {data?.name.toUpperCase()}
                         </Text>
                         <View style={{ flexDirection: 'row' }}>
                             <MIcon name={'store-marker'} size={16} color={Colors.METALLIC_GOLD} />
                             <Text style={{ fontSize: FONT.FONT_SIZE_SMALL, color: Colors.DEFAULT_TEXT_COLOR }}>
-                                {`${data.store.name}-${data.location.code}`}
+                                {`${data?.store.name}-${data?.location.code}`}
                             </Text>
                         </View>
                     </View>
                     <View style={style.bottomContainer}>
                         <BarcodeIcon size={18} color={Colors.DEFAULT_TEXT_COLOR} />
-                        < Text style={style.barcodeText} numberOfLines={1} selectable>
-                            {data.barcode}
+                        <Text style={style.barcodeText} numberOfLines={1} selectable>
+                            {data?.barcode}
                         </Text>
                     </View>
                 </View>
@@ -90,7 +75,7 @@ const ProductListItem = ({ data, onPress }: IProductListItem) => {
                     })}
                 </View>
             </View>
-        </Pressable>
+        </View>
     );
 };
 

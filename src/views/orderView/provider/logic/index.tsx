@@ -1,7 +1,9 @@
 import { ITableDataConfig } from "../../../../containers/simpleTable/types";
-import { OrdersApi, useAddOrderMutation, useDeleteOrderMutation } from "../../../../modules/api/orders.api";
+import { OrderItemStatus } from "../../../../enums/orderItemStatus";
+import { OrderStatus } from "../../../../enums/orderStatus";
+import { OrdersApi, useAddOrderMutation, useDeleteOrderMutation, useEditOrderMutation } from "../../../../modules/api/orders.api";
 import { setOrdersQueryParams } from "../../../../modules/redux/orderQuerySlicer";
-import { addItemForOrder, clearOrderDataForPost, setIsOrderForEdit, setIsShowOrderModal, setOrderDataForPost, updateItemForOrder } from "../../../../modules/redux/orderSlicer";
+import { addItemForOrder, clearOrderDataForPost, deleteItemFromOrder, setIsOrderForEdit, setIsShowOrderModal, setOrderDataForPost, updateItemForOrder } from "../../../../modules/redux/orderSlicer";
 import { useAppDispatch } from "../../../../modules/redux/store";
 import { resetTable, setNewTableConfigs } from "../../../../modules/redux/tableConfigs";
 import HELP from "../../../../services/helpers";
@@ -10,28 +12,23 @@ import { Item } from "../../../../types/item";
 import { AddOrderDto, Order, ProjectOrder } from "../../../../types/projectOrder";
 
 
-
 function OrderLogicProvider() {
     const dispatch = useAppDispatch();
     const [apiDeleteOrder] = useDeleteOrderMutation();
     const [apiAddOrder] = useAddOrderMutation();
-
+    const [apiUpdateOrder] = useEditOrderMutation();
 
     function onResetTable() {
         dispatch(resetTable({ tableName: 'order' }));
     }
 
-
     function onCloseModal() {
         dispatch(setIsShowOrderModal(false));
     }
 
-
     function setNewTableConfig(data: ITableDataConfig<ProjectOrder>[]) {
         dispatch(setNewTableConfigs({ tableName: 'order', data }));
     }
-
-
 
     function onPressRowItem(data: ProjectOrder) {
         dispatch(setOrderDataForPost({ ...data }));
@@ -39,7 +36,6 @@ function OrderLogicProvider() {
         dispatch(setIsShowOrderModal(true));
 
     }
-
 
     async function deleteOrder(orderId: number): Promise<void> {
         try {
@@ -54,11 +50,9 @@ function OrderLogicProvider() {
         }
     };
 
-
     function handlePagination(data: Imeta) {
         dispatch(setOrdersQueryParams(data));
     }
-
 
     async function handleOndeleteOrder(data: ProjectOrder) {
         await deleteOrder(data.id!);
@@ -67,6 +61,10 @@ function OrderLogicProvider() {
 
     function handleAddProductForOrder(product: Item) {
         dispatch(addItemForOrder(product));
+    }
+
+    function hanldeDeleteProductFromOrder(productId: number) {
+        dispatch(deleteItemFromOrder({ itemId: productId }));
     }
 
     function handdleCreateNewOrder() {
@@ -94,14 +92,27 @@ function OrderLogicProvider() {
 
     async function handlePostNewOrderData(data: AddOrderDto) {
         const response = await apiAddOrder(data);
-        console.log("response===>>", response);
+        if (response?.data) {
+            dispatch(setOrderDataForPost({ ...response?.data }));
+            HELP.showToast('success', 'New Order Created');
+        }
     }
 
     async function handleUpdateOrder(data: AddOrderDto) {
-
+        const { orderItems } = data;
+        const isOrderConfirmed = data.status === OrderStatus.COMPLETED;
+        const isOrderRejected = data.status === OrderStatus.DECLINED;
+        const isSomeProductStatusIsNotSet = orderItems?.some((item) => item.status === OrderItemStatus.IN_USE);
+        if (isOrderConfirmed && isSomeProductStatusIsNotSet) {
+            HELP.showToast('info', 'Some Product Status is not set');
+        } else {
+            const response = await apiUpdateOrder({ id: data.id!, body: data });
+            if (response.data) {
+                dispatch(setOrderDataForPost({ ...response?.data }));
+            }
+            HELP.showToast('success', 'Order Updated');
+        }
     }
-
-
 
     return {
         onPressRowItem,
@@ -116,7 +127,8 @@ function OrderLogicProvider() {
         handleSetOrderDataForPost,
         addScannedProductToOrder,
         handlePostNewOrderData,
-        handleUpdateOrder
+        handleUpdateOrder,
+        hanldeDeleteProductFromOrder
     };
 
 };

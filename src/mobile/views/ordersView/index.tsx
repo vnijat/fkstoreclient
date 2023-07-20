@@ -1,16 +1,16 @@
-import BottomSheet, { BottomSheetBackdrop, BottomSheetFlatList, BottomSheetScrollView, BottomSheetTextInput } from "@gorhom/bottom-sheet";
-import { format } from "date-fns";
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { FlatList, Text, View, ActivityIndicator, Keyboard, TextInput } from "react-native";
+import BottomSheet, {BottomSheetBackdrop, BottomSheetFlatList, BottomSheetScrollView, BottomSheetTextInput} from "@gorhom/bottom-sheet";
+import {format} from "date-fns";
+import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
+import {FlatList, Text, View, ActivityIndicator, Keyboard, TextInput} from "react-native";
 import MIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { SafeAreaView } from "react-native-safe-area-context";
+import {SafeAreaView} from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/Entypo";
 import CustomPressable from "../../../components/customPressable";
-import { PrimaryButton } from "../../../components/primaryButton";
-import { OrderStatus } from "../../../enums/orderStatus";
-import { Item } from "../../../types/item";
-import { AddOrderDto, OrderItem, ProjectOrder } from "../../../types/projectOrder";
-import { Colors } from "../../../utils/colors";
+import {PrimaryButton} from "../../../components/primaryButton";
+import {OrderStatus} from "../../../enums/orderStatus";
+import {Item} from "../../../types/item";
+import {AddOrderDto, OrderItem, ProjectOrder} from "../../../types/projectOrder";
+import {Colors} from "../../../utils/colors";
 import FONT from "../../../utils/font";
 import OrderDataProvider from "../../../views/orderView/provider/data";
 import OrderLogicProvider from "../../../views/orderView/provider/logic";
@@ -18,23 +18,24 @@ import SearchWithDropDown from "../../components/searchWithDropDown";
 import ProductListItem from "../productsView/components/productListItem";
 import OrderListCard from "./components/orderListCard";
 import OrdersCartListCard from "./components/ordersCartListCard";
-import { getStyle } from "./styles";
-import { BottomTabMobileStack, RootStackMobileParamList } from "../../../types/navigation";
-import { StackNavigationProp } from "@react-navigation/stack";
-import { RouteNames } from "../../../enums/routes";
+import {getStyle} from "./styles";
+import {BottomTabMobileStack, RootStackMobileParamList} from "../../../types/navigation";
+import {StackNavigationProp} from "@react-navigation/stack";
+import {RouteNames} from "../../../enums/routes";
 
 interface IOrdersViewMobile {
     navigation: StackNavigationProp<BottomTabMobileStack>;
 
 }
 
-const OrdersViewMobile = ({ navigation }: IOrdersViewMobile) => {
+const OrdersViewMobile = ({navigation}: IOrdersViewMobile) => {
     const style = useMemo(() => getStyle(), []);
     const dataProvider = OrderDataProvider();
     const logicProvider = OrderLogicProvider();
-    const { queryData: { data, isLoading },
+    const {queryData: {data, isLoading},
         searchProductForOrder,
-        orderDataForPost
+        orderDataForPost,
+        projectsForPicker,
     } = dataProvider;
     const {
         onPressRowItem,
@@ -58,7 +59,7 @@ const OrdersViewMobile = ({ navigation }: IOrdersViewMobile) => {
 
     useEffect(() => {
         if (isLoadMore) {
-            handlePagination({ take: (data?.meta.take ?? 10) + 10 });
+            handlePagination({take: (data?.meta.take ?? 10) + 10});
         }
     }, [isLoadMore]);
 
@@ -72,7 +73,7 @@ const OrdersViewMobile = ({ navigation }: IOrdersViewMobile) => {
 
 
     const hanldeOrderValueChange = (value: any, dtoKey: keyof AddOrderDto) => {
-        handleSetOrderDataForPost({ [dtoKey]: value });
+        handleSetOrderDataForPost({[dtoKey]: value});
     };
 
     const handleProductSearch = async (value: string) => {
@@ -120,14 +121,14 @@ const OrdersViewMobile = ({ navigation }: IOrdersViewMobile) => {
     };
 
     const hanldeUpdateOrder = async () => {
-        await handleUpdateOrder({ ...orderDataForPost });
+        await handleUpdateOrder({...orderDataForPost});
     };
 
     const handleConfirmOrder = async () => {
-        await handleUpdateOrder({ ...orderDataForPost, status: OrderStatus.COMPLETED });
+        await handleUpdateOrder({...orderDataForPost, status: OrderStatus.COMPLETED});
     };
 
-    const onCardValueChange = (value: { data: { [key in keyof OrderItem]?: any; }, itemId: number; }) => {
+    const onCardValueChange = (value: {data: {[key in keyof OrderItem]?: any;}, itemId: number;}) => {
         handleUpdateProductInOrder(value);
     };
 
@@ -136,7 +137,7 @@ const OrdersViewMobile = ({ navigation }: IOrdersViewMobile) => {
     };
 
     const handleOnpressScan = () => {
-        navigation.navigate(RouteNames.SCAN, { isFromOrder: true, addScannedProductToOrder });
+        navigation.navigate(RouteNames.SCAN, {isFromOrder: true, addScannedProductToOrder});
     };
 
 
@@ -145,12 +146,12 @@ const OrdersViewMobile = ({ navigation }: IOrdersViewMobile) => {
         const isOrderCreated = orderDataForPost.id;
         if (isOrderInprogress && orderDataForPost.orderItems?.length) {
             return (
-                <View style={{ width: '100%', height: 60, bottom: 0, marginTop: 5, justifyContent: 'space-evenly', flexDirection: 'row', alignItems: 'center', paddingHorizontal: 10 }}>
+                <View style={{width: '100%', height: 60, bottom: 0, marginTop: 5, justifyContent: 'space-evenly', flexDirection: 'row', alignItems: 'center', paddingHorizontal: 10}}>
                     {isShowCreateButton && <PrimaryButton title={'CREATE'} onPress={hanldeCreateOrder} borderRadius={3} buttonColor={Colors.METALLIC_GOLD} />}
                     {isOrderCreated &&
                         <>
-                            <PrimaryButton android_ripple={{ color: Colors.METALLIC_GOLD }} title={'UPDATE'} onPress={hanldeUpdateOrder} borderRadius={3} buttonColor={Colors.DEFAULT_TEXT_COLOR} />
-                            <PrimaryButton android_ripple={{ color: Colors.METALLIC_GOLD }} title={'CONFIRM'} onPress={handleConfirmOrder} borderRadius={3} buttonColor={Colors.COMPLETED_COLOR} />
+                            <PrimaryButton android_ripple={{color: Colors.METALLIC_GOLD}} title={'UPDATE'} onPress={hanldeUpdateOrder} borderRadius={3} buttonColor={Colors.DEFAULT_TEXT_COLOR} />
+                            <PrimaryButton android_ripple={{color: Colors.METALLIC_GOLD}} title={'CONFIRM'} onPress={handleConfirmOrder} borderRadius={3} buttonColor={Colors.COMPLETED_COLOR} />
                         </>
                     }
                 </View >
@@ -165,10 +166,10 @@ const OrdersViewMobile = ({ navigation }: IOrdersViewMobile) => {
         if (isLoadMore) {
             return (
                 <View
-                    style={{ position: 'absolute', bottom: 10, alignSelf: 'center', justifyContent: 'center', alignItems: 'center', backgroundColor: Colors.METALLIC_GOLD, borderRadius: 3, elevation: 1, zIndex: 3, padding: 5, minWidth: 80 }}
+                    style={{position: 'absolute', bottom: 10, alignSelf: 'center', justifyContent: 'center', alignItems: 'center', backgroundColor: Colors.METALLIC_GOLD, borderRadius: 3, elevation: 1, zIndex: 3, padding: 5, minWidth: 80}}
                 >
-                    <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-                        <Text style={{ color: Colors.CARD_COLOR, fontSize: FONT.FONT_SIZE_SMALL }}>
+                    <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
+                        <Text style={{color: Colors.CARD_COLOR, fontSize: FONT.FONT_SIZE_SMALL}}>
                             {'LOADING MORE '}
                         </Text>
                         <ActivityIndicator size={'small'} color={Colors.CARD_COLOR} />
@@ -186,12 +187,12 @@ const OrdersViewMobile = ({ navigation }: IOrdersViewMobile) => {
     const renderOrderDetailInput = useMemo(() => {
         if (!!orderDataForPost.orderItems?.length) {
             return (
-                <View style={{ minHeight: 60, width: '100%', paddingHorizontal: 5, paddingTop: 5, marginBottom: 5 }}>
-                    <Text style={{ color: Colors.DEFAULT_TEXT_COLOR, fontSize: FONT.FONT_SIZE_SMALL }}>
+                <View style={{minHeight: 60, width: '100%', paddingHorizontal: 5, paddingTop: 5, marginBottom: 5}}>
+                    <Text style={{color: Colors.DEFAULT_TEXT_COLOR, fontSize: FONT.FONT_SIZE_SMALL}}>
                         {'ORDER DETAIL'}
                     </Text>
                     <TextInput
-                        style={{ borderRadius: 3, backgroundColor: Colors.CARD_HEADER_COLOR, padding: 3, height: 40, color: Colors.DEFAULT_TEXT_COLOR }}
+                        style={{borderRadius: 3, backgroundColor: Colors.CARD_HEADER_COLOR, padding: 3, height: 40, color: Colors.DEFAULT_TEXT_COLOR}}
                         multiline={true}
                         onChangeText={(value) => hanldeOrderValueChange(value, 'detail')}
                         textAlignVertical={'top'}
@@ -208,10 +209,10 @@ const OrdersViewMobile = ({ navigation }: IOrdersViewMobile) => {
 
     const bottomSheetHandler = () => {
         return (
-            <View style={{ height: 20, backgroundColor: Colors.CARD_COLOR, borderTopLeftRadius: 10, borderTopRightRadius: 10, elevation: 2 }}>
+            <View style={{height: 20, backgroundColor: Colors.CARD_COLOR, borderTopLeftRadius: 10, borderTopRightRadius: 10, elevation: 2}}>
                 <CustomPressable
                     onPress={() => bottomSheetRef.current?.close()}
-                    style={{ position: 'absolute', top: -20, height: 40, width: 40, borderRadius: 40, backgroundColor: Colors.CARD_COLOR, elevation: 2, alignSelf: 'center', justifyContent: 'center', alignItems: 'center' }}>
+                    style={{position: 'absolute', top: -20, height: 40, width: 40, borderRadius: 40, backgroundColor: Colors.CARD_COLOR, elevation: 2, alignSelf: 'center', justifyContent: 'center', alignItems: 'center'}}>
                     <MIcon name={'window-close'} size={20} color={Colors.METALLIC_GOLD} />
                 </CustomPressable>
             </View>
@@ -226,28 +227,26 @@ const OrdersViewMobile = ({ navigation }: IOrdersViewMobile) => {
                 searchPlaceHolder={'Type product barcode or name :'}
                 onPressItem={onPressSearchedProduct}
                 isDataLoading={isProductForOrderLoading}
-                searchResultListItem={({ data }) => <ProductListItem data={data} />}
+                searchResultListItem={({data}) => <ProductListItem data={data} />}
                 getSearchValue={handleProductSearch} />
         );
     }, [searchResult?.length, isProductForOrderLoading, isHideSearchResuts]);
 
-
-
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: Colors.CARD_COLOR }} >
+        <SafeAreaView style={{flex: 1, backgroundColor: Colors.CARD_COLOR}} >
             <CustomPressable
                 onPress={handleNewOrder}
-                style={{ position: 'absolute', height: 50, width: 50, borderRadius: 50, justifyContent: 'center', alignItems: 'center', backgroundColor: Colors.CARD_COLOR, bottom: 15, right: 15, zIndex: 1, elevation: 3, }}>
+                style={{position: 'absolute', height: 50, width: 50, borderRadius: 50, justifyContent: 'center', alignItems: 'center', backgroundColor: Colors.CARD_COLOR, bottom: 15, right: 15, zIndex: 1, elevation: 3, }}>
                 <Icon name={'plus'} size={30} color={Colors.METALLIC_GOLD} />
             </CustomPressable>
             <FlatList
                 data={data?.orders}
                 onEndReached={onListEndReach}
                 onEndReachedThreshold={0.5}
-                renderItem={({ item, index }) => <OrderListCard
+                renderItem={({item, index}) => <OrderListCard
                     data={item}
                     onPressCard={() => onPressCard(item)}
-                    {...{ index }}
+                    {...{index}}
                 />
                 }
             />
@@ -258,16 +257,16 @@ const OrdersViewMobile = ({ navigation }: IOrdersViewMobile) => {
                 index={-1}
                 onClose={handleOnCloseSheet}
                 snapPoints={snapPoints}
-                containerStyle={{ zIndex: 4 }}
+                containerStyle={{zIndex: 4}}
                 enableContentPanningGesture={false}
                 backdropComponent={bottomSheetBackDrop}
             >
-                <View style={{ flex: 1, backgroundColor: Colors.CARD_COLOR }} >
-                    <View style={{ flexDirection: 'row' }}>
+                <View style={{flex: 1, backgroundColor: Colors.CARD_COLOR}} >
+                    <View style={{flexDirection: 'row'}}>
                         {isOrderInprogress &&
                             <>
                                 {renderDropDownSearch}
-                                <CustomPressable style={{ width: 30, justifyContent: 'center', alignItems: 'center', marginRight: 5 }}
+                                <CustomPressable style={{width: 30, justifyContent: 'center', alignItems: 'center', marginRight: 5}}
                                     onPress={handleOnpressScan}
                                 >
                                     <MIcon name={'barcode-scan'} size={30} color={Colors.METALLIC_GOLD} />
@@ -281,7 +280,7 @@ const OrdersViewMobile = ({ navigation }: IOrdersViewMobile) => {
                         keyExtractor={(item, index) => `${item.id}-${index}`}
                         ListFooterComponent={listFooter}
                         keyboardShouldPersistTaps={'handled'}
-                        renderItem={({ item, index }) => <OrdersCartListCard data={item}  {...{ index }} onValueChange={onCardValueChange} handleRemove={hanldeDeleteProductFromOrder} />}
+                        renderItem={({item, index}) => <OrdersCartListCard data={item}  {...{index, projectsForPicker}} onValueChange={onCardValueChange} handleRemove={hanldeDeleteProductFromOrder} />}
                     />
                 </View>
             </BottomSheet>

@@ -1,5 +1,5 @@
-import { StyleSheet } from 'react-native';
-import { Colors } from '../../../../../utils/colors';
+import {StyleSheet} from 'react-native';
+import {Colors} from '../../../../../utils/colors';
 import FONT from '../../../../../utils/font';
 
 export const getStyle = (fullfilled?: boolean) => {
@@ -16,6 +16,7 @@ export const getStyle = (fullfilled?: boolean) => {
             marginHorizontal: 5,
             borderRadius: 3,
             padding: 5,
+            zIndex: 1,
         },
         cartItemNumber: {
             position: 'absolute',
@@ -44,13 +45,13 @@ export const getStyle = (fullfilled?: boolean) => {
             flexDirection: 'row'
         },
         contentTopLeft: {
-            flex: 0.4
+            flex: 0.4,
         },
         contentTopRight: {
             flex: 0.6,
             justifyContent: 'flex-end',
             flexDirection: 'row',
-            alignItems: 'center'
+            alignItems: 'center',
         },
         contentBottom: {
             flex: 0.3,
@@ -89,9 +90,23 @@ export const getStyle = (fullfilled?: boolean) => {
             borderTopRightRadius: 3,
             borderTopLeftRadius: 0,
             borderBottomRightRadius: 0,
-            elevation:2,
+            elevation: 2,
             borderRadius: 3,
             backgroundColor: Colors.METALLIC_GOLD
+
+        },
+        proejctContainer: {
+            position: 'absolute',
+            zIndex: 10,
+            alignSelf: 'center',
+            top: 0,
+            height: 40,
+            width: 100,
+            borderTopRightRadius: 0,
+            borderTopLeftRadius: 0,
+            elevation: 2,
+            borderRadius: 3,
+            backgroundColor: Colors.CARD_COLOR
 
         },
         atStockText: {

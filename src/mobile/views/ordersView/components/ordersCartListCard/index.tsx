@@ -1,28 +1,31 @@
 import CheckBox from "@react-native-community/checkbox";
-import React, { useCallback, useMemo, useRef, useState } from "react";
-import { Text, View, TextInput, NativeSyntheticEvent, TextInputEndEditingEventData } from "react-native";
-import { BarcodeIcon } from "../../../../../assets/icons/productIcons";
-import { OrderItemStatus } from "../../../../../enums/orderItemStatus";
-import { OrderStatus } from "../../../../../enums/orderStatus";
-import { OrderItem } from "../../../../../types/projectOrder";
-import { Colors } from "../../../../../utils/colors";
+import React, {useCallback, useMemo, useRef, useState} from "react";
+import DropDownPicker, {ItemType, ValueType} from 'react-native-dropdown-picker';
+import {Text, View, TextInput, NativeSyntheticEvent, TextInputEndEditingEventData} from "react-native";
+import {BarcodeIcon} from "../../../../../assets/icons/productIcons";
+import {OrderItemStatus} from "../../../../../enums/orderItemStatus";
+import {OrderStatus} from "../../../../../enums/orderStatus";
+import {OrderItem} from "../../../../../types/projectOrder";
+import {Colors} from "../../../../../utils/colors";
 import FONT from "../../../../../utils/font";
-import { getStyle } from "./styles";
-import SwipeableItem from 'react-native-swipeable-item';
-import { Swipeable } from "react-native-gesture-handler";
+import {getStyle} from "./styles";
+import {Swipeable} from "react-native-gesture-handler";
 import CustomPressable from "../../../../../components/customPressable";
+import {IProjectsForPicker} from "../../../../../types/project";
 
 interface IOrdersCartListCard {
     data: OrderItem;
     index: number;
-    onValueChange?: (value: { data: { [k in keyof OrderItem]?: any }, itemId: number; }) => void;
+    onValueChange?: (value: {data: {[k in keyof OrderItem]?: any}, itemId: number;}) => void;
     handleRemove?: (itemId: number) => void;
+    projectsForPicker?: IProjectsForPicker[];
 }
 
 
-const OrdersCartListCard = ({ data, index, onValueChange, handleRemove }: IOrdersCartListCard) => {
-    const { name, barcode, itemId, fullfilled, unit, itemAtStock } = data;
+const OrdersCartListCard = ({data, index, onValueChange, handleRemove, projectsForPicker}: IOrdersCartListCard) => {
+    const {name, barcode, itemId, fullfilled, unit, itemAtStock, project} = data;
     const style = useMemo(() => getStyle(fullfilled), [fullfilled]);
+    const [isPickerOpen, setIsPickerOpen] = useState(false);
     const quantityValue = useMemo(() => parseFloat(data.quantity).toString(), [data.quantity]);
     const swipeRef = useRef<Swipeable>(null);
     const quantityInputRef = useRef<TextInput>(null);
@@ -31,19 +34,19 @@ const OrdersCartListCard = ({ data, index, onValueChange, handleRemove }: IOrder
         let dataValue = value;
         if (dtoKey === 'quantity') {
             dataValue = (Number(value) > Number(data?.itemAtStock)) ? data.itemAtStock : (value === '') ? '0' : value;
-            quantityInputRef.current?.setNativeProps({ text: parseFloat(dataValue).toString() });
+            quantityInputRef.current?.setNativeProps({text: parseFloat(dataValue).toString()});
         }
-        onValueChange && onValueChange({ data: { [dtoKey]: dataValue, }, itemId });
+        onValueChange && onValueChange({data: {[dtoKey]: dataValue, }, itemId});
     };
 
     const onEndEditingTextInput = (event: NativeSyntheticEvent<TextInputEndEditingEventData>) => {
-        const { nativeEvent: { text } } = event;
+        const {nativeEvent: {text}} = event;
         handleValueChange(text, 'quantity');
     };
 
     const checkBoxesData = [
-        { value: OrderItemStatus.USED, title: 'used', selected: data.status === OrderItemStatus.USED },
-        { value: OrderItemStatus.SOLD, title: 'sold', selected: data.status === OrderItemStatus.SOLD }
+        {value: OrderItemStatus.USED, title: 'used', selected: data.status === OrderItemStatus.USED},
+        {value: OrderItemStatus.SOLD, title: 'sold', selected: data.status === OrderItemStatus.SOLD}
     ];
 
 
@@ -61,12 +64,50 @@ const OrdersCartListCard = ({ data, index, onValueChange, handleRemove }: IOrder
         return (<View style={style.atStockContainer}>
             <Text style={style.atStockText}>
                 {`${parseFloat(itemAtStock?.toString() ?? 0)}`.toUpperCase()}
-                <Text style={{ fontSize: FONT.FONT_SIZE_VERY_SMALL, }}>
+                <Text style={{fontSize: FONT.FONT_SIZE_VERY_SMALL, }}>
                     {` max.`.toUpperCase()}
                 </Text>
             </Text>
         </View>);
     }, [itemAtStock, fullfilled]);
+
+
+
+
+
+    const renderForProject = useMemo(() => {
+        // if (fullfilled) {
+        //     return null;
+        // }
+        return (<View style={style.proejctContainer}>
+            <Text style={{color: Colors.DEFAULT_TEXT_COLOR, fontSize: FONT.FONT_SIZE_VERY_SMALL, textAlign: 'center'}}>
+                {`project`.toUpperCase()}
+            </Text>
+            <DropDownPicker
+                open={isPickerOpen}
+                listMode={'MODAL'}
+                showArrowIcon={!fullfilled}
+                disabled={fullfilled}
+                placeholder={(fullfilled && !project?.id) ? "" : 'Select project'}
+                placeholderStyle={{color: Colors.DEFAULT_TEXT_COLOR}}
+                textStyle={{fontSize: FONT.FONT_SIZE_VERY_SMALL, }}
+                style={{borderWidth: 0, backgroundColor: 'transparent', position: 'absolute', top: -15}}
+                listParentContainerStyle={{backgroundColor: Colors.CARD_HEADER_COLOR, margin: 1}}
+                searchContainerStyle={{backgroundColor: Colors.CARD_COLOR}}
+                searchPlaceholder={'Search project'}
+                searchTextInputStyle={{color: Colors.DEFAULT_TEXT_COLOR, borderColor: Colors.CARD_HEADER_COLOR}}
+                modalContentContainerStyle={{backgroundColor: Colors.CARD_COLOR}}
+                searchable={true}
+                items={projectsForPicker as ItemType<number | string>[]}
+                multiple={false}
+                setOpen={setIsPickerOpen}
+                value={data?.projectId as ValueType}
+                setValue={() => {}}
+                onSelectItem={({value}) => handleValueChange(value, 'projectId')}
+            />
+        </View>
+        );
+    }, [project, projectsForPicker, isPickerOpen, data?.projectId, fullfilled]);
 
     const renderInput = useMemo(() => {
         return (
@@ -81,6 +122,7 @@ const OrdersCartListCard = ({ data, index, onValueChange, handleRemove }: IOrder
             />
         );
     }, [quantityValue, fullfilled, onEndEditingTextInput]);
+
 
 
 
@@ -99,6 +141,7 @@ const OrdersCartListCard = ({ data, index, onValueChange, handleRemove }: IOrder
                     </Text>
                 </View>
                 {renderAvailableAtStock}
+                {renderForProject}
                 <View style={style.cartItemContentContainer}>
                     <View style={style.contentTop}>
                         <View style={style.contentTopLeft}>
@@ -116,27 +159,27 @@ const OrdersCartListCard = ({ data, index, onValueChange, handleRemove }: IOrder
                         </View>
                     </View>
                     <View style={style.contentBottom}>
-                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        <View style={{flexDirection: 'row', alignItems: 'center'}}>
                             <BarcodeIcon />
-                            <Text style={{ color: Colors.DEFAULT_TEXT_COLOR, fontWeight: FONT.FONT_BOLD, fontSize: FONT.FONT_SIZE_SMALL }}>
+                            <Text style={{color: Colors.DEFAULT_TEXT_COLOR, fontWeight: FONT.FONT_BOLD, fontSize: FONT.FONT_SIZE_SMALL}}>
                                 {barcode}
                             </Text>
                         </View>
-                        <View style={{ flexDirection: 'row', justifyContent: 'flex-end', flexShrink: 1 }}>
+                        <View style={{flexDirection: 'row', justifyContent: 'flex-end', flexShrink: 1}}>
                             {checkBoxesData.map((status, index) => {
                                 if (!status.selected && fullfilled) {
                                     return null;
                                 }
                                 return (
-                                    <View style={{ flexDirection: 'row', alignItems: 'center' }} key={`${index}`}>
-                                        <Text style={{ color: Colors.DEFAULT_TEXT_COLOR, fontSize: FONT.FONT_SIZE_VERY_SMALL, }}>
+                                    <View style={{flexDirection: 'row', alignItems: 'center'}} key={`${index}`}>
+                                        <Text style={{color: Colors.DEFAULT_TEXT_COLOR, fontSize: FONT.FONT_SIZE_VERY_SMALL, }}>
                                             {status.title.toUpperCase()}
                                         </Text>
                                         <CheckBox
                                             onValueChange={(value) => handleCheckBoxValue(index, value)}
                                             value={status.selected}
                                             disabled={fullfilled}
-                                            tintColors={{ true: fullfilled ? Colors.COMPLETED_COLOR : Colors.METALLIC_GOLD, false: Colors.CARD_COLOR }}
+                                            tintColors={{true: fullfilled ? Colors.COMPLETED_COLOR : Colors.METALLIC_GOLD, false: Colors.CARD_COLOR}}
                                         />
                                     </View>
                                 );
@@ -148,7 +191,6 @@ const OrdersCartListCard = ({ data, index, onValueChange, handleRemove }: IOrder
         );
     };
 
-
     const renderRightAction = () => {
         if (fullfilled) {
             return null;
@@ -157,8 +199,8 @@ const OrdersCartListCard = ({ data, index, onValueChange, handleRemove }: IOrder
             <View style={{}}>
                 <CustomPressable
                     onPress={onPressRemove}
-                    style={{ width: 80, height: 80, backgroundColor: Colors.DECLINED_COLOR, justifyContent: "center", alignItems: 'center', margin: 2, borderRadius: 3, padding: 2 }}>
-                    <Text style={{ fontSize: FONT.FONT_SIZE_MEDIUM, color: Colors.CARD_COLOR }}>
+                    style={{width: 80, height: 80, backgroundColor: Colors.DECLINED_COLOR, justifyContent: "center", alignItems: 'center', margin: 2, borderRadius: 3, padding: 2}}>
+                    <Text style={{fontSize: FONT.FONT_SIZE_MEDIUM, color: Colors.CARD_COLOR}}>
                         {'REMOVE'}
                     </Text>
                 </CustomPressable>
@@ -173,7 +215,6 @@ const OrdersCartListCard = ({ data, index, onValueChange, handleRemove }: IOrder
                 ref={swipeRef}
                 renderRightActions={renderRightAction}
                 overshootFriction={8}
-
             >
                 <CardContainer />
             </Swipeable>

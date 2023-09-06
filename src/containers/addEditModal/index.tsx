@@ -12,6 +12,7 @@ import TableInput from "../tableInput";
 import { RowDataType } from "../tableInput/types";
 import CodeInput from "../../components/codeInput";
 import UseLanguage from "../../modules/lozalization/useLanguage.hook";
+import {ICustomComponent} from "./types";
 
 interface IAddEditModal {
     /**  Pass Function For Post data to Api*/
@@ -64,7 +65,7 @@ interface IAddEditModal {
 
     modalBorderColor?: string;
 
-    customComponent?: { [key: string]: () => JSX.Element; };
+    customComponent?: ICustomComponent
 }
 
 

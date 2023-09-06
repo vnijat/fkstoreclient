@@ -1,14 +1,14 @@
-import { createNavigationContainerRef, NavigationProp } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import React, { FC, useEffect, useMemo, useState } from 'react';
+import {createNavigationContainerRef, NavigationProp} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
+import React, {FC, useEffect, useMemo, useState} from 'react';
 import SideBar from '../../containers/customDrawer';
 import CustomDrawer from '../../containers/customDrawer';
 import SettingsAddEditModal from '../../containers/settingsAddEditModal/index.windows';
-import { RouteNames } from '../../enums/routes';
-import { RootStackParamList } from '../../types/navigation';
-import { ClientsView } from '../../views/clientsView';
+import {RouteNames} from '../../enums/routes';
+import {RootStackParamList} from '../../types/navigation';
+import {ClientsView} from '../../views/clientsView';
 import InventoryTrackView from '../../views/inventoryTrackView';
-import { OrderView } from '../../views/orderView';
+import {OrderView} from '../../views/orderView';
 import ProjectsView from '../../views/projectsView';
 import PurchaseView from '../../views/purchaseView';
 import WareHouseView from '../../views/warehouseView';
@@ -23,13 +23,13 @@ export const RootNavigation: FC<any> = () => {
 
   navigationRef.addListener('state', (event) => setEvent(event));
 
- const renderSideBar = useMemo(() => {
-    if (navigationRef.getRootState()) {
+  const renderSideBar = useMemo(() => {
+    if (navigationRef.getRootState() && navigationRef?.isReady()) {
       const navigation = navigationRef.current;
       const routeNames = navigationRef.current?.getRootState().routeNames;
       const currentRoute = navigationRef.current?.getCurrentRoute()?.name;
       return <SideBar navigation={navigation} routeNames={routeNames!} currentRoute={currentRoute!} />;
-    } else { 
+    } else {
       return null;
     }
   }, [event]);
@@ -39,7 +39,7 @@ export const RootNavigation: FC<any> = () => {
   return (
     <>
       {renderSideBar}
-      <Stack.Navigator initialRouteName={RouteNames.WAREHOUSE} screenOptions={{ headerShown: false }} >
+      <Stack.Navigator initialRouteName={RouteNames.WAREHOUSE} screenOptions={{headerShown: false}} >
         <Stack.Screen name={RouteNames.WAREHOUSE} component={WareHouseView} />
         <Stack.Screen name={RouteNames.CLIENTS} component={ClientsView} />
         <Stack.Screen name={RouteNames.PROJECTS} component={ProjectsView} />

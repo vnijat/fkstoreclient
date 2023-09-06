@@ -14,12 +14,12 @@ export const ProjectsApi = InventoryApi.injectEndpoints({
       providesTags: result =>
         result
           ? [
-              ...result.projects.map(({id}) => ({
-                type: 'projects' as const,
-                id,
-              })),
-              'projects',
-            ]
+            ...result.projects.map(({id}) => ({
+              type: 'projects' as const,
+              id,
+            })),
+            'projects',
+          ]
           : ['projects'],
       query: filter => {
         return {
@@ -27,6 +27,14 @@ export const ProjectsApi = InventoryApi.injectEndpoints({
           params: filter,
         };
       },
+    }),
+    getProjectTypes: build.query<any, undefined>({
+      providesTags: ['projectTypes'],
+      query: () => {
+        return {
+          url: '/client/project/type/all'
+        };
+      }
     }),
     getProjectsForPicker: build.query<IProjectsForPicker[], undefined>({
       providesTags: ['projectsForPicker'],
@@ -62,7 +70,7 @@ export const ProjectsApi = InventoryApi.injectEndpoints({
       },
       invalidatesTags: ['projects', 'projectsForPicker', 'otherExpenses'],
     }),
-    editProject: build.mutation<Project, {id: number; body: AddClientProject}>({
+    editProject: build.mutation<Project, {id: number; body: AddClientProject;}>({
       query: ({id, body}) => {
         return {
           url: `/client/project/${id}`,
@@ -102,4 +110,5 @@ export const {
   useGetProjectsForPickerQuery,
   useGetProjectOrdersQuery,
   useGetOtherExpensesQuery,
+  useGetProjectTypesQuery
 } = ProjectsApi;

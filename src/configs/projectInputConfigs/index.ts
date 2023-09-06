@@ -73,11 +73,9 @@ const projectInputConfig: InputsConfig[] = [
     })),
   },
   {
-    title: 'For Sample?',
-    dtoKey: 'isSample',
-    height: 35,
-    width: 230,
-    isCheckBox: true,
+    title: 'Project Type',
+    dtoKey: 'typeId',
+    customComponentKeyName: 'type',
   },
   {
     title: 'Other Expenses',

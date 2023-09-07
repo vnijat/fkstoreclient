@@ -10,7 +10,7 @@ export const getStyle = (textColor?: string, buttonColor?: string) => {
             alignItems: 'center',
             flex: 1,
             justifyContent: 'space-between',
-            paddingHorizontal:20
+            paddingHorizontal: 20
         },
         buttonsStyle: {
             height: 30,
@@ -48,21 +48,37 @@ export const getStyle = (textColor?: string, buttonColor?: string) => {
 
         },
         pickerItem: {
-            padding: 2,
+            margin: 1,
+            alignItems: 'center',
+            backgroundColor: Colors.CARD_COLOR,
+            width: 30,
+            height: 30,
+            borderRadius: 3,
+            alignSelf: 'center',
+            justifyContent: 'center'
+
         },
         pickerItemText: {
-            fontSize: FONT.FONT_SIZE_MEDIUM,
+            fontSize: FONT.FONT_SIZE_LARGE,
             fontFamily: FONT.FONT_FAMILY,
-            color: Colors.DEFAULT_TEXT_COLOR
+            color: Colors.DEFAULT_TEXT_COLOR,
+            fontWeight: FONT.FONT_BOLD,
         },
         pickeritemSelected: {
-            padding: 2,
-            backgroundColor: Colors.CARD_HEADER_COLOR
+            margin: 1,
+            alignItems: 'center',
+            backgroundColor: Colors.CARD_COLOR,
+            width: 30,
+            height: 30,
+            borderRadius: 3,
+            alignSelf: 'center',
+            justifyContent: 'center'
         },
         pickerItemSelectedText: {
-            fontSize: FONT.FONT_SIZE_MEDIUM,
+            fontSize: FONT.FONT_SIZE_LARGE,
             fontFamily: FONT.FONT_FAMILY,
-            color: Colors.DEFAULT_TEXT_COLOR
+            color: Colors.METALLIC_GOLD,
+            fontWeight: FONT.FONT_BOLD,
         },
         pageNumbersContainer: {
             flexDirection: 'row',

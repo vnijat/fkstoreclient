@@ -121,7 +121,6 @@ const CustomPicker = ({
 
     const onPress = useCallback(() => {
         if (isDisabled) {
-            console.log("requiredText==>", requiredText);
             HELP.alertError(undefined, 'Requires field before select', requiredText);
         } else if (disabledForEdit) {
             HELP.alertError(undefined, 'You cant edit this field');

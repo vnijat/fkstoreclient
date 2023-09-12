@@ -11,7 +11,7 @@ const projectInputConfig: InputsConfig[] = [
     placeHolder: 'Project Title',
     height: 35,
     multiLine: false,
-    width: 470,
+    width: 455,
   },
   {
     title: 'Description',
@@ -21,7 +21,7 @@ const projectInputConfig: InputsConfig[] = [
     placeHolder: 'Project Description',
     height: 35,
     multiLine: true,
-    width: 230,
+    width: 455,
   },
   {
     title: 'Project Price',
@@ -76,6 +76,7 @@ const projectInputConfig: InputsConfig[] = [
     title: 'Project Type',
     dtoKey: 'typeId',
     customComponentKeyName: 'type',
+    isDisableForEdit: true,
   },
   {
     title: 'Other Expenses',

@@ -1,6 +1,6 @@
-import { useSelector } from "react-redux";
-import { useGetOtherExpensesQuery, useGetProjectOrdersQuery, useGetProjectsQuery } from "../../../../modules/api/projects.api";
-import { RootState } from "../../../../modules/redux/store";
+import {useSelector} from "react-redux";
+import {useGetOtherExpensesQuery, useGetProjectOrdersQuery, useGetProjectTypesQuery, useGetProjectsQuery} from "../../../../modules/api/projects.api";
+import {RootState} from "../../../../modules/redux/store";
 
 
 
@@ -10,8 +10,14 @@ function ProjectDataProvider() {
     const isShowProjectOrdersModal = useSelector((state: RootState) => state.projectSlicer.isShowProjectOrdersModal);
     const isShowOtherExpensesModal = useSelector((state: RootState) => state.projectSlicer.isShowOtherExpensesModal);
     const projectId = useSelector((state: RootState) => state.projectSlicer.projectIdForRequest);
-    const { data: queryData, isLoading } = useGetProjectsQuery(projectsQueryParams, {
-        selectFromResult: ({ data, isLoading, isUninitialized, error }) => ({
+    const {data: projectTypeData} = useGetProjectTypesQuery(undefined, {
+        selectFromResult: ({data}) => ({
+            data,
+        }
+        ),
+    });
+    const {data: queryData, isLoading} = useGetProjectsQuery(projectsQueryParams, {
+        selectFromResult: ({data, isLoading, isUninitialized, error}) => ({
             data,
             isLoading: isUninitialized ? true : isLoading
         }
@@ -19,8 +25,8 @@ function ProjectDataProvider() {
         pollingInterval: 5000
     });
 
-    const { data: projectOrders, isLoading: isProjectOrdersLoading } = useGetProjectOrdersQuery(projectId, {
-        selectFromResult: ({ data, isLoading, isUninitialized }) => ({
+    const {data: projectOrders, isLoading: isProjectOrdersLoading} = useGetProjectOrdersQuery(projectId, {
+        selectFromResult: ({data, isLoading, isUninitialized}) => ({
             data,
             isLoading: isUninitialized ? true : isLoading
         }
@@ -28,8 +34,8 @@ function ProjectDataProvider() {
         skip: !isShowProjectOrdersModal
     });
 
-    const { data: otherExpenses, isLoading: otherExpensesLoading } = useGetOtherExpensesQuery(projectId, {
-        selectFromResult: ({ data, isLoading, isUninitialized }) => ({
+    const {data: otherExpenses, isLoading: otherExpensesLoading} = useGetOtherExpensesQuery(projectId, {
+        selectFromResult: ({data, isLoading, isUninitialized}) => ({
             data,
             isLoading: isUninitialized ? true : isLoading
         }
@@ -55,7 +61,8 @@ function ProjectDataProvider() {
             isLoading: otherExpensesLoading
         },
         isShowProjectOrdersModal,
-        isShowOtherExpensesModal
+        isShowOtherExpensesModal,
+        projectTypeData,
     };
 
 

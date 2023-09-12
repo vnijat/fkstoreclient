@@ -1,5 +1,5 @@
 interface ICustomComponent {
-    [key: string]: ({}) => JSX.Element;
+    [key: string]: ({}: {disableForEdit: boolean;}) => JSX.Element;
 }
 
 

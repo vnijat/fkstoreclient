@@ -10,6 +10,12 @@ export const orderTableDataConfigs: ITableDataConfig<ProjectOrder>[] = [
     hidden: false,
   },
   {
+    headerTitle: 'Order ID',
+    dtoKey: 'id',
+    type: 'numeric',
+    hidden: false,
+  },
+  {
     headerTitle: 'Detail',
     dtoKey: 'detail',
     type: 'text',

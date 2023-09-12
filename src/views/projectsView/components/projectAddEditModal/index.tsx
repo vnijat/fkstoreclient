@@ -6,16 +6,18 @@ import {useAddProjectMutation, useEditProjectMutation} from "../../../../modules
 import {clearProjectForPost, setIsProjectForEdit, setIsShowProjectAddEditModal, setProjectDataForPost} from "../../../../modules/redux/projectSlicer";
 import {RootState, useAppDispatch} from "../../../../modules/redux/store";
 import ProjectTypeSelector from "../projectTypesSelector";
+import ProjectLogicProvider from "../../provider/logic";
+import ProjectDataProvider from "../../provider/data";
 
 
 
 interface IProjectAddEditModal {
-
-
+    logicProvider: ReturnType<typeof ProjectLogicProvider>;
+    dataProvider: ReturnType<typeof ProjectDataProvider>;
 }
 
 
-const ProjectAddEditModal = ({}: IProjectAddEditModal) => {
+const ProjectAddEditModal = ({dataProvider, logicProvider}: IProjectAddEditModal) => {
     const dispatch = useAppDispatch();
     const {data: selectableData} = useGetClientForPickerQuery(undefined, {
         selectFromResult: ({data}) => ({data}),
@@ -53,10 +55,11 @@ const ProjectAddEditModal = ({}: IProjectAddEditModal) => {
                 setDataForRequest={setDataForRequest}
                 setIsDataForEdit={setIsDataForEdit}
                 dataTitle={'PROJECT'}
-                customComponent={{type:ProjectTypeSelector}}
+                customComponent={{type: ({disableForEdit}) => <ProjectTypeSelector {...{setDataForRequest, logicProvider, dataProvider, projectDataForPost, disableForEdit}} />}}
                 selectableData={selectableData}
                 isPickerSearchEnabled
                 isShowModal={isShowProjectAddEditModal}
+                modalWidth={950}
             />}
         </>
     );

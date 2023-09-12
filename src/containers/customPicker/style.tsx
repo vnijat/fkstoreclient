@@ -81,7 +81,6 @@ export const getStyle = () => {
             fontSize: FONT.FONT_SIZE_SMALL
         },
         flyoutContent: {
-            position: 'absolute',
             flex: 1,
             minWidth: 100,
         },

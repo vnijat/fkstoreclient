@@ -1,5 +1,6 @@
 import {
   AddClientProject,
+  IProjectType,
   IProjectsForPicker,
   Project,
   ProjectsQueryParams,
@@ -36,6 +37,26 @@ export const ProjectsApi = InventoryApi.injectEndpoints({
         };
       }
     }),
+    addProjectType: build.mutation<IProjectType, any>({
+      query: body => {
+        return {
+          url: '/client/project/type/',
+          body: body,
+          method: 'POST',
+        };
+      },
+      invalidatesTags: ['projectTypes'],
+    }),
+    recoverProjects: build.mutation<undefined, number[]>({
+      query: Ids => {
+        return {
+          url: '/client/project/recover/',
+          body: Ids,
+          method: 'POST',
+        };
+      },
+      invalidatesTags: ['projects', 'projectsForPicker', 'clients'],
+    }),
     getProjectsForPicker: build.query<IProjectsForPicker[], undefined>({
       providesTags: ['projectsForPicker'],
       query: () => {
@@ -68,7 +89,7 @@ export const ProjectsApi = InventoryApi.injectEndpoints({
           method: 'POST',
         };
       },
-      invalidatesTags: ['projects', 'projectsForPicker', 'otherExpenses'],
+      invalidatesTags: ['projects', 'projectsForPicker', 'otherExpenses', 'clients'],
     }),
     editProject: build.mutation<Project, {id: number; body: AddClientProject;}>({
       query: ({id, body}) => {
@@ -85,17 +106,18 @@ export const ProjectsApi = InventoryApi.injectEndpoints({
         'otherExpenses',
       ],
     }),
-    deleteProject: build.mutation<undefined, number[]>({
-      query: Ids => {
+    deleteProject: build.mutation<undefined, {Ids: number[], softDelete: boolean;}>({
+      query: body => {
         return {
           url: `/client/project/delete`,
-          body: Ids,
+          body: body,
           method: 'DELETE',
         };
       },
       invalidatesTags: (result, error, arg) => [
-        ...arg.map(id => ({type: 'projects' as const, id})),
+        ...arg['Ids'].map(id => ({type: 'projects' as const, id})),
         'projectsForPicker',
+        'clients',
       ],
     }),
   }),
@@ -110,5 +132,6 @@ export const {
   useGetProjectsForPickerQuery,
   useGetProjectOrdersQuery,
   useGetOtherExpensesQuery,
-  useGetProjectTypesQuery
+  useGetProjectTypesQuery,
+  useRecoverProjectsMutation,
 } = ProjectsApi;

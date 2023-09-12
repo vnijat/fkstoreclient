@@ -34,7 +34,8 @@ const ProjectsView = ({}: IProjectsView) => {
         handleOnPressRow,
         handleOnPressClient,
         handleOnPressOrdersCounts,
-        handleOnPressOtherExpenses
+        handleOnPressOtherExpenses,
+        hanldeProjectRecover
     } = logicProvider;
     const {
         projectsQueryParams,
@@ -47,8 +48,10 @@ const ProjectsView = ({}: IProjectsView) => {
     const style = getStyle();
 
 
+
     const contextMenuButtons: IContextMenuButton<Project>[] = [
-        {title: 'Delete', onPress: (data) => handleDeleteProject(data)}
+        queryData?.showDeleted ? {title: 'Recover', onPress: (data) => hanldeProjectRecover(data)} : {title: 'Archive ', onPress: (data) => handleDeleteProject(data, true)},
+        {title: 'Delete ', onPress: (data) => handleDeleteProject(data)}
     ];
 
 
@@ -66,7 +69,7 @@ const ProjectsView = ({}: IProjectsView) => {
             <View style={style.container}>
                 <ProjectOtherExpensesModal {...{dataProvider, logicProvider}} />
                 <ProjectOrdersInfoModal {...{dataProvider, logicProvider}} />
-                <ProjectAddEditModal />
+                <ProjectAddEditModal {...{dataProvider, logicProvider}} />
                 <ClientInfoModal />
                 <View style={{flexShrink: 1}}>
                     <ProjectSearch {...{dataProvider, logicProvider}} />

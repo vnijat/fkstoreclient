@@ -68,6 +68,8 @@ interface ProjectsQueryParams {
   sort?: string;
   order?: Order;
   clientId?: number;
+  projectType?: number | 'all';
+  showDeleted?: boolean;
 }
 
 interface ProjectsResponse {
@@ -76,7 +78,9 @@ interface ProjectsResponse {
   projectsCount: number;
   orderBy: {sort: string; order: Order;};
   clientType: ClientType | 'all';
+  projectType: number | 'all';
   clientId: number;
+  showDeleted: boolean;
 }
 
 export type {

@@ -66,7 +66,6 @@ const ProjectStatusColumn = ({ status: currentStatus, projectId }: IProjectStatu
     ];
 
     const onSelect = async (newStatus: ProjectStatus) => {
-        console.log("onSelect=>", newStatus);
         const response = await apiEditProject({ id: projectId, body: { status: newStatus } });
         if (response?.error) {
             console.log("response.error====>>>", response?.error);

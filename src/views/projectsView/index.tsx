@@ -51,7 +51,7 @@ const ProjectsView = ({}: IProjectsView) => {
 
     const contextMenuButtons: IContextMenuButton<Project>[] = [
         queryData?.showDeleted ? {title: 'Recover', onPress: (data) => hanldeProjectRecover(data)} : {title: 'Archive ', onPress: (data) => handleDeleteProject(data, true)},
-        {title: 'Delete ', onPress: (data) => handleDeleteProject(data)}
+        // {title: 'Delete ', onPress: (data) => handleDeleteProject(data)}
     ];
 
 

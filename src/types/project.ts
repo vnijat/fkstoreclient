@@ -27,6 +27,7 @@ interface IProjectsForPicker {
 
 interface Project extends Common {
   id: number;
+  projectCode: string;
   title: string;
   description: string | null;
   status: ProjectStatus;

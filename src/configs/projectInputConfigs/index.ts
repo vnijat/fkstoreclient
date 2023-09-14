@@ -51,7 +51,8 @@ const projectInputConfig: InputsConfig[] = [
     selectableDataKey: 'client',
     height: 35,
     width: 230,
-    nullable: true,
+    // nullable: true,
+    isDisableForEdit: true,
   },
   {
     title: 'DeadLine',

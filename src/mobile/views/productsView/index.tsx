@@ -1,44 +1,80 @@
 import { RouteProp, useRoute } from "@react-navigation/native";
-import React, { useEffect, useMemo } from "react";
+import { StackNavigationProp } from "@react-navigation/stack";
+import React, { useEffect, useMemo, useState } from "react";
 import { View, FlatList, Pressable, Dimensions, KeyboardAvoidingView, Platform, Text, ActivityIndicator } from "react-native";
 import MIcon from "react-native-vector-icons/MaterialCommunityIcons";
-import { shallowEqual, useSelector } from "react-redux";
+import CustomPressable from "../../../components/customPressable";
 import { InputItem } from "../../../components/inputItem";
-import { useGetAllItemsQuery } from "../../../modules/api/apiSlice";
-import { setItemQueryParams } from "../../../modules/redux/itemQuerySlicer";
-import { RootState, useAppDispatch } from "../../../modules/redux/store";
+import { RouteNames } from "../../../enums/routes";
+import { Item } from "../../../types/item";
+import { RootStackMobileParamList } from "../../../types/navigation";
 import { Colors } from "../../../utils/colors";
 import FONT from "../../../utils/font";
+import WareHouseDataProvider from "../../../views/warehouseView/provider/data";
+import WareHouseLogicProvider from "../../../views/warehouseView/provider/logic";
 import ProductListItem from "./components/productListItem";
 import { getStyle } from "./syles";
 
 
 
-const ProductView = () => {
+interface IProductView {
+    navigation: StackNavigationProp<RootStackMobileParamList>;
+}
+
+
+const ProductView = ({ navigation }: IProductView) => {
     const style = useMemo(() => getStyle(), []);
-    const dispatch = useAppDispatch();
-    const { params } = useRoute<RouteProp<{ params: { barcode: string; }; }>>();
-    const selectQueryParams = useSelector((state: RootState) => state.itemQuerySlicer, shallowEqual);
+    const dataProvider = WareHouseDataProvider();
+    const logicProvider = WareHouseLogicProvider();
+    const { queryData: { data: query, isLoading }, wareHouseQueryParams } = dataProvider;
+    const { handleSearchValueChange, paginationHandler } = logicProvider;
+    const [isLoadMore, setLoadMore] = useState(false);
     const ICON_SIZE = 12;
-    const { data: query, error: fetchError, isLoading } = useGetAllItemsQuery(selectQueryParams, {
-        selectFromResult: ({ data, isLoading, isUninitialized, error, currentData }) => ({
-            data,
-            error,
-            isLoading: isUninitialized ? true : isLoading,
-        }
-        ),
-        pollingInterval: 5000
-    });
 
     useEffect(() => {
-        if (params?.barcode) {
-            dispatch(setItemQueryParams({ search: params.barcode, take: 10 }));
+        if (isLoadMore) {
+            paginationHandler({ take: (query?.meta.take ?? 10) + 10 });
         }
-    }, [params]);
+    }, [isLoadMore]);
 
-    const handleSearch = (text: string) => {
-        dispatch(setItemQueryParams({ search: text, take: 10 }));
+
+    useEffect(() => {
+        if (!isLoading) {
+            isLoadMore && setTimeout(() => {
+                setLoadMore(false);
+            }, 500);
+        }
+    }, [isLoading]);
+
+
+    const onReachToEnd = () => {
+        const isHasNewData = query?.items.length < query?.meta?.count;
+        if (isHasNewData) {
+            setLoadMore(true);
+        }
     };
+
+
+    const renderLoadingMore = useMemo(() => {
+        if (isLoadMore) {
+            return (
+                <View
+                    style={{ position: 'absolute', bottom: 10, alignSelf: 'center', justifyContent: 'center', alignItems: 'center', backgroundColor: Colors.METALLIC_GOLD, borderRadius: 3, elevation: 1, zIndex: 3, padding: 5, minWidth: 80 }}
+                >
+                    <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                        <Text style={{ color: Colors.CARD_COLOR, fontSize: FONT.FONT_SIZE_SMALL }}>
+                            {'LOADING MORE '}
+                        </Text>
+                        <ActivityIndicator size={'small'} color={Colors.CARD_COLOR} />
+                    </View>
+
+                </View>
+            );
+        } else {
+            return null;
+        }
+
+    }, [isLoadMore]);
 
     const PRODUCT_INFO_ICONS = [
         {
@@ -64,19 +100,11 @@ const ProductView = () => {
     ];
 
 
-    const onReachToEnd = () => {
-        const isHasNewData = query?.items.length < query?.meta?.count;
-        if (isHasNewData) {
-            dispatch(setItemQueryParams({ take: (query?.meta.take ?? 10) + 10 }));
-        }
-    };
-
-
     const EmptyList = () => {
         return (
             <View style={style.emptyListContainer}>
                 <Text style={style.emptyListText}>
-                    {selectQueryParams.search?.length ? 'Not Found' : 'No Data'}
+                    {wareHouseQueryParams.search?.length ? 'Not Found' : 'No Data'}
                 </Text>
             </View>
         );
@@ -105,13 +133,17 @@ const ProductView = () => {
         return (
             <View style={style.searchPanelContainer}>
                 <InputItem
-                    inputValue={selectQueryParams?.search ?? ''}
-                    setValue={(text) => handleSearch(text as string)}
+                    inputValue={wareHouseQueryParams?.search ?? ''}
+                    setValue={handleSearchValueChange}
                     isSearch
                 />
             </View>
         );
-    }, [selectQueryParams?.search]);
+    }, [wareHouseQueryParams?.search]);
+
+    const handleOnpressProduct = (data: Item) => {
+        navigation.navigate(RouteNames.PRODUCT_INFO, { barcode: data.barcode });
+    };
 
 
     return (
@@ -130,10 +162,16 @@ const ProductView = () => {
                         onEndReachedThreshold={0.5}
                         data={query?.items}
                         refreshing={true}
-                        keyExtractor={({ id }) => `${id}`}
-                        renderItem={({ item }) => <ProductListItem data={item} />}
+                        renderItem={({ item }) => {
+                            return (
+                                <CustomPressable onPress={() => handleOnpressProduct(item)} android_ripple={{ color: Colors.METALLIC_GOLD }}>
+                                    <ProductListItem data={item} />
+                                </CustomPressable>
+                            );
+                        }}
                         ListEmptyComponent={<EmptyList />}
                     />
+                    {renderLoadingMore}
                 </View>
             </View>
         </KeyboardAvoidingView>

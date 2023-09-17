@@ -1,30 +1,33 @@
-import { useSelector } from "react-redux";
-import { projectInputConfig } from "../../../../configs/projectInputConfigs";
+import {useSelector} from "react-redux";
+import {projectInputConfig} from "../../../../configs/projectInputConfigs";
 import AddEditModal from "../../../../containers/addEditModal";
-import { useGetClientForPickerQuery } from "../../../../modules/api/clients.api";
-import { useAddProjectMutation, useEditProjectMutation } from "../../../../modules/api/projects.api";
-import { clearProjectForPost, setIsProjectForEdit, setIsShowProjectAddEditModal, setProjectDataForPost } from "../../../../modules/redux/projectSlicer";
-import { RootState, useAppDispatch } from "../../../../modules/redux/store";
+import {useGetClientForPickerQuery} from "../../../../modules/api/clients.api";
+import {useAddProjectMutation, useEditProjectMutation} from "../../../../modules/api/projects.api";
+import {clearProjectForPost, setIsProjectForEdit, setIsShowProjectAddEditModal, setProjectDataForPost} from "../../../../modules/redux/projectSlicer";
+import {RootState, useAppDispatch} from "../../../../modules/redux/store";
+import ProjectTypeSelector from "../projectTypesSelector";
+import ProjectLogicProvider from "../../provider/logic";
+import ProjectDataProvider from "../../provider/data";
 
 
 
 interface IProjectAddEditModal {
-
-
+    logicProvider: ReturnType<typeof ProjectLogicProvider>;
+    dataProvider: ReturnType<typeof ProjectDataProvider>;
 }
 
 
-const ProjectAddEditModal = ({ }: IProjectAddEditModal) => {
+const ProjectAddEditModal = ({dataProvider, logicProvider}: IProjectAddEditModal) => {
     const dispatch = useAppDispatch();
-    const { data: selectableData } = useGetClientForPickerQuery(undefined, {
-        selectFromResult: ({ data }) => ({ data }),
+    const {data: selectableData} = useGetClientForPickerQuery(undefined, {
+        selectFromResult: ({data}) => ({data}),
     });
     const isProjectForEdit = useSelector((state: RootState) => state.projectSlicer.isProjectForEdit);
     const isShowProjectAddEditModal = useSelector((state: RootState) => state.projectSlicer.isShowProjectAddEditModal);
     const [apiAddProject] = useAddProjectMutation();
     const [apiEditProject] = useEditProjectMutation();
     const projectDataForPost = useSelector((state: RootState) => state.projectSlicer.projectDataForPost);
-    const setDataForRequest = (data: { [key: string]: string | number; }) => {
+    const setDataForRequest = (data: {[key: string]: string | number;}) => {
         dispatch(setProjectDataForPost(data));
     };
 
@@ -42,20 +45,22 @@ const ProjectAddEditModal = ({ }: IProjectAddEditModal) => {
     return (
         <>
             {isShowProjectAddEditModal && <AddEditModal
-                isDataForEdit={isProjectForEdit}
-                dataForRequest={projectDataForPost}
-                inputConfigs={projectInputConfig}
-                apiPostData={apiAddProject}
-                apiUpdateData={apiEditProject}
+                customComponent={{type: ({disableForEdit}) => <ProjectTypeSelector {...{setDataForRequest, logicProvider, dataProvider, projectDataForPost, disableForEdit}} />}}
                 clearDataForRequest={clearDataForRequest}
-                setIsShowModal={setIsShowModal}
-                setDataForRequest={setDataForRequest}
-                setIsDataForEdit={setIsDataForEdit}
-                dataTitle={'PROJECT'}
-                selectableData={selectableData}
-                isPickerSearchEnabled
                 isShowModal={isShowProjectAddEditModal}
-            />}
+                setDataForRequest={setDataForRequest}
+                dataForRequest={projectDataForPost}
+                setIsDataForEdit={setIsDataForEdit}
+                inputConfigs={projectInputConfig}
+                isDataForEdit={isProjectForEdit}
+                setIsShowModal={setIsShowModal}
+                selectableData={selectableData}
+                apiUpdateData={apiEditProject}
+                apiPostData={apiAddProject}
+                isPickerSearchEnabled
+                dataTitle={'PROJECT'}
+                modalWidth={950}
+                />}
         </>
     );
 

@@ -1,15 +1,26 @@
-import { StyleSheet } from 'react-native';
-import { Colors } from '../../utils/colors';
+import {StyleSheet} from 'react-native';
+import {Colors} from '../../utils/colors';
 
 
 export const getStyle = (width: number) => {
     const style = StyleSheet.create({
         container: {
             backgroundColor: Colors.CARD_HEADER_COLOR,
-            flex: 1,
+            // flex: 1,
             width: width * 0.05,
             minWidth: 80,
-            justifyContent: 'space-between'
+            justifyContent: 'space-between',
+            position: 'absolute',
+            zIndex: 3,
+            height: '100%',
+        },
+        border: {
+            width: 1,
+            height: '100%',
+            position: 'absolute',
+            right: 0,
+            backgroundColor: Colors.DEFAULT_TEXT_COLOR,
+            zIndex: 4,
         },
         bottomContainer: {
             justifyContent: 'space-between',

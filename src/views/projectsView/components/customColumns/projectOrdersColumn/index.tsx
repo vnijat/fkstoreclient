@@ -1,8 +1,8 @@
-import React, { useMemo } from "react";
-import { Text } from "react-native";
+import React, {useMemo} from "react";
+import {Text} from "react-native";
 import CustomPressable from "../../../../../components/customPressable";
-import { Project } from "../../../../../types/project";
-import { getStyle } from "./styles";
+import {Project} from "../../../../../types/project";
+import {getStyle} from "./styles";
 
 
 
@@ -13,10 +13,10 @@ interface IProjectOrdersColumn {
 
 }
 
-const ProjectOrdersColumn = ({ data, handleOnPressOrdersCounts }: IProjectOrdersColumn) => {
+const ProjectOrdersColumn = ({data, handleOnPressOrdersCounts}: IProjectOrdersColumn) => {
     const style = useMemo(() => getStyle(), []);
     const onPressOrdersCount = () => {
-        handleOnPressOrdersCounts(data);
+        if (data?.totalOrders > 0) handleOnPressOrdersCounts(data);
     };
 
     return (<CustomPressable

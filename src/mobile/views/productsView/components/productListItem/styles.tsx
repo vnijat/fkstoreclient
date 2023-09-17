@@ -23,11 +23,11 @@ export const getStyle = () => {
             alignItems: 'center'
         },
         rigthContainer: {
-            flex: 0.5,
-            alignItems: 'flex-end'
+            flex: 0.3,
+            justifyContent: 'space-around',
+            alignItems: 'flex-end',
         },
         rightContianerItem: {
-            flex: 0.5,
             flexDirection: 'row',
             alignItems: 'center',
         },
@@ -36,6 +36,15 @@ export const getStyle = () => {
             fontFamily: FONT.FONT_FAMILY,
             marginRight: 5,
             color: Colors.DEFAULT_TEXT_COLOR
+        },
+        barcodeText: {
+            color: Colors.DEFAULT_TEXT_COLOR,
+            fontSize: FONT.FONT_SIZE_SMALL,
+            fontWeight: FONT.FONT_BOLD
+        },
+        productNameText: {
+            color: Colors.DEFAULT_TEXT_COLOR,
+            fontSize: FONT.FONT_SIZE_MEDIUM
         }
     });
 

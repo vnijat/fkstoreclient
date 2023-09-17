@@ -1,9 +1,9 @@
 import React, { FC, useMemo } from 'react';
-import { Text } from 'react-native';
+import { PressableProps, Text } from 'react-native';
 import CustomPressable from '../customPressable';
 import { getStyle } from './styles';
 
-interface PrimaryButtonProps {
+interface PrimaryButtonProps extends PressableProps {
   title: string;
   textColor?: string;
   onPress: () => void;
@@ -26,7 +26,8 @@ export const PrimaryButton: FC<PrimaryButtonProps> = ({
   pressedColor,
   onHoverOpacity,
   borderRadius,
-  disabled
+  disabled,
+  ...rest
 }) => {
   const style = useMemo(
     () => getStyle(textColor, buttonColor, disabled),
@@ -40,6 +41,7 @@ export const PrimaryButton: FC<PrimaryButtonProps> = ({
       pressedStyle={[!!pressedColor && { backgroundColor: pressedColor }]}
       style={[style.buttonContainer, { width, height, borderRadius }]}
       disabled={disabled}
+      {...rest}
     >
       <Text style={style.title}>{title}</Text>
     </CustomPressable>

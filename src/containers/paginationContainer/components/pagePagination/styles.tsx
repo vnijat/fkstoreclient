@@ -1,5 +1,5 @@
-import { StyleSheet } from 'react-native';
-import { Colors } from '../../../../utils/colors';
+import {StyleSheet} from 'react-native';
+import {Colors} from '../../../../utils/colors';
 import FONT from '../../../../utils/font';
 
 export const getStyle = (textColor?: string, buttonColor?: string) => {
@@ -9,7 +9,8 @@ export const getStyle = (textColor?: string, buttonColor?: string) => {
             height: 45,
             alignItems: 'center',
             flex: 1,
-            justifyContent: 'space-between'
+            justifyContent: 'space-between',
+            paddingHorizontal: 20
         },
         buttonsStyle: {
             height: 30,
@@ -35,27 +36,49 @@ export const getStyle = (textColor?: string, buttonColor?: string) => {
             padding: 1,
             flexDirection: 'row',
             alignItems: 'center',
-            borderRadius: 1,
+            borderRadius: 3,
             borderWidth: 1,
-            borderColor: Colors.CARD_COLOR,
+            borderColor: Colors.CARD_HEADER_COLOR,
             justifyContent: 'space-between'
         },
+        buttonTextStyle: {
+            color: Colors.DEFAULT_TEXT_COLOR,
+            fontWeight: FONT.FONT_BOLD,
+            fontSize: FONT.FONT_SIZE_SMALL,
+
+        },
         pickerItem: {
-            padding: 2,
+            margin: 1,
+            alignItems: 'center',
+            backgroundColor: Colors.CARD_COLOR,
+            width: 30,
+            height: 30,
+            borderRadius: 3,
+            alignSelf: 'center',
+            justifyContent: 'center'
+
         },
         pickerItemText: {
-            fontSize: FONT.FONT_SIZE_MEDIUM,
+            fontSize: FONT.FONT_SIZE_LARGE,
             fontFamily: FONT.FONT_FAMILY,
-            color: Colors.DEFAULT_TEXT_COLOR
+            color: Colors.DEFAULT_TEXT_COLOR,
+            fontWeight: FONT.FONT_BOLD,
         },
         pickeritemSelected: {
-            padding: 2,
-            backgroundColor: Colors.CARD_HEADER_COLOR
+            margin: 1,
+            alignItems: 'center',
+            backgroundColor: Colors.CARD_COLOR,
+            width: 30,
+            height: 30,
+            borderRadius: 3,
+            alignSelf: 'center',
+            justifyContent: 'center'
         },
         pickerItemSelectedText: {
-            fontSize: FONT.FONT_SIZE_MEDIUM,
+            fontSize: FONT.FONT_SIZE_LARGE,
             fontFamily: FONT.FONT_FAMILY,
-            color: Colors.DEFAULT_TEXT_COLOR
+            color: Colors.METALLIC_GOLD,
+            fontWeight: FONT.FONT_BOLD,
         },
         pageNumbersContainer: {
             flexDirection: 'row',
@@ -72,12 +95,20 @@ export const getStyle = (textColor?: string, buttonColor?: string) => {
             flexDirection: 'row',
             justifyContent: 'center',
             alignItems: 'center',
+            paddingHorizontal: 10,
+            paddingVertical: 3,
+            backgroundColor: Colors.CARD_COLOR,
+            borderRadius: 3,
+            borderWidth: 1,
+            borderColor: Colors.DEFAULT_TEXT_COLOR
         },
         pageInfoText: {
             color: Colors.DEFAULT_TEXT_COLOR,
             fontSize: FONT.FONT_SIZE_SMALL
         },
-        pickerContainer: { marginLeft: 10 }
+        pickerContainer: {
+            marginLeft: 10,
+        }
     });
 
     return style;

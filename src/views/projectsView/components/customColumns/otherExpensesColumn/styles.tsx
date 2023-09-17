@@ -1,5 +1,5 @@
-import { StyleSheet } from 'react-native';
-import { Colors } from '../../../../../utils/colors';
+import {StyleSheet} from 'react-native';
+import {Colors} from '../../../../../utils/colors';
 import FONT from '../../../../../utils/font';
 
 export const getStyle = () => {
@@ -9,8 +9,8 @@ export const getStyle = () => {
             alignItems: 'center',
             backgroundColor: Colors.CARD_HEADER_COLOR,
             borderRadius: 3,
-            paddingHorizontal: 5,
-            paddingVertical: 1
+            paddingHorizontal: 10,
+            paddingVertical: 5,
         },
         text: {
             fontSize: FONT.FONT_SIZE_MEDIUM,

@@ -10,6 +10,13 @@ export const projectTableDataConfigs: ITableDataConfig<Project>[] = [
     hidden: true,
   },
   {
+    headerTitle: 'Project Code',
+    dtoKey: 'projectCode',
+    type: 'text',
+    hidden: false,
+    isAboveContextMenu: true,
+  },
+  {
     headerTitle: 'Client',
     hidden: false,
     customColumnKey: 'client',

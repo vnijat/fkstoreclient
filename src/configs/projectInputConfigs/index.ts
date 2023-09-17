@@ -11,7 +11,7 @@ const projectInputConfig: InputsConfig[] = [
     placeHolder: 'Project Title',
     height: 35,
     multiLine: false,
-    width: 470,
+    width: 455,
   },
   {
     title: 'Description',
@@ -21,7 +21,7 @@ const projectInputConfig: InputsConfig[] = [
     placeHolder: 'Project Description',
     height: 35,
     multiLine: true,
-    width: 230,
+    width: 455,
   },
   {
     title: 'Project Price',
@@ -51,7 +51,8 @@ const projectInputConfig: InputsConfig[] = [
     selectableDataKey: 'client',
     height: 35,
     width: 230,
-    nullable: true,
+    // nullable: true,
+    isDisableForEdit: true,
   },
   {
     title: 'DeadLine',
@@ -63,6 +64,7 @@ const projectInputConfig: InputsConfig[] = [
   {
     title: 'Status',
     dtoKey: 'status',
+    showOnlyInEdit: true,
     height: 35,
     width: 250,
     selectable: true,
@@ -73,11 +75,10 @@ const projectInputConfig: InputsConfig[] = [
     })),
   },
   {
-    title: 'For Sample?',
-    dtoKey: 'isSample',
-    height: 35,
-    width: 230,
-    isCheckBox: true,
+    title: 'Project Type',
+    dtoKey: 'typeId',
+    customComponentKeyName: 'type',
+    isDisableForEdit: true,
   },
   {
     title: 'Other Expenses',

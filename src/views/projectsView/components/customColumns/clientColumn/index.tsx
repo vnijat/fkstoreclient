@@ -1,10 +1,10 @@
-import React, { useMemo } from "react";
-import { Text, View } from "react-native";
+import React, {useMemo} from "react";
+import {Text, View} from "react-native";
 import CustomPressable from "../../../../../components/customPressable";
 import HELP from "../../../../../services/helpers";
-import { Project } from "../../../../../types/project";
-import { Colors } from "../../../../../utils/colors";
-import { getStyle } from "./styles";
+import {Project} from "../../../../../types/project";
+import {Colors} from "../../../../../utils/colors";
+import {getStyle} from "./styles";
 
 
 
@@ -14,8 +14,8 @@ interface IProjectClientColumn {
 }
 
 
-const ProjectClientColumn = ({ data, onPressClient }: IProjectClientColumn) => {
-    const { client } = data;
+const ProjectClientColumn = ({data, onPressClient}: IProjectClientColumn) => {
+    const {client} = data;
     const style = useMemo(() => getStyle(), []);
     const clientInfo = client === null ? 'Unknown' : client?.companyName || `${client?.firstName} ${client?.lastName}`;
 
@@ -34,7 +34,7 @@ const ProjectClientColumn = ({ data, onPressClient }: IProjectClientColumn) => {
                     {HELP.getClientTypeIcons(client?.type, 18, Colors.DEFAULT_TEXT_COLOR)}
                 </View>
                 <View >
-                    <Text style={style.columContentText} >
+                    <Text style={style.columContentText} adjustsFontSizeToFit >
                         {clientInfo.toUpperCase()}
                     </Text>
                 </View>

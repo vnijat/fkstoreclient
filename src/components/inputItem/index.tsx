@@ -1,6 +1,6 @@
 import CheckBox from '@react-native-community/checkbox';
 import React, { FC, memo, useMemo, useState } from 'react';
-import { View, TextInput, Text } from 'react-native';
+import { View, TextInput, Text, TextInputProps } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
 import CustomPicker, { IsingelSelectData } from '../../containers/customPicker';
 import DateTimePicker from '../../containers/dateTimePicker';
@@ -9,7 +9,7 @@ import { Colors } from '../../utils/colors';
 import { regExPatterns } from '../../utils/validation';
 import { getStyle } from './styles';
 
-interface IInputItem {
+interface IInputItem extends TextInputProps {
   inputTitle?: string;
   isNumeric?: boolean;
   placeHolder?: string;
@@ -44,7 +44,7 @@ interface IInputItem {
   canSelectParent?: boolean;
 }
 
-export const InputItem: FC<IInputItem> = memo(
+export const InputItem = memo(
   ({
     inputTitle,
     isNumeric,
@@ -53,32 +53,20 @@ export const InputItem: FC<IInputItem> = memo(
     height,
     maxLength,
     isMultiLine,
-    inputRef,
     setValue,
     inputValue,
     id,
-    selectable,
-    selectableData,
     isErorr,
     titleColor,
     isSearch,
     backgroundColor,
-    addButtonTitle,
-    pickerDataKeyName,
-    isPickerAddButton,
-    isPickerSearchEnabled,
-    isPickerItemEditable,
-    isDisabled,
-    requiredText,
-    pickerOnPressEditButton,
-    pickerOnPressAddButton,
-    disablePickerActionButtons,
-    errorDetail,
     isCheckBox,
     isDatePicker,
     disabledForEdit,
-    canSelectParent
-  }) => {
+    ...rest
+  }: IInputItem) => {
+
+
     const style = useMemo(
       () => getStyle(height, width, isErorr, titleColor, backgroundColor),
       [isErorr, titleColor, height, width, backgroundColor],
@@ -109,7 +97,7 @@ export const InputItem: FC<IInputItem> = memo(
       setIsFocused(false);
     };
 
-   
+
     const renderTextInput = useMemo(() => {
       if (!isCheckBox && !isDatePicker) {
         return (
@@ -125,12 +113,13 @@ export const InputItem: FC<IInputItem> = memo(
             onBlur={onBlur}
             editable={!disabledForEdit}
             caretHidden={disabledForEdit}
+            {...rest}
           />);
       } else {
         return null;
       }
 
-    }, [id, onChangeText, inputValue, placeHolder, isMultiLine, maxLength, onFocus, onBlur, isCheckBox, isDatePicker, disabledForEdit]);
+    }, [id, onChangeText, inputValue, placeHolder, isMultiLine, maxLength, onFocus, onBlur, isCheckBox, isDatePicker, disabledForEdit, rest]);
 
     const chekBoxInput = useMemo(() => {
       if (isCheckBox) {
@@ -167,15 +156,15 @@ export const InputItem: FC<IInputItem> = memo(
         }
         {chekBoxInput}
         {renderDatePicker}
-            <View style={{ justifyContent: 'center' }} >
-              {renderTextInput}
-              {isShowMagnify && (
-                <View
-                  style={style.magnify}>
-                  <Icon name="magnifying-glass" size={16} color={'white'} />
-                </View>
-              )}
+        <View style={{ justifyContent: 'center' }} >
+          {renderTextInput}
+          {isShowMagnify && (
+            <View
+              style={style.magnify}>
+              <Icon name="magnifying-glass" size={16} color={'white'} />
             </View>
+          )}
+        </View>
       </View >
     );
   }

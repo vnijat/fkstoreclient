@@ -5,7 +5,7 @@ import UseLanguage from "../../../../modules/lozalization/useLanguage.hook";
 import CustomDrawerItem from "../drawerItem/drawerItem";
 
 
-interface IDrawerRoutes {
+interface INavigationRoutes {
     currentRoute: string;
     navigation: any;
 }
@@ -18,7 +18,7 @@ export interface IRouteData {
     childRoutes?: IRouteData[];
 }
 
-const DrawerRoutes = ({ navigation, currentRoute }: IDrawerRoutes) => {
+const NavigationRoutes = ({ navigation, currentRoute }: INavigationRoutes) => {
     const ICON_SIZE = 30;
     const lang = UseLanguage();
 
@@ -73,4 +73,4 @@ const DrawerRoutes = ({ navigation, currentRoute }: IDrawerRoutes) => {
     );
 };
 
-export default DrawerRoutes;
+export default NavigationRoutes;

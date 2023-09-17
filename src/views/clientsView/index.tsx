@@ -29,7 +29,6 @@ export const ClientsView = ({ }: IClientsViewProps) => {
         } } = dataProvider;
     const { handlePagination } = logicProvider;
     const style = useMemo(() => getStyle(), []);
-
     return (
         <>
             <View style={{ flex: 1, flexDirection: 'row' }}>

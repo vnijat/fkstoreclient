@@ -1,5 +1,4 @@
-import CheckBox from '@react-native-community/checkbox';
-import React, { memo, useMemo, useRef, useState, useCallback } from 'react';
+import React, {memo, useMemo, useRef, useState, useCallback} from 'react';
 import {
     Text,
     View,
@@ -10,19 +9,19 @@ import {
     TextStyle
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
-import { Flyout } from 'react-native-windows';
-import { Colors } from '../../utils/colors';
-import { getStyle } from './style';
-import { setIsOpenOptionModal, setOptionNameForModal } from "../../modules/redux/itemOptions";
+import {Flyout} from 'react-native-windows';
+import {Colors} from '../../utils/colors';
+import {getStyle} from './style';
+import {setIsOpenOptionModal, setOptionNameForModal} from "../../modules/redux/itemOptions";
 import HELP from '../../services/helpers';
-import { InputItem } from '../../components/inputItem/index.windows';
+import {InputItem} from '../../components/inputItem/index.windows';
 import CustomPressable from '../../components/customPressable';
-import { PrimaryButton } from '../../components/primaryButton';
-import MultipleSelectItem, { IMultipleSelectData } from './components/multipleSelectItem';
-import { inputsForItemOptions } from '../../configs/ItemOptionsInputConfigs';
+import {PrimaryButton} from '../../components/primaryButton';
+import MultipleSelectItem, {IMultipleSelectData} from './components/multipleSelectItem';
+import {inputsForItemOptions} from '../../configs/ItemOptionsInputConfigs';
 import SingleSelectItem from './components/singleSelectItem';
-import { useAppDispatch } from '../../modules/redux/store';
-import { FilterParamskey } from '../../types/item';
+import {useAppDispatch} from '../../modules/redux/store';
+import {FilterParamskey} from '../../types/item';
 import UseLanguage from '../../modules/lozalization/useLanguage.hook';
 
 export interface IsingelSelectData {
@@ -113,7 +112,7 @@ const CustomPicker = ({
             const nestedData = multipleSelectData! || singleSelectData;
             const dataForfilter = HELP.flatNestedCategories(nestedData);
             const regEx = new RegExp(searchText.trim(), 'i');
-            filteredData = dataForfilter?.filter((data: { label: string; hasNested: boolean; }) => !data.hasNested && regEx.test(data.label.trim()));
+            filteredData = dataForfilter?.filter((data: {label: string; hasNested: boolean;}) => !data.hasNested && regEx.test(data.label.trim()));
         }
         return filteredData;
     }, [searchText, singleSelectMode, singleSelectData, multipleSelectData, isDataSearchEnabled]);
@@ -121,7 +120,6 @@ const CustomPicker = ({
 
     const onPress = useCallback(() => {
         if (isDisabled) {
-            console.log("requiredText==>", requiredText);
             HELP.alertError(undefined, 'Requires field before select', requiredText);
         } else if (disabledForEdit) {
             HELP.alertError(undefined, 'You cant edit this field');
@@ -146,7 +144,7 @@ const CustomPicker = ({
     const renerListEmptyComponent = () => {
         return (
             <View style={itemStyle || (singleSelectMode ? style.singleSelectItem : style.multipleSelectItem)}>
-                <Text style={{ color: Colors.DEFAULT_TEXT_COLOR }}>
+                <Text style={{color: Colors.DEFAULT_TEXT_COLOR}}>
                     {(isDataSearchEnabled && searchText.trim().length) ? 'not found' : 'no data'}
                 </Text>
             </View>
@@ -163,12 +161,12 @@ const CustomPicker = ({
     }, [multipleSelectData?.length, singleSelectData?.length, getFilteredData?.length, searchText]);
 
 
-    const renderMultipleSelectItem = useCallback(({ item, index }: { item: IMultipleSelectData; index: number; }) => {
-        const { id, label } = item;
+    const renderMultipleSelectItem = useCallback(({item, index}: {item: IMultipleSelectData; index: number;}) => {
+        const {id, label} = item;
         const isSelected = !!selectedIds?.includes(id);
         return (
             <>
-                <MultipleSelectItem {...{ id, index, label, isSelected, itemStyle, itemTextStyle, selectedIds, parent, selectedItemStyle, selectedItemTextStyle, onSelect }} nestedData={item?.nested} key={`${id}-${index}`} indent={0} />
+                <MultipleSelectItem {...{id, index, label, isSelected, itemStyle, itemTextStyle, selectedIds, parent, selectedItemStyle, selectedItemTextStyle, onSelect}} nestedData={item?.nested} key={`${id}-${index}`} indent={0} />
             </>
         );
     },
@@ -180,9 +178,9 @@ const CustomPicker = ({
 
 
     const onPressSingleItem = (item: IsingelSelectData) => {
-        const { label, value } = item;
+        const {label, value} = item;
         if (singleOnSelect) {
-            singleOnSelect({ label, value });
+            singleOnSelect({label, value});
             setShowContent(false);
         } else {
             return;
@@ -208,14 +206,14 @@ const CustomPicker = ({
             const selected = HELP.flatNestedCategories(singleSelectData).filter((item) => item.value == singleSelected)[0];
             return selected?.label ?? lang['select'];
         } else return lang['noData'];
-    }, [singleSelected, singleSelectData?.length, lang]);
+    }, [singleSelected, singleSelectData, lang]);
 
 
-    const renderSingleSelectItem = useCallback(({ item, index }: { item: IsingelSelectData; index: number; }) => {
+    const renderSingleSelectItem = useCallback(({item, index}: {item: IsingelSelectData; index: number;}) => {
         return (
             <>
                 <SingleSelectItem
-                    {...{ isDeselectEnabled, itemStyle, selectedItemStyle, selectedItemTextStyle, itemTextStyle, singleSelected, disablePickerActionButtons, isEditable, index }}
+                    {...{isDeselectEnabled, itemStyle, selectedItemStyle, selectedItemTextStyle, itemTextStyle, singleSelected, disablePickerActionButtons, isEditable, index}}
                     data={item}
                     indent={0}
                     onPressSingleItem={(data: IsingelSelectData) => onPressSingleItem(data)}
@@ -281,7 +279,7 @@ const CustomPicker = ({
                     }
                     {singleSelectMode ? (
                         <FlatList
-                            style={[style.listContainer, { backgroundColor: isShowableExited ? Colors.CARD_HEADER_COLOR : Colors.FLORAL_WHITE }]}
+                            style={[style.listContainer, {backgroundColor: isShowableExited ? Colors.CARD_HEADER_COLOR : Colors.FLORAL_WHITE}]}
                             contentContainerStyle={style.listContentContainer}
                             data={getFilteredData || singleSelectData}
                             listKey={(item, index) => `${index}-singleModeList`}
@@ -291,7 +289,7 @@ const CustomPicker = ({
                         />
                     ) : (
                         <FlatList
-                            style={[style.listContainer, { backgroundColor: isShowableExited ? Colors.CARD_HEADER_COLOR : Colors.FLORAL_WHITE }]}
+                            style={[style.listContainer, {backgroundColor: isShowableExited ? Colors.CARD_HEADER_COLOR : Colors.FLORAL_WHITE}]}
                             contentContainerStyle={style.listContentContainer}
                             data={getFilteredData || multipleSelectData}
                             keyExtractor={(item, index) => item?.id.toString()}

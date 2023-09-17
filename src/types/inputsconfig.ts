@@ -22,9 +22,10 @@ interface InputsConfig {
   isDisableForEdit?: boolean;
   isCode?: boolean;
   nullable?: boolean;
-  enumData?: {label: string; value: string | number}[];
+  enumData?: {label: string; value: string | number;}[];
   canSelectParent?: boolean;
   customComponentKeyName?: string;
+  showOnlyInEdit?: boolean;
 }
 
 export type {InputsConfig};

@@ -45,22 +45,22 @@ const ProjectAddEditModal = ({dataProvider, logicProvider}: IProjectAddEditModal
     return (
         <>
             {isShowProjectAddEditModal && <AddEditModal
-                isDataForEdit={isProjectForEdit}
-                dataForRequest={projectDataForPost}
-                inputConfigs={projectInputConfig}
-                apiPostData={apiAddProject}
-                apiUpdateData={apiEditProject}
-                clearDataForRequest={clearDataForRequest}
-                setIsShowModal={setIsShowModal}
-                setDataForRequest={setDataForRequest}
-                setIsDataForEdit={setIsDataForEdit}
-                dataTitle={'PROJECT'}
                 customComponent={{type: ({disableForEdit}) => <ProjectTypeSelector {...{setDataForRequest, logicProvider, dataProvider, projectDataForPost, disableForEdit}} />}}
-                selectableData={selectableData}
-                isPickerSearchEnabled
+                clearDataForRequest={clearDataForRequest}
                 isShowModal={isShowProjectAddEditModal}
+                setDataForRequest={setDataForRequest}
+                dataForRequest={projectDataForPost}
+                setIsDataForEdit={setIsDataForEdit}
+                inputConfigs={projectInputConfig}
+                isDataForEdit={isProjectForEdit}
+                setIsShowModal={setIsShowModal}
+                selectableData={selectableData}
+                apiUpdateData={apiEditProject}
+                apiPostData={apiAddProject}
+                isPickerSearchEnabled
+                dataTitle={'PROJECT'}
                 modalWidth={950}
-            />}
+                />}
         </>
     );
 

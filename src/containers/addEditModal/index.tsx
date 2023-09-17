@@ -150,7 +150,8 @@ const AddEditModal = ({
                         isDisableForEdit,
                         canSelectParent,
                         nullable,
-                        customComponentKeyName
+                        customComponentKeyName,
+                        showOnlyInEdit
                     } = config;
                     const inputTitle = lang[HELP.modifyTextForLangSelect(title ?? '') as keyof typeof lang] ?? title;
                     const inputValue: string | boolean = dataForRequest[dtoKey!] || '';
@@ -162,6 +163,9 @@ const AddEditModal = ({
                     const errorDetail = isError ? ((selectable && !(inputValue as string).length) ? `Please pick ${title}` : errorMessage[dtoKey!].map(t => `*${t}`).join('\n')) : undefined;
                     const disabled = (!!requiredDataName && !!requiredDataDtoKey) && !dataForRequest[requiredDataDtoKey];
                     const disableForEdit = tempDataForEdit && isDisableForEdit;
+                    if (!tempDataForEdit && showOnlyInEdit) {
+                        return null;
+                    }
                     if (isTableInput) {
                         return (
                             <View style={style.tableInputContainer} key={`${title}`}>

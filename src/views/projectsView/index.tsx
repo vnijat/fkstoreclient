@@ -84,6 +84,7 @@ const ProjectsView = ({}: IProjectsView) => {
                         contextMenuButtons={contextMenuButtons}
                         onPressRow={handleOnPressRow}
                         customColumns={customColumns}
+                        isLoading={isLoading}
 
                     />
                 </View>

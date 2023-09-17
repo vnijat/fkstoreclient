@@ -64,6 +64,7 @@ const projectInputConfig: InputsConfig[] = [
   {
     title: 'Status',
     dtoKey: 'status',
+    showOnlyInEdit: true,
     height: 35,
     width: 250,
     selectable: true,

@@ -42,10 +42,13 @@ const ProjectAddEditModal = ({dataProvider, logicProvider}: IProjectAddEditModal
         dispatch(setIsShowProjectAddEditModal(data));
     };
 
+    const customComponents = {
+        type: ({disableForEdit}: {disableForEdit: boolean;}) => <ProjectTypeSelector {...{setDataForRequest, projectDataForPost, disableForEdit}} />
+    };
     return (
         <>
             {isShowProjectAddEditModal && <AddEditModal
-                customComponent={{type: ({disableForEdit}) => <ProjectTypeSelector {...{setDataForRequest, logicProvider, dataProvider, projectDataForPost, disableForEdit}} />}}
+                customComponent={customComponents}
                 clearDataForRequest={clearDataForRequest}
                 isShowModal={isShowProjectAddEditModal}
                 setDataForRequest={setDataForRequest}
@@ -59,8 +62,8 @@ const ProjectAddEditModal = ({dataProvider, logicProvider}: IProjectAddEditModal
                 apiPostData={apiAddProject}
                 isPickerSearchEnabled
                 dataTitle={'PROJECT'}
-                modalWidth={950}
-                />}
+                modalWidth={1000}
+            />}
         </>
     );
 

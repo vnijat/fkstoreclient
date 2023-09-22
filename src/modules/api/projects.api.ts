@@ -29,7 +29,7 @@ export const ProjectsApi = InventoryApi.injectEndpoints({
         };
       },
     }),
-    getProjectTypes: build.query<any, undefined>({
+    getProjectTypes: build.query<{label: string; value: number, prefix: string;}[], undefined>({
       providesTags: ['projectTypes'],
       query: () => {
         return {
@@ -37,12 +37,22 @@ export const ProjectsApi = InventoryApi.injectEndpoints({
         };
       }
     }),
-    addProjectType: build.mutation<IProjectType, any>({
+    addProjectType: build.mutation<undefined, IProjectType>({
       query: body => {
         return {
           url: '/client/project/type/',
           body: body,
           method: 'POST',
+        };
+      },
+      invalidatesTags: ['projectTypes'],
+    }),
+    editProjectType: build.mutation<undefined, {id: number; body: IProjectType;}>({
+      query: ({body, id}) => {
+        return {
+          url: `/client/project/type/${id}`,
+          body: body,
+          method: 'PATCH',
         };
       },
       invalidatesTags: ['projectTypes'],
@@ -134,4 +144,6 @@ export const {
   useGetOtherExpensesQuery,
   useGetProjectTypesQuery,
   useRecoverProjectsMutation,
+  useAddProjectTypeMutation,
+  useEditProjectTypeMutation,
 } = ProjectsApi;

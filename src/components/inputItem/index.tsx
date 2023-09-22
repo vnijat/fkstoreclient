@@ -1,13 +1,13 @@
 import CheckBox from '@react-native-community/checkbox';
-import React, { FC, memo, useMemo, useState } from 'react';
-import { View, TextInput, Text, TextInputProps } from 'react-native';
+import React, {FC, memo, useMemo, useState} from 'react';
+import {View, TextInput, Text, TextInputProps} from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
-import CustomPicker, { IsingelSelectData } from '../../containers/customPicker';
+import CustomPicker, {IsingelSelectData} from '../../containers/customPicker';
 import DateTimePicker from '../../containers/dateTimePicker';
 import HELP from '../../services/helpers';
-import { Colors } from '../../utils/colors';
-import { regExPatterns } from '../../utils/validation';
-import { getStyle } from './styles';
+import {Colors} from '../../utils/colors';
+import {regExPatterns} from '../../utils/validation';
+import {getStyle} from './styles';
 
 interface IInputItem extends TextInputProps {
   inputTitle?: string;
@@ -18,11 +18,11 @@ interface IInputItem extends TextInputProps {
   maxLength?: number;
   isMultiLine?: boolean;
   inputRef?: (r: any) => {};
-  setValue: (text: string | boolean | Date) => void;
-  inputValue: string | boolean;
+  setValue: (value: unknown) => void;
+  inputValue: unknown;
   id?: number;
   selectable?: boolean;
-  selectableData?: Array<IsingelSelectData & { id?: number; }>;
+  selectableData?: Array<IsingelSelectData & {id?: number;}>;
   isErorr?: boolean;
   titleColor?: string;
   isSearch?: boolean;
@@ -141,7 +141,7 @@ export const InputItem = memo(
 
     const renderDatePicker = useMemo(() => {
       if (isDatePicker) {
-        return <DateTimePicker dateValue={inputValue} getDate={(date: Date) => setValue(date)} />;
+        return <DateTimePicker dateValue={inputValue as Date} getDate={(date) => setValue(date)} />;
       } else {
         return null;
       }
@@ -149,14 +149,14 @@ export const InputItem = memo(
     }, [isDatePicker, inputValue]);
 
     return (
-      <View style={{ margin: 5, opacity: disabledForEdit ? 0.6 : 1 }}>
+      <View style={{margin: 5, opacity: disabledForEdit ? 0.6 : 1}}>
         {!!inputTitle && (
           <Text style={style.inputTitle}>{`${inputTitle?.toUpperCase()} ${isErorr ? '*' : ''} `}</Text>
         )
         }
         {chekBoxInput}
         {renderDatePicker}
-        <View style={{ justifyContent: 'center' }} >
+        <View style={{justifyContent: 'center'}} >
           {renderTextInput}
           {isShowMagnify && (
             <View

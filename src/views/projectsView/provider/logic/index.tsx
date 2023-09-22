@@ -1,13 +1,13 @@
 import {ITableDataConfig} from "../../../../containers/simpleTable/types";
 import {ProjectStatus} from "../../../../enums/projectStatus";
-import {useDeleteProjectMutation, useEditProjectMutation, useRecoverProjectsMutation} from "../../../../modules/api/projects.api";
+import {useAddProjectTypeMutation, useDeleteProjectMutation, useEditProjectMutation, useEditProjectTypeMutation, useRecoverProjectsMutation} from "../../../../modules/api/projects.api";
 import {setProjectsQueryParams} from "../../../../modules/redux/projectQuerySlicer";
-import {setClientInfoData, setIsOpenClientInfoModal, setIsProjectForEdit, setIsShowOtherExpensesModal, setIsShowProjectAddEditModal, setIsShowProjectOrdersModal, setProjectDataForPost, setProjectIdForRequest, setProjectIdForRequestOrders} from "../../../../modules/redux/projectSlicer";
+import {clearProjectTypeForPost, setClientInfoData, setIsOpenClientInfoModal, setIsProjectForEdit, setIsShowOtherExpensesModal, setIsShowProjectAddEditModal, setIsShowProjectOrdersModal, setIsShowProjectTypesModal, setProjectDataForPost, setProjectIdForRequest, setProjectIdForRequestOrders, setProjectTypeDataForPost} from "../../../../modules/redux/projectSlicer";
 import {useAppDispatch} from "../../../../modules/redux/store";
 import {resetTable, setNewTableConfigs} from "../../../../modules/redux/tableConfigs";
 import HELP from "../../../../services/helpers";
 import {Imeta} from "../../../../types/common/common";
-import {Project} from "../../../../types/project";
+import {IProjectType, Project} from "../../../../types/project";
 
 
 
@@ -16,6 +16,8 @@ function ProjectLogicProvider() {
     const [apiDeleteProject] = useDeleteProjectMutation();
     const [apiEditProject] = useEditProjectMutation();
     const [apiRecoverProject] = useRecoverProjectsMutation();
+    const [apiAddProjectType] = useAddProjectTypeMutation();
+    const [apiEditProjectType] = useEditProjectTypeMutation();
 
     function handlePagination(data: Imeta) {
         dispatch(setProjectsQueryParams(data));
@@ -42,6 +44,25 @@ function ProjectLogicProvider() {
         dispatch(resetTable({tableName: 'project'}));
     }
 
+
+    function handleClearProjectTypeDataForPost() {
+        dispatch(clearProjectTypeForPost());
+    }
+
+
+    function handleOnCloseProjectTypesModal() {
+        dispatch(setIsShowProjectTypesModal(false));
+        handleClearProjectTypeDataForPost();
+    }
+
+    function handleOnOpenProjectTypesModal() {
+        dispatch(setIsShowProjectTypesModal(true));
+    }
+
+    function handleProjectTypesInput(data?: {[K in keyof IProjectType]: IProjectType[K]}) {
+        dispatch(setProjectTypeDataForPost(data));
+    }
+
     async function hanldeProjectRecover(data: Project) {
         try {
             const response = await apiRecoverProject([data?.id!]);
@@ -49,6 +70,31 @@ function ProjectLogicProvider() {
                 throw response.error;
             }
             HELP.showToast('success', `Project Recovered`.toUpperCase(), 'Recovered');
+        } catch (error) {
+            HELP.alertError(error);
+        }
+    }
+
+
+    async function handleAddProjectType(data: IProjectType) {
+        try {
+            const response = await apiAddProjectType(data);
+            if (response.error) {
+                throw response.error;
+            }
+            HELP.showToast('success', `Project Type Added`.toUpperCase(), 'Added');
+        } catch (error) {
+            HELP.alertError(error);
+        }
+    }
+
+    async function handleEditProjectType(data: IProjectType) {
+        try {
+            const response = await apiEditProjectType({body: data, id: data?.id!});
+            if (response.error) {
+                throw response.error;
+            }
+            HELP.showToast('success', `Project Type Updated`.toUpperCase(), 'Updated');
         } catch (error) {
             HELP.alertError(error);
         }
@@ -128,7 +174,13 @@ function ProjectLogicProvider() {
         handleOnPressOtherExpenses,
         handleOnCloseOtherExpensesModal,
         handleFilterSelection,
-        hanldeProjectRecover
+        hanldeProjectRecover,
+        handleOnCloseProjectTypesModal,
+        handleOnOpenProjectTypesModal,
+        handleProjectTypesInput,
+        handleAddProjectType,
+        handleEditProjectType,
+        handleClearProjectTypeDataForPost
     };
 
 

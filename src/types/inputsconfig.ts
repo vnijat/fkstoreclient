@@ -1,7 +1,7 @@
 import {ITableConfig} from '../containers/tableInput/types';
 
-interface InputsConfig {
-  dtoKey?: string;
+interface InputsConfig<T = any> {
+  dtoKey?: keyof T;
   title?: string;
   isNumeric?: boolean;
   maxLength?: number;

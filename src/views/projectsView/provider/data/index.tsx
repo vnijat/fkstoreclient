@@ -9,6 +9,8 @@ function ProjectDataProvider() {
     const projectsQueryParams = useSelector((state: RootState) => state.projectQuery);
     const isShowProjectOrdersModal = useSelector((state: RootState) => state.projectSlicer.isShowProjectOrdersModal);
     const isShowOtherExpensesModal = useSelector((state: RootState) => state.projectSlicer.isShowOtherExpensesModal);
+    const isShowProjectTyepsModal = useSelector((state: RootState) => state.projectSlicer.isShowProjectTypesModal);
+    const projectTypeDataForPost = useSelector((state: RootState) => state.projectSlicer.projectTypeDataForPost);
     const projectId = useSelector((state: RootState) => state.projectSlicer.projectIdForRequest);
     const {data: projectTypeData} = useGetProjectTypesQuery(undefined, {
         selectFromResult: ({data}) => ({
@@ -63,6 +65,8 @@ function ProjectDataProvider() {
         isShowProjectOrdersModal,
         isShowOtherExpensesModal,
         projectTypeData,
+        isShowProjectTyepsModal,
+        projectTypeDataForPost
     };
 
 

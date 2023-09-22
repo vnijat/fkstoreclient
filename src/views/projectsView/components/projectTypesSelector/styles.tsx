@@ -6,7 +6,6 @@ export const getStyle = () => {
     const style = StyleSheet.create({
         container: {
             width: '100%',
-            height: 60
         },
         checkBoxContainer: {
             flexDirection: 'row',
@@ -24,17 +23,22 @@ export const getStyle = () => {
         },
         topContainer: {
             justifyContent: 'center',
-            alignItems: 'center'
+            alignItems: 'center',
+            flexDirection: 'row',
         },
         topContainerText: {
             fontSize: FONT.FONT_SIZE_LARGE,
             fontFamily: FONT.FONT_FAMILY,
-            color: Colors.METALLIC_GOLD
+            color: Colors.METALLIC_GOLD,
+            fontWeight: FONT.FONT_BOLD,
+            textAlign: 'center',
+
         },
         checkBoxesContainer: {
+            minHeight: 100,
             flexDirection: 'row',
             justifyContent: 'space-evenly',
-            flexWrap: 'wrap'
+            alignContent: 'center',
         }
 
     });

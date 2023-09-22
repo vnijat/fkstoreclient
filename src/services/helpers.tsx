@@ -180,9 +180,10 @@ const getProjectStatusIcons = (status: ProjectStatus, size?: number, color?: str
     return icons[status];
 };
 
-const alertError = (error?: {status: string, data: {message: string;};}, title?: string, message?: string) => {
+const alertError = (error?: {status: string, data: {message: string | string[];};}, title?: string, message?: string) => {
     const errorTitle = title || `Conflict Status Code  ${error?.status}` || '';
-    const errorMessage = message || error?.data.message || '';
+    const dataMessage = Array.isArray(error?.data.message) ? error?.data.message.join(',') : error?.data.message;
+    const errorMessage = message || dataMessage || '';
     showToast('error', errorMessage, errorTitle, 5000);
 };
 

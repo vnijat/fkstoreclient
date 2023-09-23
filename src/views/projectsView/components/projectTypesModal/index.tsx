@@ -12,6 +12,7 @@ import {PrimaryButton} from "../../../../components/primaryButton";
 import {InputItem} from "../../../../components/inputItem/index.windows";
 import CustomPressable from "../../../../components/customPressable";
 import Icon from "react-native-vector-icons/Entypo";
+import CustomContextMenu from "../../../../components/customContextMenu";
 
 
 
@@ -30,7 +31,8 @@ const ProjectTypesModal = ({logicProvider, dataProvider}: IProjectTypesModal) =>
         handleProjectTypesInput,
         handleAddProjectType,
         handleEditProjectType,
-        handleClearProjectTypeDataForPost
+        handleClearProjectTypeDataForPost,
+        handleDeleteProjectType,
     } = logicProvider;
 
 
@@ -79,6 +81,24 @@ const ProjectTypesModal = ({logicProvider, dataProvider}: IProjectTypesModal) =>
     }, [isEditMode]);
 
 
+
+
+
+    const ContextMenuContent = useCallback(({typeId}: {typeId: number;}) => {
+        return (
+            <View style={{minWidth: 100, backgroundColor: Colors.CARD_COLOR, minHeight: 40}}>
+                <CustomPressable style={{minWidth: 100, backgroundColor: Colors.CARD_HEADER_COLOR, alignItems: 'center', justifyContent: 'center', margin: 2, height: 30}} onHoverOpacity
+                    onPress={() => handleDeleteProjectType(typeId)}
+                >
+                    <Text style={{color: Colors.DEFAULT_TEXT_COLOR, fontFamily: FONT.FONT_FAMILY, fontSize: FONT.FONT_SIZE_MEDIUM}}>
+                        {'Delete'.toUpperCase()}
+                    </Text>
+                </CustomPressable>
+            </View>
+        );
+    }, []);
+
+
     const renderProjectTypeCard = useCallback(({label, value, prefix}, index) => {
         return (
             <CustomPressable
@@ -87,6 +107,9 @@ const ProjectTypesModal = ({logicProvider, dataProvider}: IProjectTypesModal) =>
                 tooltip={'Press to Edit Project Type'.toUpperCase()}
                 key={index}
                 style={{minWidth: 80, height: 30, backgroundColor: Colors.CARD_HEADER_COLOR, borderRadius: 3, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', margin: 5, padding: 5}}>
+                <CustomContextMenu>
+                    <ContextMenuContent typeId={value} />
+                </CustomContextMenu>
                 <Text style={{color: Colors.DEFAULT_TEXT_COLOR, fontFamily: FONT.FONT_FAMILY, fontSize: FONT.FONT_SIZE_MEDIUM}}>
                     {label?.toUpperCase()}
                 </Text>
@@ -94,11 +117,18 @@ const ProjectTypesModal = ({logicProvider, dataProvider}: IProjectTypesModal) =>
         );
     }, [projectTypeData]);
 
+    const onKeyPress = useCallback((e) => {
+        if (e.nativeEvent.key === 'Enter') {
+            handleOnpressInputButton();
+        }
+    }, [projectTypeDataForPost]);
+
     const renderProejctTypeInputs = useMemo(() => {
         return projectTypeInputConfig.map(({title, dtoKey, width, height, placeHolder, isDisableForEdit}, index) => {
             const objectKey = dtoKey as keyof IProjectType;
             return (
                 <InputItem
+                    onKeyPress={onKeyPress}
                     key={index}
                     height={height}
                     width={width}

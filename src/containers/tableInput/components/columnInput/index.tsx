@@ -1,11 +1,11 @@
-import React, { memo, useEffect, useMemo, useState } from "react";
-import { Text, TextInput, View } from "react-native";
-import { Colors } from "../../../../utils/colors";
-import { currency } from "../../../../utils/currency.windows";
-import { regExPatterns } from "../../../../utils/validation";
-import { getStyle } from "./styles";
+import React, {memo, useEffect, useMemo, useState} from "react";
+import {Text, TextInput, TextInputProps, View} from "react-native";
+import {Colors} from "../../../../utils/colors";
+import {currency} from "../../../../utils/currency.windows";
+import {regExPatterns} from "../../../../utils/validation";
+import {getStyle} from "./styles";
 
-interface IColumnInput {
+interface IColumnInput extends TextInputProps {
     getInputValue: (text: string) => void;
     inputValueFromRowData: string;
     isNumber?: boolean;
@@ -14,7 +14,7 @@ interface IColumnInput {
     isDate?: boolean;
 }
 
-const ColumnInput = ({ getInputValue, inputValueFromRowData = '', isNumber, isMoney, isEditable, isDate }: IColumnInput) => {
+const ColumnInput = ({getInputValue, inputValueFromRowData = '', isNumber, isMoney, isEditable, isDate, ...rest}: IColumnInput) => {
     const style = useMemo(() => getStyle(isMoney), [isMoney]);
     const [inputValue, setInputValue] = useState(isDate ? new Date(inputValueFromRowData).toLocaleDateString() : inputValueFromRowData);
 
@@ -40,6 +40,7 @@ const ColumnInput = ({ getInputValue, inputValueFromRowData = '', isNumber, isMo
                 editable={!!isEditable}
                 scrollEnabled={false}
                 maxLength={(isNumber || isMoney) ? 13 : 0}
+                {...rest}
             />
             {isMoney && <Text style={style.currency}>
                 {'₼'}

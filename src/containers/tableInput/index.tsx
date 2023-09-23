@@ -1,15 +1,15 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Text, TextInput, View } from "react-native";
+import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
+import {Text, TextInput, View} from "react-native";
 import Icon from "react-native-vector-icons/Entypo";
-import { ScrollView } from "react-native-windows";
+import {ScrollView} from "react-native-windows";
 import CustomPressable from "../../components/customPressable";
 import HELP from "../../services/helpers";
-import { Colors } from "../../utils/colors";
-import { currency } from "../../utils/currency.windows";
+import {Colors} from "../../utils/colors";
+import {currency} from "../../utils/currency.windows";
 import HeaderColumn from "./components/headerColumn";
 import TableInputRow from "./components/tableInputRow";
-import { getStyle } from "./styles";
-import { ITableConfig, RowDataType, } from "./types";
+import {getStyle} from "./styles";
+import {ITableConfig, RowDataType, } from "./types";
 
 
 interface ITableInput<T> {
@@ -19,7 +19,7 @@ interface ITableInput<T> {
     isDataEditable?: boolean;
 }
 
-const TableInput = <T extends any>({ tableData, tableConfig, getNewTableData, isDataEditable }: ITableInput<T>) => {
+const TableInput = <T extends any>({tableData, tableConfig, getNewTableData, isDataEditable}: ITableInput<T>) => {
     const style = useMemo(() => getStyle(), []);
     const [data, setData] = useState<RowDataType<T>[]>([...tableData]);
     const scrollRef = useRef(null);
@@ -49,12 +49,19 @@ const TableInput = <T extends any>({ tableData, tableConfig, getNewTableData, is
         }
     };
 
-    const setRowDataToTableData = (data: { [key: string]: string; }, index: number) => {
+    const setRowDataToTableData = (data: {[key: string]: string;}, index: number) => {
         setData(prev => {
-            prev[index] = { ...prev[index], ...data };
+            prev[index] = {...prev[index], ...data};
             return [...prev];
         });
     };
+
+    const onKeyPress = useCallback((e, isLast) => {
+        if (e.nativeEvent.key === 'Enter' && isLast) {
+            addRowToTable();
+        }
+    }, [data]);
+
 
     const renderDataToTable = useMemo(() => {
         return data.map((rowData, index) => {
@@ -62,10 +69,10 @@ const TableInput = <T extends any>({ tableData, tableConfig, getNewTableData, is
             return (<View key={`${index}-data`}>
                 <TableInputRow
                     getRowData={(data) => setRowDataToTableData(data, index)}
-                    key={`${index}-inputs`}
                     defaultRowData={rowData}
                     tableInputConfigs={tableConfig}
                     isEditable={isDataEditable}
+                    onKeyPress={(e) => onKeyPress(e, isLast)}
                 />
                 {isDataEditable && isLast &&
                     <>
@@ -137,7 +144,7 @@ const TableInput = <T extends any>({ tableData, tableConfig, getNewTableData, is
         const isDisabled = !isHasChanges || (!data.length && !isHasChanges);
         if (isDataEditable) {
             return (
-                <View style={[style.actionButtonsContainer, isDisabled && { opacity: 0.5 }]}>
+                <View style={[style.actionButtonsContainer, isDisabled && {opacity: 0.5}]}>
                     <CustomPressable
                         style={style.actionButton}
                         onHoverOpacity={!isDisabled}
@@ -169,7 +176,7 @@ const TableInput = <T extends any>({ tableData, tableConfig, getNewTableData, is
                 {renderColumnHeaderTitles}
             </View>
             <View style={style.tableRowsContainer}>
-                <ScrollView style={{ flex: 1 }} contentContainerStyle={style.tableContent}
+                <ScrollView style={{flex: 1}} contentContainerStyle={style.tableContent}
                     ref={scrollRef}
                 >
                     {isDataEditable && !data.length && <CustomPressable style={style.addButton} onPress={addRowToTable} onHoverOpacity>

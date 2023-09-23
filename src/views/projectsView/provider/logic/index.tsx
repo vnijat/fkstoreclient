@@ -1,6 +1,6 @@
 import {ITableDataConfig} from "../../../../containers/simpleTable/types";
 import {ProjectStatus} from "../../../../enums/projectStatus";
-import {useAddProjectTypeMutation, useDeleteProjectMutation, useEditProjectMutation, useEditProjectTypeMutation, useRecoverProjectsMutation} from "../../../../modules/api/projects.api";
+import {useAddProjectTypeMutation, useDeleteProjectMutation, useDeleteProjectTypeMutation, useEditProjectMutation, useEditProjectTypeMutation, useRecoverProjectsMutation} from "../../../../modules/api/projects.api";
 import {setProjectsQueryParams} from "../../../../modules/redux/projectQuerySlicer";
 import {clearProjectTypeForPost, setClientInfoData, setIsOpenClientInfoModal, setIsProjectForEdit, setIsShowOtherExpensesModal, setIsShowProjectAddEditModal, setIsShowProjectOrdersModal, setIsShowProjectTypesModal, setProjectDataForPost, setProjectIdForRequest, setProjectIdForRequestOrders, setProjectTypeDataForPost} from "../../../../modules/redux/projectSlicer";
 import {useAppDispatch} from "../../../../modules/redux/store";
@@ -18,6 +18,7 @@ function ProjectLogicProvider() {
     const [apiRecoverProject] = useRecoverProjectsMutation();
     const [apiAddProjectType] = useAddProjectTypeMutation();
     const [apiEditProjectType] = useEditProjectTypeMutation();
+    const [apiDeleteProjectType] = useDeleteProjectTypeMutation();
 
     function handlePagination(data: Imeta) {
         dispatch(setProjectsQueryParams(data));
@@ -120,6 +121,19 @@ function ProjectLogicProvider() {
         }
     }
 
+    async function handleDeleteProjectType(typeId: number, softDelete: boolean = false) {
+        try {
+            const response = await apiDeleteProjectType({Ids: [typeId], softDelete: softDelete});
+            console.log("handleDeleteProjectType", response);
+            if (response.error) {
+                throw response.error;
+            }
+            HELP.showToast('success', `Project Type Deleted`.toUpperCase(), `Deleted`);
+        } catch (error) {
+            HELP.alertError(error);
+        }
+    }
+
     function handleOnPressClient(data: Project) {
         if (data?.client) {
             dispatch(setClientInfoData(data?.client));
@@ -180,7 +194,8 @@ function ProjectLogicProvider() {
         handleProjectTypesInput,
         handleAddProjectType,
         handleEditProjectType,
-        handleClearProjectTypeDataForPost
+        handleClearProjectTypeDataForPost,
+        handleDeleteProjectType
     };
 
 

@@ -1,13 +1,6 @@
-import CheckBox from '@react-native-community/checkbox';
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { View, Text, Alert, Animated, PanResponder } from 'react-native';
-import Icon from 'react-native-vector-icons/Entypo';
+import { useEffect, useMemo, useState } from 'react';
+import { View,} from 'react-native';
 import CustomModal from "../../components/customModal";
-import CustomPressable from "../../components/customPressable";
-import { RootState, useAppDispatch } from "../../modules/redux/store";
-import { setIsHideTableColumn, setMoveColumn } from '../../modules/redux/tableConfigs';
-import HELP from '../../services/helpers';
-import { Colors } from '../../utils/colors';
 import { ITableDataConfig, ITableRowData } from '../simpleTable/types';
 import TableColumnEditItem from './components/tableColumnItem';
 import { getStyle } from './style';

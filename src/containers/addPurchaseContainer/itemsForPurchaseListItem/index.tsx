@@ -51,10 +51,12 @@ const ItemsForPurchaseListItem = ({ purchaseItem, index, suppliersData }: IItems
         updateMainPrice,
         quantity,
         paymentMethod,
-        unit
+        unit,
+        store
     } = purchaseItem;
     const rowData: IrowData[] = useMemo(() => [
         { value: (1 + (index ?? 0)), },
+        { value: store?.name },
         { value: (fullfilled && supplier) ? supplier.name : supplierId, selectable: !fullfilled, selectableData: selectableSuppliersData, searchEnabled: true, dtoKey: 'supplierId' },
         { value: paymentMethod, selectable: !fullfilled, selectableData: paymentMethodData, dtoKey: 'paymentMethod' },
         { value: poInfo, editable: true, disabled: fullfilled, dtoKey: 'poInfo' },

@@ -5,7 +5,6 @@ export const getStyle = (width?: number, borderColor?: string) => {
     const style = StyleSheet.create({
         modalContent: {
             width: width || 500,
-            paddingVertical: 10,
             backgroundColor: Colors.CARD_COLOR,
             borderRadius: 3,
             borderWidth: 2,

@@ -1,61 +1,39 @@
 import React, { memo, useMemo, useState } from "react";
-import { View } from "react-native";
+import { View, Text } from "react-native";
 import Icon from "react-native-vector-icons/Entypo";
-import { Text } from "react-native-windows";
 import CustomPressable from "../../../../components/customPressable";
 import { InputItem } from "../../../../components/inputItem/index.windows";
-import AddClientModal from "../../../../containers/addClient";
 import CustomPicker, { IsingelSelectData } from "../../../../containers/customPicker";
-import { ClientSort } from "../../../../enums/clientSort";
-import { ClientType } from "../../../../enums/clientType";
 import { Order } from "../../../../enums/order.enum";
-import { setClientsQueryParams } from "../../../../modules/redux/clientsQuerySlicer";
-import { setIsShowClientModal } from "../../../../modules/redux/clientsSlicer";
-import { useAppDispatch } from "../../../../modules/redux/store";
 import { Colors } from "../../../../utils/colors";
+import ClientDataProvider from "../../provider/data";
+import ClientLogicProvider from "../../provider/logic";
 import { getStyle } from "./styles";
 
 
 
 interface IClinetListHeader {
-    searchValue: string;
-    clientTypeValue: ClientType & 'all';
-    orderBy: { sort: ClientSort; order: Order; };
+    logicProvider: ReturnType<typeof ClientLogicProvider>;
+    dataProvider: ReturnType<typeof ClientDataProvider>;
 }
 
-const ClientListHeader = ({ searchValue, clientTypeValue, orderBy }: IClinetListHeader) => {
+const ClientListHeader = ({ logicProvider, dataProvider }: IClinetListHeader) => {
     const style = useMemo(() => getStyle(), []);
-    const dispatch = useAppDispatch();
-
-    const onPressAddClient = () => {
-        dispatch(setIsShowClientModal(true));
-    };
-
-
-    const onSearch = (text: string) => {
-        dispatch(setClientsQueryParams({ page: 1, search: text.trim() }));
-    };
-
-    const clientType = [
-        ...Object.values(ClientType),
-        'all'
-    ].map(item => ({ value: item, label: item }));
-
-    const clientSortData = Object.keys(ClientSort).map((item) => ({ value: ClientSort[item as keyof typeof ClientSort], label: item }));
-
-    const onSelectType = (data: IsingelSelectData) => {
-        dispatch(setClientsQueryParams({ page: 1, type: data?.value as ClientType & 'all' }));
-    };
+    const {
+        handleOnPressAddClient,
+        handleSearchInput,
+        handleClientSortBy,
+        handleClientTypeSort,
+        handleClientSortByOrder
 
 
-    const onSelectSortBy = (value: IsingelSelectData) => {
-        dispatch(setClientsQueryParams({ page: 1, sort: value.value as ClientSort }));
+    } = logicProvider;
+    const { clientTypes, clientSortData, queryData: { data: queryData }, clientQueryParams } = dataProvider;
 
-    };
 
     const onPressOrderButton = () => {
-        const order: Order = (orderBy?.order === Order.DESC) ? Order.ASC : Order.DESC;
-        dispatch(setClientsQueryParams({ page: 1, order }));
+        const order: Order = (queryData?.orderBy?.order === Order.DESC) ? Order.ASC : Order.DESC;
+        handleClientSortByOrder(order);
     };
 
 
@@ -66,17 +44,17 @@ const ClientListHeader = ({ searchValue, clientTypeValue, orderBy }: IClinetList
         };
         return (
             <CustomPressable style={{ justifyContent: 'center', alignItems: 'center' }} onPress={onPressOrderButton}>
-                {Icons[orderBy?.order]}
+                {Icons[queryData?.orderBy?.order!]}
             </CustomPressable >
         );
-    }, [orderBy?.order]);
+    }, [queryData?.orderBy.order]);
 
 
     const renderSortByes = useMemo(() => {
         const data =
             [
-                { title: 'Client Type', onSelect: onSelectType, selected: clientTypeValue, selectedData: clientType, isOrder: false },
-                { title: 'Sort By', onSelect: onSelectSortBy, selected: orderBy?.sort, selectedData: clientSortData, isOrder: true },
+                { title: 'Client Type', onSelect: handleClientTypeSort, selected: queryData?.type, selectedData: clientTypes, isOrder: false },
+                { title: 'Sort By', onSelect: handleClientSortBy, selected: queryData?.orderBy?.sort, selectedData: clientSortData, isOrder: true },
             ];
         return data.map(({ title, onSelect, selected, selectedData, isOrder }, index) => {
             return (
@@ -98,16 +76,16 @@ const ClientListHeader = ({ searchValue, clientTypeValue, orderBy }: IClinetList
             );
         });
 
-    }, [clientType, orderBy, clientTypeValue]);
+    }, [queryData?.orderBy, queryData?.type]);
 
 
 
     return (
         <>
-            <View style={{ flex: 1 }}>
-                <View style={{ flex: 0.6, flexDirection: 'row' }}>
+            <View style={{ flexGrow: 1, padding: 5 }}>
+                <View style={{ flexGrow: 1, flexDirection: 'row' }}>
                     <View style={{ flex: 0.3, justifyContent: 'center', paddingLeft: 10 }}>
-                        <InputItem isSearch setValue={onSearch} inputValue={searchValue} />
+                        <InputItem isSearch setValue={handleSearchInput} inputValue={clientQueryParams?.search!} height={30} />
                     </View>
                     <View style={{ flex: 0.7, paddingLeft: 10, justifyContent: 'center' }}>
                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -115,11 +93,11 @@ const ClientListHeader = ({ searchValue, clientTypeValue, orderBy }: IClinetList
                         </View>
                     </View>
                 </View>
-                <View style={{ flex: 0.4, justifyContent: 'center' }}>
+                <View style={{ flexGrow: 1, justifyContent: 'center' }}>
                     <View style={{ flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
                         <CustomPressable style={style.addButton}
                             onHoverOpacity
-                            onPress={onPressAddClient}>
+                            onPress={handleOnPressAddClient}>
                             <View style={{ paddingRight: 5 }}>
                                 <Icon size={12} name={'add-user'} color={Colors.CARD_COLOR} />
                             </View>

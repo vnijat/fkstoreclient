@@ -2,6 +2,7 @@ import {IListHeader} from '../../../../types/common/common';
 
 const HEADERS: IListHeader[] = [
   {title: 'No.', dtoKey: 'index'},
+  {title: 'Store', dtoKey: 'storeId'},
   {title: 'Supplier', dtoKey: 'supplierId'},
   {title: 'Payment Method', dtoKey: 'paymentMethod'},
   {title: 'PO-info', dtoKey: 'poInfo'},

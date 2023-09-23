@@ -1,5 +1,5 @@
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { FC } from 'react';
+import React, { FC, useMemo } from 'react';
 import { View } from 'react-native';
 import { useSelector } from 'react-redux';
 import PaginationContainer from '../../containers/paginationContainer';
@@ -11,41 +11,36 @@ import { Colors } from '../../utils/colors';
 import ClientList from './components/clientList';
 import AddEditClientModal from './containers/addEditClientModal';
 import ClientListHeader from './containers/clientListHeader';
+import ClientDataProvider from './provider/data';
+import ClientLogicProvider from './provider/logic';
 import { getStyle } from './styles';
 
 interface IClientsViewProps {
-    navigation: StackNavigationProp<{}>;
 }
 
-export const ClientsView = ({ navigation }: IClientsViewProps) => {
-    const style = getStyle();
-    const selectClientsQueryParams = useSelector((state: RootState) => state.clientQuery);
-    const { data: queryData } = useGetClientsQuery(selectClientsQueryParams, {
-        selectFromResult: ({ data }) => ({
-            data,
-        }
-        ),
-        pollingInterval: 5000
-    });
-
-
-
+export const ClientsView = ({ }: IClientsViewProps) => {
+    const dataProvider = ClientDataProvider();
+    const logicProvider = ClientLogicProvider();
+    const {
+        clientQueryParams,
+        queryData: {
+            data: queryData,
+            isLoading,
+        } } = dataProvider;
+    const { handlePagination } = logicProvider;
+    const style = useMemo(() => getStyle(), []);
     return (
         <>
             <View style={{ flex: 1, flexDirection: 'row' }}>
                 <AddEditClientModal />
                 <View style={{ flex: 0.05 }} />
                 <View style={style.container}>
-                    <View style={{ backgroundColor: Colors.CARD_COLOR, flex: 0.2 }}>
-                        <ClientListHeader
-                            searchValue={selectClientsQueryParams?.search ?? ''}
-                            clientTypeValue={queryData?.type as ClientType & 'all'}
-                            orderBy={queryData?.orderBy!}
-                        />
+                    <View style={{ backgroundColor: Colors.CARD_COLOR, flexShrink: 1 }}>
+                        <ClientListHeader {...{ dataProvider, logicProvider }} />
                     </View>
                     <ClientList data={queryData?.clients} />
                     <View style={{ backgroundColor: Colors.CARD_HEADER_COLOR, flex: 0.1, justifyContent: 'center' }}>
-                        <PaginationContainer actionFunction={setClientsQueryParams} meta={queryData?.meta ?? {}} />
+                        <PaginationContainer paginationHandler={handlePagination} meta={queryData?.meta ?? {}} />
                     </View>
 
                 </View>

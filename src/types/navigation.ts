@@ -1,12 +1,30 @@
 import {RouteNames} from '../enums/routes';
 
 type RootStackParamList = {
-  [RouteNames.DRAWER]: undefined;
+  [RouteNames.CLIENTS]: undefined;
+  [RouteNames.ORDERS]: undefined;
+  [RouteNames.PROJECTS]: undefined;
+  [RouteNames.PURCHASES]: undefined;
+  [RouteNames.WAREHOUSE]: undefined;
+  [RouteNames.TRACKVIEW]: undefined;
 };
 
 type RootStackMobileParamList = {
   [RouteNames.DRAWER]: undefined;
   [RouteNames.PRODUCT_INFO]: {barcode: string};
+};
+
+type BottomTabMobileStack = {
+  [RouteNames.HOME]: undefined;
+  [RouteNames.DASHBOARD]: undefined;
+  [RouteNames.ORDERS]: undefined;
+  [RouteNames.SCAN]: {
+    isFromOrder?: boolean;
+    isFromPurchase?: boolean;
+    addScannedProductToOrder?: (barcode: string) => Promise<void>;
+  };
+  [RouteNames.PRODUCTS]: undefined;
+  [RouteNames.PURCHASES]: undefined;
 };
 
 type DrawerStackParamlist = {
@@ -15,6 +33,7 @@ type DrawerStackParamlist = {
   [RouteNames.PROJECTS]: undefined;
   [RouteNames.PURCHASES]: undefined;
   [RouteNames.WAREHOUSE]: undefined;
+  [RouteNames.TRACKVIEW]: undefined;
 };
 
 type DrawerStackMobileParamlist = {
@@ -27,4 +46,5 @@ export type {
   DrawerStackParamlist,
   RootStackMobileParamList,
   DrawerStackMobileParamlist,
+  BottomTabMobileStack,
 };

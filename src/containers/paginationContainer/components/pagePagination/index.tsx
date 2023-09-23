@@ -1,15 +1,15 @@
-import React, { FC, useCallback, useMemo } from 'react';
-import { Text, View } from 'react-native';
+import React, {FC, useCallback, useMemo} from 'react';
+import {Text, View} from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
 import CustomPressable from '../../../../components/customPressable';
-import { Imeta } from '../../../../types/common/common';
-import { Colors } from '../../../../utils/colors';
-import CustomPicker, { IsingelSelectData } from '../../../customPicker';
+import {Imeta} from '../../../../types/common/common';
+import {Colors} from '../../../../utils/colors';
+import CustomPicker, {IsingelSelectData} from '../../../customPicker';
 import PageButton from '../pageButton';
 import PagesContainer from '../pagesContainer';
 
-import { IpaginationTakeOptions, paginationTakeOptions } from './configs';
-import { getStyle } from './styles';
+import {IpaginationTakeOptions, paginationTakeOptions} from './configs';
+import {getStyle} from './styles';
 
 
 
@@ -56,30 +56,30 @@ export const PagePagination: FC<IPagePAgination> = ({
   );
 
   const onPressPageNumber = (pageNumber: number) => {
-    setPage({ page: pageNumber });
+    setPage({page: pageNumber});
   };
 
 
   const onPressAlignLeft = () => {
     const toFirstPage = page! + 1 - page!;
-    onPressToFirst({ page: toFirstPage });
+    onPressToFirst({page: toFirstPage});
   };
 
   const onPressLeft = () => {
-    onPressPrevious({ page: page! - 1 });
+    onPressPrevious({page: page! - 1});
   };
 
   const onPressRight = () => {
-    onPressNext({ page: page! + 1 });
+    onPressNext({page: page! + 1});
   };
 
   const onPressAlignRight = () => {
     const toLastPage = pageCount;
-    onPressToLast({ page: toLastPage });
+    onPressToLast({page: toLastPage});
   };
 
   const onChangeTakeParams = (item: IsingelSelectData) => {
-    onSelectTakeValue && onSelectTakeValue({ take: Number(item.value), page: 1 });
+    onSelectTakeValue && onSelectTakeValue({take: Number(item.value), page: 1});
   };
 
   const renderLeftButtons = useMemo(() => {
@@ -137,7 +137,7 @@ export const PagePagination: FC<IPagePAgination> = ({
         style={styles.paginationRightContainer}>
         <Text style={styles.pageInfoText}>
           {showedItemCount > 0
-            ? `page ${page} of ${pageCount} | showed ${showedItemsCount} of ${showedItemCount}`
+            ? `Page ${page} / ${pageCount} | Showed ${showedItemsCount} / ${showedItemCount}`.toUpperCase()
             : 'No Data'}
         </Text>
         <View style={styles.pickerContainer}>
@@ -146,8 +146,13 @@ export const PagePagination: FC<IPagePAgination> = ({
             singleSelectData={paginationTakeOptions}
             singleSelected={take}
             singleOnSelect={onChangeTakeParams}
+            itemStyle={styles.pickerItem}
+            itemTextStyle={styles.pickerItemText}
+            selectedItemStyle={styles.pickeritemSelected}
+            selectedItemTextStyle={styles.pickerItemSelectedText}
             buttonStyle={styles.pickerButton}
-            title={'show'}
+            butonTextStyle={styles.buttonTextStyle}
+            title={'SELECT'}
           />
         </View>
       </View>

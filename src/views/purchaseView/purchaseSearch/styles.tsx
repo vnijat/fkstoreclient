@@ -4,12 +4,13 @@ import { Colors } from '../../../utils/colors';
 export const getStyle = () => {
     const style = StyleSheet.create({
         container: {
-            flex: 1,
+            flexGrow: 1,
             flexDirection: 'row',
             justifyContent: 'center',
             alignItems: 'center',
             backgroundColor: Colors.CARD_COLOR,
-            paddingHorizontal: 20
+            paddingHorizontal: 10,
+            paddingVertical: 10
         },
         searchInputContainer: {
             flex: 0.4

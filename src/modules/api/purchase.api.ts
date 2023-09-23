@@ -9,7 +9,7 @@ import {InventoryApi} from './apiSlice';
 
 export const PurchaseApi = InventoryApi.injectEndpoints({
   endpoints: build => ({
-    getPurchases: build.query<PurchaseQueryResponse,undefined | PurchaseQueryParams>({
+    getPurchases: build.query<PurchaseQueryResponse, PurchaseQueryParams>({
       providesTags: ['purchases'],
       query: params => {
         return {
@@ -19,7 +19,13 @@ export const PurchaseApi = InventoryApi.injectEndpoints({
       },
     }),
     addPurchase: build.mutation<undefined, AddPurchaseDto>({
-      invalidatesTags: ['purchases', 'items', 'item', 'itemForPurchase'],
+      invalidatesTags: [
+        'purchases',
+        'items',
+        'item',
+        'itemForPurchase',
+        'inventoryTrackData',
+      ],
       query: body => {
         return {
           url: '/purchase/',
@@ -29,7 +35,7 @@ export const PurchaseApi = InventoryApi.injectEndpoints({
       },
     }),
     deletePurchase: build.mutation<undefined, number>({
-      invalidatesTags: ['purchases'],
+      invalidatesTags: ['purchases', 'inventoryTrackData'],
       query: purchaseId => {
         return {
           url: `/purchase/${purchaseId}`,
@@ -38,7 +44,13 @@ export const PurchaseApi = InventoryApi.injectEndpoints({
       },
     }),
     editPurchase: build.mutation<undefined, {body: any; id: number}>({
-      invalidatesTags: ['purchases', 'items', 'item', 'itemForOrder'],
+      invalidatesTags: [
+        'purchases',
+        'items',
+        'item',
+        'itemForOrder',
+        'inventoryTrackData',
+      ],
       query: ({body, id}) => {
         return {
           url: `/purchase/${id}`,

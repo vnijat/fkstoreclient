@@ -1,5 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { OrderItemStatus } from '../../enums/orderItemStatus';
 import { OrderStatus } from '../../enums/orderStatus';
+import { Item } from '../../types/item';
 import { AddOrderDto, OrderItem } from '../../types/projectOrder';
 
 
@@ -22,13 +24,28 @@ const ordersSlicer = createSlice({
         setOrderDataForPost: (state, action: PayloadAction<AddOrderDto>) => {
             Object.assign(state.orderDataForPost, action.payload);
         },
-        addItemForOrder: (state, action: PayloadAction<OrderItem>) => {
-            const isExist = state.orderDataForPost?.orderItems?.some((item) => item.itemId == action.payload.itemId);
+        addItemForOrder: (state, action: PayloadAction<Item>) => {
+            const item = action.payload;
+            const isExist = state.orderDataForPost?.orderItems?.some((orderItem) => orderItem.itemId == item.id);
+            const orderItem = {
+                itemId: item.id as number,
+                unit: item.unit.name,
+                name: item.name,
+                quantity: 0,
+                barcode: item.barcode,
+                itemAtStock: item.quantity,
+                pricePerUnit: item.costPrice,
+                status: OrderItemStatus.IN_USE,
+                projectId: null,
+                storeId: item.store.id,
+                store: item.store
+
+            };
             if (!state.orderDataForPost?.orderItems?.length) {
                 state.orderDataForPost.orderItems = [];
             }
             if (!isExist) {
-                state.orderDataForPost.orderItems.push(action.payload);
+                state.orderDataForPost.orderItems.push(orderItem);
             }
         },
         updateItemForOrder: (state, action: PayloadAction<{ itemId: number, data: { [key: string]: any; }; }>) => {

@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { Colors } from '../../utils/colors';
+import FONT from '../../utils/font';
 
 
 export const getStyle = () => {
@@ -19,54 +20,58 @@ export const getStyle = () => {
         },
         cardHeader: {
             flexDirection: 'row',
-            flex: 0.4,
-            backgroundColor: Colors.CARD_HEADER_COLOR
+            backgroundColor: Colors.CARD_HEADER_COLOR,
+            height: 60
         },
         iconContainer: {
-            flex: 0.3,
             borderRightWidth: 1,
             borderColor: Colors.CULTURED,
-            justifyContent: 'center', alignItems: 'center'
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: 60,
+            height: 60
         },
         infoContainer: {
-            flex: 0.6,
+            flexShrink: 1,
             alignItems: 'flex-start',
             alignSelf: 'flex-start',
-            paddingTop: 10,
-            marginLeft: 10
+            // paddingTop: 10,
+            marginLeft: 10,
         },
         infoContent: {
             flexDirection: 'row',
             justifyContent: 'center',
             margin: 5,
-            alignItems: 'center'
+            alignItems: 'center',
         },
         infoIcon: {
             justifyContent: 'center',
-            alignItems: 'center'
+            alignItems: 'center',
         },
         infoText: {
-            fontSize: 12,
+            fontSize: FONT.FONT_SIZE_MEDIUM,
+            fontFamily: FONT.FONT_FAMILY,
             color: Colors.DEFAULT_TEXT_COLOR,
             marginLeft: 5,
         },
         companyText: {
-            fontSize: 12,
+            fontSize: FONT.FONT_SIZE_MEDIUM,
             color: Colors.DARK_GOLDENROD,
-            fontWeight: '700',
+            fontWeight: FONT.FONT_BOLD,
+            fontFamily: FONT.FONT_FAMILY,
             maxWidth: '80%',
-            maxHeight: '20%',
             zIndex: 2
         },
         clientInfo: {
-            flex: 0.7,
+            flexGrow: 1,
             paddingLeft: 5,
-            paddingTop: 5
+            paddingTop: 5,
         },
         clientInfoText: {
-            fontSize: 14,
+            fontSize: FONT.FONT_SIZE_MEDIUM,
+            fontFamily: FONT.FONT_FAMILY,
             color: Colors.DEFAULT_TEXT_COLOR,
-            fontWeight: '700',
+            fontWeight: FONT.FONT_BOLD,
             maxWidth: '80%',
             maxHeight: '80%'
         },
@@ -85,7 +90,9 @@ export const getStyle = () => {
         },
         actionItemText: {
             color: Colors.DEFAULT_TEXT_COLOR,
-            fontSize: 14
+            fontSize: FONT.FONT_SIZE_MEDIUM,
+            fontFamily: FONT.FONT_FAMILY,
+            fontWeight: FONT.FONT_BOLD,
         },
         actionButton: {
             position: 'absolute',
@@ -93,12 +100,16 @@ export const getStyle = () => {
             top: 5,
             zIndex: 2
         },
-        iconVipText: {
-            fontSize: 10,
-            fontWeight: '700',
-            position: 'absolute',
-            top: 22,
-            color: Colors.METALLIC_GOLD
+        contactsInfoTitleContainer: {
+            paddingHorizontal: 15,
+            borderBottomWidth: 1,
+            borderColor: Colors.CARD_HEADER_COLOR
+        },
+        contactsInfoTitleText: {
+            color: Colors.DEFAULT_TEXT_COLOR,
+            fontSize: FONT.FONT_SIZE_SMALL,
+            fontFamily: FONT.FONT_FAMILY,
+            fontWeight: FONT.FONT_BOLD
         }
     });
 

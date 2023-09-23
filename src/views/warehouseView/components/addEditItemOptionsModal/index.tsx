@@ -74,7 +74,7 @@ const AddEditItemOptionsModal = () => {
                 isPickerSearchEnabled
                 isShowModal={isShowModal}
                 deleteFunction={handleOnDelete}
-                modalBorderColor={Colors.DEFAULT_TEXT_COLOR}
+                modalBorderColor={Colors.METALLIC_GOLD}
             />}
         </>
 

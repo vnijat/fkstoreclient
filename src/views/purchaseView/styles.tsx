@@ -8,7 +8,8 @@ export const getStyle = () => {
       backgroundColor: Colors.BACKGROUND_COLOR,
       paddingLeft: 20,
       paddingRight: 15,
-      paddingVertical: 30
+      paddingVertical: 30,
+      paddingTop: 20,
     },
     footerContainer: {
       flex: 0.1,

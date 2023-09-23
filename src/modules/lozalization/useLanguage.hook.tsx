@@ -64,7 +64,10 @@ function UseLanguage() {
                     onSucces: {
 
                     }
-                }
+                },
+                trackView: 'Track',
+                date: 'Date',
+                productName: 'Product Name'
             },
             ru: {
                 dashBoard: 'Панел',
@@ -119,7 +122,10 @@ function UseLanguage() {
                     onSucces: {
 
                     }
-                }
+                },
+                trackView: 'Track',
+                date: 'Дата',
+                productName: 'Название продукта'
             },
             az: {
                 dashBoard: 'Panel',
@@ -174,7 +180,10 @@ function UseLanguage() {
                     onSucces: {
 
                     }
-                }
+                },
+                trackView: 'Track',
+                date: 'Tarix',
+                productName: 'Məhsulun Adı'
             }
         },
         {

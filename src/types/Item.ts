@@ -1,5 +1,14 @@
+import {
+  areaMeasures,
+  dimensionMeasures,
+  volumeMeasures,
+  weightMeasures,
+} from '../enums/itemProperties';
 import {Order} from '../enums/order.enum';
 import {Common, Imeta} from './common/common';
+import {InventoryTrackData} from './inventoryTrack';
+import {OrderItem} from './projectOrder';
+import {PurchaseItem} from './purchase';
 interface AddItemInterface {
   id?: number | null;
   createdAt?: string | null;
@@ -7,7 +16,8 @@ interface AddItemInterface {
   name: string;
   code?: string;
   description?: string;
-  pricePerUnit?: string;
+  costPrice?: string;
+  sellPrice?: string;
   quantity?: string;
   unitId?: string;
   supplierId?: string;
@@ -16,6 +26,7 @@ interface AddItemInterface {
   labelId?: string;
   storeId?: string;
   colorId?: string;
+  properties: ProductAttributesDto;
 }
 
 interface ItemQueryParams {
@@ -103,7 +114,8 @@ interface Label extends Common {
 interface Item extends Common {
   name: string;
   description: string;
-  pricePerUnit: number;
+  costPrice: number;
+  sellPrice: number;
   quantity: number;
   code: string;
   barcode: string;
@@ -113,15 +125,33 @@ interface Item extends Common {
   location: Location;
   store: Store;
   color: Color;
-  totalPrice: number;
+  totalCostPrice: number;
+  totalSellPrice: number;
   outOfStock: boolean;
   label: Label;
   inUse: boolean;
+  properties: ProductAttributesDto;
 }
 
 interface ItemResponseFull extends Omit<Item, 'category'> {
   qrCode: Buffer;
   category: 'string';
+  transactions: InventoryTrackData[];
+}
+
+interface ProductAttributesDto extends Common {
+  height?: number;
+  width?: number;
+  length?: number;
+  weight?: number;
+  volume?: number;
+  area?: number;
+  areaMeasure?: areaMeasures;
+  dimensionMeasure?: dimensionMeasures;
+  weightMeasure?: weightMeasures;
+  volumeMeasure?: volumeMeasures;
+  supplierColorVariant?: string;
+  supplierProductArticule?: string;
 }
 
 interface ItemResponse {
@@ -147,4 +177,6 @@ export type {
   AddItemInterface,
   ItemOptionForInputs,
   Supplier,
+  Store,
+  ProductAttributesDto,
 };

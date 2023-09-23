@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { Colors } from '../../../../utils/colors';
+import FONT from '../../../../utils/font';
 
 export const getStyle = () => {
     const style = StyleSheet.create({
@@ -25,6 +26,11 @@ export const getStyle = () => {
             justifyContent: 'center',
             alignItems: 'center',
             height: 50,
+        },
+        routeTitle: {
+            fontSize: FONT.FONT_SIZE_SMALL,
+            fontWeight: FONT.FONT_BOLD,
+            fontFamily: FONT.FONT_FAMILY
         }
     });
 

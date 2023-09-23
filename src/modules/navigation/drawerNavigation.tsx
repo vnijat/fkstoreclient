@@ -14,7 +14,7 @@ export const DrawerNavigation = ({ }) => {
     const Drawer = createDrawerNavigator<DrawerStackMobileParamlist>();
     return (
         <>
-            <StatusBar backgroundColor={Colors.METALLIC_GOLD} />
+            <StatusBar backgroundColor={Colors.CARD_COLOR} />
             <Drawer.Navigator initialRouteName={RouteNames.HOME}
                 screenOptions={DrawerScreenOptions}
             >

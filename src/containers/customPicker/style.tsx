@@ -1,5 +1,5 @@
-import { StyleSheet } from 'react-native';
-import { Colors } from '../../utils/colors';
+import {StyleSheet} from 'react-native';
+import {Colors} from '../../utils/colors';
 import FONT from '../../utils/font';
 
 export const getStyle = () => {
@@ -83,7 +83,6 @@ export const getStyle = () => {
         flyoutContent: {
             flex: 1,
             minWidth: 100,
-            
         },
         searchInputContainer: {
             backgroundColor: Colors.FLORAL_WHITE

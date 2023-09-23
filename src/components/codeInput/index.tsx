@@ -130,7 +130,7 @@ const CodeInput = ({ inputValue, maxLength, width, height, categoryId, errorDeta
                         :
                         <ScrollView style={style.contentScroll} contentContainerStyle={style.scrollContent}>
                             <Text style={style.contentTitleText}>
-                                {'Suggested: '}
+                                {'Existed: '}
                             </Text>
                             {codeSuggestion?.suggestedCodes.map((suggested, index) => {
                                 return <CodeItem code={suggested.code} key={`${suggested.code}-${index}`} />;

@@ -1,22 +1,13 @@
 import { memo, useEffect, useMemo, useState } from "react";
-import { Text, View, ActivityIndicator, Alert } from "react-native";
+import { Text, View, ActivityIndicator } from "react-native";
 import { useSelector } from "react-redux";
 import { InputItem } from "../../components/inputItem/index.windows";
 import { PrimaryButton } from "../../components/primaryButton";
-import { OrderItemStatus } from "../../enums/orderItemStatus";
-import { OrderStatus } from "../../enums/orderStatus";
-import { useAddOrderMutation, useEditOrderMutation } from "../../modules/api/orders.api";
-import { useGetProjectsForPickerQuery } from "../../modules/api/projects.api";
-import { clearOrderDataForPost, setIsOrderForEdit, setIsShowOrderModal, setOrderDataForPost } from "../../modules/redux/orderSlicer";
 import { RootState, useAppDispatch } from "../../modules/redux/store";
 import HELP from "../../services/helpers";
-import { AddOrderDto } from "../../types/projectOrder";
 import { Colors } from "../../utils/colors";
-import ItemsForOrderList from "./itemsForPurchaseList";
 import ItemsForOrderListHeader from "./itemsPurchaseListHeader";
-import ItemsForOrderSearch from "./itemsForPurchaseSearch";
 import { getStyle } from "./style";
-import { useGetOptionQuery } from "../../modules/api/itemOptions.api";
 import { useGetItemInputsQuery } from "../../modules/api/apiSlice";
 import { AddPurchaseDto } from "../../types/purchase";
 import { PurchaseStatus } from "../../enums/purchase";
@@ -24,6 +15,7 @@ import { clearPurchaseDataForPost, setIsPurchaseForEdit, setIsShowPurchaseModal,
 import ItemsForPurchaseList from "./itemsForPurchaseList";
 import ItemsForPurchaseSearch from "./itemsForPurchaseSearch";
 import { useAddPurchaseMutation, useEditPurchaseMutation } from "../../modules/api/purchase.api";
+import AddEditItemModal from "../../views/warehouseView/components/addEditItemModal";
 
 
 
@@ -142,7 +134,7 @@ const AddPurchaseContainer = ({ }: IAddPurchaseContainer) => {
             [PurchaseStatus.IN_PROGRESS]: Colors.INPROGRESS_COLOR
         };
         return purchaseData.status && colors[purchaseData.status];
-    }, [PurchaseStatus]);
+    }, [PurchaseStatus, purchaseData.status]);
 
     const renderActionButtons = useMemo(() => {
         if (tempData) {

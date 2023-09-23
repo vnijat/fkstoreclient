@@ -12,11 +12,22 @@ import { RootState, useAppDispatch } from "../../../../modules/redux/store";
 import { currency } from "../../../../utils/currency.windows";
 import { Colors } from "../../../../utils/colors";
 import HELP from "../../../../services/helpers";
+import SimpleTable from "../../../../containers/simpleTable";
+import { ICustomColumn, ITableDataConfig } from "../../../../containers/simpleTable/types";
+import { InventoryTrackData } from "../../../../types/inventoryTrack";
+import TrackStatusColumn from "../../../inventoryTrackView/components/customColumns/statusColumn";
+import FONT from "../../../../utils/font";
 
 
 interface IItemModal {
 }
 
+
+interface propertiesData {
+    title: string;
+    value?: string;
+    width?: number;
+}
 
 const ItemModal = ({ }: IItemModal) => {
     const style = useMemo(() => getStyle(), []);
@@ -32,6 +43,52 @@ const ItemModal = ({ }: IItemModal) => {
 
     const onCloseModal = () => {
         dispatch(setIsShowItemModal(false));
+    };
+
+
+    const propertiesData = useMemo(() => {
+        let properties: propertiesData[] = [];
+        if (data?.properties) {
+            const { dimensionMeasure, volumeMeasure, volume, width, height, length, area, areaMeasure, weight, weightMeasure, supplierColorVariant, supplierProductArticule } = data?.properties;
+            const dimensionsData = `l: ${Number(length)} w: ${Number(width)} h: ${Number(height)}`;
+            const areaData = `${Number(area)}`;
+            const volumeData = `${Number(volume)}`;
+            const weightData = `${Number(weight)}`;
+            properties = [
+                { title: `Dimensions (${dimensionMeasure})`, value: dimensionsData, width: 150 },
+                { title: `Area (${areaMeasure})`, value: areaData },
+                { title: `Volume (${volumeMeasure})`, value: volumeData },
+                { title: `Weight (${weightMeasure})`, value: weightData },
+                { title: 'Color/Variant', value: supplierColorVariant },
+                { title: 'Aritcule', value: supplierProductArticule },
+            ];
+        }
+        return properties;
+    }, [data?.properties]);
+
+
+    const tableDataConfig: ITableDataConfig<InventoryTrackData>[] = [
+        {
+            headerTitle: 'Date',
+            dtoKey: 'updatedat',
+            hidden: false,
+            type: 'date'
+        },
+        {
+            headerTitle: 'Quantity',
+            dtoKey: 'quantity',
+            type: 'numeric',
+            hidden: false
+        },
+        {
+            headerTitle: 'Status',
+            customColumnKey: 'status',
+            hidden: false
+        }
+    ];
+
+    const customColumn: ICustomColumn<InventoryTrackData> = {
+        status: ({ data }) => <TrackStatusColumn data={data} />
     };
 
     const onPressGetBarcodePdf = async () => {
@@ -54,24 +111,32 @@ const ItemModal = ({ }: IItemModal) => {
             isDissmissEnabled={false}
             closeModal={onCloseModal}
             width={1000}
+            borderColor={Colors.DEFAULT_TEXT_COLOR}
         >
             <View style={style.container}>
                 {(isShowModal && data) ? <>
                     <View style={style.contentTopContainer}>
                         <View style={style.contentTopLeftContainer}>
                             <DataField title={'Name'} value={data?.name!} />
-                            <DataField title={'Description'} value={data?.description!} height={100} />
+                            <DataField title={'Description'} value={data?.description!} height={60} />
                             <DataField title={'Category'} value={data?.category!} />
                             <View style={{ flexDirection: 'row' }}>
                                 <DataField title={'Unit'} value={data?.unit.name!} width={100} />
-                                <DataField title={'Quantity'} value={Number(data?.quantity!)} width={100} />
-                                <DataField title={'Price Per Unit'} value={currency.format(Number(data?.pricePerUnit!))} width={100} />
-                                <DataField title={'Total Price'} value={currency.format(Number(data?.totalPrice!))} width={100} />
+                                <DataField title={'At Stock'} value={Number(data?.quantity!)} width={100} />
+                                <DataField title={'Cost Price'} value={currency.format(Number(data?.costPrice!))} width={100} />
+
                             </View>
                             <View style={{ flexDirection: 'row' }}>
                                 <DataField title={'Color'} value={data?.color.name!} width={100} />
                                 <DataField title={'Store'} value={data?.store.name!} width={100} />
                                 <DataField title={'Location'} value={data?.location.code!} width={100} />
+                            </View>
+                            <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+                                {propertiesData?.map((data, index) => {
+                                    return (
+                                        <DataField title={data.title} value={data.value as string} width={data?.width || 100} key={`${index}`} />
+                                    );
+                                })}
                             </View>
                         </View>
                         <View style={style.contentTopRightContainer}>
@@ -87,14 +152,27 @@ const ItemModal = ({ }: IItemModal) => {
                                 </Text>
                             </View>
                             <View style={style.barcodeActionsButton}>
-                                <PrimaryButton onPress={onPressGetBarcodePdf} title={'Get PDF'} width={100} />
-                                <PrimaryButton onPress={onPressPrint} title={'Print'} width={100} />
+                                <PrimaryButton onPress={onPressGetBarcodePdf} title={'Get PDF'} width={100} onHoverOpacity />
+                                <PrimaryButton onPress={onPressPrint} title={'Print'} width={100} onHoverOpacity />
                             </View>
                         </View>
                     </View>
                     <View style={style.contentBottomContainer}>
                         <View style={style.contentBottomLeft}>
-                            <View style={style.bottomActionButton}>
+                            <View style={{ height: 280 }}>
+                                <View style={style.bottemLeftTitle}>
+                                    <Text style={style.bottemLeftTitleText}>
+                                        {'Transactions'.toUpperCase()}
+                                    </Text>
+                                </View>
+                                <View style={{ flexShrink: 1, backgroundColor: Colors.CARD_HEADER_COLOR, }}>
+                                    <SimpleTable
+                                        tableData={data.transactions}
+                                        tableDataConfig={tableDataConfig}
+                                        customColumns={customColumn}
+                                        rowHeight={35}
+                                    />
+                                </View>
                             </View>
                         </View>
                         <View style={style.bottomRightContainer}>

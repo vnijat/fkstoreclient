@@ -2,7 +2,7 @@ import React, { memo, useMemo } from "react";
 import { FlatList, View } from "react-native";
 import ClientCard from "../../../../containers/clientCard";
 import { ClientType } from "../../../../enums/clientType";
-import { Client } from "../../../../types/clientsQuery";
+import { Client } from "../../../../types/client";
 import { Colors } from "../../../../utils/colors";
 import { getStyle } from "./styles";
 
@@ -16,7 +16,7 @@ interface IClientList {
 const ClientList = ({ data }: IClientList) => {
     const style = useMemo(() => getStyle(), []);
     return (
-        <View style={{ backgroundColor: Colors.BACKGROUND_COLOR, flex: 1, alignItems: 'center' }}>
+        <View style={{ backgroundColor: Colors.BACKGROUND_COLOR, flexGrow: 1, alignItems: 'center' }}>
             <FlatList
                 data={data}
                 keyExtractor={({ id }) => `${id}`}

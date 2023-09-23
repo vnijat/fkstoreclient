@@ -1,6 +1,10 @@
-import {PaymentMethod, PurchaseStatus} from '../enums/purchase';
+import {
+  PaymentMethod,
+  PurchaseItemStatus,
+  PurchaseStatus,
+} from '../enums/purchase';
 import {Common, Imeta} from './common/common';
-import {Supplier} from './item';
+import {Store, Supplier} from './item';
 import {Order} from './projectOrder';
 
 interface AddPurchaseDto extends Common {
@@ -19,12 +23,16 @@ interface PurchaseItem extends Common {
   barcode: string;
   pricePerUnit: number;
   itemId: number;
+  storeId: number;
   updateMainPrice: boolean;
   fullfilled: boolean;
   supplierId: number | null;
   paymentMethod?: PaymentMethod;
   poInfo?: string;
   supplier?: Supplier;
+  purchaseId?: number;
+  store: Store;
+  status?: PurchaseItemStatus;
 }
 
 interface PurchaseDto extends Common {

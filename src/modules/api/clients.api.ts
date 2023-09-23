@@ -45,10 +45,7 @@ export const ClientsApi = InventoryApi.injectEndpoints({
         };
       },
     }),
-    getClientForPicker: build.query<
-      {client: {id: number; label: string}[]},
-      undefined
-    >({
+    getClientForPicker: build.query<{client: {id: number; label: string}[]}, undefined>({
       providesTags: ['clientForPicker'],
       query: () => {
         return {

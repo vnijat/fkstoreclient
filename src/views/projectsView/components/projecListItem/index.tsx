@@ -52,11 +52,6 @@ const ProjectListItem = ({ project }: IProjectslistItem) => {
         }
     };
 
-
-
-
-
-
     const RenderOrdersColumn = ({ data }: { data: any; }) => {
         const onPressOrdersCount = () => {
             dispatch(setProjectIdForRequestOrders(project.id!));
@@ -72,7 +67,6 @@ const ProjectListItem = ({ project }: IProjectslistItem) => {
             </Text>
         </CustomPressable>;
     };
-
 
 
     const RenderClientColumn = useMemo(() => ({ client }: { client: Client; }) => {

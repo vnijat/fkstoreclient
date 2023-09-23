@@ -9,7 +9,7 @@ import { getStyle } from "./style";
 interface ICustomModal {
     isShowModal: boolean;
     closeModal: () => void;
-    isDissmissEnabled: boolean;
+    isDissmissEnabled?: boolean;
     children?: React.ReactNode;
     width?: number;
     borderColor?: string;

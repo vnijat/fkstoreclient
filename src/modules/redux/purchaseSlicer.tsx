@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { PurchaseStatus } from '../../enums/purchase';
+import { PaymentMethod, PurchaseStatus } from '../../enums/purchase';
+import { Item } from '../../types/item';
 import { AddPurchaseDto, PurchaseItem } from '../../types/purchase';
 
 
@@ -22,13 +23,29 @@ const purchaseSlicer = createSlice({
         setPurchaseDataForPost: (state, action: PayloadAction<AddPurchaseDto>) => {
             Object.assign(state.purchaseDataForPost, action.payload);
         },
-        addItemForPurchase: (state, action: PayloadAction<PurchaseItem>) => {
-            const isExist = state.purchaseDataForPost?.purchaseItems?.some((item) => item.itemId == action.payload.itemId);
+        addItemForPurchase: (state, action: PayloadAction<Item>) => {
+            const item = action.payload;
+            const isExist = state.purchaseDataForPost?.purchaseItems?.some((purchaseItem) => purchaseItem.itemId == item.id);
+            const purchaseItem = {
+                itemId: item.id as number,
+                unit: item.unit.name,
+                name: item.name,
+                quantity: 0,
+                barcode: item.barcode,
+                updateMainPrice: false,
+                pricePerUnit: item.costPrice,
+                paymentMethod: PaymentMethod.CASH,
+                fullfilled: false,
+                supplierId: item.supplier.id || null,
+                poInfo: '',
+                storeId: item.store.id!,
+                store: item.store
+            };
             if (!state.purchaseDataForPost?.purchaseItems?.length) {
                 state.purchaseDataForPost.purchaseItems = [];
             }
             if (!isExist) {
-                state.purchaseDataForPost.purchaseItems.push(action.payload);
+                state.purchaseDataForPost.purchaseItems.push(purchaseItem);
             }
         },
         updateItemForPurchase: (state, action: PayloadAction<{ itemId: number, data: { [key: string]: any; }; }>) => {

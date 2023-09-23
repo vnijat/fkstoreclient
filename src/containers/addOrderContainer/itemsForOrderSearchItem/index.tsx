@@ -25,6 +25,7 @@ const ItemsForOrderSearchItem = ({ data, setShowContent }: IItemsForOrderSearchI
     const style = useMemo(() => getStyle(), []);
     const dispatch = useAppDispatch();
     const rowData = useMemo(() => [
+        { value: data.store.name, title: 'Store' },
         { value: data.name, title: 'Name' },
         { value: data.barcode, title: 'Barcode' },
         { value: data.unit.symbol, title: 'Unit' },
@@ -34,17 +35,7 @@ const ItemsForOrderSearchItem = ({ data, setShowContent }: IItemsForOrderSearchI
 
     const setItemForOrder = () => {
         if (!data.inUse) {
-            dispatch(addItemForOrder({
-                itemId: data.id as number,
-                unit: data.unit.name,
-                name: data.name,
-                quantity: 0,
-                barcode: data.barcode,
-                itemAtStock: data?.quantity,
-                pricePerUnit: data.pricePerUnit,
-                status: OrderItemStatus.IN_USE,
-                projectId: null
-            }));
+            dispatch(addItemForOrder(data));
             setShowContent && setShowContent(false);
         } else {
             HELP.alertError(undefined, 'Item is in another Order, Please complete another order first');

@@ -27,6 +27,7 @@ export const itemTableDataConfigs: ITableDataConfig<Item>[] = [
     dtoKey: 'barcode',
     type: 'text',
     hidden: false,
+    isAboveContextMenu: true,
   },
   {
     headerTitle: 'Color',
@@ -59,16 +60,28 @@ export const itemTableDataConfigs: ITableDataConfig<Item>[] = [
     hidden: false,
   },
   {
-    headerTitle: 'Price',
-    dtoKey: 'pricePerUnit',
+    headerTitle: 'Cost Price',
+    dtoKey: 'costPrice',
     type: 'money',
     hidden: false,
   },
   {
-    headerTitle: 'Total Price',
-    dtoKey: 'totalPrice',
+    headerTitle: 'Total Cost Price',
+    dtoKey: 'totalCostPrice',
     type: 'money',
     hidden: false,
+  },
+  {
+    headerTitle: 'Sell Price',
+    dtoKey: 'sellPrice',
+    type: 'money',
+    hidden: true,
+  },
+  {
+    headerTitle: 'Total Sell Price',
+    dtoKey: 'totalSellPrice',
+    type: 'money',
+    hidden: true,
   },
   {
     headerTitle: 'Supplier',
@@ -101,12 +114,6 @@ export const itemTableDataConfigs: ITableDataConfig<Item>[] = [
     objectDtoKey: 'name',
     type: 'text',
     hidden: true,
-  },
-  {
-    headerTitle: 'Date',
-    hidden: true,
-    dtoKey: 'createdAt',
-    type: 'date',
   },
   {
     headerTitle: 'SKU',

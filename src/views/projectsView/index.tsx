@@ -1,50 +1,95 @@
-import { StackNavigationProp } from '@react-navigation/stack';
-import React, { FC } from 'react';
-import { Button, Pressable, Text, View } from 'react-native';
-import { useSelector } from 'react-redux';
+import {StackNavigationProp} from '@react-navigation/stack';
+import React, {FC} from 'react';
+import {View} from 'react-native';
 import PaginationContainer from '../../containers/paginationContainer';
-import { useGetProjectsQuery } from '../../modules/api/projects.api';
-import { setProjectsQueryParams } from '../../modules/redux/projectQuerySlicer';
-import { RootState, useAppDispatch } from '../../modules/redux/store';
-import { Colors } from '../../utils/colors';
+import SimpleTable from '../../containers/simpleTable';
+import {IContextMenuButton, ICustomColumn} from '../../containers/simpleTable/types';
+import {Project} from '../../types/project';
+import {Colors} from '../../utils/colors';
 import ClientInfoModal from './components/clientInfoModal';
+import ProjectClientColumn from './components/customColumns/clientColumn';
+import ProjectOtherExpensesColumn from './components/customColumns/otherExpensesColumn';
+import ProjectOrdersColumn from './components/customColumns/projectOrdersColumn';
+import ProjectStatusColumn from './components/customColumns/statusColumn';
 import ProjectAddEditModal from './components/projectAddEditModal';
-import ProjectList from './components/projectList';
 import ProjectOrdersInfoModal from './components/projectOrdersInfoModal';
+import ProjectOtherExpensesModal from './components/projectOtherExpensesModal';
 import ProjectSearch from './components/projectSearch';
-import { getStyle } from './styles';
+import ProjectDataProvider from './provider/data';
+import ProjectLogicProvider from './provider/logic';
+import {getStyle} from './styles';
 
 
 interface IProjectsView {
-    navigation: StackNavigationProp<{}>;
 }
 
-const ProjectsView = ({ navigation }: IProjectsView) => {
+const ProjectsView = ({}: IProjectsView) => {
+    const logicProvider = ProjectLogicProvider();
+    const dataProvider = ProjectDataProvider();
+    const {
+        handlePagination,
+        handleNewTableData,
+        handleResetTableConfig,
+        handleDeleteProject,
+        handleOnPressRow,
+        handleOnPressClient,
+        handleOnPressOrdersCounts,
+        handleOnPressOtherExpenses,
+        hanldeProjectRecover
+    } = logicProvider;
+    const {
+        projectsQueryParams,
+        queryData: {
+            data: queryData,
+            isLoading
+        },
+        projectTableDataConfig
+    } = dataProvider;
     const style = getStyle();
-    const projectsQueryParams = useSelector((state: RootState) => state.projectQuery);
-    const { data: queryData } = useGetProjectsQuery(projectsQueryParams, {
-        selectFromResult: ({ data, isLoading, isUninitialized, error }) => ({
-            data,
-        }
-        ),
-        pollingInterval: 5000
-    });
+
+
+
+    const contextMenuButtons: IContextMenuButton<Project>[] = [
+        queryData?.showDeleted ? {title: 'Recover', onPress: (data) => hanldeProjectRecover(data)} : {title: 'Archive ', onPress: (data) => handleDeleteProject(data, true)},
+        // {title: 'Delete ', onPress: (data) => handleDeleteProject(data)}
+    ];
+
+
+    const customColumns: ICustomColumn<Project> = {
+        status: ({data}) => <ProjectStatusColumn data={data} {...{dataProvider, logicProvider}} />,
+        client: ({data}) => <ProjectClientColumn data={data} onPressClient={handleOnPressClient} />,
+        order: ({data}) => <ProjectOrdersColumn data={data} handleOnPressOrdersCounts={handleOnPressOrdersCounts} />,
+        otherExpenses: ({data}) => <ProjectOtherExpensesColumn data={data} handleOnPressCount={handleOnPressOtherExpenses} />,
+    };
+
 
     return (
-        <View style={{ flex: 1, flexDirection: 'row' }}>
-            <View style={{ flex: 0.05 }} />
+        <View style={{flex: 1, flexDirection: 'row'}}>
+            <View style={{flex: 0.05}} />
             <View style={style.container}>
-                <ProjectOrdersInfoModal />
-                <ProjectAddEditModal />
+                <ProjectOtherExpensesModal {...{dataProvider, logicProvider}} />
+                <ProjectOrdersInfoModal {...{dataProvider, logicProvider}} />
+                <ProjectAddEditModal {...{dataProvider, logicProvider}} />
                 <ClientInfoModal />
-                <View style={{ flex: 0.2 }}>
-                    <ProjectSearch searchValue={projectsQueryParams.search ?? ''} />
+                <View style={{flexShrink: 1}}>
+                    <ProjectSearch {...{dataProvider, logicProvider}} />
                 </View>
-                <View style={{ flex: 0.7 }}>
-                    <ProjectList data={queryData?.projects!} />
+                <View style={{flex: 1}}>
+                    <SimpleTable
+                        tableData={queryData?.projects ?? []}
+                        rowHeight={70}
+                        tableDataConfig={projectTableDataConfig}
+                        getNewTableConfig={handleNewTableData}
+                        onResetTable={handleResetTableConfig}
+                        contextMenuButtons={contextMenuButtons}
+                        onPressRow={handleOnPressRow}
+                        customColumns={customColumns}
+                        isLoading={isLoading}
+
+                    />
                 </View>
-                <View style={{ flex: 0.1, backgroundColor: Colors.CARD_HEADER_COLOR, justifyContent: 'center' }}>
-                    <PaginationContainer actionFunction={setProjectsQueryParams} meta={queryData?.meta} />
+                <View style={{flex: 0.1, backgroundColor: Colors.CARD_HEADER_COLOR, justifyContent: 'center'}}>
+                    <PaginationContainer paginationHandler={handlePagination} meta={queryData?.meta!} />
                 </View>
             </View>
         </View>

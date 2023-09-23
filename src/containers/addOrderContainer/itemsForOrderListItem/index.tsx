@@ -1,19 +1,19 @@
-import React, { useMemo } from "react";
-import { View } from "react-native";
-import { Text } from "react-native-windows";
+import React, {useMemo} from "react";
+import {View} from "react-native";
+import {Text} from "react-native-windows";
 import CustomContextMenu from "../../../components/customContextMenu";
 import CustomPressable from "../../../components/customPressable";
-import { InputItem } from "../../../components/inputItem/index.windows";
-import { OrderItemStatus } from "../../../enums/orderItemStatus";
-import { deleteItemFromOrder, updateItemForOrder } from "../../../modules/redux/orderSlicer";
-import { useAppDispatch } from "../../../modules/redux/store";
-import { IProjectsForPicker } from "../../../types/project";
-import { Order, OrderItem } from "../../../types/projectOrder";
-import { Colors } from "../../../utils/colors";
+import {InputItem} from "../../../components/inputItem/index.windows";
+import {OrderItemStatus} from "../../../enums/orderItemStatus";
+import {deleteItemFromOrder, updateItemForOrder} from "../../../modules/redux/orderSlicer";
+import {useAppDispatch} from "../../../modules/redux/store";
+import {IProjectsForPicker} from "../../../types/project";
+import {Order, OrderItem} from "../../../types/projectOrder";
+import {Colors} from "../../../utils/colors";
 import EditableColumn from "./components/editableColumn";
 import SelectableColumn from "./components/selectableColumn";
 import StaticColumn from "./components/staticColumn";
-import { getStyle } from "./style";
+import {getStyle} from "./style";
 
 
 interface IItemsForOrderListItem {
@@ -26,45 +26,45 @@ interface IrowData {
     value: any;
     editable?: boolean;
     selectable?: boolean;
-    selectableData?: { value: string | number, label: string; }[];
+    selectableData?: {value: string | number, label: string;}[];
     searchEnabled?: boolean;
     dtoKey?: string;
     isDeselectEnabled?: boolean;
 }
 
 
-const ItemsForOrderListItem = ({ orderItem, index, projectsData }: IItemsForOrderListItem) => {
+const ItemsForOrderListItem = ({orderItem, index, projectsData}: IItemsForOrderListItem) => {
     const style = useMemo(() => getStyle(), []);
     const dispatch = useAppDispatch();
     const orderItemStatusData = useMemo(() => {
         const values = Object.values(OrderItemStatus);
         const valuesWithoutInuse = values.filter(i => i !== OrderItemStatus.IN_USE);
         const orderItemSatusValues = orderItem.fullfilled ? valuesWithoutInuse : values;
-        return orderItemSatusValues.map((status) => ({ value: status, label: status.toUpperCase() }));
+        return orderItemSatusValues.map((status) => ({value: status, label: status.toUpperCase()}));
     }, [orderItem.fullfilled]);
-
-
+    
     const rowData: IrowData[] = useMemo(() => [
-        { value: (1 + (index ?? 0)), },
-        { value: (orderItem.fullfilled && orderItem.project) ? `${orderItem.project?.title}` + `${orderItem.project.isSample ? '(sample)' : ''}` : orderItem.projectId, selectable: !orderItem.fullfilled, selectableData: projectsData, searchEnabled: true, dtoKey: 'projectId', isDeselectEnabled: true },
-        { value: orderItem.name },
-        { value: orderItem.barcode, },
-        { value: Number(orderItem.itemAtStock) },
-        { value: orderItem.unit, },
-        { value: Number(orderItem.quantity), editable: !orderItem.fullfilled },
-        { value: orderItem.status, selectable: !orderItem.fullfilled, selectableData: orderItemStatusData, dtoKey: 'status' },
-    ], [orderItem.status, orderItem.projectId, orderItem.project, orderItem.quantity, orderItem.fullfilled]);
+        {value: (1 + (index ?? 0)), },
+        {value: orderItem?.store?.name},
+        {value: (orderItem.fullfilled && orderItem.project) ? `${orderItem.project?.title}` : orderItem.projectId, selectable: !orderItem.fullfilled, selectableData: projectsData, searchEnabled: true, dtoKey: 'projectId', isDeselectEnabled: true},
+        {value: orderItem.name},
+        {value: orderItem.barcode, },
+        {value: Number(orderItem.itemAtStock)},
+        {value: orderItem.unit, },
+        {value: Number(orderItem.quantity), editable: !orderItem.fullfilled},
+        {value: orderItem.status, selectable: !orderItem.fullfilled, selectableData: orderItemStatusData, dtoKey: 'status'},
+    ], [orderItem.status, orderItem.projectId, orderItem.store, orderItem.project, orderItem.quantity, orderItem.fullfilled]);
 
 
     const handleOnChangeEditableColumn = (text: string) => {
-        dispatch(updateItemForOrder({ itemId: orderItem.itemId, data: { quantity: Number(text) } }));
+        dispatch(updateItemForOrder({itemId: orderItem.itemId, data: {quantity: Number(text)}}));
     };
 
     const handleDeleteItemFromOrder = () => {
         if (orderItem.fullfilled) {
             return;
         }
-        dispatch(deleteItemFromOrder({ itemId: orderItem.itemId }));
+        dispatch(deleteItemFromOrder({itemId: orderItem.itemId}));
     };
 
 
@@ -97,7 +97,7 @@ const ItemsForOrderListItem = ({ orderItem, index, projectsData }: IItemsForOrde
     }, [orderItem]);
 
     const getSelectedValue = (value: string, dtoKey: string) => {
-        dispatch(updateItemForOrder({ itemId: orderItem.itemId, data: { [dtoKey]: value } }));
+        dispatch(updateItemForOrder({itemId: orderItem.itemId, data: {[dtoKey]: value}}));
     };
 
     const renderColumns = useMemo(() => {

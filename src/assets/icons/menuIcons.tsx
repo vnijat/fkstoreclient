@@ -46,3 +46,10 @@ export const ProjectsIcon = ({ size, color }: IICON) => {
         <Icon name="suitcase" size={size} color={color} />
     );
 };
+
+
+export const TrackIcon = ({ size, color }: IICON) => {
+    return (
+        <Icon name="line-graph" size={size} color={color} />
+    );
+};

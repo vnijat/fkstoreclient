@@ -2,10 +2,9 @@ import React, { memo, useEffect, useMemo, useRef, useState } from "react";
 import { ScrollView, View } from "react-native";
 import { ActivityIndicator, Flyout, Text } from "react-native-windows";
 import { InputItem } from "../../../components/inputItem/index.windows";
-import { PaymentMethod } from "../../../enums/purchase";
-import { useItemForOrderQuery } from "../../../modules/api/orders.api";
+import { PrimaryButton } from "../../../components/primaryButton";
 import { useGetItemForPurchaseQuery } from "../../../modules/api/purchase.api";
-import { addItemForOrder } from "../../../modules/redux/orderSlicer";
+import { setFromWhereAddEditModalCalled, setIsShowAddEditModal } from "../../../modules/redux/itemsSlicer";
 import { addItemForPurchase } from "../../../modules/redux/purchaseSlicer";
 import { useAppDispatch } from "../../../modules/redux/store";
 import { Colors } from "../../../utils/colors";
@@ -40,19 +39,7 @@ const ItemsForPurchaseSearch = ({ }: IItemsForOrderSearch) => {
         if (data?.length) {
             data.length > 1 && setShowContent(true);
             if (data?.length === 1) {
-                dispatch(addItemForPurchase({
-                    itemId: data[0].id as number,
-                    unit: data[0].unit.name,
-                    name: data[0].name,
-                    quantity: 0,
-                    barcode: data[0].barcode,
-                    updateMainPrice: false,
-                    pricePerUnit: data[0].pricePerUnit,
-                    paymentMethod: PaymentMethod.CASH,
-                    fullfilled: false,
-                    supplierId: data[0].supplier.id || null,
-                    poInfo: ''
-                }));
+                dispatch(addItemForPurchase(data[0]));
             }
         }
     }, [data?.length]);
@@ -86,6 +73,11 @@ const ItemsForPurchaseSearch = ({ }: IItemsForOrderSearch) => {
         clearTimeout(timeoutId as ReturnType<typeof setTimeout>);
     };
 
+    const handleNewPrdouct = () => {
+        dispatch(setFromWhereAddEditModalCalled('purchase'));
+        dispatch(setIsShowAddEditModal(true));
+    };
+
     return (
         <>
             <View style={style.searchContainer}
@@ -111,6 +103,16 @@ const ItemsForPurchaseSearch = ({ }: IItemsForOrderSearch) => {
                     }
 
                 </View>}
+                <View style={{ alignSelf: 'flex-end', paddingRight: 20 }}>
+                    <PrimaryButton title={'NEW PRODUCT'}
+                        onPress={handleNewPrdouct}
+                        onHoverOpacity
+                        width={120}
+                        height={30}
+                        borderRadius={3}
+                        buttonColor={Colors.DEFAULT_TEXT_COLOR}
+                    />
+                </View>
             </View>
             <Flyout
                 target={searchRef.current}

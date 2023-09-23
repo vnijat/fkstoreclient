@@ -1,44 +1,46 @@
-import React, { memo, useEffect, useMemo, useState } from "react";
-import { View } from "react-native";
-import { currency } from "../../../../utils/currency.windows";
-import { ITableConfig, RowDataType, } from "../../types";
+import React, {memo, useEffect, useMemo, useState} from "react";
+import {TextInputProps, View} from "react-native";
+import {currency} from "../../../../utils/currency.windows";
+import {ITableConfig, RowDataType, } from "../../types";
 import ColumnInput from "../columnInput";
-import { getStyle } from "./styles";
+import {getStyle} from "./styles";
 
 
-interface ITableInputRow {
-    getRowData: (rowData: RowDataType) => void;
-    defaultRowData: RowDataType;
-    tableInputConfigs: ITableConfig[];
+interface ITableInputRow<T> extends TextInputProps {
+    getRowData: (rowData: RowDataType<T>) => void;
+    defaultRowData: RowDataType<T>;
+    tableInputConfigs: ITableConfig<T>[];
     isEditable?: boolean;
 }
 
 
-const TableInputRow = ({ getRowData, defaultRowData, tableInputConfigs, isEditable }: ITableInputRow) => {
+const TableInputRow = <T extends any>({getRowData, defaultRowData, tableInputConfigs, isEditable, ...rest}: ITableInputRow<T>) => {
     const style = useMemo(() => getStyle(), []);
-    const [rowData, setRowData] = useState<RowDataType>(defaultRowData);
+    const [rowData, setRowData] = useState<RowDataType<T>>(defaultRowData);
 
     const setInputsDataForRow = (text: string, dtoKey: string) => {
-        setRowData(prev => ({ ...prev, [dtoKey]: text }));
-        getRowData({ ...rowData, [dtoKey]: text });
+        setRowData(prev => ({...prev, [dtoKey]: text}));
+        getRowData({...rowData, [dtoKey]: text});
     };
 
     return (
         <View style={style.rowContainer}>
-            {tableInputConfigs?.map(({ dtoKey, isNumber, isMoney, isSumTotal }, index) => {
+            {tableInputConfigs?.map(({dtoKey, isNumber, isMoney, isSumTotal, isDate}, index) => {
                 const inputValueFromRowData = ((isNumber || isMoney) && !!defaultRowData[dtoKey]?.length) ? Number(defaultRowData[dtoKey]).toString() : defaultRowData[dtoKey];
                 return (
                     <ColumnInput
-                        key={`${index}-${dtoKey}`}
-                        getInputValue={(text: string) => setInputsDataForRow(text, dtoKey)}
+                        key={`${index}-${dtoKey as string}`}
+                        getInputValue={(text: string) => setInputsDataForRow(text, dtoKey as string)}
                         inputValueFromRowData={inputValueFromRowData}
                         isNumber={isNumber}
                         isMoney={isMoney}
                         isEditable={isEditable}
+                        isDate={isDate}
+                        {...rest}
                     />
                 );
             })}
         </View>);
 };
 
-export default memo(TableInputRow);
+export default memo(TableInputRow);;;

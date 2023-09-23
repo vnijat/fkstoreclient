@@ -1,15 +1,15 @@
 import CheckBox from '@react-native-community/checkbox';
-import React, { FC, memo, useMemo, useState } from 'react';
-import { View, TextInput, Text } from 'react-native';
+import React, {FC, memo, useMemo, useState} from 'react';
+import {View, TextInput, Text, TextInputProps} from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
-import CustomPicker, { IsingelSelectData } from '../../containers/customPicker';
+import CustomPicker, {IsingelSelectData} from '../../containers/customPicker';
 import DateTimePicker from '../../containers/dateTimePicker';
 import HELP from '../../services/helpers';
-import { Colors } from '../../utils/colors';
-import { regExPatterns } from '../../utils/validation';
-import { getStyle } from './styles';
+import {Colors} from '../../utils/colors';
+import {regExPatterns} from '../../utils/validation';
+import {getStyle} from './styles';
 
-interface IInputItem {
+interface IInputItem extends TextInputProps {
   inputTitle?: string;
   isNumeric?: boolean;
   placeHolder?: string;
@@ -18,11 +18,11 @@ interface IInputItem {
   maxLength?: number;
   isMultiLine?: boolean;
   inputRef?: (r: any) => {};
-  setValue: (text: any) => void;
-  inputValue: string | boolean | Date;
+  setValue: (value: unknown) => void;
+  inputValue: unknown;
   id?: number;
   selectable?: boolean;
-  selectableData?: Array<IsingelSelectData & { id?: number; }>;
+  selectableData?: Array<IsingelSelectData & {id?: number;}>;
   isErorr?: boolean;
   titleColor?: string;
   isSearch?: boolean;
@@ -79,7 +79,8 @@ export const InputItem: FC<IInputItem> = memo(
     isDatePicker,
     disabledForEdit,
     canSelectParent,
-    isDeselectEnabled
+    isDeselectEnabled,
+    ...rest
   }) => {
     const style = useMemo(
       () => getStyle(height, width, isErorr, titleColor, backgroundColor),
@@ -135,7 +136,7 @@ export const InputItem: FC<IInputItem> = memo(
           isAddButton={isPickerAddButton}
           buttonStyle={style.pickerButtonStyle}
           itemStyle={style.pickerItemStyle}
-          selectedItemStyle={[style.pickerItemStyle, { backgroundColor: Colors.CARD_HEADER_COLOR }]}
+          selectedItemStyle={[style.pickerItemStyle, {backgroundColor: Colors.CARD_HEADER_COLOR}]}
           singleSelectMode
           isEditable={isPickerItemEditable}
           isDataSearchEnabled={isPickerSearchEnabled}
@@ -168,6 +169,7 @@ export const InputItem: FC<IInputItem> = memo(
             onBlur={onBlur}
             editable={!disabledForEdit}
             caretHidden={disabledForEdit}
+            {...rest}
           />);
       } else {
         return null;
@@ -205,7 +207,7 @@ export const InputItem: FC<IInputItem> = memo(
     }, [isDatePicker, inputValue]);
 
     return (
-      <View style={{ margin: 5, opacity: disabledForEdit ? 0.6 : 1 }} tooltip={errorMessage}>
+      <View style={{margin: 5, opacity: disabledForEdit ? 0.6 : 1}} tooltip={errorMessage}>
         {!!inputTitle && (
           <Text style={style.inputTitle}>{`${inputTitle?.toUpperCase()} ${isErorr ? '*' : ''
             } `}</Text>
@@ -216,7 +218,7 @@ export const InputItem: FC<IInputItem> = memo(
         {selectable ? renderCustomPicker
           :
           (
-            <View style={{ justifyContent: 'center' }} >
+            <View style={{justifyContent: 'center'}} >
               {renderTextInput}
               {isShowMagnify && (
                 <View

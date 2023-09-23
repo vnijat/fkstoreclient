@@ -1,5 +1,6 @@
 import {
   AddClientProject,
+  IProjectType,
   IProjectsForPicker,
   Project,
   ProjectsQueryParams,
@@ -14,12 +15,12 @@ export const ProjectsApi = InventoryApi.injectEndpoints({
       providesTags: result =>
         result
           ? [
-              ...result.projects.map(({id}) => ({
-                type: 'projects' as const,
-                id,
-              })),
-              'projects',
-            ]
+            ...result.projects.map(({id}) => ({
+              type: 'projects' as const,
+              id,
+            })),
+            'projects',
+          ]
           : ['projects'],
       query: filter => {
         return {
@@ -27,6 +28,44 @@ export const ProjectsApi = InventoryApi.injectEndpoints({
           params: filter,
         };
       },
+    }),
+    getProjectTypes: build.query<{label: string; value: number, prefix: string;}, undefined>({
+      providesTags: ['projectTypes'],
+      query: () => {
+        return {
+          url: '/client/project/type/all'
+        };
+      }
+    }),
+    addProjectType: build.mutation<undefined, IProjectType>({
+      query: body => {
+        return {
+          url: '/client/project/type/',
+          body: body,
+          method: 'POST',
+        };
+      },
+      invalidatesTags: ['projectTypes'],
+    }),
+    editProjectType: build.mutation<undefined, {id: number; body: IProjectType;}>({
+      query: ({body, id}) => {
+        return {
+          url: `/client/project/type/${id}`,
+          body: body,
+          method: 'PATCH',
+        };
+      },
+      invalidatesTags: ['projectTypes'],
+    }),
+    recoverProjects: build.mutation<undefined, number[]>({
+      query: Ids => {
+        return {
+          url: '/client/project/recover/',
+          body: Ids,
+          method: 'POST',
+        };
+      },
+      invalidatesTags: ['projects', 'projectsForPicker', 'clients'],
     }),
     getProjectsForPicker: build.query<IProjectsForPicker[], undefined>({
       providesTags: ['projectsForPicker'],
@@ -44,6 +83,14 @@ export const ProjectsApi = InventoryApi.injectEndpoints({
         };
       },
     }),
+    getOtherExpenses: build.query<OrderItem[], number | undefined | string>({
+      providesTags: ['otherExpenses'],
+      query: projectId => {
+        return {
+          url: `/client/project/otherExpenses/${projectId}`,
+        };
+      },
+    }),
     addProject: build.mutation<Project, AddClientProject>({
       query: body => {
         return {
@@ -52,9 +99,9 @@ export const ProjectsApi = InventoryApi.injectEndpoints({
           method: 'POST',
         };
       },
-      invalidatesTags: ['projects', 'projectsForPicker'],
+      invalidatesTags: ['projects', 'projectsForPicker', 'otherExpenses', 'clients'],
     }),
-    editProject: build.mutation<Project, {id: number; body: AddClientProject}>({
+    editProject: build.mutation<Project, {id: number; body: AddClientProject;}>({
       query: ({id, body}) => {
         return {
           url: `/client/project/${id}`,
@@ -66,19 +113,33 @@ export const ProjectsApi = InventoryApi.injectEndpoints({
         {type: 'projects', id: arg.id},
         'projectsForPicker',
         'clients',
+        'otherExpenses',
       ],
     }),
-    deleteProject: build.mutation<undefined, number[]>({
-      query: Ids => {
+    deleteProject: build.mutation<undefined, {Ids: number[], softDelete: boolean;}>({
+      query: body => {
         return {
           url: `/client/project/delete`,
-          body: Ids,
+          body: body,
           method: 'DELETE',
         };
       },
       invalidatesTags: (result, error, arg) => [
-        ...arg.map(id => ({type: 'projects' as const, id})),
+        'projects',
         'projectsForPicker',
+        'clients',
+      ],
+    }),
+    deleteProjectType: build.mutation<undefined, {Ids: number[], softDelete: boolean;}>({
+      query: body => {
+        return {
+          url: `/client/project/type/delete`,
+          body: body,
+          method: 'DELETE',
+        };
+      },
+      invalidatesTags: (result, error, arg) => [
+        'projectTypes',
       ],
     }),
   }),
@@ -92,4 +153,10 @@ export const {
   useDeleteProjectMutation,
   useGetProjectsForPickerQuery,
   useGetProjectOrdersQuery,
+  useGetOtherExpensesQuery,
+  useGetProjectTypesQuery,
+  useRecoverProjectsMutation,
+  useAddProjectTypeMutation,
+  useEditProjectTypeMutation,
+  useDeleteProjectTypeMutation
 } = ProjectsApi;

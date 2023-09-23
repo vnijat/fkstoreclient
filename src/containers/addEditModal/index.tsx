@@ -1,18 +1,18 @@
-import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Text, View, Alert } from "react-native";
-import { Colors } from "../../utils/colors";
-import { InputItem } from "../../components/inputItem/index.windows";
-import { PrimaryButton } from "../../components/primaryButton";
+import React, {memo, useCallback, useEffect, useMemo, useRef, useState} from "react";
+import {Text, View, Alert} from "react-native";
+import {Colors} from "../../utils/colors";
+import {InputItem} from "../../components/inputItem/index.windows";
+import {PrimaryButton} from "../../components/primaryButton";
 import HELP from "../../services/helpers";
 import CustomModal from "../../components/customModal";
-import { getStyle } from "./styles";
-import { InputsConfig } from "../../types/inputsconfig";
-import { IsingelSelectData } from "../customPicker";
+import {getStyle} from "./styles";
+import {InputsConfig} from "../../types/inputsconfig";
+import {IsingelSelectData} from "../customPicker";
 import TableInput from "../tableInput";
-import { RowDataType } from "../tableInput/types";
+import {RowDataType} from "../tableInput/types";
 import CodeInput from "../../components/codeInput";
 import UseLanguage from "../../modules/lozalization/useLanguage.hook";
-import Toast from "react-native-toast-message";
+import {ICustomComponent} from "./types";
 
 interface IAddEditModal {
     /**  Pass Function For Post data to Api*/
@@ -24,11 +24,11 @@ interface IAddEditModal {
 
     setIsDataForEdit?: (data: boolean) => void;
 
-    setDataForRequest: (data: { [key: string]: any; }) => void;
+    setDataForRequest: (data: {[key: string]: any;}) => void;
 
     clearDataForRequest: () => void;
     /**  Data From Store before Post Or Update */
-    dataForRequest: { [key: string]: any; };
+    dataForRequest: {[key: string]: any;};
     /**  Show Modal For Edit And Add Data */
     isShowModal: boolean;
     /** Array of Inputs Config with plaseHolder,title,dtoKey,etc.*/
@@ -36,7 +36,7 @@ interface IAddEditModal {
 
     dataTitle?: string;
 
-    selectableData?: { [key: string]: IsingelSelectData[]; };
+    selectableData?: {[key: string]: IsingelSelectData[];};
 
     pickerOnPressEditButton?: (dataId: number, dataKeyName?: string) => void;
 
@@ -64,6 +64,8 @@ interface IAddEditModal {
     deleteFunction?: (Ids: number[]) => Promise<any>;
 
     modalBorderColor?: string;
+
+    customComponent?: ICustomComponent;
 }
 
 
@@ -88,11 +90,12 @@ const AddEditModal = ({
     disablePickerActionButtons,
     modalWidth,
     deleteFunction,
-    modalBorderColor
+    modalBorderColor,
+    customComponent
 }: IAddEditModal) => {
     const style = getStyle();
     const [tempDataForEdit, settempDataForEdit] = useState<any>();
-    const [errorMessage, setErrorMessages] = useState<{ [key: string]: string[]; }>({});
+    const [errorMessage, setErrorMessages] = useState<{[key: string]: string[];}>({});
     const inputRef = useRef<any>([]);
     const lang = UseLanguage();
 
@@ -105,17 +108,17 @@ const AddEditModal = ({
 
 
 
-    const setClientDataForPost = useCallback((
-        inputValue: string | RowDataType[] | boolean | Date,
+    const setDataForPost = useCallback((
+        inputValue: string | RowDataType<any>[] | boolean | Date,
         objectKey: string,
     ) => {
         errorMessage[objectKey] &&
             setErrorMessages(prev => {
                 delete prev[objectKey];
-                return { ...prev };
+                return {...prev};
             });
-        setDataForRequest({ [objectKey]: inputValue });
-    }, [errorMessage, dataForRequest]);
+        setDataForRequest({[objectKey]: inputValue});
+    }, [errorMessage, dataForRequest, setDataForRequest]);
 
 
 
@@ -146,11 +149,13 @@ const AddEditModal = ({
                         requiredText,
                         isDisableForEdit,
                         canSelectParent,
-                        nullable
+                        nullable,
+                        customComponentKeyName,
+                        showOnlyInEdit
                     } = config;
-                    const inputTitle = (lang[dtoKey as keyof typeof lang] || lang[title?.toLowerCase() as keyof typeof lang]) ?? title;
+                    const inputTitle = lang[HELP.modifyTextForLangSelect(title ?? '') as keyof typeof lang] ?? title;
                     const inputValue: string | boolean = dataForRequest[dtoKey!] || '';
-                    const dataForPickerFromServer = (selectableData && selectableDataKey) ? (!!requiredDataName ? selectableData[selectableDataKey]?.filter((data: { [key: string]: any; }) => (data?.[requiredDataDtoKey!!] ? data?.[requiredDataDtoKey!!] : data?.[requiredDataDtoKey?.toLowerCase()!!]) == dataForRequest[requiredDataDtoKey!]) : selectableData[selectableDataKey]) : [];
+                    const dataForPickerFromServer = (selectableData && selectableDataKey) ? (!!requiredDataName ? selectableData[selectableDataKey]?.filter((data: {[key: string]: any;}) => (data?.[requiredDataDtoKey!!] ? data?.[requiredDataDtoKey!!] : data?.[requiredDataDtoKey?.toLowerCase()!!]) == dataForRequest[requiredDataDtoKey!]) : selectableData[selectableDataKey]) : [];
                     const dataForPickerFromEnum = isEnum ? enumData : [];
                     const dataForPicker = selectable ? (isEnum ? dataForPickerFromEnum : dataForPickerFromServer) : [];
                     const pickerDataKeyName = selectable ? selectableDataKey : '';
@@ -158,6 +163,9 @@ const AddEditModal = ({
                     const errorDetail = isError ? ((selectable && !(inputValue as string).length) ? `Please pick ${title}` : errorMessage[dtoKey!].map(t => `*${t}`).join('\n')) : undefined;
                     const disabled = (!!requiredDataName && !!requiredDataDtoKey) && !dataForRequest[requiredDataDtoKey];
                     const disableForEdit = tempDataForEdit && isDisableForEdit;
+                    if (!tempDataForEdit && showOnlyInEdit) {
+                        return null;
+                    }
                     if (isTableInput) {
                         return (
                             <View style={style.tableInputContainer} key={`${title}`}>
@@ -166,7 +174,7 @@ const AddEditModal = ({
                                         {`${inputTitle}`.toUpperCase()}
                                     </Text>
                                 </View>
-                                <TableInput getNewTableData={(data: RowDataType[]) => setClientDataForPost(data, dtoKey)} tableData={dataForRequest[dtoKey!] ?? []} tableConfig={tableConfig ?? []} isDataEditable />
+                                <TableInput getNewTableData={(data: RowDataType<any>[]) => setDataForPost(data, dtoKey!)} tableData={dataForRequest[dtoKey!] ?? []} tableConfig={tableConfig ?? []} isDataEditable />
                             </View>
                         );
                     } else if (isCode) {
@@ -181,12 +189,22 @@ const AddEditModal = ({
                                 height={height}
                                 isDisabled={disabled}
                                 requiredDataText={requiredText}
-                                getCodeValue={inputValue => setClientDataForPost(inputValue, dtoKey)}
+                                getCodeValue={inputValue => setDataForPost(inputValue, dtoKey!)}
                                 categoryId={dataForRequest['categoryId']}
                                 isError={isError}
                                 errorDetail={errorDetail}
                             />
                         );
+                    }
+                    else if (customComponentKeyName) {
+                        if ((customComponent && customComponent[customComponentKeyName])) {
+                            const CustomComponent = customComponent[customComponentKeyName];
+                            return (
+                                <CustomComponent key={`${id}`} {...{disableForEdit}} />
+                            );
+                        } else {
+                            return null;
+                        }
                     }
                     else {
                         return (
@@ -202,7 +220,7 @@ const AddEditModal = ({
                                 inputRef={r => (inputRef.current[id] = r)}
                                 inputValue={inputValue}
                                 setValue={inputValue =>
-                                    setClientDataForPost(inputValue, dtoKey)
+                                    setDataForPost(inputValue, dtoKey!)
                                 }
                                 id={id}
                                 isPickerAddButton={isPickerAddButton}
@@ -274,7 +292,7 @@ const AddEditModal = ({
                 HELP.showToast('success', `${dataTitle ?? ''} Deleted`.toUpperCase(), "Deleted");
                 onCloseModal();
             } catch (error) {
-                console.log(`onPressAdd${dataTitle}`, error);
+                console.log(`onPressAdd ${dataTitle}`, error);
                 if (error?.status === 400) {
                     setErrorMessages(HELP.modifieErrorMessage(error));
                 }
@@ -312,9 +330,9 @@ const AddEditModal = ({
 
     const onPressSave = useCallback(async () => {
         if (apiUpdateData) {
-            const { id, ...body } = dataForRequest;
+            const {id, ...body} = dataForRequest;
             try {
-                const response = await apiUpdateData({ body, id: id! });
+                const response = await apiUpdateData({body, id: id!});
                 if (response.error) {
                     throw response.error;
                 }
@@ -346,7 +364,7 @@ const AddEditModal = ({
             width={modalWidth}
             borderColor={modalBorderColor}
         >
-            <View style={{ flex: 1 }}>
+            <View style={{flex: 1}}>
                 <View style={style.contentContainer}>
                     {renderInputs}
                 </View>

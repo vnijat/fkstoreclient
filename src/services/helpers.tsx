@@ -1,23 +1,28 @@
 import React from "react";
-import { Alert, Text, View, StyleSheet } from "react-native";
-import { CompletedIcon, CorporateClientIcon, DeclinedIcon, IndividualClientIcon, InProgressIcon, UnknownClientIcon, VipIcon } from "../assets/icons/clientCardIcons";
-import { IMultipleSelectData } from "../containers/customPicker/components/multipleSelectItem";
-import { ClientType } from "../enums/clientType";
-import { ProjectStatus } from "../enums/projectStatus";
-import { IICON } from "../types/icon";
-import { Colors } from "../utils/colors";
+import {Alert, Text, View, StyleSheet, Platform} from "react-native";
+import {CompletedIcon, CorporateClientIcon, DeclinedIcon, IndividualClientIcon, InProgressIcon, UnknownClientIcon, VipIcon} from "../assets/icons/clientCardIcons";
+import {IMultipleSelectData} from "../containers/customPicker/components/multipleSelectItem";
+import {ClientType} from "../enums/clientType";
+import {ProjectStatus} from "../enums/projectStatus";
+import {IICON} from "../types/icon";
+import {Colors} from "../utils/colors";
 import countries from 'i18n-iso-countries';
-import { IsingelSelectData } from "../containers/customPicker";
-import { Item } from "../types/item";
+import {IsingelSelectData} from "../containers/customPicker";
+import {Item} from "../types/item";
 import Toast from "react-native-toast-message";
-import { ToastVariants } from "../types/toast";
+import {ToastVariants} from "../types/toast";
+var Sound;
+if (Platform.OS !== 'windows') {
+    Sound = require('react-native-sound');
+}
 
 countries.registerLocale(require('i18n-iso-countries/langs/en.json'));
 countries.registerLocale(require('i18n-iso-countries/langs/az.json'));
-const countryobjects = countries.getNames('en', { select: 'official' });
+const countryobjects = countries.getNames('en', {select: 'official'});
+const scanSignal = Platform.OS !== 'windows' ? new Sound('scan.mp3', Sound.MAIN_BUNDLE) : null;
 
 const modifieErrorMessage = (error: any) => {
-    return error.data.message.reduce((errorObject: { [key: string]: string[]; }, message: string,) => {
+    return error.data.message.reduce((errorObject: {[key: string]: string[];}, message: string,) => {
         if (!!message?.length) {
             const messageToArray = message.split(' ');
             const errorTitle = messageToArray.shift()!;
@@ -33,7 +38,7 @@ const modifieErrorMessage = (error: any) => {
 
 
 
-const modifyItemForEdit = <T extends { [key: string]: any; }>(data: T[] | T, itemId?: number) => {
+const modifyItemForEdit = <T extends {[key: string]: any;}>(data: T[] | T, itemId?: number) => {
     const itemForPost: any = {};
     const selectedItem: T = Array.isArray(data) ? data.filter(item => item.id === itemId)[0] : data;
     for (let key in selectedItem) {
@@ -52,13 +57,17 @@ const modifyItemForEdit = <T extends { [key: string]: any; }>(data: T[] | T, ite
 const alertPromise = (title: string, message: string) => {
     return new Promise((resolve, reject) => {
         Alert.alert(title, message, [
-            { text: 'Cancel', onPress: () => reject('rejected'), style: 'cancel' },
-            { text: 'Yes', onPress: () => resolve(true), style: 'destructive' },
-        ], { onDismiss: () => reject('rejected') });
+            {text: 'Cancel', onPress: () => reject('rejected'), style: 'cancel'},
+            {text: 'Yes', onPress: () => resolve(true), style: 'destructive'},
+        ], {onDismiss: () => reject('rejected')});
 
     });
 };
 
+
+const playScanSound = () => {
+    if (scanSignal) scanSignal.play();
+};
 
 const getSlicesForPaginationPage = (currentPage: number, pageCount: number, show?: number) => {
     const maxToshow = show || 5;
@@ -73,14 +82,14 @@ const getSlicesForPaginationPage = (currentPage: number, pageCount: number, show
     const sliceStart = currentPage >= maxToshow ? currentPage - diffFromMax : 0;
     const sliceEnd = currentPage >= maxToshow ? currentPage + 3 : maxToshow;
 
-    return { sliceStart, sliceEnd };
+    return {sliceStart, sliceEnd};
 };
 
 
 
 const getNestedCategoriesIds = (tree: IMultipleSelectData[]) => {
     return tree?.reduce((acc, curr) => {
-        const { nested, id } = curr;
+        const {nested, id} = curr;
         if (!!nested?.length) {
             acc = acc.concat(getNestedCategoriesIds(nested));
         }
@@ -102,7 +111,7 @@ const isNotSameValue = (value1: number | boolean | string, value2: number | bool
 
 const getNestedDataValues = (tree: IsingelSelectData[]) => {
     return tree?.reduce((acc, curr) => {
-        const { nested, value } = curr;
+        const {nested, value} = curr;
         if (nested?.length) {
             acc = acc.concat(getNestedDataValues(nested));
         }
@@ -114,11 +123,11 @@ const getNestedDataValues = (tree: IsingelSelectData[]) => {
 
 const getNestedCategoriesForSelect = (tree: IMultipleSelectData[]) => {
     return tree?.reduce((acc, curr) => {
-        const { nested, id, label, } = curr;
+        const {nested, id, label, } = curr;
         if (!!nested?.length) {
             acc = acc.concat(getNestedCategoriesForSelect(nested));
         }
-        acc.push({ id, label, hasNested: !!nested?.length });
+        acc.push({id, label, hasNested: !!nested?.length});
         return acc;
     }, [] as any[]);
 
@@ -127,17 +136,17 @@ const getNestedCategoriesForSelect = (tree: IMultipleSelectData[]) => {
 
 const flatNestedCategories = (tree: IMultipleSelectData[] | IsingelSelectData[]) => {
     return tree?.reduce((acc, curr) => {
-        const { nested, ...rest } = curr;
+        const {nested, ...rest} = curr;
         if (nested?.length) {
             acc = acc.concat(flatNestedCategories(nested));
         }
-        acc.push({ ...rest, hasNested: nested?.length });
+        acc.push({...rest, hasNested: nested?.length});
         return acc;
     }, [] as IMultipleSelectData[] | IsingelSelectData[]);
 };
 
 const mapNestedForPicker = (tree: IsingelSelectData[]): IsingelSelectData[] => {
-    return tree?.map((data) => ({ label: data?.label, value: data.id ? data.id : data.value, nested: mapNestedForPicker(data?.nested!) }));
+    return tree?.map((data) => ({label: data?.label, value: data.id ? data.id : data.value, nested: mapNestedForPicker(data?.nested!)}));
 };
 
 const getClientTypeIcons = (type: ClientType, size?: number, color?: string) => {
@@ -171,9 +180,10 @@ const getProjectStatusIcons = (status: ProjectStatus, size?: number, color?: str
     return icons[status];
 };
 
-const alertError = (error?: { status: string, data: { message: string; }; }, title?: string, message?: string) => {
+const alertError = (error?: {status: string, data: {message: string | string[];};}, title?: string, message?: string) => {
     const errorTitle = title || `Conflict Status Code  ${error?.status}` || '';
-    const errorMessage = message || error?.data.message || '';
+    const dataMessage = Array.isArray(error?.data.message) ? error?.data.message.join(',') : error?.data.message;
+    const errorMessage = message || dataMessage || '';
     showToast('error', errorMessage, errorTitle, 5000);
 };
 
@@ -186,7 +196,29 @@ const showToast = (toastType: ToastVariants, message: string, title?: string, du
     });
 };
 
-const getCountriesForPicker = () => Object.keys(countryobjects).map((key) => ({ value: key, label: countryobjects[key] }));
+
+/**
+* @returns Text formatted to lower camelCase 
+*/
+const modifyTextForLangSelect = (text: string) => {
+    const lowerCaseText = text.toLowerCase();
+    const regExFindAfterSpace = new RegExp(/(?!^)\b\w/, 'gi');
+    const regExfindSpaces = new RegExp(/\s/, 'gi');
+    return lowerCaseText.replace(regExFindAfterSpace, (v) => v.toUpperCase()).replace(regExfindSpaces, '');
+};
+
+
+const getCountriesForPicker = () => Object.keys(countryobjects).map((key) => ({value: key, label: countryobjects[key]}));
+
+const getUTCAddTZ = (date: Date) => {
+    const minutsToMilliSeconds = date.getTimezoneOffset() * 60000;
+    return new Date(date.getTime() + minutsToMilliSeconds);
+};
+
+const getUTCSubTZ = (date: Date) => {
+    const minutsToMilliSeconds = date.getTimezoneOffset() * 60000;
+    return new Date(date.getTime() - minutsToMilliSeconds);
+};
 
 
 const HELP = {
@@ -204,7 +236,11 @@ const HELP = {
     alertError,
     isNotSameValue,
     getSlicesForPaginationPage,
-    showToast
+    showToast,
+    modifyTextForLangSelect,
+    getUTCAddTZ,
+    getUTCSubTZ,
+    playScanSound
 };
 
 export default HELP;

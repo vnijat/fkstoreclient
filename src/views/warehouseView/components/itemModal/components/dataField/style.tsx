@@ -5,15 +5,17 @@ import FONT from '../../../../../../utils/font';
 export const getStyle = (height?: number | string, backgroundColor?: string, width?: number | string) => {
     const style = StyleSheet.create({
         container: {
-            marginHorizontal: 10,
-            marginVertical: 10
+            marginHorizontal: 2,
+            marginVertical: 2
         },
         titleContainer: {
-            marginBottom: 2
+            marginBottom: 1
         },
         titleText: {
-            fontSize: FONT.FONT_SIZE_SMALL,
-            color: Colors.DEFAULT_TEXT_COLOR
+            fontFamily: FONT.FONT_FAMILY,
+            fontSize: FONT.FONT_SIZE_MEDIUM,
+            color: Colors.DEFAULT_TEXT_COLOR,
+            fontWeight: FONT.FONT_BOLD
         },
         valueContainer: {
             backgroundColor: backgroundColor || Colors.CARD_HEADER_COLOR,
@@ -24,7 +26,7 @@ export const getStyle = (height?: number | string, backgroundColor?: string, wid
         },
         valueText: {
             color: Colors.DEFAULT_TEXT_COLOR,
-            fontSize: FONT.FONT_SIZE_MEDIUM,
+            fontSize: FONT.FONT_SIZE_SMALL,
             padding: 5
         }
 

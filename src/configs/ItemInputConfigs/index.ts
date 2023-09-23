@@ -39,9 +39,15 @@ const inputsConfig: InputsConfig[] = [
     maxLength: 120,
     placeHolder: 'Description',
     width: 470,
-    height: 150,
+    height: 60,
     multiLine: true,
     dtoKey: 'description',
+  },
+  {
+    title: 'Product Attributes',
+    dtoKey: 'properties',
+    customComponentKeyName: 'productAttributes',
+    width: 470,
   },
 
   {
@@ -64,14 +70,25 @@ const inputsConfig: InputsConfig[] = [
     isDisableForEdit: true,
   },
   {
-    title: 'Price Per Unit',
+    title: 'Cost Price',
     isNumeric: true,
     maxLength: 16,
     placeHolder: '0',
     width: 150,
     height: 30,
     multiLine: false,
-    dtoKey: 'pricePerUnit',
+    dtoKey: 'costPrice',
+  },
+
+  {
+    title: 'Sell Price',
+    isNumeric: true,
+    maxLength: 16,
+    placeHolder: '0',
+    width: 150,
+    height: 30,
+    multiLine: false,
+    dtoKey: 'sellPrice',
   },
   {
     title: 'Color',

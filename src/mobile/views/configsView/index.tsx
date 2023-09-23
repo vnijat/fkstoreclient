@@ -1,6 +1,6 @@
 import { Picker } from "@react-native-picker/picker";
 import React, { useState } from "react";
-import { View } from "react-native";
+import { KeyboardAvoidingView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useSelector } from "react-redux";
 import { InputItem } from "../../../components/inputItem";
@@ -46,7 +46,7 @@ const ConfigsView = () => {
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: Colors.CARD_COLOR }}>
-            <View>
+            <KeyboardAvoidingView >
                 <InputItem
                     setValue={(value) => setApiValue(value as string)}
                     inputValue={value}
@@ -74,7 +74,7 @@ const ConfigsView = () => {
                         onHoverOpacity
                     />
                 </View>
-            </View>
+            </KeyboardAvoidingView>
         </SafeAreaView>
     );
 };

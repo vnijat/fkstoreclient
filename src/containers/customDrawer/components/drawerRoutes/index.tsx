@@ -1,11 +1,11 @@
 import React from "react";
-import { ClientsIcon, OrdersIcon, ProjectsIcon, PurchasesIcon, WarehouseIcon } from "../../../../assets/icons/menuIcons";
+import { ClientsIcon, OrdersIcon, ProjectsIcon, PurchasesIcon, TrackIcon, WarehouseIcon } from "../../../../assets/icons/menuIcons";
 import { RouteNames } from "../../../../enums/routes";
 import UseLanguage from "../../../../modules/lozalization/useLanguage.hook";
 import CustomDrawerItem from "../drawerItem/drawerItem";
 
 
-interface IDrawerRoutes {
+interface INavigationRoutes {
     currentRoute: string;
     navigation: any;
 }
@@ -18,7 +18,7 @@ export interface IRouteData {
     childRoutes?: IRouteData[];
 }
 
-const DrawerRoutes = ({ navigation, currentRoute }: IDrawerRoutes) => {
+const NavigationRoutes = ({ navigation, currentRoute }: INavigationRoutes) => {
     const ICON_SIZE = 30;
     const lang = UseLanguage();
 
@@ -50,6 +50,11 @@ const DrawerRoutes = ({ navigation, currentRoute }: IDrawerRoutes) => {
             routeName: RouteNames.PROJECTS,
             icon: (color: string) => <ProjectsIcon size={ICON_SIZE} color={color} />,
         },
+        {
+            title: lang['trackView'],
+            routeName: RouteNames.TRACKVIEW,
+            icon: (color: string) => <TrackIcon size={ICON_SIZE} color={color} />,
+        },
     ];
 
     const onPressRoute = (route: string) => {
@@ -68,4 +73,4 @@ const DrawerRoutes = ({ navigation, currentRoute }: IDrawerRoutes) => {
     );
 };
 
-export default DrawerRoutes;
+export default NavigationRoutes;

@@ -3,7 +3,7 @@ import { Text, View } from "react-native";
 import { Alert } from "react-native-windows";
 import CustomPressable from "../../../components/customPressable";
 import { OrderItemStatus } from "../../../enums/orderItemStatus";
-import { PaymentMethod } from "../../../enums/purchase";
+import { PaymentMethod, PurchaseItemStatus } from "../../../enums/purchase";
 import { addItemForOrder } from "../../../modules/redux/orderSlicer";
 import { addItemForPurchase } from "../../../modules/redux/purchaseSlicer";
 import { useAppDispatch } from "../../../modules/redux/store";
@@ -27,28 +27,17 @@ const ItemsForPurchaseSearchItem = ({ data, setShowContent }: IItemsForPurchaseS
     const style = useMemo(() => getStyle(), []);
     const dispatch = useAppDispatch();
     const rowData = useMemo(() => [
-        { value: data.name, title: 'Name' },
-        { value: data.barcode, title: 'Barcode' },
-        { value: data.unit.symbol, title: 'Unit' },
+        { value: data?.store?.name, title: 'Store' },
+        { value: data?.barcode, title: 'Barcode' },
+        { value: data?.name, title: 'Name' },
+        { value: data?.unit.symbol, title: 'Unit' },
         { value: Number(data.quantity), title: 'Quantity' },
     ], [data]);
 
 
-    const setItemForOrder = () => {
+    const setItemForPurchase = () => {
         if (!data.inUse) {
-            dispatch(addItemForPurchase({
-                itemId: data.id as number,
-                unit: data.unit.name,
-                name: data.name,
-                quantity: 0,
-                barcode: data.barcode,
-                pricePerUnit: data.pricePerUnit,
-                fullfilled: false,
-                supplierId: data.supplier.id || null,
-                paymentMethod: PaymentMethod.CASH,
-                updateMainPrice: false,
-                poInfo: ''
-            }));
+            dispatch(addItemForPurchase(data));
             setShowContent && setShowContent(false);
         } else {
             HELP.alertError(undefined, 'Item in active  Order, Please complete order first');
@@ -81,7 +70,7 @@ const ItemsForPurchaseSearchItem = ({ data, setShowContent }: IItemsForPurchaseS
 
     return (
         <CustomPressable
-            onPress={setItemForOrder}
+            onPress={setItemForPurchase}
             style={style.searchedItemContainer}
         >
             {renderRow}

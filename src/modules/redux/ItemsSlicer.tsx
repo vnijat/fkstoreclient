@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { AddItemInterface } from '../../types/item';
+import { AddItemInterface, ProductAttributesDto } from '../../types/item';
 import { ItemForPostDefaults } from '../../utils/defaults';
 
 interface ItemsSlicerInterface {
@@ -10,6 +10,7 @@ interface ItemsSlicerInterface {
     isShowItemModal: boolean;
     isShowAddEditModal: boolean;
     itemIdForFullResponse?: number;
+    addEditModalCalledFrom: 'warehouse' | 'purchase';
 }
 
 const initialState = {
@@ -21,7 +22,8 @@ const initialState = {
     isItemForEdit: false,
     isShowItemModal: false,
     itemIdForFullResponse: undefined,
-    isShowAddEditModal: false
+    isShowAddEditModal: false,
+    addEditModalCalledFrom: 'warehouse'
 } as ItemsSlicerInterface;
 
 const itemsSlicer = createSlice({
@@ -50,8 +52,8 @@ const itemsSlicer = createSlice({
             Object.assign(state.itemforPost, action.payload);
         },
         clearItemForPosting: (state) => {
-            const { id, updatedAt, createdAt, name, description, code, ...rest } = state.itemforPost;
-            state.itemforPost = { name: '', description: '', code: '', ...rest };
+            const { id, updatedAt, createdAt, name, description, code, costPrice, quantity, sellPrice, properties, ...rest } = state.itemforPost;
+            state.itemforPost = { name: '', description: '', code: '', costPrice: undefined, sellPrice: undefined, quantity: undefined, properties: ItemForPostDefaults.properties, ...rest };
         },
         setItemForPost: (state, action: PayloadAction<{ [key: string]: any; }>) => {
             Object.assign(state.itemforPost, action.payload);
@@ -65,6 +67,12 @@ const itemsSlicer = createSlice({
         setIsShowAddEditModal: (state, action: PayloadAction<boolean>) => {
             state.isShowAddEditModal = action.payload;
         },
+        setFromWhereAddEditModalCalled: (state, action: PayloadAction<'warehouse' | 'purchase'>) => {
+            state.addEditModalCalledFrom = action.payload;
+        },
+        setProductAttributes: (state, action: PayloadAction<ProductAttributesDto>) => {
+            Object.assign(state.itemforPost.properties, action.payload);
+        }
     },
 });
 
@@ -78,6 +86,8 @@ export const {
     setItemValueForPost,
     clearItemForPosting,
     setItemIdForFullResponse,
-    setIsShowAddEditModal
+    setIsShowAddEditModal,
+    setFromWhereAddEditModalCalled,
+    setProductAttributes
 } = itemsSlicer.actions;
 export default itemsSlicer.reducer;

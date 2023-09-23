@@ -16,7 +16,8 @@ interface AddClientProject {
   isSample?: boolean;
   otherExpenses?: OtherExpensesType[];
   status: ProjectStatus;
-  orders: OrderItem[];
+  orders?: OrderItem[];
+  typeId?: number | null;
 }
 
 interface IProjectsForPicker {
@@ -25,6 +26,8 @@ interface IProjectsForPicker {
 }
 
 interface Project extends Common {
+  id: number;
+  projectCode: string;
   title: string;
   description: string | null;
   status: ProjectStatus;
@@ -40,13 +43,23 @@ interface Project extends Common {
   unPaid: number;
   totalOrders: number;
   ordersTotalCost: number;
+  totalExpenses: number;
+  totalExpensesCost: number;
+  orders?: OrderItem[];
+  typeId: number | null;
+  type: IProjectType;
 }
 
-type OtherExpensesType = {
+interface OtherExpensesType extends Common {
   title: string;
   description?: string;
   cost: number;
-};
+}
+
+interface IProjectType extends Common {
+  title: string;
+  prefix: string;
+}
 
 interface ProjectsQueryParams {
   search?: string;
@@ -56,15 +69,19 @@ interface ProjectsQueryParams {
   sort?: string;
   order?: Order;
   clientId?: number;
+  projectType?: number | 'all';
+  showDeleted?: boolean;
 }
 
 interface ProjectsResponse {
   projects: Project[];
   meta: Imeta;
   projectsCount: number;
-  orderBy: {sort: string; order: Order};
+  orderBy: {sort: string; order: Order;};
   clientType: ClientType | 'all';
+  projectType: number | 'all';
   clientId: number;
+  showDeleted: boolean;
 }
 
 export type {
@@ -74,4 +91,5 @@ export type {
   ProjectsQueryParams,
   ProjectsResponse,
   OtherExpensesType,
+  IProjectType,
 };

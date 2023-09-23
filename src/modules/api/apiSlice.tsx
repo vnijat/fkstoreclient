@@ -1,11 +1,8 @@
-// Need to use the React-specific entry point to import createApi
 import { BaseQueryFn, createApi, FetchArgs, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
 import { ItemOptionForInputs, ItemQueryParams, ItemResponse, ItemResponseFull } from '../../types/item';
-import { IItemOptions } from '../redux/itemOptions';
 import { RootState } from '../redux/store';
 import { ApiTags } from './api.tags';
 
-// Define a service using a base URL and expected endpoints
 
 const asyncFetchBaseQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (args, api, extraOptions) => {
     const baseUrl = (api.getState() as RootState).configs.apiURL;

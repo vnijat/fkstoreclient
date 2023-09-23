@@ -15,6 +15,7 @@ import { useDeleteClientMutation } from '../../modules/api/clients.api';
 import HELP from '../../services/helpers';
 import { setClientForPost, setIsClientForEdit, setIsShowClientModal } from '../../modules/redux/clientsSlicer';
 import { useSelector } from 'react-redux';
+import FONT from '../../utils/font';
 
 interface IClientCard {
     id: number | string;
@@ -78,11 +79,12 @@ const ClientCard = ({
 
     const onPressDelete = async () => {
         try {
-            await HELP.alertPromise('do you want to delete Client?', 'you cant recover deleted Client');
             const response = await apiDeleteClient(Number(id));
+            if (response.error) {
+                throw response.error;
+            }
             HELP.showToast('success', `${response?.data?.message}`.toUpperCase(), "Deleted");
         } catch (erorr) {
-            console.log("On delete Client==>>", erorr);
             HELP.alertError(erorr);
         }
 
@@ -110,27 +112,38 @@ const ClientCard = ({
             <View style={style.cardContent}>
 
                 <View style={style.cardHeader}>
-                    <View style={style.iconContainer} tooltip={type}>
+                    <View style={style.iconContainer} tooltip={type} >
                         {renderClientIcon}
                     </View>
                     <View style={style.clientInfo}>
-                        <Text style={style.clientInfoText}>
+                        <Text style={style.clientInfoText} selectable>
                             {`${firstName} ${lastName}`.toUpperCase()}
                         </Text>
-                        {!!companyName?.length && <Text style={style.companyText} >
+                        {!!companyName?.length && <Text style={style.companyText} selectable>
                             {companyName.toUpperCase()}
                         </Text>}
                     </View>
+                </View>
+                <ProjectInfo {...{
+                    projectsCompleted,
+                    projectsDeclined,
+                    projectsInProgress,
+                    totalProjects,
+                }} />
+                <View style={style.contactsInfoTitleContainer}>
+                    <Text style={style.contactsInfoTitleText}>
+                        {'CONTACTS'}
+                    </Text>
                 </View>
                 <View style={style.infoContainer}>
                     {clientInfo.map((info, index) => {
                         if (info?.value) {
                             return (
-                                <View style={style.infoContent} key={`${index}-${info}`}>
+                                <View style={style.infoContent} key={`${index}-${info}`} >
                                     <View style={style.infoIcon}>
                                         {info.icon}
                                     </View>
-                                    <Text style={style.infoText}>
+                                    <Text style={style.infoText} selectable>
                                         {info?.value}
                                     </Text>
                                 </View>
@@ -143,12 +156,7 @@ const ClientCard = ({
 
                     })}
                 </View>
-                <ProjectInfo {...{
-                    projectsCompleted,
-                    projectsDeclined,
-                    projectsInProgress,
-                    totalProjects,
-                }} />
+
             </View>
         </View >
     );

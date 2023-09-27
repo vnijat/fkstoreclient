@@ -170,7 +170,6 @@ const SearchContainer: FC<ISearchContainer> = ({ logicProvider, dataProvider }) 
                                 onPress={handleCreateNew}
                                 onHoverOpacity
                                 textColor={Colors.CARD_COLOR}
-                                buttonColor={Colors.DEFAULT_TEXT_COLOR}
                                 borderRadius={2}
                             />
                         </View>

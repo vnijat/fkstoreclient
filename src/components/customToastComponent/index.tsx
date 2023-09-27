@@ -2,7 +2,6 @@ import {Text, View} from "react-native";
 import {ToastProps} from "react-native-toast-notifications/lib/typescript/toast";
 import {ToastVariants} from "../../types/toast";
 import {Colors} from "../../utils/colors";
-import FONT from "../../utils/font";
 import {useMemo} from "react";
 import {getStyle} from "./styles.";
 

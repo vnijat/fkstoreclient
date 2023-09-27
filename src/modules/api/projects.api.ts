@@ -29,7 +29,7 @@ export const ProjectsApi = InventoryApi.injectEndpoints({
         };
       },
     }),
-    getProjectTypes: build.query<{label: string; value: number, prefix: string;}, undefined>({
+    getProjectTypes: build.query<{label: string; value: number, prefix: string;}[], undefined>({
       providesTags: ['projectTypes'],
       query: () => {
         return {

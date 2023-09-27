@@ -37,7 +37,7 @@ const SideBar: FC<ISideBar> = ({navigation, currentRoute, routeNames}) => {
                     style={style.configButton} >
                     <Icon name='cog' size={30} color={Colors.DEFAULT_TEXT_COLOR} />
                 </CustomPressable>
-                <Image source={require('../../assets/logo/LOGO.svg')} resizeMode={'contain'} style={{height: 60}} />
+                <Image source={require('../../assets/logo/LOGO.svg')} resizeMode={'center'} style={{height: 60, width: 60}} />
             </View>
         </View >
     );

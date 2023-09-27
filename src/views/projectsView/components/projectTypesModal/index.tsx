@@ -73,7 +73,7 @@ const ProjectTypesModal = ({logicProvider, dataProvider}: IProjectTypesModal) =>
                 tooltip={'Reset'.toUpperCase()}
                 onHoverOpacity
                 onPress={handleOnpressReset}
-                style={{position: 'absolute', right: 10, top: 10}}
+                style={style.resetButton}
             >
                 <Icon name={'back'} size={25} color={Colors.METALLIC_GOLD} />
             </CustomPressable>
@@ -86,11 +86,11 @@ const ProjectTypesModal = ({logicProvider, dataProvider}: IProjectTypesModal) =>
 
     const ContextMenuContent = useCallback(({typeId}: {typeId: number;}) => {
         return (
-            <View style={{minWidth: 100, backgroundColor: Colors.CARD_COLOR, minHeight: 40}}>
-                <CustomPressable style={{minWidth: 100, backgroundColor: Colors.CARD_HEADER_COLOR, alignItems: 'center', justifyContent: 'center', margin: 2, height: 30}} onHoverOpacity
+            <View style={style.contextMenuContainer}>
+                <CustomPressable style={style.contextMenuItem} onHoverOpacity
                     onPress={() => handleDeleteProjectType(typeId)}
                 >
-                    <Text style={{color: Colors.DEFAULT_TEXT_COLOR, fontFamily: FONT.FONT_FAMILY, fontSize: FONT.FONT_SIZE_MEDIUM}}>
+                    <Text style={style.contextMenuItemText}>
                         {'Delete'.toUpperCase()}
                     </Text>
                 </CustomPressable>
@@ -106,11 +106,11 @@ const ProjectTypesModal = ({logicProvider, dataProvider}: IProjectTypesModal) =>
                 onHoverOpacity
                 tooltip={'Press to Edit Project Type'.toUpperCase()}
                 key={index}
-                style={{minWidth: 80, height: 30, backgroundColor: Colors.CARD_HEADER_COLOR, borderRadius: 3, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', margin: 5, padding: 5}}>
+                style={style.typeCardContainer}>
                 <CustomContextMenu>
                     <ContextMenuContent typeId={value} />
                 </CustomContextMenu>
-                <Text style={{color: Colors.DEFAULT_TEXT_COLOR, fontFamily: FONT.FONT_FAMILY, fontSize: FONT.FONT_SIZE_MEDIUM}}>
+                <Text style={style.typeCardText}>
                     {label?.toUpperCase()}
                 </Text>
             </CustomPressable>
@@ -150,20 +150,27 @@ const ProjectTypesModal = ({logicProvider, dataProvider}: IProjectTypesModal) =>
             borderColor={Colors.DEFAULT_TEXT_COLOR}
             width={600}
         >
-            <View style={{flex: 1, height: 400, backgroundColor: Colors.CARD_COLOR, paddingHorizontal: 5}}>
-
-                <View style={{flex: 0.7, flexDirection: 'row', flexWrap: 'wrap'}}>
+            <View style={style.container}>
+                <View style={style.typeContentContainer}>
                     {projectTypeData?.map(renderProjectTypeCard)}
                 </View>
                 <View style={{height: 5, backgroundColor: Colors.METALLIC_GOLD}} />
-                <View style={{flex: 0.3, backgroundColor: Colors.DEFAULT_TEXT_COLOR, marginBottom: 5, justifyContent: 'center'}}>
+                <View style={style.bottomContainer}>
                     {renderResetButton}
-                    <View style={{flexDirection: "row", flexWrap: 'wrap', justifyContent: "center", }}>
-                        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                    <View style={style.inputContainer}>
+                        <View style={style.inputItemsContainer}>
                             {renderProejctTypeInputs}
                         </View>
-                        <View style={{margin: 5, marginLeft: 10, flexDirection: 'row', alignItems: 'flex-end'}}>
-                            <PrimaryButton title={buttonTitle} onHoverOpacity buttonColor={Colors.CARD_COLOR} textColor={Colors.DEFAULT_TEXT_COLOR} onPress={handleOnpressInputButton} borderRadius={3} height={35} width={100} />
+                        <View style={style.inputButtonContainer}>
+                            <PrimaryButton
+                                title={buttonTitle}
+                                onHoverOpacity
+                                buttonColor={Colors.CARD_COLOR}
+                                textColor={Colors.DEFAULT_TEXT_COLOR}
+                                onPress={handleOnpressInputButton}
+                                borderRadius={3}
+                                height={35}
+                                width={100} />
                         </View>
                     </View>
                 </View>

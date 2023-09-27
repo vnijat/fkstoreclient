@@ -6,7 +6,7 @@ export const getStyle = (textColor?: string, buttonColor?: string) => {
     const style = StyleSheet.create({
         pageNumbersContainer: {
             flexDirection: 'row',
-            width: 160,
+            width: 200,
             justifyContent: 'center'
         },
     });

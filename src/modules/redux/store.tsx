@@ -1,9 +1,8 @@
-import { combineReducers, configureStore, Store } from '@reduxjs/toolkit';
-import { setupListeners } from '@reduxjs/toolkit/dist/query';
-import { useDispatch } from 'react-redux';
-import { InventoryApi } from '../api/apiSlice';
+import {combineReducers, configureStore, Store} from '@reduxjs/toolkit';
+import {setupListeners} from '@reduxjs/toolkit/dist/query';
+import {useDispatch} from 'react-redux';
+import {InventoryApi} from '../api/apiSlice';
 import appStateSlicer from './appStateSlicer';
-import itemsSlicer from './itemsSlicer';
 import menuSlicer from './menuSlicer';
 import itemQuerySlicer from './itemQuerySlicer';
 import filterSlicer from './filterSlicer';
@@ -20,9 +19,10 @@ import purchaseSlicer from './purchaseSlicer';
 import tableConfigsSlicer from './tableConfigs';
 import inventoryTrackSlicer from './inventoryTrackSlicer';
 import invventoryTrackQueryParams from './inventoryTrackQueryParams';
-import { FLUSH, PAUSE, PERSIST, PersistConfig, persistReducer, persistStore, PURGE, REGISTER, REHYDRATE } from 'redux-persist';
+import {FLUSH, PAUSE, PERSIST, PersistConfig, persistReducer, persistStore, PURGE, REGISTER, REHYDRATE} from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
+import itemsSlicer from './itemsSlicer';
 
 
 const persistConfig: PersistConfig<any> = {

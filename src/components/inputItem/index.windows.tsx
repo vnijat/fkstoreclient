@@ -130,7 +130,7 @@ export const InputItem: FC<IInputItem> = memo(
       return (<>
         < CustomPicker
           dataKeyName={pickerDataKeyName}
-          singleSelected={inputValue}
+          singleSelected={inputValue as string | number}
           singleOnSelect={onValueChange}
           singleSelectData={dataForPicker}
           isAddButton={isPickerAddButton}
@@ -161,7 +161,7 @@ export const InputItem: FC<IInputItem> = memo(
             key={id}
             style={style.textInput}
             onChangeText={onChangeText}
-            value={inputValue}
+            value={inputValue as string}
             placeholder={placeHolder}
             multiline={isMultiLine}
             maxLength={maxLength}

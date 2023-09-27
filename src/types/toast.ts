@@ -1,9 +1,5 @@
-import {ToastConfigParams} from 'react-native-toast-message';
 
-type ToastVariants = 'success' | 'info' | 'error';
+export const toastVariants = ['normal', 'success', 'warning', 'danger', 'info'] as const;
+type ToastVariants = typeof toastVariants[number];
 
-type ToastConfigType = {
-  [K in ToastVariants]: (params: ToastConfigParams<any>) => React.ReactNode;
-};
-
-export type {ToastConfigType, ToastVariants};
+export type {ToastVariants};

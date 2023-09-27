@@ -9,8 +9,9 @@ import {Colors} from "../utils/colors";
 import countries from 'i18n-iso-countries';
 import {IsingelSelectData} from "../containers/customPicker";
 import {Item} from "../types/item";
-import Toast from "react-native-toast-message";
-import {ToastVariants} from "../types/toast";
+import {ToastVariants, toastVariants} from "../types/toast";
+import {Toast} from "react-native-toast-notifications";
+import {IToastData} from "../components/customToastComponent";
 var Sound;
 if (Platform.OS !== 'windows') {
     Sound = require('react-native-sound');
@@ -182,17 +183,20 @@ const getProjectStatusIcons = (status: ProjectStatus, size?: number, color?: str
 
 const alertError = (error?: {status: string, data: {message: string | string[];};}, title?: string, message?: string) => {
     const errorTitle = title || `Conflict Status Code  ${error?.status}` || '';
-    const dataMessage = Array.isArray(error?.data.message) ? error?.data.message.join(',') : error?.data.message;
+    const dataMessage = Array.isArray(error?.data.message) ? error?.data.message.join('*\n') : error?.data.message;
     const errorMessage = message || dataMessage || '';
-    showToast('error', errorMessage, errorTitle, 5000);
+    showToast('warning', errorMessage, errorTitle, 5000);
 };
 
-const showToast = (toastType: ToastVariants, message: string, title?: string, duration?: number) => {
-    Toast.show({
-        type: toastType,
-        text1: title || '',
-        text2: message || '',
-        visibilityTime: duration || 3000,
+const showToast = (toastType: ToastVariants = 'normal', message: string, title?: string, duration?: number) => {
+    const toastVariant = toastVariants.includes(toastType) ? toastType : 'normal';
+    Toast.show('Custom Toast', {
+        duration: duration || 3000,
+        data: {
+            title: title,
+            message: message,
+            type: toastVariant,
+        } as IToastData
     });
 };
 

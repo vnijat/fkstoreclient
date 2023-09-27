@@ -14,8 +14,8 @@ export const getStyle = (isCurrent?: boolean) => {
             fontSize: 12
         },
         pageButtons: {
-            height: 25,
-            width: 30,
+            height: 30,
+            width: 35,
             margin: 1,
             borderRadius: 2,
             justifyContent: 'center',

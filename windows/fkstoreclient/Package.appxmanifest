@@ -8,7 +8,7 @@
 
   <Identity
     Publisher="CN=neejee"
-    Version="1.1.13.0"  Name="fkclient"/>
+    Version="1.1.14.0"  Name="fkclient"/>
 
   <mp:PhoneIdentity PhoneProductId="480eb102-e22b-422b-9fea-56f15468e48f" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 

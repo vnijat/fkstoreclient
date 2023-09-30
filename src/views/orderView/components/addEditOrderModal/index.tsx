@@ -1,7 +1,8 @@
-import { memo } from "react";
+import {memo, useMemo} from "react";
 import CustomModal from "../../../../components/customModal";
 import AddOrderContainer from "../../../../containers/addOrderContainer";
-import { Colors } from "../../../../utils/colors";
+import {Colors} from "../../../../utils/colors";
+import {useWindowDimensions} from "react-native";
 
 
 
@@ -15,8 +16,9 @@ interface IAddEditOrderModal {
 
 
 
-const AddEditOrderModal = ({ isOpen, onClose }: IAddEditOrderModal) => {
-
+const AddEditOrderModal = ({isOpen, onClose}: IAddEditOrderModal) => {
+    const {width} = useWindowDimensions();
+    const modalWidth = useMemo(() => width - 200, [width]);
     const onCloseModal = () => {
         onClose && onClose();
     };
@@ -26,7 +28,7 @@ const AddEditOrderModal = ({ isOpen, onClose }: IAddEditOrderModal) => {
             isShowModal={isOpen}
             closeModal={onCloseModal}
             isDissmissEnabled={false}
-            width={1000}
+            width={modalWidth}
             borderColor={Colors.DEFAULT_TEXT_COLOR}
         >
             {isOpen && <AddOrderContainer />}

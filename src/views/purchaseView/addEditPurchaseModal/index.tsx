@@ -1,7 +1,8 @@
-import React, { memo } from "react";
+import React, {memo, useMemo} from "react";
 import CustomModal from "../../../components/customModal";
 import AddPurchaseContainer from "../../../containers/addPurchaseContainer";
-import { Colors } from "../../../utils/colors";
+import {Colors} from "../../../utils/colors";
+import {useWindowDimensions} from "react-native";
 
 
 
@@ -15,8 +16,9 @@ interface IAddEditPurchaseModal {
 
 
 
-const AddEditPurchaseModal = ({ isOpen, onClose }: IAddEditPurchaseModal) => {
-
+const AddEditPurchaseModal = ({isOpen, onClose}: IAddEditPurchaseModal) => {
+    const {width} = useWindowDimensions();
+    const modalWidth = useMemo(() => width - 200, [width]);
     const onCloseModal = () => {
         onClose && onClose();
     };
@@ -26,7 +28,7 @@ const AddEditPurchaseModal = ({ isOpen, onClose }: IAddEditPurchaseModal) => {
             isShowModal={isOpen}
             closeModal={onCloseModal}
             isDissmissEnabled={false}
-            width={1250}
+            width={modalWidth}
             borderColor={Colors.DEFAULT_TEXT_COLOR}
         >
             {isOpen && <AddPurchaseContainer />}

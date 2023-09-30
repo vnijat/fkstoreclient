@@ -5,18 +5,19 @@ import FONT from '../../utils/font';
 export const getStyle = () => {
     const style = StyleSheet.create({
         toastContainer: {
-            minHeight: 60,
+            minHeight: 50,
+            minWidth: 200,
             maxWidth: 300,
             maxHeight: 100,
-            paddingHorizontal: 5,
-            paddingVertical: 5,
             backgroundColor: Colors.CARD_COLOR,
             borderStartWidth: 5,
             borderWidth: 1,
-            borderRadius: 10
+            borderRadius: 10,
+            paddingHorizontal: 10,
         },
         toastTitleContainer: {
-            flex: 0.3
+            flex: 0.4,
+            justifyContent: 'center',
         },
         toastTitleText: {
             color: Colors.DEFAULT_TEXT_COLOR,
@@ -25,8 +26,7 @@ export const getStyle = () => {
             fontFamily: FONT.FONT_FAMILY
         },
         toastMessageContainer: {
-            flex: 0.8,
-            justifyContent: 'center',
+            flex: 0.6,
             alignItems: 'center',
             flexDirection: 'row',
             flexWrap: 'wrap'

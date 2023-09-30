@@ -76,7 +76,7 @@
   <PropertyGroup Label="UserMacros">
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
     <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
-    <PackageCertificateThumbprint>A50C55A811B8A3F2F2CBFD83009890C3DB81C95F</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>173468164ECBB83A8A5FF8C261866F1FC195024D</PackageCertificateThumbprint>
     <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
     <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
     <AppxPackageDir>C:\Users\neejee\Documents\FKSTORECLIENTPACKAGES\</AppxPackageDir>

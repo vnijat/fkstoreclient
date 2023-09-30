@@ -66,7 +66,7 @@ export const getStyle = () => {
             height: 30,
             flexDirection: 'row',
             minWidth: 100,
-            maxWidth: 200,
+            maxWidth: 300,
             alignItems: 'center',
             paddingHorizontal: 5,
             justifyContent: 'space-between'

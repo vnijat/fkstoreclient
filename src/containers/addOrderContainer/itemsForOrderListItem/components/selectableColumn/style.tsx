@@ -1,5 +1,5 @@
-import { StyleSheet } from 'react-native';
-import { Colors } from '../../../../../utils/colors';
+import {StyleSheet} from 'react-native';
+import {Colors} from '../../../../../utils/colors';
 
 export const getStyle = () => {
     const style = StyleSheet.create({
@@ -28,13 +28,12 @@ export const getStyle = () => {
         },
         pickerItemText: {
             color: Colors.DEFAULT_TEXT_COLOR,
-            // minWidth: 100,
-            // maxWidth: 200
             width: '100%'
         },
         pickerItemSelectedText: {
             color: Colors.CARD_COLOR,
-            fontWeight: '700'
+            fontWeight: '700',
+            width: '100%'
         },
         selectableColumnContainer: {
             zIndex: 2,

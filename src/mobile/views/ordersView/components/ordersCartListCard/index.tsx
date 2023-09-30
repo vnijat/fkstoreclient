@@ -76,11 +76,8 @@ const OrdersCartListCard = ({data, index, onValueChange, handleRemove, projectsF
 
 
     const renderForProject = useMemo(() => {
-        // if (fullfilled) {
-        //     return null;
-        // }
         return (<View style={style.proejctContainer}>
-            <Text style={{color: Colors.DEFAULT_TEXT_COLOR, fontSize: FONT.FONT_SIZE_VERY_SMALL, textAlign: 'center'}}>
+            <Text style={{color: Colors.DEFAULT_TEXT_COLOR, fontSize: FONT.FONT_SIZE_VERY_SMALL, marginLeft: 10}}>
                 {`project`.toUpperCase()}
             </Text>
             <DropDownPicker
@@ -90,7 +87,7 @@ const OrdersCartListCard = ({data, index, onValueChange, handleRemove, projectsF
                 disabled={fullfilled}
                 placeholder={(fullfilled && !project?.id) ? "" : 'Select project'}
                 placeholderStyle={{color: Colors.DEFAULT_TEXT_COLOR}}
-                textStyle={{fontSize: FONT.FONT_SIZE_VERY_SMALL, }}
+                textStyle={{fontSize: FONT.FONT_SIZE_SMALL, fontWeight: FONT.FONT_BOLD, color: Colors.BUTTON_COLOR_DEFAULT}}
                 style={{borderWidth: 0, backgroundColor: 'transparent', position: 'absolute', top: -15}}
                 listParentContainerStyle={{backgroundColor: Colors.CARD_HEADER_COLOR, margin: 1}}
                 searchContainerStyle={{backgroundColor: Colors.CARD_COLOR}}
@@ -160,8 +157,8 @@ const OrdersCartListCard = ({data, index, onValueChange, handleRemove, projectsF
                     </View>
                     <View style={style.contentBottom}>
                         <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                            <BarcodeIcon />
-                            <Text style={{color: Colors.DEFAULT_TEXT_COLOR, fontWeight: FONT.FONT_BOLD, fontSize: FONT.FONT_SIZE_SMALL}}>
+                            <BarcodeIcon color={Colors.BUTTON_COLOR_DEFAULT} />
+                            <Text style={{color: Colors.BUTTON_COLOR_DEFAULT, fontWeight: FONT.FONT_BOLD, fontSize: FONT.FONT_SIZE_SMALL}}>
                                 {barcode}
                             </Text>
                         </View>

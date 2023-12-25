@@ -3,7 +3,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import MIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Alert, View, Text } from "react-native";
-import { CameraScreen } from "react-native-camera-kit";
+// import { CameraScreen } from "react-native-camera-kit";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useSelector } from "react-redux";
 import { RouteNames } from "../../../enums/routes";
@@ -78,14 +78,14 @@ const ScanView = () => {
                 </CustomPressable>
             }
             {
-                isFoucused && < CameraScreen
-                    scanBarcode={true}
-                    onReadCode={onReadBarcode}
-                    showFrame={true}
-                    laserColor={Colors.INFRA_RED}
-                    frameColor={Colors.METALLIC_GOLD}
-                    focusMode={'on'}
-                />
+                // isFoucused && < CameraScreen
+                //     scanBarcode={true}
+                //     onReadCode={onReadBarcode}
+                //     showFrame={true}
+                //     laserColor={Colors.INFRA_RED}
+                //     frameColor={Colors.METALLIC_GOLD}
+                //     focusMode={'on'}
+                // />
             }
         </SafeAreaView >
     );

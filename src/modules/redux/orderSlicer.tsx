@@ -1,20 +1,22 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { OrderItemStatus } from '../../enums/orderItemStatus';
-import { OrderStatus } from '../../enums/orderStatus';
-import { Item } from '../../types/item';
-import { AddOrderDto, OrderItem } from '../../types/projectOrder';
+import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {OrderItemStatus} from '../../enums/orderItemStatus';
+import {OrderStatus} from '../../enums/orderStatus';
+import {Item} from '../../types/item';
+import {AddOrderDto, OrderItem} from '../../types/projectOrder';
 
 
 interface IOrders {
     orderDataForPost: AddOrderDto;
     isOrderForEdit: boolean;
     isShowOrderModal: boolean;
+    projectId: number | null;
 }
 
 const initialState = {
-    orderDataForPost: { status: OrderStatus.PENDING },
+    orderDataForPost: {status: OrderStatus.PENDING},
     isOrderForEdit: false,
-    isShowOrderModal: false
+    isShowOrderModal: false,
+    projectId: null
 } as IOrders;
 
 const ordersSlicer = createSlice({
@@ -36,7 +38,7 @@ const ordersSlicer = createSlice({
                 itemAtStock: item.quantity,
                 pricePerUnit: item.costPrice,
                 status: OrderItemStatus.IN_USE,
-                projectId: null,
+                projectId: state.projectId,
                 storeId: item.store.id,
                 store: item.store
 
@@ -48,13 +50,13 @@ const ordersSlicer = createSlice({
                 state.orderDataForPost.orderItems.push(orderItem);
             }
         },
-        updateItemForOrder: (state, action: PayloadAction<{ itemId: number, data: { [key: string]: any; }; }>) => {
+        updateItemForOrder: (state, action: PayloadAction<{itemId: number, data: {[key: string]: any;};}>) => {
             if (state?.orderDataForPost?.orderItems) {
                 const itemIndex = state?.orderDataForPost?.orderItems.findIndex((item) => item.itemId == action.payload.itemId);
                 state.orderDataForPost.orderItems[itemIndex] = Object.assign(state.orderDataForPost.orderItems[itemIndex], action.payload.data);
             }
         },
-        deleteItemFromOrder: (state, action: PayloadAction<{ itemId: number | string; }>) => {
+        deleteItemFromOrder: (state, action: PayloadAction<{itemId: number | string;}>) => {
             if (state?.orderDataForPost?.orderItems) {
                 const itemIndex = state.orderDataForPost.orderItems.findIndex((item) => item.itemId == action.payload.itemId);
                 state.orderDataForPost.orderItems.splice(itemIndex, 1);
@@ -68,6 +70,9 @@ const ordersSlicer = createSlice({
         },
         setIsShowOrderModal: (state, action: PayloadAction<boolean>) => {
             state.isShowOrderModal = action.payload;
+        },
+        setProjectId: (state, action: PayloadAction<number>) => {
+            state.projectId = action.payload;
         }
     }
 });
@@ -80,5 +85,6 @@ export const {
     clearOrderDataForPost,
     setIsOrderForEdit,
     setIsShowOrderModal,
+    setProjectId
 } = ordersSlicer.actions;
 export default ordersSlicer.reducer;

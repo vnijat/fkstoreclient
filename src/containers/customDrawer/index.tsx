@@ -8,9 +8,10 @@ import Icon from "react-native-vector-icons/Entypo";
 import {Colors} from "../../utils/colors";
 import {setIsShowSettingsModal} from "../../modules/redux/appStateSlicer";
 import NavigationRoutes from "./components/drawerRoutes";
+import {NavigationContainerRef} from "@react-navigation/native";
 
 interface ISideBar {
-    navigation: DrawerNavigationHelpers;
+    navigation: NavigationContainerRef<ReactNavigation.RootParamList>;
     currentRoute: string;
     routeNames: Array<string>;
 }
@@ -26,17 +27,16 @@ const SideBar: FC<ISideBar> = ({navigation, currentRoute, routeNames}) => {
 
     return (
         <View style={style.container}>
-            {/* <View style={style.border} /> */}
             <View>
-                <NavigationRoutes navigation={navigation} currentRoute={currentRoute} />
+                <NavigationRoutes navigation={navigation} currentRoute={currentRoute} routeNames={routeNames} />
             </View>
             <View style={style.bottomContainer}>
-                <CustomPressable
+                {/* <CustomPressable
                     onPress={onPressConfigs}
                     onHoverOpacity
                     style={style.configButton} >
                     <Icon name='cog' size={30} color={Colors.DEFAULT_TEXT_COLOR} />
-                </CustomPressable>
+                </CustomPressable> */}
                 <Image source={require('../../assets/logo/LOGO.svg')} resizeMode={'center'} style={{height: 60, width: 60}} />
             </View>
         </View >

@@ -1,14 +1,14 @@
-import React, { memo, useMemo, useState } from "react";
-import { View, Text } from "react-native";
+import React, {memo, useMemo, useState} from "react";
+import {View, Text} from "react-native";
 import Icon from "react-native-vector-icons/Entypo";
 import CustomPressable from "../../../../components/customPressable";
-import { InputItem } from "../../../../components/inputItem/index.windows";
-import CustomPicker, { IsingelSelectData } from "../../../../containers/customPicker";
-import { Order } from "../../../../enums/order.enum";
-import { Colors } from "../../../../utils/colors";
+import {InputItem} from "../../../../components/inputItem/index.windows";
+import CustomPicker, {IsingelSelectData} from "../../../../containers/customPicker";
+import {Order} from "../../../../enums/order.enum";
+import {Colors} from "../../../../utils/colors";
 import ClientDataProvider from "../../provider/data";
 import ClientLogicProvider from "../../provider/logic";
-import { getStyle } from "./styles";
+import {getStyle} from "./styles";
 
 
 
@@ -17,7 +17,7 @@ interface IClinetListHeader {
     dataProvider: ReturnType<typeof ClientDataProvider>;
 }
 
-const ClientListHeader = ({ logicProvider, dataProvider }: IClinetListHeader) => {
+const ClientListHeader = ({logicProvider, dataProvider}: IClinetListHeader) => {
     const style = useMemo(() => getStyle(), []);
     const {
         handleOnPressAddClient,
@@ -28,7 +28,7 @@ const ClientListHeader = ({ logicProvider, dataProvider }: IClinetListHeader) =>
 
 
     } = logicProvider;
-    const { clientTypes, clientSortData, queryData: { data: queryData }, clientQueryParams } = dataProvider;
+    const {clientTypes, clientSortData, queryData: {data: queryData}, clientQueryParams} = dataProvider;
 
 
     const onPressOrderButton = () => {
@@ -43,7 +43,7 @@ const ClientListHeader = ({ logicProvider, dataProvider }: IClinetListHeader) =>
             DESC: < Icon name={'arrow-down'} size={25} color={Colors.DEFAULT_TEXT_COLOR} />
         };
         return (
-            <CustomPressable style={{ justifyContent: 'center', alignItems: 'center' }} onPress={onPressOrderButton}>
+            <CustomPressable style={{justifyContent: 'center', alignItems: 'center'}} onPress={onPressOrderButton}>
                 {Icons[queryData?.orderBy?.order!]}
             </CustomPressable >
         );
@@ -53,14 +53,14 @@ const ClientListHeader = ({ logicProvider, dataProvider }: IClinetListHeader) =>
     const renderSortByes = useMemo(() => {
         const data =
             [
-                { title: 'Client Type', onSelect: handleClientTypeSort, selected: queryData?.type, selectedData: clientTypes, isOrder: false },
-                { title: 'Sort By', onSelect: handleClientSortBy, selected: queryData?.orderBy?.sort, selectedData: clientSortData, isOrder: true },
+                {title: 'Client Type', onSelect: handleClientTypeSort, selected: queryData?.type, selectedData: clientTypes, isOrder: false},
+                {title: 'Sort By', onSelect: handleClientSortBy, selected: queryData?.orderBy?.sort, selectedData: clientSortData, isOrder: true},
             ];
-        return data.map(({ title, onSelect, selected, selectedData, isOrder }, index) => {
+        return data.map(({title, onSelect, selected, selectedData, isOrder}, index) => {
             return (
-                <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 10 }} key={index}>
-                    <Text style={{ color: Colors.DEFAULT_TEXT_COLOR }}>
-                        {title.toLowerCase()}
+                <View style={{flexDirection: 'row', alignItems: 'center'}} key={index}>
+                    <Text style={{color: Colors.DEFAULT_TEXT_COLOR}}>
+                        {title.toUpperCase()}
                     </Text>
                     <CustomPicker
                         singleSelectMode
@@ -68,7 +68,7 @@ const ClientListHeader = ({ logicProvider, dataProvider }: IClinetListHeader) =>
                         singleSelectData={selectedData}
                         singleSelected={selected}
                         buttonStyle={style.pickerButton}
-                        itemStyle={{ backgroundColor: Colors.CARD_COLOR, margin: 1, minHeight: 20, paddingLeft: 5, justifyContent: 'center' }}
+                        itemStyle={{backgroundColor: Colors.CARD_COLOR, margin: 1, minHeight: 20, paddingLeft: 5, justifyContent: 'center'}}
                         arrowDownColor={Colors.DEFAULT_TEXT_COLOR}
                     />
                     {isOrder && renderAscDescIcon}
@@ -82,26 +82,26 @@ const ClientListHeader = ({ logicProvider, dataProvider }: IClinetListHeader) =>
 
     return (
         <>
-            <View style={{ flexGrow: 1, padding: 5 }}>
-                <View style={{ flexGrow: 1, flexDirection: 'row' }}>
-                    <View style={{ flex: 0.3, justifyContent: 'center', paddingLeft: 10 }}>
+            <View style={style.container}>
+                <View style={{flexGrow: 1, flexDirection: 'row'}}>
+                    <View style={{flex: 0.3, justifyContent: 'center', paddingLeft: 10}}>
                         <InputItem isSearch setValue={handleSearchInput} inputValue={clientQueryParams?.search!} height={30} />
                     </View>
-                    <View style={{ flex: 0.7, paddingLeft: 10, justifyContent: 'center' }}>
-                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <View style={{flex: 0.7, paddingLeft: 10, justifyContent: 'center'}}>
+                        <View style={{flexDirection: 'row', alignItems: 'center', gap: 10, }}>
                             {renderSortByes}
                         </View>
                     </View>
                 </View>
-                <View style={{ flexGrow: 1, justifyContent: 'center' }}>
-                    <View style={{ flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
+                <View style={{flexGrow: 1, justifyContent: 'center'}}>
+                    <View style={{flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center'}}>
                         <CustomPressable style={style.addButton}
                             onHoverOpacity
                             onPress={handleOnPressAddClient}>
-                            <View style={{ paddingRight: 5 }}>
+                            <View style={{paddingRight: 5}}>
                                 <Icon size={12} name={'add-user'} color={Colors.CARD_COLOR} />
                             </View>
-                            <Text style={{ color: Colors.CARD_COLOR }}>
+                            <Text style={{color: Colors.CARD_COLOR}}>
                                 {'Add Client'}
                             </Text>
                         </CustomPressable>

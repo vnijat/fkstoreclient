@@ -1,4 +1,5 @@
 import {ITableDataConfig} from '../../../containers/simpleTable/types';
+import {Role} from '../../../enums/userRole';
 import {Item} from '../../../types/item';
 
 export const itemTableDataConfigs: ITableDataConfig<Item>[] = [
@@ -64,24 +65,28 @@ export const itemTableDataConfigs: ITableDataConfig<Item>[] = [
     dtoKey: 'costPrice',
     type: 'money',
     hidden: false,
+    accessRoles: [Role.SUPER_ADMIN, Role.MANAGER]
   },
   {
     headerTitle: 'Total Cost Price',
     dtoKey: 'totalCostPrice',
     type: 'money',
     hidden: false,
+    accessRoles: [Role.SUPER_ADMIN, Role.MANAGER]
   },
   {
     headerTitle: 'Sell Price',
     dtoKey: 'sellPrice',
     type: 'money',
     hidden: true,
+    accessRoles: [Role.SUPER_ADMIN, Role.MANAGER]
   },
   {
     headerTitle: 'Total Sell Price',
     dtoKey: 'totalSellPrice',
     type: 'money',
     hidden: true,
+    accessRoles: [Role.SUPER_ADMIN, Role.MANAGER]
   },
   {
     headerTitle: 'Supplier',

@@ -23,6 +23,7 @@ const SettingsAddEditModal = () => {
     const isShowSettingsModal = useSelector((state: RootState) => state.appStateSlicer.isShowSettingsModal);
     const ApiUrl = useSelector((state: RootState) => state.configs.apiURL);
     const appLang = useSelector((state: RootState) => state.configs.language);
+    const user = useSelector((state: RootState) => state.user.user);
     const [value, setValue] = useState(ApiUrl);
     const [lang, setLang] = useState<'en-EN' | 'ru-RU' | 'az-AZ'>(appLang);
 

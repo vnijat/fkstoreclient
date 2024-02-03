@@ -20,6 +20,7 @@ interface IItemsForOrderListItem {
     orderItem: OrderItem;
     index?: number;
     projectsData: IProjectsForPicker[];
+    projectId?: number;
 }
 
 interface IrowData {
@@ -30,10 +31,11 @@ interface IrowData {
     searchEnabled?: boolean;
     dtoKey?: string;
     isDeselectEnabled?: boolean;
+    isHidden?: boolean;
 }
 
 
-const ItemsForOrderListItem = ({orderItem, index, projectsData}: IItemsForOrderListItem) => {
+const ItemsForOrderListItem = ({orderItem, index, projectsData, projectId}: IItemsForOrderListItem) => {
     const style = useMemo(() => getStyle(), []);
     const dispatch = useAppDispatch();
     const orderItemStatusData = useMemo(() => {
@@ -42,11 +44,19 @@ const ItemsForOrderListItem = ({orderItem, index, projectsData}: IItemsForOrderL
         const orderItemSatusValues = orderItem.fullfilled ? valuesWithoutInuse : values;
         return orderItemSatusValues.map((status) => ({value: status, label: status.toUpperCase()}));
     }, [orderItem.fullfilled]);
-    
+
     const rowData: IrowData[] = useMemo(() => [
         {value: (1 + (index ?? 0)), },
         {value: orderItem?.store?.name},
-        {value: (orderItem.fullfilled && orderItem.project) ? `${orderItem.project?.title}` : orderItem.projectId, selectable: !orderItem.fullfilled, selectableData: projectsData, searchEnabled: true, dtoKey: 'projectId', isDeselectEnabled: true},
+        {
+            value: (orderItem.fullfilled && orderItem.project) ? `${orderItem.project?.projectCode}` : orderItem.projectId,
+            selectable: !orderItem.fullfilled,
+            selectableData: projectsData,
+            searchEnabled: true,
+            dtoKey: 'projectId',
+            isDeselectEnabled: true,
+            isHidden: !!projectId
+        },
         {value: orderItem.name},
         {value: orderItem.barcode, },
         {value: Number(orderItem.itemAtStock)},
@@ -102,6 +112,7 @@ const ItemsForOrderListItem = ({orderItem, index, projectsData}: IItemsForOrderL
 
     const renderColumns = useMemo(() => {
         return rowData.map((data, index) => {
+            if (data.isHidden) return null;
             if (data.editable) {
                 return <EditableColumn
                     key={`${index}-editable`}

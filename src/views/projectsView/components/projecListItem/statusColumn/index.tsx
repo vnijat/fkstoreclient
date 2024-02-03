@@ -1,12 +1,12 @@
-import React, { memo, useEffect, useMemo, useRef, useState } from "react";
-import { Animated, Easing, View } from "react-native";
+import React, {memo, useEffect, useMemo, useRef, useState} from "react";
+import {Animated, Easing, View} from "react-native";
 import CustomPressable from "../../../../../components/customPressable";
-import { ProjectStatus } from "../../../../../enums/projectStatus";
-import { useEditProjectMutation } from "../../../../../modules/api/projects.api";
-import { useAppDispatch } from "../../../../../modules/redux/store";
+import {ProjectStatus} from "../../../../../enums/projectStatus";
+import {useEditProjectMutation} from "../../../../../modules/api/projects.api";
+import {useAppDispatch} from "../../../../../modules/redux/store";
 import HELP from "../../../../../services/helpers";
-import { Colors } from "../../../../../utils/colors";
-import { getStyle } from "./styles";
+import {Colors} from "../../../../../utils/colors";
+import {getStyle} from "./styles";
 
 interface IProjectStatusColumn {
     status: ProjectStatus;
@@ -15,7 +15,7 @@ interface IProjectStatusColumn {
 
 }
 
-const ProjectStatusColumn = ({ status: currentStatus, projectId }: IProjectStatusColumn) => {
+const ProjectStatusColumn = ({status: currentStatus, projectId}: IProjectStatusColumn) => {
     const style = useMemo(() => getStyle(), []);
     const animatedValue = useRef(new Animated.Value(-30)).current;
     const [apiEditProject] = useEditProjectMutation();
@@ -55,23 +55,25 @@ const ProjectStatusColumn = ({ status: currentStatus, projectId }: IProjectStatu
             outputRange: [0, 0, 1]
         }),
         transform: [
-            { translateX: animatedValue }
+            {translateX: animatedValue}
         ]
     };
 
     const projectStatuses = [
-        { title: 'COMPLETED', value: ProjectStatus.COMPLETED },
-        { title: 'IN PROGRESS', value: ProjectStatus.INPROGRESS },
-        { title: 'DECLINED', value: ProjectStatus.DECLINED }
+        {title: 'COMPLETED', value: ProjectStatus.COMPLETED},
+        {title: 'IN PROGRESS', value: ProjectStatus.INPROGRESS},
+        {title: 'DECLINED', value: ProjectStatus.DECLINED}
     ];
 
     const onSelect = async (newStatus: ProjectStatus) => {
-        const response = await apiEditProject({ id: projectId, body: { status: newStatus } });
-        if (response?.error) {
-            console.log("response.error====>>>", response?.error);
-            return;
+        try {
+            const response = await apiEditProject({id: projectId, body: {status: newStatus}}).unwrap();
+            setIsOpen(false);
+            HELP.showToast('success', 'Status Changed');
         }
-        else { setIsOpen(false); }
+        catch (error) {
+            HELP.alertError(error);
+        }
     };
 
     return (
@@ -85,7 +87,7 @@ const ProjectStatusColumn = ({ status: currentStatus, projectId }: IProjectStatu
                     {HELP.getProjectStatusIcons(currentStatus, 20)}
                 </View>
             </CustomPressable >
-            <Animated.View style={[style.animatedIconSelector, { ...animatedStle }]}
+            <Animated.View style={[style.animatedIconSelector, {...animatedStle}]}
             >
                 {projectStatuses.map((status) => {
                     const isNotSelected = status.value !== currentStatus;

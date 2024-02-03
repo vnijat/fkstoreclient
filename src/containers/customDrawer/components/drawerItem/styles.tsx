@@ -1,5 +1,5 @@
-import { StyleSheet } from 'react-native';
-import { Colors } from '../../../../utils/colors';
+import {StyleSheet} from 'react-native';
+import {Colors} from '../../../../utils/colors';
 import FONT from '../../../../utils/font';
 
 export const getStyle = () => {
@@ -17,7 +17,7 @@ export const getStyle = () => {
             justifyContent: 'center',
             alignItems: 'center',
             height: 50,
-            marginVertical: 5
+            marginBottom: 5,
         },
         childDrawer: {
             borderLeftWidth: 2,

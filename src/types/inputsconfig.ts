@@ -1,4 +1,5 @@
 import {ITableConfig} from '../containers/tableInput/types';
+import {Role} from '../enums/userRole';
 
 interface InputsConfig<T = any> {
   dtoKey?: keyof T;

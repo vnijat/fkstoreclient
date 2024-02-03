@@ -1,5 +1,5 @@
-import { StyleSheet } from 'react-native';
-import { Colors } from '../../utils/colors';
+import {StyleSheet} from 'react-native';
+import {Colors} from '../../utils/colors';
 
 export const getStyle = (width?: number, borderColor?: string) => {
     const style = StyleSheet.create({
@@ -8,7 +8,7 @@ export const getStyle = (width?: number, borderColor?: string) => {
             backgroundColor: Colors.CARD_COLOR,
             borderRadius: 3,
             borderWidth: 2,
-            borderColor: borderColor || Colors.CARD_HEADER_COLOR,
+            borderColor: borderColor || Colors.DEFAULT_TEXT_COLOR,
             zIndex: 1,
         },
         closeButton: {

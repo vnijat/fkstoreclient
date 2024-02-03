@@ -1,19 +1,13 @@
-import { StackNavigationProp } from '@react-navigation/stack';
 import React, { FC, useMemo } from 'react';
 import { View } from 'react-native';
-import { useSelector } from 'react-redux';
 import PaginationContainer from '../../containers/paginationContainer';
-import { ClientType } from '../../enums/clientType';
-import { useGetClientsQuery } from '../../modules/api/clients.api';
-import { setClientsQueryParams } from '../../modules/redux/clientsQuerySlicer';
-import { RootState } from '../../modules/redux/store';
-import { Colors } from '../../utils/colors';
-import ClientList from './components/clientList';
-import AddEditClientModal from './containers/addEditClientModal';
-import ClientListHeader from './containers/clientListHeader';
 import ClientDataProvider from './provider/data';
 import ClientLogicProvider from './provider/logic';
 import { getStyle } from './styles';
+import AddEditClientModal from './containers/addEditClientModal';
+import ClientListHeader from './containers/clientListHeader';
+import ClientList from './components/clientList';
+import {Colors} from '../../utils/colors';
 
 interface IClientsViewProps {
 }

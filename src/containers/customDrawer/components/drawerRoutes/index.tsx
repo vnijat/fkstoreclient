@@ -1,6 +1,6 @@
 import React from "react";
-import { ClientsIcon, OrdersIcon, ProjectsIcon, PurchasesIcon, TrackIcon, WarehouseIcon } from "../../../../assets/icons/menuIcons";
-import { RouteNames } from "../../../../enums/routes";
+import {ClientsIcon, OrdersIcon, ProjectsIcon, PurchasesIcon, TrackIcon, WarehouseIcon} from "../../../../assets/icons/menuIcons";
+import {RouteNames} from "../../../../enums/routes";
 import UseLanguage from "../../../../modules/lozalization/useLanguage.hook";
 import CustomDrawerItem from "../drawerItem/drawerItem";
 
@@ -8,6 +8,7 @@ import CustomDrawerItem from "../drawerItem/drawerItem";
 interface INavigationRoutes {
     currentRoute: string;
     navigation: any;
+    routeNames: string[];
 }
 
 
@@ -18,7 +19,7 @@ export interface IRouteData {
     childRoutes?: IRouteData[];
 }
 
-const NavigationRoutes = ({ navigation, currentRoute }: INavigationRoutes) => {
+const NavigationRoutes = ({navigation, currentRoute, routeNames}: INavigationRoutes) => {
     const ICON_SIZE = 30;
     const lang = UseLanguage();
 
@@ -65,6 +66,9 @@ const NavigationRoutes = ({ navigation, currentRoute }: INavigationRoutes) => {
     return (
         <>
             {drawerRoutesData.map((route, index) => {
+                if (!routeNames.includes(route.routeName)) {
+                    return null;
+                }
                 return (
                     <CustomDrawerItem key={`${index}-${route.routeName}`} routeObject={route} onPressRoute={onPressRoute} currentRoute={currentRoute} />
                 );

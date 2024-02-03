@@ -1,12 +1,21 @@
-import { BaseQueryFn, createApi, FetchArgs, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
-import { ItemOptionForInputs, ItemQueryParams, ItemResponse, ItemResponseFull } from '../../types/item';
-import { RootState } from '../redux/store';
-import { ApiTags } from './api.tags';
+import {BaseQueryFn, createApi, FetchArgs, fetchBaseQuery, FetchBaseQueryError} from '@reduxjs/toolkit/query/react';
+import {ItemOptionForInputs, ItemQueryParams, ItemResponse, ItemResponseFull} from '../../types/item';
+import {RootState} from '../redux/store';
+import {ApiTags} from './api.tags';
 
 
 const asyncFetchBaseQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (args, api, extraOptions) => {
     const baseUrl = (api.getState() as RootState).configs.apiURL;
-    const rawBaseQuery = fetchBaseQuery({ baseUrl });
+    const rawBaseQuery = fetchBaseQuery({
+        baseUrl,
+        prepareHeaders(headers, api) {
+            const tokens = (api.getState() as RootState).user.tokens;
+            if (tokens?.accessToken) {
+                headers.set('Authorization', `Bearer ${tokens.accessToken}`);
+            }
+            return headers;
+        },
+    });
     return rawBaseQuery(args, api, extraOptions);
 };
 
@@ -23,7 +32,7 @@ export const InventoryApi = createApi({
                 };
             },
         }),
-        getItemCodeSuggestions: build.query<{ lastCodes: { code: string; }[]; suggestedCodes: { code: string; }[]; }, undefined | { categoryId: number; itemCode: string; }>({
+        getItemCodeSuggestions: build.query<{lastCodes: {code: string;}[]; suggestedCodes: {code: string;}[];}, undefined | {categoryId: number; itemCode: string;}>({
             providesTags: ['codeSuggestions'],
             query: (codeParams) => {
                 return {
@@ -76,8 +85,8 @@ export const InventoryApi = createApi({
             },
             invalidatesTags: ['items', 'codeSuggestions', 'itemForOrder']
         }),
-        editItem: build.mutation<undefined, { body: any; id: number; }>({
-            query: ({ body, id }) => {
+        editItem: build.mutation<undefined, {body: any; id: number;}>({
+            query: ({body, id}) => {
                 return {
                     url: `/item/${id}`,
                     body: body,
@@ -86,7 +95,7 @@ export const InventoryApi = createApi({
             },
             invalidatesTags: ['items', 'item', 'itemForOrder']
         }),
-        printBarcode: build.mutation<undefined, { itemId: number; }>({
+        printBarcode: build.mutation<undefined, {itemId: number;}>({
             query: (body) => {
                 return {
                     url: `/item/print/barcode/`,

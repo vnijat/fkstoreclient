@@ -1,21 +1,21 @@
-import { memo, useEffect, useMemo, useState } from "react";
-import { Text, View, ActivityIndicator, Alert } from "react-native";
-import { useSelector } from "react-redux";
-import { InputItem } from "../../components/inputItem/index.windows";
-import { PrimaryButton } from "../../components/primaryButton";
-import { OrderItemStatus } from "../../enums/orderItemStatus";
-import { OrderStatus } from "../../enums/orderStatus";
-import { useAddOrderMutation, useEditOrderMutation } from "../../modules/api/orders.api";
-import { useGetProjectsForPickerQuery } from "../../modules/api/projects.api";
-import { clearOrderDataForPost, setIsOrderForEdit, setIsShowOrderModal, setOrderDataForPost } from "../../modules/redux/orderSlicer";
-import { RootState, useAppDispatch } from "../../modules/redux/store";
+import {memo, useEffect, useMemo, useState} from "react";
+import {Text, View, ActivityIndicator, Alert} from "react-native";
+import {useSelector} from "react-redux";
+import {InputItem} from "../../components/inputItem/index.windows";
+import {PrimaryButton} from "../../components/primaryButton";
+import {OrderItemStatus} from "../../enums/orderItemStatus";
+import {OrderStatus} from "../../enums/orderStatus";
+import {useAddOrderMutation, useEditOrderMutation} from "../../modules/api/orders.api";
+import {useGetProjectsForPickerQuery} from "../../modules/api/projects.api";
+import {clearOrderDataForPost, setIsOrderForEdit, setIsShowOrderModal, setOrderDataForPost, setProjectId} from "../../modules/redux/orderSlicer";
+import {RootState, useAppDispatch} from "../../modules/redux/store";
 import HELP from "../../services/helpers";
-import { AddOrderDto } from "../../types/projectOrder";
-import { Colors } from "../../utils/colors";
+import {AddOrderDto} from "../../types/projectOrder";
+import {Colors} from "../../utils/colors";
 import ItemsForOrderList from "./itemsForOrderList";
 import ItemsForOrderListHeader from "./itemsForOrderListHeader";
 import ItemsForOrderSearch from "./itemsForOrderSearch";
-import { getStyle } from "./style";
+import {getStyle} from "./style";
 
 
 
@@ -23,13 +23,13 @@ interface IAddOrderContainer {
 
 }
 
-const AddOrderCntainer = ({ }: IAddOrderContainer) => {
+const AddOrderCntainer = ({}: IAddOrderContainer) => {
     const style = useMemo(() => getStyle(), []);
     const dispatch = useAppDispatch();
     const [apiAddOrder] = useAddOrderMutation();
     const [apiUpdateOrder] = useEditOrderMutation();
-    const { data: projectsData, isLoading } = useGetProjectsForPickerQuery(undefined, {
-        selectFromResult: ({ data, isLoading }) => ({
+    const {data: projectsData, isLoading} = useGetProjectsForPickerQuery(undefined, {
+        selectFromResult: ({data, isLoading}) => ({
             data,
             isLoading
         })
@@ -60,13 +60,13 @@ const AddOrderCntainer = ({ }: IAddOrderContainer) => {
         }
     }, [isOrderForEdit]);
 
-
+    console.log("ORDERSS++>>>", orderData.orderItems);
     const handleCreateOrder = async () => {
         if (!!orderData.orderItems?.length) {
             const response = await apiAddOrder(orderData);
             if (response?.data) {
-                dispatch(setOrderDataForPost({ ...response.data }));
-                setTempOrderData({ ...response.data });
+                dispatch(setOrderDataForPost({...response.data}));
+                setTempOrderData({...response.data});
             }
         } else {
             HELP.alertError(undefined, `Cant Create Order`, `Order Cart is Empty`);
@@ -81,15 +81,15 @@ const AddOrderCntainer = ({ }: IAddOrderContainer) => {
     };
 
     const orderDetailSetValue = (value: string) => {
-        dispatch(setOrderDataForPost({ detail: value }));
+        dispatch(setOrderDataForPost({detail: value}));
     };
 
     const handleUpdateOrder = async () => {
         if (!!orderData.orderItems?.length) {
-            const response = await apiUpdateOrder({ body: orderData, id: orderData?.id! });
+            const response = await apiUpdateOrder({body: orderData, id: orderData?.id!});
             if (response?.data) {
-                dispatch(setOrderDataForPost({ ...response.data }));
-                setTempOrderData({ ...response.data });
+                dispatch(setOrderDataForPost({...response.data}));
+                setTempOrderData({...response.data});
             }
         } else {
             HELP.alertError(undefined, `Cant Update Order`, `Order Cart is Empty`);
@@ -100,10 +100,10 @@ const AddOrderCntainer = ({ }: IAddOrderContainer) => {
     const handleOrderConfirm = async () => {
         const isOrderCanConfirmed = !!orderData?.orderItems?.length && !orderData.orderItems?.some(item => [OrderItemStatus.IN_USE].includes(item.status!));
         if (isOrderCanConfirmed) {
-            const response = await apiUpdateOrder({ body: { ...orderData, status: OrderStatus.COMPLETED }, id: orderData?.id! });
+            const response = await apiUpdateOrder({body: {...orderData, status: OrderStatus.COMPLETED}, id: orderData?.id!});
             if (response?.data) {
-                dispatch(setOrderDataForPost({ ...response.data }));
-                setTempOrderData({ ...response.data });
+                dispatch(setOrderDataForPost({...response.data}));
+                setTempOrderData({...response.data});
             }
         }
         else {
@@ -114,10 +114,10 @@ const AddOrderCntainer = ({ }: IAddOrderContainer) => {
 
     const handleOrderReject = async () => {
         if (!!orderData.orderItems?.length) {
-            const response = await apiUpdateOrder({ body: { ...orderData, status: OrderStatus.DECLINED }, id: orderData?.id! });
+            const response = await apiUpdateOrder({body: {...orderData, status: OrderStatus.DECLINED}, id: orderData?.id!});
             if (response?.data) {
-                dispatch(setOrderDataForPost({ ...response.data }));
-                setTempOrderData({ ...response.data });
+                dispatch(setOrderDataForPost({...response.data}));
+                setTempOrderData({...response.data});
             } else if (response?.error) {
                 HELP.alertError(response?.error);
             }
@@ -135,6 +135,21 @@ const AddOrderCntainer = ({ }: IAddOrderContainer) => {
         return orderData.status && colors[orderData.status];
     }, [orderStatus]);
 
+
+    const handleProjectSelection = (projectId: number) => {
+        dispatch(setProjectId(projectId));
+    };
+
+
+    const renderProjectSelection = useMemo(() => {
+        return (
+            <View>
+
+            </View>
+        );
+
+    }, [projectsData]);
+
     return (
         <View style={style.container}>
             {orderStatus.inProgress && <View style={style.searchContainer}>
@@ -149,7 +164,7 @@ const AddOrderCntainer = ({ }: IAddOrderContainer) => {
                         : <ItemsForOrderList orderItems={orderData.orderItems ?? []} projectsData={projectsData ?? []} />}
                 </View>
             </View>
-            <View style={[style.orderActionsContainer, { borderColor: actionContainerColor }]}>
+            <View style={[style.orderActionsContainer, {borderColor: actionContainerColor}]}>
                 <Text style={style.orderStatusText}>
                     {`ORDER STATUS: ${orderData.status}`.toUpperCase()}
                 </Text>

@@ -1,16 +1,14 @@
-import { StyleSheet } from 'react-native';
-import { Colors } from '../../../../utils/colors';
+import {StyleSheet} from 'react-native';
+import {Colors} from '../../../../utils/colors';
 
 export const getStyle = () => {
   const style = StyleSheet.create({
     container: {
-      flex: 1,
-      backgroundColor: Colors.BACKGROUND_COLOR,
-      // alignItems: 'center',
-      paddingTop: 60,
-      paddingLeft: 100,
-      paddingRight: 20,
-      paddingBottom: 20
+      flexGrow: 1,
+      padding: 5,
+      borderRadius: 3,
+      borderWidth: 2,
+      borderColor: Colors.CARD_HEADER_COLOR,
 
     },
     pickerButton: {
@@ -23,7 +21,7 @@ export const getStyle = () => {
       borderRadius: 1,
       borderWidth: 1,
       borderColor: Colors.DEFAULT_TEXT_COLOR,
-      justifyContent: 'space-between',
+      // justifyContent: 'space-between',
       backgroundColor: 'transparent'
     },
     addButton: {

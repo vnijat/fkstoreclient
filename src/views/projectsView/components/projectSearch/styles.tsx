@@ -4,9 +4,15 @@ import {Colors} from '../../../../utils/colors';
 export const getStyle = () => {
     const style = StyleSheet.create({
         container: {
-            flex: 1,
-            backgroundColor: Colors.BACKGROUND_COLOR,
-            // alignItems: 'center'
+            flexGrow: 1,
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: Colors.CARD_COLOR,
+            padding: 5,
+            borderRadius: 3,
+            borderWidth: 2,
+            borderColor: Colors.CARD_HEADER_COLOR
         },
         pickerButton: {
             minWidth: 30,

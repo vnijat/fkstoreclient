@@ -24,7 +24,7 @@ export const ProjectsApi = InventoryApi.injectEndpoints({
           : ['projects'],
       query: filter => {
         return {
-          url: '/client/projects/all',
+          url: '/project/all',
           params: filter,
         };
       },
@@ -33,14 +33,14 @@ export const ProjectsApi = InventoryApi.injectEndpoints({
       providesTags: ['projectTypes'],
       query: () => {
         return {
-          url: '/client/project/type/all'
+          url: '/project/type/all'
         };
       }
     }),
     addProjectType: build.mutation<undefined, IProjectType>({
       query: body => {
         return {
-          url: '/client/project/type/',
+          url: '/project/type/',
           body: body,
           method: 'POST',
         };
@@ -50,7 +50,7 @@ export const ProjectsApi = InventoryApi.injectEndpoints({
     editProjectType: build.mutation<undefined, {id: number; body: IProjectType;}>({
       query: ({body, id}) => {
         return {
-          url: `/client/project/type/${id}`,
+          url: `/project/type/${id}`,
           body: body,
           method: 'PATCH',
         };
@@ -60,7 +60,7 @@ export const ProjectsApi = InventoryApi.injectEndpoints({
     recoverProjects: build.mutation<undefined, number[]>({
       query: Ids => {
         return {
-          url: '/client/project/recover/',
+          url: '/project/recover/',
           body: Ids,
           method: 'POST',
         };
@@ -71,7 +71,7 @@ export const ProjectsApi = InventoryApi.injectEndpoints({
       providesTags: ['projectsForPicker'],
       query: () => {
         return {
-          url: '/client/projects/picker',
+          url: '/project/active/all/picker',
         };
       },
     }),
@@ -79,7 +79,7 @@ export const ProjectsApi = InventoryApi.injectEndpoints({
       providesTags: ['projectOrders'],
       query: projectId => {
         return {
-          url: `/client/project/orders/${projectId}`,
+          url: `/project/orders/${projectId}`,
         };
       },
     }),
@@ -87,14 +87,14 @@ export const ProjectsApi = InventoryApi.injectEndpoints({
       providesTags: ['otherExpenses'],
       query: projectId => {
         return {
-          url: `/client/project/otherExpenses/${projectId}`,
+          url: `/project/otherExpenses/${projectId}`,
         };
       },
     }),
     addProject: build.mutation<Project, AddClientProject>({
       query: body => {
         return {
-          url: '/client/project/',
+          url: '/project/',
           body: body,
           method: 'POST',
         };
@@ -104,13 +104,13 @@ export const ProjectsApi = InventoryApi.injectEndpoints({
     editProject: build.mutation<Project, {id: number; body: AddClientProject;}>({
       query: ({id, body}) => {
         return {
-          url: `/client/project/${id}`,
+          url: `/project/${id}`,
           body: body,
           method: 'PATCH',
         };
       },
       invalidatesTags: (result, error, arg) => [
-        {type: 'projects', id: arg.id},
+        'projects',
         'projectsForPicker',
         'clients',
         'otherExpenses',
@@ -119,7 +119,7 @@ export const ProjectsApi = InventoryApi.injectEndpoints({
     deleteProject: build.mutation<undefined, {Ids: number[], softDelete: boolean;}>({
       query: body => {
         return {
-          url: `/client/project/delete`,
+          url: `/project/delete`,
           body: body,
           method: 'DELETE',
         };
@@ -133,7 +133,7 @@ export const ProjectsApi = InventoryApi.injectEndpoints({
     deleteProjectType: build.mutation<undefined, {Ids: number[], softDelete: boolean;}>({
       query: body => {
         return {
-          url: `/client/project/type/delete`,
+          url: `/project/type/delete`,
           body: body,
           method: 'DELETE',
         };

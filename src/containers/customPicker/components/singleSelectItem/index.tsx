@@ -1,11 +1,11 @@
-import React, { useMemo, useState } from "react";
-import { Pressable, StyleProp, Text, View, ViewStyle, TextStyle } from "react-native";
+import React, {useMemo, useState} from "react";
+import {Pressable, StyleProp, Text, View, ViewStyle, TextStyle} from "react-native";
 import Icon from "react-native-vector-icons/Entypo";
-import { IsingelSelectData } from "../..";
+import {IsingelSelectData} from "../..";
 import CustomPressable from "../../../../components/customPressable";
 import HELP from "../../../../services/helpers";
-import { Colors } from "../../../../utils/colors";
-import { getStyle } from "./styles";
+import {Colors} from "../../../../utils/colors";
+import {getStyle} from "./styles";
 
 
 
@@ -27,7 +27,7 @@ interface ISingleSelectItem {
     isDeselectEnabled?: boolean;
 }
 
-const SingleSelectItem = ({ singleSelected, data, onPressSingleItem, indent, isEditable, canSelectParent, selectedItemStyle, selectedItemTextStyle, onPressEditButton, itemTextStyle, itemStyle, disablePickerActionButtons, isDeselectEnabled }: ISingleSelectItem) => {
+const SingleSelectItem = ({singleSelected, data, onPressSingleItem, indent, isEditable, canSelectParent, selectedItemStyle, selectedItemTextStyle, onPressEditButton, itemTextStyle, itemStyle, disablePickerActionButtons, isDeselectEnabled}: ISingleSelectItem) => {
     const [isShowEditButton, setIsshowEditButton] = useState<boolean>(false);
     const [isShowNested, setIsShowNested] = useState(false);
     const style = useMemo(() => getStyle(indent), [indent]);
@@ -41,7 +41,7 @@ const SingleSelectItem = ({ singleSelected, data, onPressSingleItem, indent, isE
             setIsShowNested(!isShowNested);
         } else {
             if (isDeselectEnabled && isSelected) {
-                onPressSingleItem({ value: null, label: data.label });
+                onPressSingleItem({value: null, label: data.label});
             } else {
 
                 onPressSingleItem(data);
@@ -76,13 +76,13 @@ const SingleSelectItem = ({ singleSelected, data, onPressSingleItem, indent, isE
     return (
         <>
             <CustomPressable
-                style={[(isSelected && selectedItemStyle) ? [selectedItemStyle, !!indent && style.withIndent] : ([itemStyle, !!indent && style.withIndent] || [style.singleSelectItem, { backgroundColor: isSelected ? Colors.CARD_HEADER_COLOR : 'transparent' }, !!indent && style.withIndent])]}
+                style={[(isSelected && selectedItemStyle) ? [selectedItemStyle, !!indent && style.withIndent] : ([itemStyle, !!indent && style.withIndent] || [style.singleSelectItem, {backgroundColor: isSelected ? Colors.CARD_HEADER_COLOR : 'transparent'}, !!indent && style.withIndent])]}
                 onPress={onPressItem}
                 onMouseEnter={() => setIsshowEditButton(true)}
                 onMouseLeave={() => setIsshowEditButton(false)}
                 onHoverOpacity>
                 <Text
-                    style={[(isSelected && selectedItemTextStyle) ? selectedItemTextStyle : (itemTextStyle || { fontSize: 12, color: Colors.DEFAULT_TEXT_COLOR })]}
+                    style={[(isSelected && selectedItemTextStyle) ? selectedItemTextStyle : (itemTextStyle || {fontSize: 12, color: Colors.DEFAULT_TEXT_COLOR})]}
                 >
                     {data?.label}
                 </Text>
@@ -93,12 +93,12 @@ const SingleSelectItem = ({ singleSelected, data, onPressSingleItem, indent, isE
                     {!!data.nested?.length && <Pressable
                         onPress={onPressArrow}
                         style={style.arrowButton}>
-                        <View style={{ transform: [{ rotate }] }}>
+                        <View style={{transform: [{rotate}]}}>
                             <Icon name={'chevron-small-right'} size={22} color={Colors.METALLIC_GOLD} />
                         </View>
                     </Pressable>}
                     {isEditable && isShowEditButton &&
-                        <CustomPressable onPress={onPressEdit} disabled={disablePickerActionButtons}>
+                        <CustomPressable onPress={onPressEdit} disabled={disablePickerActionButtons} style={{marginRight: 10}}>
                             <Icon size={14} color={Colors.METALLIC_GOLD} name={'cog'} />
                         </CustomPressable>
                     }

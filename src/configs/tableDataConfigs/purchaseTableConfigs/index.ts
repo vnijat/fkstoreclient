@@ -1,4 +1,5 @@
 import {ITableDataConfig} from '../../../containers/simpleTable/types';
+import {Role} from '../../../enums/userRole';
 import {PurchaseDto} from '../../../types/purchase';
 
 export const purchaseTableDataConfigs: ITableDataConfig<PurchaseDto>[] = [
@@ -25,6 +26,7 @@ export const purchaseTableDataConfigs: ITableDataConfig<PurchaseDto>[] = [
     dtoKey: 'totalPrice',
     type: 'money',
     hidden: false,
+    accessRoles: [Role.SUPER_ADMIN, Role.MANAGER]
   },
   {
     headerTitle: 'Status',

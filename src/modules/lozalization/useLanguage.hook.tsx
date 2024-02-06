@@ -51,7 +51,7 @@ function UseLanguage() {
                 addNew: 'Add New',
                 create: 'Create',
                 update: 'Update',
-                code: 'Product Code',
+                code: 'Code',
                 select: 'Select',
                 noData: 'No data',
                 alert: {

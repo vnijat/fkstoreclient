@@ -20,7 +20,7 @@ interface IItemsForOrderListItem {
     orderItem: OrderItem;
     index?: number;
     projectsData: IProjectsForPicker[];
-    projectId?: number;
+    projectId?: number | null;
 }
 
 interface IrowData {
@@ -63,7 +63,7 @@ const ItemsForOrderListItem = ({orderItem, index, projectsData, projectId}: IIte
         {value: orderItem.unit, },
         {value: Number(orderItem.quantity), editable: !orderItem.fullfilled},
         {value: orderItem.status, selectable: !orderItem.fullfilled, selectableData: orderItemStatusData, dtoKey: 'status'},
-    ], [orderItem.status, orderItem.projectId, orderItem.store, orderItem.project, orderItem.quantity, orderItem.fullfilled]);
+    ], [orderItem.status, orderItem.projectId, orderItem.store, orderItem.project, orderItem.quantity, orderItem.fullfilled, projectId]);
 
 
     const handleOnChangeEditableColumn = (text: string) => {

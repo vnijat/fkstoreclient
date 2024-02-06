@@ -41,7 +41,7 @@ const TableList = <T extends ITableRowData>({tableDataConfig, tableData, isLoadi
                 </View>
                 : < FlatList
                     data={tableData}
-                    contentContainerStyle={{paddingVertical: 10}}
+                    contentContainerStyle={{paddingVertical: 10, gap: 3, }}
                     keyExtractor={(tableData, index) => `${index}-${tableData.id}`}
                     renderItem={listItem}
                 />}

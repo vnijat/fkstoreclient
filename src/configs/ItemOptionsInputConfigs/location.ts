@@ -21,15 +21,6 @@ const location: InputsConfig[] = [
     selectableDataKey: 'store',
     width: 150,
   },
-  {
-    title: 'SKU',
-    dtoKey: 'skuCode',
-    isNumeric: false,
-    maxLength: 200,
-    placeHolder: 'SKU',
-    width: 150,
-    height: 35,
-  },
 ];
 
 export {location};

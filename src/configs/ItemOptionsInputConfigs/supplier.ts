@@ -52,15 +52,6 @@ const supplier: InputsConfig[] = [
     width: 230,
     height: 35,
   },
-  {
-    title: 'SKU',
-    dtoKey: 'skuCode',
-    isNumeric: false,
-    maxLength: 200,
-    placeHolder: 'SKU',
-    width: 230,
-    height: 35,
-  },
 ];
 
 export {supplier};

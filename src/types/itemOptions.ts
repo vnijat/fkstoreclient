@@ -11,35 +11,29 @@ interface AddSupplier {
   phone: string;
   email: string;
   country: string;
-  skuCode: string;
 }
 
 interface AddLabel {
   name: string;
-  skuCode: string;
 }
 
 interface AddLocation {
   title: string;
   storeId: number;
-  skuCode: string;
 }
 
 interface AddColor {
   name: string;
-  skuCode: string;
 }
 
 interface AddUnit {
   name: string;
   symbol: string;
-  skuCode: string;
 }
 
 interface AddCategory {
   title: string;
   parentCategoryId: number;
-  skuCode: string;
 }
 
 export type {

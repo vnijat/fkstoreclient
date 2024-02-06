@@ -108,7 +108,6 @@ interface Color extends Common {
 
 interface Label extends Common {
   name: string;
-  skuCode: string;
 }
 
 interface Item extends Common {

@@ -146,9 +146,6 @@ const ItemModal = ({}: IItemModal) => {
                                     <Image source={{uri: `data:image/png;base64,${data?.qrCode}`}} resizeMode={'center'} style={{flex: 1, }} />
                                 </View>
                                 <Text style={style.rightContainerInfoText}>
-                                    {`SKU: ${data?.skuCode}`}
-                                </Text>
-                                <Text style={style.rightContainerInfoText}>
                                     {!!data?.label.name.length && `Label: ${data?.label.name}`}
                                 </Text>
                             </View>

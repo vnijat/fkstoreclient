@@ -1,5 +1,5 @@
-import { StyleSheet } from 'react-native';
-import { Colors } from '../../utils/colors';
+import {StyleSheet} from 'react-native';
+import {Colors} from '../../utils/colors';
 import FONT from '../../utils/font';
 
 
@@ -7,7 +7,7 @@ export const getStyle = () => {
     const style = StyleSheet.create({
         container: {
             flex: 1,
-            paddingHorizontal: 5
+            // paddingHorizontal: 5,
         },
         orderContentContainer: {
             paddingTop: 5,
@@ -57,8 +57,31 @@ export const getStyle = () => {
             justifyContent: 'space-between',
             width: 220,
             marginRight: 20
+        },
+        projectSelectionContainer: {
+            height: 600,
+            flex: 1,
+            gap: 5,
+            justifyContent: 'center',
+        },
+        projectListContainer: {
+            flex: 0.8,
+            justifyContent: 'center',
+            alignItems: 'center',
+        },
+        projectSelectionHeaderContainer: {
+            flex: 0.1,
+            backgroundColor: Colors.DEFAULT_TEXT_COLOR,
+            borderBottomRightRadius: 5,
+            borderBottomLeftRadius: 5,
+            justifyContent: 'center',
+        },
+        projectSelectionBottomContainer: {
+            flex: 0.1,
+            justifyContent: 'center',
+            alignItems: 'flex-end',
+            paddingHorizontal: 10,
         }
-
     });
 
     return style;

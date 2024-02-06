@@ -28,6 +28,12 @@ export const inventoryTrackTableConfig: ITableDataConfig<InventoryTrackData>[] =
       hidden: false,
     },
     {
+      headerTitle: 'Project Code',
+      dtoKey: 'projectcode',
+      type: 'text',
+      hidden: false,
+    },
+    {
       headerTitle: 'Unit',
       dtoKey: 'unit',
       type: 'text',

@@ -18,4 +18,5 @@ export const ApiTags = [
   'inventoryTrackData',
   'projectTypes',
   'user',
+  'activeProjects'
 ] as const;

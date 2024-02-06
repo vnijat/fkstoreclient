@@ -9,8 +9,6 @@ export const getStyle = () => {
             alignItems: 'center',
             borderRadius: 3,
             padding: 5,
-            flex: 1,
-            marginRight: 10,
             backgroundColor: Colors.CARD_HEADER_COLOR,
         },
         columContentText: {

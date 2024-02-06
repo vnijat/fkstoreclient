@@ -1,5 +1,5 @@
-import { StyleSheet } from 'react-native';
-import { Colors } from '../../../../utils/colors';
+import {StyleSheet} from 'react-native';
+import {Colors} from '../../../../utils/colors';
 import FONT from '../../../../utils/font';
 
 
@@ -9,9 +9,9 @@ export const getStyle = (columnWidth?: number) => {
         container: {
             flex: 1,
             flexDirection: 'row',
-            justifyContent: 'space-evenly',
             alignItems: 'center',
-            paddingHorizontal: 10
+            paddingHorizontal: 5,
+            gap: 5
         },
         headerColumn: {
             flex: 1,

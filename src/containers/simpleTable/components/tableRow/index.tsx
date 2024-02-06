@@ -31,8 +31,6 @@ const TableRow = <T extends ITableRowData>({tableRowData, tableDataConfig, rowHe
     const handleRowOnpress = () => {
         onPressRow && onPressRow(tableRowData, rowIndex);
     };
-
-
     return (
         <CustomPressable
             style={style.container}

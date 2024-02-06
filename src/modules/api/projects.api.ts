@@ -75,6 +75,15 @@ export const ProjectsApi = InventoryApi.injectEndpoints({
         };
       },
     }),
+    getActiveProjects: build.query<Project[], string>({
+      providesTags: ['activeProjects'],
+      query: (projectCode) => {
+        return {
+          url: `/project/active/all/`,
+          params: {projectCode},
+        };
+      },
+    }),
     getProjectOrders: build.query<OrderItem[], number | undefined | string>({
       providesTags: ['projectOrders'],
       query: projectId => {
@@ -158,5 +167,6 @@ export const {
   useRecoverProjectsMutation,
   useAddProjectTypeMutation,
   useEditProjectTypeMutation,
-  useDeleteProjectTypeMutation
+  useDeleteProjectTypeMutation,
+  useGetActiveProjectsQuery
 } = ProjectsApi;

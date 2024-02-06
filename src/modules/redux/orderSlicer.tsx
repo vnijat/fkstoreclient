@@ -71,7 +71,7 @@ const ordersSlicer = createSlice({
         setIsShowOrderModal: (state, action: PayloadAction<boolean>) => {
             state.isShowOrderModal = action.payload;
         },
-        setProjectId: (state, action: PayloadAction<number>) => {
+        setProjectId: (state, action: PayloadAction<number | null>) => {
             state.projectId = action.payload;
         }
     }

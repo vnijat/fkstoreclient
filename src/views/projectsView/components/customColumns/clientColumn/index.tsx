@@ -29,6 +29,7 @@ const ProjectClientColumn = ({data, onPressClient}: IProjectClientColumn) => {
                 style={style.container}
                 onPress={onPressIcon}
                 tooltip={'Click to View'}
+                onHoverOpacity
             >
                 <View style={style.clientIconContainer}>
                     {HELP.getClientTypeIcons(client?.type, 18, Colors.DEFAULT_TEXT_COLOR)}

@@ -2,7 +2,6 @@ export interface Common {
   id?: number;
   createdAt?: string;
   updatedAt?: string;
-  skuCode?: string;
 }
 
 export interface Imeta {
@@ -17,4 +16,5 @@ export interface Imeta {
 export interface IListHeader {
   title: string;
   dtoKey?: string;
+  isHidden?: boolean;
 }

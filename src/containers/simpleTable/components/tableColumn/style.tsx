@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import {StyleSheet} from 'react-native';
 
 export const getStyle = (zIndex: number, columnWidth?: number) => {
     const style = StyleSheet.create({
@@ -8,7 +8,7 @@ export const getStyle = (zIndex: number, columnWidth?: number) => {
             maxWidth: columnWidth || 250,
             minWidth: 200,
             zIndex: zIndex,
-            backgroundColor: 'transparent'
+            backgroundColor: 'transparent',
         }
 
     });

@@ -120,10 +120,4 @@ export const itemTableDataConfigs: ITableDataConfig<Item>[] = [
     type: 'text',
     hidden: true,
   },
-  {
-    headerTitle: 'SKU',
-    hidden: true,
-    dtoKey: 'skuCode',
-    type: 'text',
-  },
 ];

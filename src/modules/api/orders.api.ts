@@ -3,6 +3,7 @@ import {
   AddOrderDto,
   OrderQueryResponse,
   OrdersQueryParams,
+  ProjectOrder,
 } from '../../types/projectOrder';
 import {InventoryApi} from './apiSlice';
 
@@ -52,7 +53,7 @@ export const OrdersApi = InventoryApi.injectEndpoints({
         };
       },
     }),
-    editOrder: build.mutation<undefined, {body: any; id: number}>({
+    editOrder: build.mutation<ProjectOrder, {body: any; id: number;}>({
       invalidatesTags: [
         'orders',
         'items',

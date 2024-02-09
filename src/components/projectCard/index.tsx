@@ -9,17 +9,18 @@ import CustomPressable from "../customPressable";
 interface IProjectCard {
     data: Project;
     hanldeOnPressClient?: (data: Project) => void;
-    handleOnPressSelect?: (data: Project) => void;
+    handleOnPressActionButton?: (data: Project) => void;
+    actionButtonTitle?: string;
 }
 
 
-const ProjectCard = ({data, hanldeOnPressClient, handleOnPressSelect}: IProjectCard) => {
+const ProjectCard = ({data, hanldeOnPressClient, handleOnPressActionButton, actionButtonTitle}: IProjectCard) => {
     const style = useMemo(() => getStyle(), []);
     const {projectCode} = data;
 
 
     const onPressSelect = () => {
-        handleOnPressSelect && handleOnPressSelect(data);
+        handleOnPressActionButton && handleOnPressActionButton(data);
     };
     return (
         <View style={style.container}>
@@ -39,7 +40,7 @@ const ProjectCard = ({data, hanldeOnPressClient, handleOnPressSelect}: IProjectC
                     onPress={onPressSelect}
                     style={style.selectProjectButton}>
                     <Text style={style.selectProjectButtonText}>
-                        {'SELECT PROJECT'}
+                        {actionButtonTitle || 'SELECT PROJECT'}
                     </Text>
                 </CustomPressable>
             </View>

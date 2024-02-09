@@ -24,7 +24,7 @@ const ItemsForOrderList = ({orderItems, projectsData, projectId}: IItemsForOrder
             projectsData={projectsData ?? []}
             projectId={projectId}
         />;
-    }, []);
+    }, [projectId, projectsData]);
 
 
 
@@ -32,7 +32,7 @@ const ItemsForOrderList = ({orderItems, projectsData, projectId}: IItemsForOrder
         <View style={{flex: 1}}>
             <FlatList
                 data={orderItems}
-                keyExtractor={(item) => item.itemId.toString()}
+                keyExtractor={(item, index) => `${item.itemId}-${index}`}
                 listKey={'orderList'}
                 renderItem={listItem}
             />

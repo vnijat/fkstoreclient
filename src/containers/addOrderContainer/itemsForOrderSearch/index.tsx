@@ -1,24 +1,25 @@
-import React, { memo, useEffect, useMemo, useRef, useState } from "react";
-import { ScrollView, View } from "react-native";
-import { ActivityIndicator, Flyout, Text } from "react-native-windows";
-import { InputItem } from "../../../components/inputItem/index.windows";
-import { OrderItemStatus } from "../../../enums/orderItemStatus";
-import { useItemForOrderQuery } from "../../../modules/api/orders.api";
-import { addItemForOrder } from "../../../modules/redux/orderSlicer";
-import { useAppDispatch } from "../../../modules/redux/store";
+import React, {memo, useEffect, useMemo, useRef, useState} from "react";
+import {ScrollView, View} from "react-native";
+import {ActivityIndicator, Flyout, Text} from "react-native-windows";
+import {InputItem} from "../../../components/inputItem/index.windows";
+import {OrderItemStatus} from "../../../enums/orderItemStatus";
+import {useItemForOrderQuery} from "../../../modules/api/orders.api";
+import {addItemForOrder} from "../../../modules/redux/orderSlicer";
+import {useAppDispatch} from "../../../modules/redux/store";
 import HELP from "../../../services/helpers";
-import { Colors } from "../../../utils/colors";
+import {Colors} from "../../../utils/colors";
 import SearchContentItem from "../itemsForOrderSearchItem";
-import { getStyle } from "./style";
+import {getStyle} from "./style";
+import {Project} from "../../../types/project";
 
 
 
 interface IItemsForOrderSearch {
-
+    selectedProject: Project;
 }
 
 
-const ItemsForOrderSearch = ({ }: IItemsForOrderSearch) => {
+const ItemsForOrderSearch = ({selectedProject}: IItemsForOrderSearch) => {
     const style = useMemo(() => getStyle(), []);
     let timeoutId = useRef<ReturnType<typeof setTimeout>>(null).current;
     const dispatch = useAppDispatch();
@@ -26,7 +27,7 @@ const ItemsForOrderSearch = ({ }: IItemsForOrderSearch) => {
     const [skip, setSkip] = useState(true);
     const [isShowContent, setShowContent] = useState(false);
     const searchRef = useRef(null);
-    const { data, isLoading, isUninitialized } = useItemForOrderQuery(value, {
+    const {data, isLoading, isUninitialized} = useItemForOrderQuery(value, {
         skip
     });
     const searchContentHeight = useMemo(
@@ -112,8 +113,8 @@ const ItemsForOrderSearch = ({ }: IItemsForOrderSearch) => {
                 placement={'bottom'}
                 showMode={'transient'}
             >
-                <View style={[style.floatResultsContainer, { height: searchContentHeight, }]}>
-                    <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingVertical: 5 }}>
+                <View style={[style.floatResultsContainer, {height: searchContentHeight, }]}>
+                    <ScrollView style={{flex: 1}} contentContainerStyle={{paddingVertical: 5}}>
                         {!!data?.length && data?.map((item, index) => {
                             return <SearchContentItem data={item} setShowContent={(data) => setShowContent(data)} key={`${index}-searchItem`} />;
                         })}

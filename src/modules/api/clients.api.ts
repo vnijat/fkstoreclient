@@ -35,8 +35,8 @@ export const ClientsApi = InventoryApi.injectEndpoints({
         };
       },
     }),
-    editClient: build.mutation<ClientsResponse, {body: AddClient; id: number}>({
-      invalidatesTags: ['clients', 'clientForPicker'],
+    editClient: build.mutation<ClientsResponse, {body: AddClient; id: number;}>({
+      invalidatesTags: ['clients', 'clientForPicker', 'orders', 'projects'],
       query: ({body, id}) => {
         return {
           url: `/client/${id}`,
@@ -45,7 +45,7 @@ export const ClientsApi = InventoryApi.injectEndpoints({
         };
       },
     }),
-    getClientForPicker: build.query<{client: {id: number; label: string}[]}, undefined>({
+    getClientForPicker: build.query<{client: {id: number; label: string;}[];}, undefined>({
       providesTags: ['clientForPicker'],
       query: () => {
         return {

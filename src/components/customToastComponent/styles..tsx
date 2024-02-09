@@ -5,7 +5,6 @@ import FONT from '../../utils/font';
 export const getStyle = () => {
     const style = StyleSheet.create({
         toastContainer: {
-            minHeight: 50,
             minWidth: 200,
             maxWidth: 300,
             maxHeight: 100,
@@ -16,7 +15,7 @@ export const getStyle = () => {
             paddingHorizontal: 10,
         },
         toastTitleContainer: {
-            flex: 0.4,
+            flexGrow: 0.4,
             justifyContent: 'center',
         },
         toastTitleText: {
@@ -26,10 +25,10 @@ export const getStyle = () => {
             fontFamily: FONT.FONT_FAMILY
         },
         toastMessageContainer: {
-            flex: 0.6,
+            flexShrink: 0.6,
             alignItems: 'center',
             flexDirection: 'row',
-            flexWrap: 'wrap'
+            flexWrap: 'wrap',
         },
         toastMessageText: {
             color: Colors.DEFAULT_TEXT_COLOR,

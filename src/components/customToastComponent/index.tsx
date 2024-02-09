@@ -32,18 +32,19 @@ const CustomToastComponent = ({toastOptions}: ICustomToastComponent) => {
         'warning': Colors.INFRA_RED,
         'info': Colors.OLD_GOLD,
     };
-
+    const toastTitle = !!title.length && !message.length ? type : title;
+    const toasMessage = !!title.length && !message.length ? title : message;
 
     return (
         <View style={[style.toastContainer, {borderColor: BorderColors[type]}]}>
             <View style={style.toastTitleContainer}>
                 <Text style={style.toastTitleText}>
-                    {title}
+                    {toastTitle.toUpperCase()}
                 </Text>
             </View>
             <View style={style.toastMessageContainer}>
                 <Text style={style.toastMessageText}>
-                    {message.toUpperCase()}
+                    {toasMessage.toUpperCase()}
                 </Text>
             </View>
         </View>

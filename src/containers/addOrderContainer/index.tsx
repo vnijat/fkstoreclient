@@ -1,13 +1,13 @@
 import {memo, useCallback, useEffect, useMemo, useState} from "react";
 import {Text, View, ActivityIndicator, Alert, FlatList} from "react-native";
-import {useSelector} from "react-redux";
+import {shallowEqual, useSelector} from "react-redux";
 import {InputItem} from "../../components/inputItem/index.windows";
 import {PrimaryButton} from "../../components/primaryButton";
 import {OrderItemStatus} from "../../enums/orderItemStatus";
 import {OrderStatus} from "../../enums/orderStatus";
 import {useAddOrderMutation, useEditOrderMutation} from "../../modules/api/orders.api";
 import {useGetActiveProjectsQuery, useGetProjectsForPickerQuery} from "../../modules/api/projects.api";
-import {clearOrderDataForPost, setIsOrderForEdit, setIsShowOrderModal, setOrderDataForPost, setProjectId} from "../../modules/redux/orderSlicer";
+import {clearOrderDataForPost, setIsOrderForEdit, setIsShowOrderModal, setOrderDataForPost, setProjectId, setProjectIdForAllOrderItems, setSelectedProject} from "../../modules/redux/orderSlicer";
 import {RootState, useAppDispatch} from "../../modules/redux/store";
 import HELP from "../../services/helpers";
 import {AddOrderDto} from "../../types/projectOrder";
@@ -22,6 +22,8 @@ import FONT from "../../utils/font";
 import {setClientInfoData, setIsOpenClientInfoModal} from "../../modules/redux/projectSlicer";
 import {setIsShowClientModal} from "../../modules/redux/clientsSlicer";
 import ClientInfoModal from "../../views/projectsView/components/clientInfoModal";
+import CustomPressable from "../../components/customPressable";
+import Icon from "react-native-vector-icons/Entypo";
 
 
 
@@ -34,7 +36,7 @@ const AddOrderCntainer = ({}: IAddOrderContainer) => {
     const dispatch = useAppDispatch();
     const [isSkipProjectSlection, setIsSkipProjectSlection] = useState<boolean>(false);
     const [projectCodeValue, setProjectCodeValue] = useState<string>('');
-    const projectId = useSelector((state: RootState) => state.ordersSlicer.projectId);
+    const selectedProject = useSelector((state: RootState) => state.ordersSlicer.selectedProject);
     const [apiAddOrder] = useAddOrderMutation();
     const [apiUpdateOrder] = useEditOrderMutation();
     const {data: projectsData, isLoading} = useGetProjectsForPickerQuery(undefined, {
@@ -48,7 +50,6 @@ const AddOrderCntainer = ({}: IAddOrderContainer) => {
             data,
         })
     });
-
     const isOrderForEdit = useSelector((state: RootState) => state.ordersSlicer?.isOrderForEdit);
     const orderData = useSelector((state: RootState) => state.ordersSlicer.orderDataForPost);
     const [tempOrderData, setTempOrderData] = useState<AddOrderDto>();
@@ -60,20 +61,29 @@ const AddOrderCntainer = ({}: IAddOrderContainer) => {
         };
     }, [orderData.status]);
 
+
+    const actionContainerColor = useMemo(() => {
+        const colors = {
+            [OrderStatus.COMPLETED]: Colors.COMPLETED_COLOR,
+            [OrderStatus.DECLINED]: Colors.DECLINED_COLOR,
+            [OrderStatus.PENDING]: Colors.INPROGRESS_COLOR
+        };
+        return orderData.status && colors[orderData.status];
+    }, [orderStatus]);
+
     useEffect(() => {
         return () => {
             setTempOrderData(undefined);
             dispatch(clearOrderDataForPost());
             dispatch(setIsShowOrderModal(false));
             dispatch(setIsOpenClientInfoModal(false));
-            dispatch(setProjectId(null));
+            dispatch(setSelectedProject(null));
         };
     }, []);
 
     useEffect(() => {
         if (isOrderForEdit) {
-            dispatch(setProjectId(null));
-            setIsSkipProjectSlection(true);
+            !selectedProject && setIsSkipProjectSlection(true);
             setTempOrderData(orderData);
             dispatch(setIsOrderForEdit(false));
         }
@@ -103,15 +113,22 @@ const AddOrderCntainer = ({}: IAddOrderContainer) => {
     };
 
     const handleUpdateOrder = async () => {
-        if (!!orderData.orderItems?.length) {
-            const response = await apiUpdateOrder({body: orderData, id: orderData?.id!});
-            if (response?.data) {
-                dispatch(setOrderDataForPost({...response.data}));
-                setTempOrderData({...response.data});
+        try {
+            if (!!orderData.orderItems?.length) {
+                const response = await apiUpdateOrder({body: orderData, id: orderData?.id!}).unwrap();
+                if (response) {
+                    dispatch(setOrderDataForPost({...response}));
+                    setTempOrderData({...response});
+                }
+                HELP.showToast('success', 'Order Updated');
+            } else {
+                HELP.alertError(undefined, `Cant Update Order`, `Order Cart is Empty`);
             }
-        } else {
-            HELP.alertError(undefined, `Cant Update Order`, `Order Cart is Empty`);
+
+        } catch (error) {
+            HELP.alertError(error);
         }
+
     };
 
 
@@ -120,17 +137,17 @@ const AddOrderCntainer = ({}: IAddOrderContainer) => {
             const isOrderCanConfirmed = !!orderData?.orderItems?.length && !orderData.orderItems?.some(item => [OrderItemStatus.IN_USE].includes(item.status!));
             if (isOrderCanConfirmed) {
                 const response = await apiUpdateOrder({body: {...orderData, status: OrderStatus.COMPLETED}, id: orderData?.id!}).unwrap();
-                if (response?.data) {
-                    dispatch(setOrderDataForPost({...response.data}));
-                    setTempOrderData({...response.data});
+                if (response) {
+                    dispatch(setOrderDataForPost({...response}));
+                    setTempOrderData({...response});
                 }
+                HELP.showToast('success', 'Order Confirmed');
             }
             else {
                 HELP.alertError(undefined, `Can't Confirm!`, `cart empty or  some item status is"${OrderItemStatus.IN_USE.toUpperCase()}"`);
             }
 
         } catch (error) {
-
             HELP.alertError(error);
         }
 
@@ -138,31 +155,40 @@ const AddOrderCntainer = ({}: IAddOrderContainer) => {
     };
 
     const handleOrderReject = async () => {
-        if (!!orderData.orderItems?.length) {
-            const response = await apiUpdateOrder({body: {...orderData, status: OrderStatus.DECLINED}, id: orderData?.id!});
-            if (response?.data) {
-                dispatch(setOrderDataForPost({...response.data}));
-                setTempOrderData({...response.data});
-            } else if (response?.error) {
-                HELP.alertError(response?.error);
+        try {
+            if (!!orderData.orderItems?.length) {
+                const response = await apiUpdateOrder({body: {...orderData, status: OrderStatus.DECLINED}, id: orderData?.id!}).unwrap();
+                if (response) {
+                    dispatch(setOrderDataForPost({...response}));
+                    setTempOrderData({...response});
+                }
+            } else {
+                HELP.alertError(undefined, `Cant Reject`, `Order cart is empty`);
             }
-        } else {
-            HELP.alertError(undefined, `Cant Reject`, `Order cart is empty`);
+        } catch (error) {
+            HELP.alertError(error);
         }
+
     };
 
-    const actionContainerColor = useMemo(() => {
-        const colors = {
-            [OrderStatus.COMPLETED]: Colors.COMPLETED_COLOR,
-            [OrderStatus.DECLINED]: Colors.DECLINED_COLOR,
-            [OrderStatus.PENDING]: Colors.INPROGRESS_COLOR
-        };
-        return orderData.status && colors[orderData.status];
-    }, [orderStatus]);
+    const handleReturnBack = () => {
+        isSkipProjectSlection && setIsSkipProjectSlection(false);
+        selectedProject && dispatch(setSelectedProject(null));
+    };
 
+    const handleOnPressChangeProject = () => {
+        if (orderStatus.inProgress) {
+            dispatch(setSelectedProject(null));
+        } else {
+            HELP.showToast('info', `Can't Change Project`, `Order is ${orderData.status}`);
+        }
 
+    };
     const handleProjectSelection = (data: Project) => {
-        dispatch(setProjectId(data.id));
+        if (orderData?.orderItems?.length) {
+            dispatch(setProjectIdForAllOrderItems(data.id));
+        }
+        dispatch(setSelectedProject(data));
     };
 
     const hanldeOnPressClient = useCallback((data: Project) => {
@@ -173,9 +199,9 @@ const AddOrderCntainer = ({}: IAddOrderContainer) => {
 
     const projectListItem = useCallback(({item, index}: {item: Project; index: number;}) => {
         return (
-            <ProjectCard data={item} hanldeOnPressClient={hanldeOnPressClient} handleOnPressSelect={handleProjectSelection} />
+            <ProjectCard data={item} hanldeOnPressClient={hanldeOnPressClient} handleOnPressActionButton={handleProjectSelection} />
         );
-    }, [activeProjects]);
+    }, [activeProjects, orderData.orderItems]);
 
     const renderProjectSelection = useMemo(() => {
         return (
@@ -201,24 +227,39 @@ const AddOrderCntainer = ({}: IAddOrderContainer) => {
             </View>
         );
 
-    }, [activeProjects, isSkipProjectSlection, projectCodeValue]);
+    }, [activeProjects, isSkipProjectSlection, projectCodeValue, orderData.orderItems]);
+
+
+
+
+
+    const renderSelectedProject = useMemo(() => {
+        if (!selectedProject) return null;
+        return (
+            <ProjectCard
+                data={selectedProject}
+                hanldeOnPressClient={hanldeOnPressClient}
+                actionButtonTitle={'CHANGE PROJECT'}
+                handleOnPressActionButton={handleOnPressChangeProject} />
+        );
+    }, [selectedProject, orderStatus]);
 
     return (
         <View style={style.container}>
             <ClientInfoModal />
             {
-                ((projectId || isSkipProjectSlection)) ?
+                ((selectedProject || isSkipProjectSlection)) ?
                     <>
                         {orderStatus.inProgress && <View style={style.searchContainer}>
-                            <ItemsForOrderSearch />
+                            <ItemsForOrderSearch selectedProject={selectedProject} />
                         </View>}
                         <View style={style.orderContentContainer}>
                             <View style={style.orderListHeaderContainer}>
-                                <ItemsForOrderListHeader projectId={projectId} />
+                                <ItemsForOrderListHeader projectId={selectedProject?.id} />
                             </View>
                             <View style={style.orderListContainer}>
                                 {isLoading ? <ActivityIndicator size={'large'} color={Colors.METALLIC_GOLD} />
-                                    : <ItemsForOrderList orderItems={orderData.orderItems ?? []} projectsData={projectsData ?? []} projectId={projectId} />}
+                                    : <ItemsForOrderList orderItems={orderData.orderItems ?? []} projectsData={projectsData ?? []} projectId={selectedProject?.id} />}
                             </View>
                         </View>
                         <View style={[style.orderActionsContainer, {borderColor: actionContainerColor}]}>
@@ -231,17 +272,31 @@ const AddOrderCntainer = ({}: IAddOrderContainer) => {
                             </View>}
                         </View>
                         <View style={style.orderDetailContainer}>
-                            <InputItem
-                                inputTitle={'ORDER DETAIL'}
-                                setValue={orderDetailSetValue}
-                                inputValue={orderData.detail ?? ''}
-                                isMultiLine
-                                disabledForEdit={!orderStatus.inProgress}
-                                height={60}
-                            />
+                            <View style={{flexGrow: 1, padding: 5, justifyContent: 'center'}}>
+                                <InputItem
+                                    inputTitle={'ORDER DETAIL'}
+                                    setValue={orderDetailSetValue}
+                                    inputValue={orderData.detail ?? ''}
+                                    isMultiLine
+                                    disabledForEdit={!orderStatus.inProgress}
+                                    height={100}
+                                />
+                            </View>
+                            <View style={{flexShrink: 1}}>
+                                {renderSelectedProject}
+                            </View>
                         </View>
                         <View style={style.orderFooterContainer}>
                             {orderStatus.inProgress && <View style={style.orderFooterButtonContainer}>
+                                <View tooltip={'RETURN TO PROJECT SELECTION'}>
+                                    <CustomPressable
+                                        style={style.returnBackIcon}
+                                        onHoverOpacity
+                                        onPress={handleReturnBack}
+                                    >
+                                        <Icon name={'level-up'} size={20} color={Colors.CARD_COLOR} />
+                                    </CustomPressable>
+                                </View>
                                 <PrimaryButton onHoverOpacity title={'RESET'} onPress={handleClearOrderData} width={100} height={30} borderRadius={2} textColor={Colors.CARD_COLOR} buttonColor={Colors.DEFAULT_TEXT_COLOR} />
                                 {tempOrderData ? <PrimaryButton onHoverOpacity title={'UPDATE'} onPress={handleUpdateOrder} width={100} height={30} borderRadius={2} textColor={Colors.CARD_COLOR} buttonColor={Colors.DEFAULT_TEXT_COLOR} />
                                     : <PrimaryButton onHoverOpacity title={'CREATE'} onPress={handleCreateOrder} width={100} height={30} borderRadius={2} textColor={Colors.CARD_COLOR} buttonColor={Colors.DEFAULT_TEXT_COLOR} />

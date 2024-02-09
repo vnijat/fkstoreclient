@@ -27,10 +27,12 @@ export const getStyle = () => {
             height: 300
         },
         orderDetailContainer: {
-            flex: 0.2
+            flex: 0.2,
+            flexDirection: 'row',
+            margin: 5,
         },
         orderFooterContainer: {
-            flex: 0.1
+            flex: 0.2
         },
         orderFooterButtonContainer: {
             height: 50,
@@ -39,13 +41,22 @@ export const getStyle = () => {
             justifyContent: 'space-around',
             alignItems: 'center'
         },
+        returnBackIcon: {
+            height: 30,
+            width: 30,
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: Colors.DEFAULT_TEXT_COLOR,
+            borderRadius: 2
+        },
         orderActionsContainer: {
             backgroundColor: Colors.DEFAULT_TEXT_COLOR,
             height: 50,
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'space-between',
-            borderTopWidth: 5
+            borderTopWidth: 5,
+            paddingHorizontal: 10,
         },
         orderStatusText: {
             fontSize: FONT.FONT_SIZE_SMALL,
@@ -81,7 +92,22 @@ export const getStyle = () => {
             justifyContent: 'center',
             alignItems: 'flex-end',
             paddingHorizontal: 10,
+        },
+        selectedProjectContainer: {
+            height: 30,
+            borderRadius: 5,
+            justifyContent: 'center',
+            alignItems: 'center',
+            paddingHorizontal: 5,
+            backgroundColor: Colors.CARD_COLOR,
+        },
+        selectedProjectText: {
+            fontSize: FONT.FONT_SIZE_MEDIUM,
+            color: Colors.DEFAULT_TEXT_COLOR,
+            fontWeight: FONT.FONT_BOLD,
+            fontFamily: FONT.FONT_FAMILY
         }
+
     });
 
     return style;

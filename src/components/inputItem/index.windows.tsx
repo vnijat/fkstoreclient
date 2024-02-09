@@ -199,7 +199,7 @@ export const InputItem: FC<IInputItem> = memo(
 
     const renderDatePicker = useMemo(() => {
       if (isDatePicker) {
-        return <DateTimePicker dateValue={inputValue as Date} getDate={(date: string) => setValue(date)} />;
+        return <DateTimePicker dateValue={inputValue as Date} width={width} getDate={(date: string) => setValue(date)} height={height} />;
       } else {
         return null;
       }

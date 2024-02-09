@@ -9,7 +9,7 @@ export enum Colors {
   FLORAL_WHITE = '#FBFBF2',
   ELTON_BLUE = '#94C9A9',
   MING = '#006D77',
-  METALLIC_GOLD = '#D1AC00',
+  METALLIC_GOLD = '#8c712c',
   DARK_GOLDENROD = '#B2911F',
   DARK_BROWN = '#8c712c',
   OLD_GOLD = '#e0c152',

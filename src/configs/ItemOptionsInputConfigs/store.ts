@@ -39,15 +39,6 @@ const store: InputsConfig[] = [
     height: 35,
     width: 140,
   },
-  {
-    title: 'SKU',
-    dtoKey: 'skuCode',
-    isNumeric: false,
-    maxLength: 200,
-    placeHolder: 'SKU',
-    height: 35,
-    width: 140,
-  },
 ];
 
 export {store};

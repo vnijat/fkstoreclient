@@ -12,6 +12,8 @@ import {Item} from "../types/item";
 import {ToastVariants, toastVariants} from "../types/toast";
 import {Toast} from "react-native-toast-notifications";
 import {IToastData} from "../components/customToastComponent";
+import {Role} from "../enums/userRole";
+import store, {RootState} from "../modules/redux/store";
 var Sound;
 if (Platform.OS !== 'windows') {
     Sound = require('react-native-sound');
@@ -36,6 +38,16 @@ const modifieErrorMessage = (error: any) => {
     }, {});
 };
 
+
+
+
+const hasPermission = (canAccessRoles: Role[]) => {
+    const currentUser = (store.getState() as RootState).user.user;
+    if (!currentUser) {
+        return false;
+    }
+    return canAccessRoles.some(role => role === currentUser.role);
+};
 
 
 
@@ -244,7 +256,8 @@ const HELP = {
     modifyTextForLangSelect,
     getUTCAddTZ,
     getUTCSubTZ,
-    playScanSound
+    playScanSound,
+    hasPermission
 };
 
 export default HELP;

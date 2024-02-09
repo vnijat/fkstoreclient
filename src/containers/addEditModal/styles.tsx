@@ -1,5 +1,5 @@
-import { StyleSheet } from 'react-native';
-import { Colors } from '../../utils/colors';
+import {StyleSheet} from 'react-native';
+import {Colors} from '../../utils/colors';
 import FONT from '../../utils/font';
 
 export const getStyle = () => {
@@ -37,7 +37,6 @@ export const getStyle = () => {
       flexDirection: 'row',
       alignItems: 'center',
       paddingHorizontal: 5,
-      justifyContent: 'flex-start',
     },
     tableInputContainer: {
       width: '100%',

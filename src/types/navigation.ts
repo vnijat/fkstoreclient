@@ -1,6 +1,7 @@
 import {RouteNames} from '../enums/routes';
 
 type RootStackParamList = {
+  [RouteNames.LOGIN]: undefined;
   [RouteNames.CLIENTS]: undefined;
   [RouteNames.ORDERS]: undefined;
   [RouteNames.PROJECTS]: undefined;
@@ -9,9 +10,14 @@ type RootStackParamList = {
   [RouteNames.TRACKVIEW]: undefined;
 };
 
+
+type AuthStackParamList = {
+};
+
+
 type RootStackMobileParamList = {
   [RouteNames.DRAWER]: undefined;
-  [RouteNames.PRODUCT_INFO]: {barcode: string};
+  [RouteNames.PRODUCT_INFO]: {barcode: string;};
 };
 
 type BottomTabMobileStack = {
@@ -47,4 +53,5 @@ export type {
   RootStackMobileParamList,
   DrawerStackMobileParamlist,
   BottomTabMobileStack,
+  AuthStackParamList
 };

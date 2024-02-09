@@ -1,5 +1,5 @@
-import { StyleSheet, Platform } from 'react-native';
-import { Colors } from '../../utils/colors';
+import {StyleSheet, Platform} from 'react-native';
+import {Colors} from '../../utils/colors';
 
 export const getStyle = (height: number, width: number, isErorr?: boolean, titleColor?: string, backgroundColor?: string) => {
     const style = StyleSheet.create({
@@ -60,9 +60,9 @@ export const getStyle = (height: number, width: number, isErorr?: boolean, title
             minWidth: width,
             alignItems: 'center',
             paddingHorizontal: 5,
-            backgroundColor: 'transparent',
+            margin: 2,
+            backgroundColor: Colors.CARD_COLOR,
             justifyContent: 'space-between',
-            paddingRight: 20
         }
     });
 

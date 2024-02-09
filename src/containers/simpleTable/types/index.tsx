@@ -1,4 +1,5 @@
-import { ElementType } from "react";
+import {ElementType} from "react";
+import {Role} from "../../../enums/userRole";
 
 interface ITableDataConfig<T> {
     /**
@@ -44,6 +45,8 @@ interface ITableDataConfig<T> {
 
     isAboveContextMenu?: boolean;
 
+    accessRoles?: Role[];
+
 }
 
 type ITableDataTypes = 'numeric' | 'money' | 'text' | 'date';
@@ -66,7 +69,7 @@ interface IContextMenuButton<T> {
 
 
 interface ICustomColumn<T> {
-    [key: string]: ({ data }: { data: T; }) => JSX.Element;
+    [key: string]: ({data}: {data: T;}) => JSX.Element;
 }
 
 export type {

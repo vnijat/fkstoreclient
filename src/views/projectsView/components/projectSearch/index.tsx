@@ -95,7 +95,7 @@ const ProjectSearchContainer = ({logicProvider, dataProvider}: IProjectSearchCot
 
     return (
         <>
-            <View style={{flexGrow: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', backgroundColor: Colors.CARD_COLOR, padding: 5}}>
+            <View style={style.container}>
                 <View style={{flex: 0.4}}>
                     <InputItem inputValue={projectsQueryParams?.search ?? ''} setValue={(value) => handleSearchInput(value as string)} isSearch height={30} />
                 </View>

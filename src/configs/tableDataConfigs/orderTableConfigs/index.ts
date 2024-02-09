@@ -1,4 +1,5 @@
 import {ITableDataConfig} from '../../../containers/simpleTable/types';
+import {Role} from '../../../enums/userRole';
 import {Item} from '../../../types/item';
 import {ProjectOrder} from '../../../types/projectOrder';
 
@@ -32,6 +33,7 @@ export const orderTableDataConfigs: ITableDataConfig<ProjectOrder>[] = [
     dtoKey: 'totalPrice',
     type: 'money',
     hidden: false,
+    accessRoles: [Role.SUPER_ADMIN, Role.MANAGER]
   },
   {
     headerTitle: 'Status',

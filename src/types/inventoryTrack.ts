@@ -28,6 +28,7 @@ interface InventoryTrackData {
   storeid: number;
   parentId: number;
   fullfilled: boolean;
+  projectcode: string;
   type: 'purchase' | 'order' | 'move';
   status: OrderItemStatus | PurchaseItemStatus;
 }
@@ -35,7 +36,7 @@ interface InventoryTrackResponse {
   data: InventoryTrackData[];
   meta: Imeta;
   dataCount: number;
-  orderBy: {sort: string; order: Order};
+  orderBy: {sort: string; order: Order;};
   inventoryStartDate: Date;
 }
 

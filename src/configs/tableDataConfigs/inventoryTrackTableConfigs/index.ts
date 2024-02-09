@@ -28,6 +28,12 @@ export const inventoryTrackTableConfig: ITableDataConfig<InventoryTrackData>[] =
       hidden: false,
     },
     {
+      headerTitle: 'Project Code',
+      dtoKey: 'projectcode',
+      type: 'text',
+      hidden: false,
+    },
+    {
       headerTitle: 'Unit',
       dtoKey: 'unit',
       type: 'text',
@@ -39,12 +45,6 @@ export const inventoryTrackTableConfig: ITableDataConfig<InventoryTrackData>[] =
       type: 'numeric',
       hidden: false,
     },
-    // {
-    //   headerTitle: 'Total Price',
-    //   dtoKey: 'totalPrice',
-    //   type: 'money',
-    //   hidden: true,
-    // },
     {
       headerTitle: 'Status',
       customColumnKey: 'status',

@@ -1,22 +1,23 @@
-import React, { memo, useMemo } from "react";
-import { Image, View, Linking, ActivityIndicator, Text } from "react-native";
+import React, {memo, useMemo} from "react";
+import {Image, View, Linking, ActivityIndicator, Text} from "react-native";
 import Icon from "react-native-vector-icons/Entypo";
-import { useSelector } from "react-redux";
+import {useSelector} from "react-redux";
 import DataField from "./components/dataField";
-import { getStyle } from "./style";
+import {getStyle} from "./style";
 import CustomModal from "../../../../components/customModal";
-import { PrimaryButton } from "../../../../components/primaryButton";
-import { useGetItemQuery, InventoryApi } from "../../../../modules/api/apiSlice";
-import { setIsShowItemModal } from "../../../../modules/redux/itemsSlicer";
-import { RootState, useAppDispatch } from "../../../../modules/redux/store";
-import { currency } from "../../../../utils/currency.windows";
-import { Colors } from "../../../../utils/colors";
+import {PrimaryButton} from "../../../../components/primaryButton";
+import {useGetItemQuery, InventoryApi} from "../../../../modules/api/apiSlice";
+import {setIsShowItemModal} from "../../../../modules/redux/itemsSlicer";
+import {RootState, useAppDispatch} from "../../../../modules/redux/store";
+import {currency} from "../../../../utils/currency.windows";
+import {Colors} from "../../../../utils/colors";
 import HELP from "../../../../services/helpers";
 import SimpleTable from "../../../../containers/simpleTable";
-import { ICustomColumn, ITableDataConfig } from "../../../../containers/simpleTable/types";
-import { InventoryTrackData } from "../../../../types/inventoryTrack";
+import {ICustomColumn, ITableDataConfig} from "../../../../containers/simpleTable/types";
+import {InventoryTrackData} from "../../../../types/inventoryTrack";
 import TrackStatusColumn from "../../../inventoryTrackView/components/customColumns/statusColumn";
 import FONT from "../../../../utils/font";
+import {Role} from "../../../../enums/userRole";
 
 
 interface IItemModal {
@@ -29,14 +30,14 @@ interface propertiesData {
     width?: number;
 }
 
-const ItemModal = ({ }: IItemModal) => {
+const ItemModal = ({}: IItemModal) => {
     const style = useMemo(() => getStyle(), []);
     const apiURL = useSelector((state: RootState) => state.configs.apiURL);
     const dispatch = useAppDispatch();
     const itemId = useSelector((state: RootState) => state.itemsSlicer.itemIdForFullResponse);
     const isShowModal = useSelector((state: RootState) => state.itemsSlicer.isShowItemModal);
-    const { data } = useGetItemQuery(itemId, {
-        selectFromResult: ({ data }) => ({
+    const {data} = useGetItemQuery(itemId, {
+        selectFromResult: ({data}) => ({
             data,
         })
     });
@@ -49,18 +50,18 @@ const ItemModal = ({ }: IItemModal) => {
     const propertiesData = useMemo(() => {
         let properties: propertiesData[] = [];
         if (data?.properties) {
-            const { dimensionMeasure, volumeMeasure, volume, width, height, length, area, areaMeasure, weight, weightMeasure, supplierColorVariant, supplierProductArticule } = data?.properties;
+            const {dimensionMeasure, volumeMeasure, volume, width, height, length, area, areaMeasure, weight, weightMeasure, supplierColorVariant, supplierProductArticule} = data?.properties;
             const dimensionsData = `l: ${Number(length)} w: ${Number(width)} h: ${Number(height)}`;
             const areaData = `${Number(area)}`;
             const volumeData = `${Number(volume)}`;
             const weightData = `${Number(weight)}`;
             properties = [
-                { title: `Dimensions (${dimensionMeasure})`, value: dimensionsData, width: 150 },
-                { title: `Area (${areaMeasure})`, value: areaData },
-                { title: `Volume (${volumeMeasure})`, value: volumeData },
-                { title: `Weight (${weightMeasure})`, value: weightData },
-                { title: 'Color/Variant', value: supplierColorVariant },
-                { title: 'Aritcule', value: supplierProductArticule },
+                {title: `Dimensions (${dimensionMeasure})`, value: dimensionsData, width: 150},
+                {title: `Area (${areaMeasure})`, value: areaData},
+                {title: `Volume (${volumeMeasure})`, value: volumeData},
+                {title: `Weight (${weightMeasure})`, value: weightData},
+                {title: 'Color/Variant', value: supplierColorVariant},
+                {title: 'Aritcule', value: supplierProductArticule},
             ];
         }
         return properties;
@@ -88,7 +89,7 @@ const ItemModal = ({ }: IItemModal) => {
     ];
 
     const customColumn: ICustomColumn<InventoryTrackData> = {
-        status: ({ data }) => <TrackStatusColumn data={data} />
+        status: ({data}) => <TrackStatusColumn data={data} />
     };
 
     const onPressGetBarcodePdf = async () => {
@@ -96,7 +97,7 @@ const ItemModal = ({ }: IItemModal) => {
     };
 
     const onPressPrint = async () => {
-        const response = await dispatch(InventoryApi.endpoints.printBarcode.initiate({ itemId: itemId! }));
+        const response = await dispatch(InventoryApi.endpoints.printBarcode.initiate({itemId: itemId!}));
         if (response?.data) {
             HELP.showToast('success', `${response?.data?.message}`.toUpperCase(), "Print Job Sent");
         } else {
@@ -120,18 +121,18 @@ const ItemModal = ({ }: IItemModal) => {
                             <DataField title={'Name'} value={data?.name!} />
                             <DataField title={'Description'} value={data?.description!} height={60} />
                             <DataField title={'Category'} value={data?.category!} />
-                            <View style={{ flexDirection: 'row' }}>
+                            <View style={{flexDirection: 'row'}}>
                                 <DataField title={'Unit'} value={data?.unit.name!} width={100} />
                                 <DataField title={'At Stock'} value={Number(data?.quantity!)} width={100} />
-                                <DataField title={'Cost Price'} value={currency.format(Number(data?.costPrice!))} width={100} />
+                                {HELP.hasPermission([Role.SUPER_ADMIN, Role.MANAGER]) && <DataField title={'Cost Price'} value={currency.format(Number(data?.costPrice!))} width={100} />}
 
                             </View>
-                            <View style={{ flexDirection: 'row' }}>
+                            <View style={{flexDirection: 'row'}}>
                                 <DataField title={'Color'} value={data?.color.name!} width={100} />
                                 <DataField title={'Store'} value={data?.store.name!} width={100} />
                                 <DataField title={'Location'} value={data?.location.code!} width={100} />
                             </View>
-                            <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+                            <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
                                 {propertiesData?.map((data, index) => {
                                     return (
                                         <DataField title={data.title} value={data.value as string} width={data?.width || 100} key={`${index}`} />
@@ -142,11 +143,8 @@ const ItemModal = ({ }: IItemModal) => {
                         <View style={style.contentTopRightContainer}>
                             <View style={style.itemBarcodeContainer}>
                                 <View style={style.barcodeImage}>
-                                    <Image source={{ uri: `data:image/png;base64,${data?.qrCode}` }} resizeMode={'center'} style={{ flex: 1, }} />
+                                    <Image source={{uri: `data:image/png;base64,${data?.qrCode}`}} resizeMode={'center'} style={{flex: 1, }} />
                                 </View>
-                                <Text style={style.rightContainerInfoText}>
-                                    {`SKU: ${data?.skuCode}`}
-                                </Text>
                                 <Text style={style.rightContainerInfoText}>
                                     {!!data?.label.name.length && `Label: ${data?.label.name}`}
                                 </Text>
@@ -159,13 +157,13 @@ const ItemModal = ({ }: IItemModal) => {
                     </View>
                     <View style={style.contentBottomContainer}>
                         <View style={style.contentBottomLeft}>
-                            <View style={{ height: 280 }}>
+                            <View style={{height: 280}}>
                                 <View style={style.bottemLeftTitle}>
                                     <Text style={style.bottemLeftTitleText}>
                                         {'Transactions'.toUpperCase()}
                                     </Text>
                                 </View>
-                                <View style={{ flexShrink: 1, backgroundColor: Colors.CARD_HEADER_COLOR, }}>
+                                <View style={{flexShrink: 1, backgroundColor: Colors.CARD_HEADER_COLOR, }}>
                                     <SimpleTable
                                         tableData={data.transactions}
                                         tableDataConfig={tableDataConfig}

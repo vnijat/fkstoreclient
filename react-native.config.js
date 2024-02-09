@@ -3,8 +3,12 @@ module.exports = {
         "react-native-sound": {
             platforms: {
                 windows: null
-                // add more platform to disable auto-linking for them too
-            }
+            },
+        },
+        "react-native-document-picker": {
+            platforms: {
+                windows: null
+            },
         }
     }
 };

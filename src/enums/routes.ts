@@ -1,4 +1,5 @@
 export enum RouteNames {
+  LOGIN = 'Login',
   DRAWER = 'Drawer',
   WAREHOUSE = 'Warehouse',
   CLIENTS = 'Clients',

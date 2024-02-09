@@ -1,15 +1,15 @@
-import { ITableDataConfig } from "../../../../containers/simpleTable/types";
-import { OrderItemStatus } from "../../../../enums/orderItemStatus";
-import { OrderStatus } from "../../../../enums/orderStatus";
-import { OrdersApi, useAddOrderMutation, useDeleteOrderMutation, useEditOrderMutation } from "../../../../modules/api/orders.api";
-import { setOrdersQueryParams } from "../../../../modules/redux/orderQuerySlicer";
-import { addItemForOrder, clearOrderDataForPost, deleteItemFromOrder, setIsOrderForEdit, setIsShowOrderModal, setOrderDataForPost, updateItemForOrder } from "../../../../modules/redux/orderSlicer";
-import { useAppDispatch } from "../../../../modules/redux/store";
-import { resetTable, setNewTableConfigs } from "../../../../modules/redux/tableConfigs";
+import {ITableDataConfig} from "../../../../containers/simpleTable/types";
+import {OrderItemStatus} from "../../../../enums/orderItemStatus";
+import {OrderStatus} from "../../../../enums/orderStatus";
+import {OrdersApi, useAddOrderMutation, useDeleteOrderMutation, useEditOrderMutation} from "../../../../modules/api/orders.api";
+import {setOrdersQueryParams} from "../../../../modules/redux/orderQuerySlicer";
+import {addItemForOrder, clearOrderDataForPost, deleteItemFromOrder, setIsOrderForEdit, setIsShowOrderModal, setOrderDataForPost, updateItemForOrder} from "../../../../modules/redux/orderSlicer";
+import {useAppDispatch} from "../../../../modules/redux/store";
+import {resetTable, setNewTableConfigs} from "../../../../modules/redux/tableConfigs";
 import HELP from "../../../../services/helpers";
-import { Imeta } from "../../../../types/common/common";
-import { Item } from "../../../../types/item";
-import { AddOrderDto, Order, ProjectOrder } from "../../../../types/projectOrder";
+import {Imeta} from "../../../../types/common/common";
+import {Item} from "../../../../types/item";
+import {AddOrderDto, Order, ProjectOrder} from "../../../../types/projectOrder";
 
 
 function OrderLogicProvider() {
@@ -19,7 +19,7 @@ function OrderLogicProvider() {
     const [apiUpdateOrder] = useEditOrderMutation();
 
     function onResetTable() {
-        dispatch(resetTable({ tableName: 'order' }));
+        dispatch(resetTable({tableName: 'order'}));
     }
 
     function onCloseModal() {
@@ -27,11 +27,11 @@ function OrderLogicProvider() {
     }
 
     function setNewTableConfig(data: ITableDataConfig<ProjectOrder>[]) {
-        dispatch(setNewTableConfigs({ tableName: 'order', data }));
+        dispatch(setNewTableConfigs({tableName: 'order', data}));
     }
 
     function onPressRowItem(data: ProjectOrder) {
-        dispatch(setOrderDataForPost({ ...data }));
+        dispatch(setOrderDataForPost({...data}));
         dispatch(setIsOrderForEdit(true));
         dispatch(setIsShowOrderModal(true));
 
@@ -64,14 +64,14 @@ function OrderLogicProvider() {
     }
 
     function hanldeDeleteProductFromOrder(productId: number) {
-        dispatch(deleteItemFromOrder({ itemId: productId }));
+        dispatch(deleteItemFromOrder({itemId: productId}));
     }
 
     function handdleCreateNewOrder() {
         dispatch(clearOrderDataForPost());
     }
 
-    function handleUpdateProductInOrder(value: { data: { [key: string]: any; }, itemId: number; }) {
+    function handleUpdateProductInOrder(value: {data: {[key: string]: any;}, itemId: number;}) {
         dispatch(updateItemForOrder(value));
     }
 
@@ -80,7 +80,7 @@ function OrderLogicProvider() {
     }
 
     async function addScannedProductToOrder(barcode: string) {
-        const response = await dispatch(OrdersApi.endpoints.itemForOrder.initiate(barcode, { forceRefetch: true }));
+        const response = await dispatch(OrdersApi.endpoints.itemForOrder.initiate(barcode, {forceRefetch: true}));
         if (response.data?.length === 1) {
             const productForOrder = response.data[0];
             dispatch(addItemForOrder(productForOrder));
@@ -93,25 +93,30 @@ function OrderLogicProvider() {
     async function handlePostNewOrderData(data: AddOrderDto) {
         const response = await apiAddOrder(data);
         if (response?.data) {
-            dispatch(setOrderDataForPost({ ...response?.data }));
+            dispatch(setOrderDataForPost({...response?.data}));
             HELP.showToast('success', 'New Order Created');
         }
     }
 
     async function handleUpdateOrder(data: AddOrderDto) {
-        const { orderItems } = data;
-        const isOrderConfirmed = data.status === OrderStatus.COMPLETED;
-        const isOrderRejected = data.status === OrderStatus.DECLINED;
-        const isSomeProductStatusIsNotSet = orderItems?.some((item) => item.status === OrderItemStatus.IN_USE);
-        if (isOrderConfirmed && isSomeProductStatusIsNotSet) {
-            HELP.showToast('info', 'Some Product Status is not set');
-        } else {
-            const response = await apiUpdateOrder({ id: data.id!, body: data });
-            if (response.data) {
-                dispatch(setOrderDataForPost({ ...response?.data }));
+        try {
+            const {orderItems} = data;
+            const isOrderConfirmed = data.status === OrderStatus.COMPLETED;
+            const isOrderRejected = data.status === OrderStatus.DECLINED;
+            const isSomeProductStatusIsNotSet = orderItems?.some((item) => item.status === OrderItemStatus.IN_USE);
+            if (isOrderConfirmed && isSomeProductStatusIsNotSet) {
+                HELP.showToast('info', 'Some Product Status is not set');
+            } else {
+                const response = await apiUpdateOrder({id: data.id!, body: data}).unwrap();
+                if (response.data) {
+                    dispatch(setOrderDataForPost({...response?.data}));
+                }
+                HELP.showToast('success', 'Order Updated');
             }
-            HELP.showToast('success', 'Order Updated');
+        } catch (error) {
+            HELP.alertError(error);
         }
+
     }
 
     return {

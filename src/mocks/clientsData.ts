@@ -4,7 +4,6 @@ export const ClientDataMock = [
   {
     id: 2,
     createdAt: '2022-09-21T22:36:22.801Z',
-    skuCode: '',
     companyName: '',
     firstName: 'bill ',
     lastName: 'gates',
@@ -20,7 +19,6 @@ export const ClientDataMock = [
   {
     id: 1,
     createdAt: '2022-09-21T22:18:22.898Z',
-    skuCode: '',
     companyName: 'FourSeason',
     firstName: 'Rasim',
     lastName: 'Rasimovich',
@@ -36,7 +34,6 @@ export const ClientDataMock = [
   {
     id: 3,
     createdAt: '2022-09-21T22:36:22.801Z',
-    skuCode: '',
     companyName: 'microsoft',
     firstName: 'bill ',
     lastName: 'gates',
@@ -52,7 +49,6 @@ export const ClientDataMock = [
   {
     id: 4,
     createdAt: '2022-09-21T22:36:22.801Z',
-    skuCode: '',
     companyName: 'SOCAR',
     firstName: 'Putin ',
     lastName: 'Vladimir',
@@ -68,7 +64,6 @@ export const ClientDataMock = [
   {
     id: 5,
     createdAt: '2022-09-21T22:36:22.801Z',
-    skuCode: '',
     companyName: 'Russia',
     firstName: 'Putin ',
     lastName: 'Vladimir',
@@ -84,7 +79,6 @@ export const ClientDataMock = [
   {
     id: 6,
     createdAt: '2022-09-21T22:36:22.801Z',
-    skuCode: '',
     companyName: 'Russia',
     firstName: 'Putin ',
     lastName: 'Vladimir',
@@ -100,7 +94,6 @@ export const ClientDataMock = [
   {
     id: 7,
     createdAt: '2022-09-21T22:36:22.801Z',
-    skuCode: '',
     companyName: 'Russia',
     firstName: 'Putin ',
     lastName: 'Vladimir',
@@ -116,7 +109,6 @@ export const ClientDataMock = [
   {
     id: 8,
     createdAt: '2022-09-21T22:36:22.801Z',
-    skuCode: '',
     companyName: 'Russia',
     firstName: 'Putin ',
     lastName: 'Vladimir',
@@ -132,7 +124,6 @@ export const ClientDataMock = [
   {
     id: 9,
     createdAt: '2022-09-21T22:36:22.801Z',
-    skuCode: '',
     companyName: 'FKMMC',
     firstName: 'Ramin ',
     lastName: 'Kerim',

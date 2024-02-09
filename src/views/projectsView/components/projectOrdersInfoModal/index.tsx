@@ -1,21 +1,15 @@
 import {useMemo} from "react";
-import {ActivityIndicator, Text, View} from "react-native";
-import {useSelector} from "react-redux";
+import {View} from "react-native";
 import CustomModal from "../../../../components/customModal";
-import customModal from "../../../../components/customModal";
 import SimpleTable from "../../../../containers/simpleTable";
 import {ITableDataConfig} from "../../../../containers/simpleTable/types";
-import TableInput from "../../../../containers/tableInput";
-import {ITableConfig, RowDataType} from "../../../../containers/tableInput/types";
-import {useGetProjectOrdersQuery} from "../../../../modules/api/projects.api";
-import {setIsShowProjectOrdersModal} from "../../../../modules/redux/projectSlicer";
-import {RootState, useAppDispatch} from "../../../../modules/redux/store";
-import {Project} from "../../../../types/project";
 import {OrderItem} from "../../../../types/projectOrder";
 import {Colors} from "../../../../utils/colors";
 import ProjectDataProvider from "../../provider/data";
 import ProjectLogicProvider from "../../provider/logic";
 import {getStyle} from "./styles";
+import HELP from "../../../../services/helpers";
+import {Role} from "../../../../enums/userRole";
 
 
 
@@ -29,17 +23,17 @@ const ProjectOrdersInfoModal = ({logicProvider, dataProvider}: IProectOrdersInfo
     const {handleOnCloseProjectOrdersModal} = logicProvider;
     const {projectOrdersData: {data, isLoading}, isShowProjectOrdersModal} = dataProvider;
     const style = useMemo(() => getStyle(), []);
-    
+    const hasPermission = HELP.hasPermission([Role.MANAGER, Role.SUPER_ADMIN]);
     const tableConfig: ITableDataConfig<OrderItem>[] = [
-        {headerTitle: 'ORDER ID', dtoKey: 'orderId', type: 'numeric', hidden: false},
+        // {headerTitle: 'ORDER ID', dtoKey: 'orderId', type: 'numeric', hidden: false},
         {headerTitle: 'ORDER DATE', dtoKey: 'updatedAt', type: 'date', hidden: false},
         {headerTitle: 'NAME', dtoKey: 'name', type: 'text', hidden: false},
-        {headerTitle: 'Store', dtoKey: 'store', type: 'text', isObject: true, objectDtoKey: 'name', hidden: false},
         {headerTitle: 'BARCODE', dtoKey: 'barcode', type: 'text', hidden: false},
         {headerTitle: 'UNIT', dtoKey: 'unit', type: 'text', hidden: false},
         {headerTitle: 'QUANTITY', dtoKey: 'quantity', type: 'numeric', hidden: false},
-        {headerTitle: 'PRICE', dtoKey: 'pricePerUnit', type: 'money', hidden: false},
-        {headerTitle: 'COST ', dtoKey: 'totalPrice', type: 'money', hidden: false},
+        {headerTitle: 'Store', dtoKey: 'store', type: 'text', isObject: true, objectDtoKey: 'name', hidden: false},
+        {headerTitle: 'PRICE', dtoKey: 'pricePerUnit', type: 'money', hidden: !hasPermission},
+        {headerTitle: 'COST ', dtoKey: 'totalPrice', type: 'money', hidden: !hasPermission},
     ];
 
     return (

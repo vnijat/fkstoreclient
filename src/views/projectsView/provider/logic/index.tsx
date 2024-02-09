@@ -1,5 +1,6 @@
 import {ITableDataConfig} from "../../../../containers/simpleTable/types";
 import {ProjectStatus} from "../../../../enums/projectStatus";
+import {Role} from "../../../../enums/userRole";
 import {useAddProjectTypeMutation, useDeleteProjectMutation, useDeleteProjectTypeMutation, useEditProjectMutation, useEditProjectTypeMutation, useRecoverProjectsMutation} from "../../../../modules/api/projects.api";
 import {setProjectsQueryParams} from "../../../../modules/redux/projectQuerySlicer";
 import {clearProjectTypeForPost, setClientInfoData, setIsOpenClientInfoModal, setIsProjectForEdit, setIsShowOtherExpensesModal, setIsShowProjectAddEditModal, setIsShowProjectOrdersModal, setIsShowProjectTypesModal, setProjectDataForPost, setProjectIdForRequest, setProjectIdForRequestOrders, setProjectTypeDataForPost} from "../../../../modules/redux/projectSlicer";
@@ -19,6 +20,8 @@ function ProjectLogicProvider() {
     const [apiAddProjectType] = useAddProjectTypeMutation();
     const [apiEditProjectType] = useEditProjectTypeMutation();
     const [apiDeleteProjectType] = useDeleteProjectTypeMutation();
+    const accesFor = [Role.MANAGER, Role.SUPER_ADMIN];
+    const hasPermission = HELP.hasPermission(accesFor);
 
     function handlePagination(data: Imeta) {
         dispatch(setProjectsQueryParams(data));
@@ -103,6 +106,7 @@ function ProjectLogicProvider() {
 
 
     function handleOnPressRow(data: Project) {
+        if (!hasPermission) return;
         const {client, paid, price, ...restProject} = data;
         dispatch(setProjectDataForPost({clientId: client?.id!, paid: Number(paid).toString(), price: Number(price).toString(), ...restProject}));
         dispatch(setIsProjectForEdit(true));
@@ -160,11 +164,12 @@ function ProjectLogicProvider() {
     }
 
     async function handleProjectStatusChange(projectId: number, status: ProjectStatus) {
+        if (!hasPermission) {
+            HELP.alertError(undefined, 'Permission Denied', 'You don\'t have permission to change project status');
+            return;
+        }
         try {
-            const response = await apiEditProject({id: projectId, body: {status: status}});
-            if (response.error) {
-                throw response.error;
-            }
+            const response = await apiEditProject({id: projectId, body: {status: status}}).unwrap();
             HELP.showToast('success', `Project Status Changed`.toUpperCase(), 'Status Change');
         }
         catch (error) {

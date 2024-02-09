@@ -1,19 +1,22 @@
 import CheckBox from '@react-native-community/checkbox';
-import React, { FC, useMemo, useRef, useState } from 'react';
-import { Text, View, ScrollView } from 'react-native';
-import { ClearIcon } from '../../../../assets/icons/searchContainerIcons';
+import React, {FC, useMemo, useRef, useState} from 'react';
+import {Text, View, ScrollView} from 'react-native';
+import {ClearIcon} from '../../../../assets/icons/searchContainerIcons';
 import CustomPressable from '../../../../components/customPressable';
-import { InputItem } from '../../../../components/inputItem';
-import { PrimaryButton } from '../../../../components/primaryButton';
+import {InputItem} from '../../../../components/inputItem';
+import {PrimaryButton} from '../../../../components/primaryButton';
 import CustomPicker from '../../../../containers/customPicker';
 import UseLanguage from '../../../../modules/lozalization/useLanguage.hook';
-import { FilterParamskey, ItemOptionForInputs } from '../../../../types/item';
-import { Colors } from '../../../../utils/colors';
-import { currency } from '../../../../utils/currency.windows';
+import {FilterParamskey, ItemOptionForInputs} from '../../../../types/item';
+import {Colors} from '../../../../utils/colors';
+import {currency} from '../../../../utils/currency.windows';
 import WareHouseDataProvider from '../../provider/data';
 import WareHouseLogicProvider from '../../provider/logic';
 import FilterItem from './component/filterItems';
-import { getStyle } from './styles';
+import {getStyle} from './styles';
+import HELP from '../../../../services/helpers';
+import {Role} from '../../../../enums/userRole';
+import {Signs} from '../../../../utils/unicodeSigns';
 
 
 
@@ -23,7 +26,7 @@ interface ISearchContainer {
 }
 
 
-const SearchContainer: FC<ISearchContainer> = ({ logicProvider, dataProvider }) => {
+const SearchContainer: FC<ISearchContainer> = ({logicProvider, dataProvider}) => {
     const {
         pickerFilterParams,
         selectedFilterParamsWithLabel,
@@ -45,13 +48,13 @@ const SearchContainer: FC<ISearchContainer> = ({ logicProvider, dataProvider }) 
     const style = useMemo(() => getStyle(), []);
     const lang = UseLanguage();
     const searchInputRef = useRef(null);
-
+    const overallPrice = HELP.hasPermission([Role.SUPER_ADMIN, Role.MANAGER]) ? currency.format(queryData?.sumTotal!) : Signs.MONEYSMILE.toString();
     const renderSearch = useMemo(() => {
         return <InputItem width={'100%'} setValue={(value) => handleSearchValueChange(value as string)} inputValue={wareHouseQueryParams?.search || ''} inputRef={(r) => searchInputRef.current = r} isSearch={true} height={30} />;
 
     }, [wareHouseQueryParams?.search]);
 
-    const inWaitAnotherData = [{ dtoKey: 'location', title: lang['location'], waitsForDtokey: 'storeId', waitsForTitle: lang['store'] }];
+    const inWaitAnotherData = [{dtoKey: 'location', title: lang['location'], waitsForDtokey: 'storeId', waitsForTitle: lang['store']}];
 
     const renderFilterByPickers = useMemo(() => {
         if (dataForFilterBy) {
@@ -102,9 +105,9 @@ const SearchContainer: FC<ISearchContainer> = ({ logicProvider, dataProvider }) 
 
     const renderFilterItems = useMemo(() => {
         if (selectedFilterParamsWithLabel.length) {
-            return selectedFilterParamsWithLabel.map((item: { id: number, label: string, parent: FilterParamskey; }, index: number) => {
-                const { id, label, parent } = item;
-                return <FilterItem label={label} key={index} onPress={() => handleFilterParamSelect({ id, label, parent })} />;
+            return selectedFilterParamsWithLabel.map((item: {id: number, label: string, parent: FilterParamskey;}, index: number) => {
+                const {id, label, parent} = item;
+                return <FilterItem label={label} key={index} onPress={() => handleFilterParamSelect({id, label, parent})} />;
             });
         } else {
             return null;
@@ -116,7 +119,7 @@ const SearchContainer: FC<ISearchContainer> = ({ logicProvider, dataProvider }) 
     return (
         <View style={style.container}>
             < View style={style.topContainer}>
-                <View style={{ flexShrink: 1, maxHeight: 40 }}>
+                <View style={{flexShrink: 1, maxHeight: 40}}>
                     <ScrollView >
                         <View style={style.filterItemsContainer}>
                             {renderFilterItems}
@@ -143,7 +146,7 @@ const SearchContainer: FC<ISearchContainer> = ({ logicProvider, dataProvider }) 
                         </CustomPressable>
                     </View>
                     <View style={style.bottomRightContainer}>
-                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        <View style={{flexDirection: 'row', alignItems: 'center'}}>
                             <Text style={style.infoText}>
                                 {`${lang['outOfStock']}: `.toUpperCase()}
                             </Text>
@@ -158,13 +161,13 @@ const SearchContainer: FC<ISearchContainer> = ({ logicProvider, dataProvider }) 
                             />
                             <Text style={style.infoText}>
                                 {`${lang['overallPrice']} : `.toUpperCase()}
-                                <Text style={{ color: Colors.METALLIC_GOLD }}>
-                                    {currency.format(queryData?.sumTotal!)}
+                                <Text style={{color: Colors.METALLIC_GOLD, }}>
+                                    {overallPrice}
                                 </Text>
                             </Text>
                         </View>
 
-                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        <View style={{flexDirection: 'row', alignItems: 'center'}}>
                             <PrimaryButton
                                 title={lang['newProduct'].toUpperCase()}
                                 onPress={handleCreateNew}

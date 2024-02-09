@@ -1,8 +1,11 @@
-import { StyleSheet } from 'react-native';
-import { Colors } from '../../../../../utils/colors';
+import {StyleSheet} from 'react-native';
+import {Colors} from '../../../../../utils/colors';
 
 export const getStyle = () => {
     const style = StyleSheet.create({
+        container: {
+            flexDirection: 'row'
+        },
         iconContainer: {
             borderColor: Colors.CARD_HEADER_COLOR,
             borderRadius: 30,

@@ -1,7 +1,7 @@
-import React, { useCallback } from "react";
-import { View, ScrollView, FlatList } from "react-native";
-import { IProjectsForPicker } from "../../../types/project";
-import { OrderItem } from "../../../types/projectOrder";
+import React, {useCallback} from "react";
+import {View, ScrollView, FlatList} from "react-native";
+import {IProjectsForPicker} from "../../../types/project";
+import {OrderItem} from "../../../types/projectOrder";
 import ItemsForOrderListItem from "../itemsForOrderListItem";
 
 
@@ -9,27 +9,30 @@ import ItemsForOrderListItem from "../itemsForOrderListItem";
 interface IItemsForOrderList {
     orderItems: OrderItem[];
     projectsData: IProjectsForPicker[];
+    projectId?: number | null;
 }
 
 
-const ItemsForOrderList = ({ orderItems, projectsData }: IItemsForOrderList) => {
+const ItemsForOrderList = ({orderItems, projectsData, projectId}: IItemsForOrderList) => {
 
 
-    const listItem = useCallback(({ item, index }: { item: OrderItem, index: number; }) => {
+    const listItem = useCallback(({item, index}: {item: OrderItem, index: number;}) => {
         return <ItemsForOrderListItem
             orderItem={item}
             index={index}
             key={`${index}`}
-            projectsData={projectsData ?? []} />;
-    }, []);
+            projectsData={projectsData ?? []}
+            projectId={projectId}
+        />;
+    }, [projectId, projectsData]);
 
 
 
     return (
-        <View style={{ flex: 1 }}>
+        <View style={{flex: 1}}>
             <FlatList
                 data={orderItems}
-                keyExtractor={(item) => item.itemId.toString()}
+                keyExtractor={(item, index) => `${item.itemId}-${index}`}
                 listKey={'orderList'}
                 renderItem={listItem}
             />

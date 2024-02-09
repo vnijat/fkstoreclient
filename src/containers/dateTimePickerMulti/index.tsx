@@ -1,21 +1,23 @@
-import RNDateTimePicker, { DateTimePickerEvent } from "@react-native-community/datetimepicker";
-import { endOfDay, endOfToday, parse, parseISO, startOfDay } from "date-fns";
-import { useEffect, useMemo, useState } from "react";
-import { Text, View } from "react-native";
+import RNDateTimePicker, {DateTimePickerEvent} from "@react-native-community/datetimepicker";
+import {endOfDay, endOfToday, parse, parseISO, startOfDay} from "date-fns";
+import {useEffect, useMemo, useState} from "react";
+import {Text, View} from "react-native";
 import HELP from "../../services/helpers";
-import { Colors } from "../../utils/colors";
+import {Colors} from "../../utils/colors";
 import FONT from "../../utils/font";
+import {getStyle} from "./styles";
 
 
 interface IMulitDateTimePicker {
     startDate: Date;
     endDate?: Date;
-    getDates: (data: { startDate: string; endDate: string; }) => void;
+    getDates: (data: {startDate: string; endDate: string;}) => void;
 }
 
 
-const MulitDateTimePicker = ({ startDate, endDate, getDates }: IMulitDateTimePicker) => {
-    const defaultStartDate = startOfDay(new Date(startDate))
+const MulitDateTimePicker = ({startDate, endDate, getDates}: IMulitDateTimePicker) => {
+    const style = useMemo(() => getStyle(), []);
+    const defaultStartDate = startOfDay(new Date(startDate));
     const startDateUTC = HELP.getUTCSubTZ(defaultStartDate);
     const [start, setStartDate] = useState(startDateUTC);
     const endOfTodayUTC = HELP.getUTCAddTZ(endOfToday());
@@ -30,7 +32,7 @@ const MulitDateTimePicker = ({ startDate, endDate, getDates }: IMulitDateTimePic
         if (Number(start) > Number(end)) {
             setEndDate(start);
         }
-        getDates({ startDate, endDate });
+        getDates({startDate, endDate});
     }, [start, end]);
 
     const onChangeStartDate = (event: DateTimePickerEvent, date: Date) => {
@@ -41,23 +43,16 @@ const MulitDateTimePicker = ({ startDate, endDate, getDates }: IMulitDateTimePic
     };
 
     return (
-        <View style={{ flexDirection: 'row', height: 40, alignItems: 'center', }}>
-            <View style={{ flexDirection: 'row', margin: 2, alignItems: 'center', backgroundColor: Colors.DEFAULT_TEXT_COLOR, }}>
-                <Text style={{
-                    fontSize: FONT.FONT_SIZE_MEDIUM, fontFamily: FONT.FONT_FAMILY,
-                    marginRight: 2,
-
-                }}>
-                    {'start'}
+        <View style={style.container}>
+            <View style={style.dateContainer}>
+                <Text style={style.dateTitle}>
+                    {'START'}
                 </Text>
                 <RNDateTimePicker value={start} onChange={onChangeStartDate} />
             </View>
-            <View style={{ flexDirection: 'row', margin: 2, alignItems: 'center', backgroundColor: Colors.DEFAULT_TEXT_COLOR, }}>
-                <Text style={{
-                    fontSize: FONT.FONT_SIZE_MEDIUM, fontFamily: FONT.FONT_FAMILY,
-                    marginRight: 2
-                }}>
-                    {'end'}
+            <View style={style.dateContainer}>
+                <Text style={style.dateTitle}>
+                    {'END'}
                 </Text>
                 <RNDateTimePicker value={end} onChange={onChangeEndDate} minimumDate={minimumEndDate} />
             </View>

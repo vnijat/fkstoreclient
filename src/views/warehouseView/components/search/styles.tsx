@@ -1,5 +1,5 @@
-import { StyleSheet } from 'react-native';
-import { Colors } from '../../../../utils/colors';
+import {StyleSheet} from 'react-native';
+import {Colors} from '../../../../utils/colors';
 import FONT from '../../../../utils/font';
 
 export const getStyle = () => {
@@ -8,11 +8,14 @@ export const getStyle = () => {
             flexGrow: 1,
             paddingVertical: 10,
             paddingHorizontal: 10,
+            borderRadius: 3,
+            borderWidth: 2,
+            borderColor: Colors.CARD_HEADER_COLOR
         },
         search: {
         },
         topContainer: {
-            flexShrink: 1
+            flexShrink: 1,
         },
         bottomContainer: {
             justifyContent: 'center',
@@ -87,7 +90,8 @@ export const getStyle = () => {
             color: Colors.DEFAULT_TEXT_COLOR,
             fontSize: FONT.FONT_SIZE_MEDIUM,
             fontWeight: FONT.FONT_BOLD,
-            fontFamily: FONT.FONT_FAMILY
+            fontFamily: FONT.FONT_FAMILY,
+            textAlign: 'center'
         }
     });
 

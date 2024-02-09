@@ -20,15 +20,6 @@ const unit: InputsConfig[] = [
     height: 35,
     width: 150,
   },
-  {
-    title: 'SKU',
-    dtoKey: 'skuCode',
-    isNumeric: false,
-    maxLength: 200,
-    placeHolder: 'SKU',
-    height: 35,
-    width: 120,
-  },
 ];
 
 export {unit};

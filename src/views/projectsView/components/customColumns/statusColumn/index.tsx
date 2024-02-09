@@ -1,15 +1,15 @@
-import React, { memo, useEffect, useMemo, useRef, useState } from "react";
-import { Animated, Easing, View } from "react-native";
+import React, {memo, useEffect, useMemo, useRef, useState} from "react";
+import {Animated, Easing, View} from "react-native";
 import CustomPressable from "../../../../../components/customPressable";
-import { ProjectStatus } from "../../../../../enums/projectStatus";
-import { useEditProjectMutation } from "../../../../../modules/api/projects.api";
-import { useAppDispatch } from "../../../../../modules/redux/store";
+import {ProjectStatus} from "../../../../../enums/projectStatus";
+import {useEditProjectMutation} from "../../../../../modules/api/projects.api";
+import {useAppDispatch} from "../../../../../modules/redux/store";
 import HELP from "../../../../../services/helpers";
-import { Project } from "../../../../../types/project";
-import { Colors } from "../../../../../utils/colors";
+import {Project} from "../../../../../types/project";
+import {Colors} from "../../../../../utils/colors";
 import ProjectDataProvider from "../../../provider/data";
 import ProjectLogicProvider from "../../../provider/logic";
-import { getStyle } from "./styles";
+import {getStyle} from "./styles";
 
 interface IProjectStatusColumn {
     data: Project;
@@ -17,18 +17,18 @@ interface IProjectStatusColumn {
     dataProvider: ReturnType<typeof ProjectDataProvider>;
 }
 
-const ProjectStatusColumn = ({ data, logicProvider, dataProvider }: IProjectStatusColumn) => {
-    const { status: currentStatus } = data;
-    const { } = dataProvider;
-    const { handleProjectStatusChange } = logicProvider;
+const ProjectStatusColumn = ({data, logicProvider, dataProvider}: IProjectStatusColumn) => {
+    const {status: currentStatus} = data;
+    const {} = dataProvider;
+    const {handleProjectStatusChange} = logicProvider;
     const style = useMemo(() => getStyle(), []);
     const animatedValue = useRef(new Animated.Value(-30)).current;
     const [isOpen, setIsOpen] = useState(false);
 
     const projectStatuses = [
-        { title: 'COMPLETED', value: ProjectStatus.COMPLETED, borderColor: Colors.COMPLETED_COLOR },
-        { title: 'IN PROGRESS', value: ProjectStatus.INPROGRESS, borderColor: Colors.INPROGRESS_COLOR },
-        { title: 'DECLINED', value: ProjectStatus.DECLINED, borderColor: Colors.DECLINED_COLOR }
+        {title: 'COMPLETED', value: ProjectStatus.COMPLETED, borderColor: Colors.COMPLETED_COLOR},
+        {title: 'IN PROGRESS', value: ProjectStatus.INPROGRESS, borderColor: Colors.INPROGRESS_COLOR},
+        {title: 'DECLINED', value: ProjectStatus.DECLINED, borderColor: Colors.DECLINED_COLOR}
     ];
 
     const currentStatusBorderColor = useMemo(() => projectStatuses.find(status => status.value === currentStatus)?.borderColor, [currentStatus]);
@@ -66,7 +66,7 @@ const ProjectStatusColumn = ({ data, logicProvider, dataProvider }: IProjectStat
             outputRange: [0, 0, 1]
         }),
         transform: [
-            { translateX: animatedValue }
+            {translateX: animatedValue}
         ]
     };
 
@@ -79,8 +79,8 @@ const ProjectStatusColumn = ({ data, logicProvider, dataProvider }: IProjectStat
     };
 
     return (
-        <>
-            <CustomPressable style={[style.iconContainer, { borderColor: currentStatusBorderColor }]}
+        <View style={style.container}>
+            <CustomPressable style={[style.iconContainer, {borderColor: currentStatusBorderColor}]}
                 tooltip={currentStatus.toUpperCase()}
                 onPress={onPressIcon}
                 onHoverOpacity
@@ -89,7 +89,7 @@ const ProjectStatusColumn = ({ data, logicProvider, dataProvider }: IProjectStat
                     {HELP.getProjectStatusIcons(currentStatus, 20, currentStatusBorderColor)}
                 </View>
             </CustomPressable >
-            <Animated.View style={[style.animatedIconSelector, { ...animatedStle }]}
+            <Animated.View style={[style.animatedIconSelector, {...animatedStle}]}
             >
                 {projectStatuses.map((status) => {
                     const isNotSelected = status.value !== currentStatus;
@@ -97,7 +97,7 @@ const ProjectStatusColumn = ({ data, logicProvider, dataProvider }: IProjectStat
                         <View key={`${status.value}`}
                         >
                             {isNotSelected ?
-                                <CustomPressable style={[style.iconContainer, { borderColor: status.borderColor }]}
+                                <CustomPressable style={[style.iconContainer, {borderColor: status.borderColor}]}
                                     onPress={() => onSelect(status.value)}
                                     onHoverOpacity
                                     tooltip={status?.title}
@@ -111,7 +111,7 @@ const ProjectStatusColumn = ({ data, logicProvider, dataProvider }: IProjectStat
                     );
                 })}
             </Animated.View>
-        </>
+        </View>
     );
 
 };

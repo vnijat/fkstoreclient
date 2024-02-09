@@ -22,15 +22,6 @@ const category: InputsConfig[] = [
     isDisableForEdit: true,
   },
   {
-    title: 'SKU',
-    dtoKey: 'skuCode',
-    isNumeric: false,
-    maxLength: 200,
-    placeHolder: 'SKU',
-    width: 150,
-    height: 35,
-  },
-  {
     title: 'Parent Category',
     dtoKey: 'parentCategoryId',
     isNumeric: false,

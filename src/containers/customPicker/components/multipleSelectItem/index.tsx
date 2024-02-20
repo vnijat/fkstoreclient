@@ -99,7 +99,7 @@ const MultipleSelectItem = ({ isSelected, index, label, id, nestedData, indent, 
             <Text
                 style={[(isSelected && selectedItemTextStyle) ? selectedItemTextStyle : (itemTextStyle || style.itemText)]}
                 key={`${label}`}>
-                {label}
+                {label.toUpperCase()}
             </Text>
             {renderSelectedCounter}
             {isHasNestedData &&

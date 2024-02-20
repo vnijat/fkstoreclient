@@ -257,8 +257,8 @@ const CustomPicker = ({
                 >
                     <Text style={[butonTextStyle || style.pickerButtonText]}>
                         {(singleSelectMode
-                            ? ` ${(title && title) || ''} ${singleSelectedTitle}`
-                            : title) || ''}
+                            ? ` ${(title && title) || ''} ${singleSelectedTitle}`.toUpperCase()
+                            : title?.toUpperCase()) || ''}
                     </Text>
                     <Icon name="chevron-small-down" size={17} color={arrowDownColor || Colors.CARD_HEADER_COLOR} />
                 </CustomPressable>

@@ -5,7 +5,7 @@ import {RootState} from "../../../../modules/redux/store";
 
 
 function InventoryTrackDataProvider() {
-    const queryParams = useSelector((state: RootState) => state.invventoryTrackQueryParams);
+    const queryParams = useSelector((state: RootState) => state.inventorySlicer.inventoryTrackParams);
     const tableConfig = useSelector((state: RootState) => state.tableConfigs.inventoryTrack);
     const {data: queryData, isLoading} = useGetTrackDataQuery(queryParams, {
         selectFromResult: ({data, isLoading, isUninitialized, error}) => ({

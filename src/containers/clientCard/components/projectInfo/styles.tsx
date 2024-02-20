@@ -1,5 +1,5 @@
-import { StyleSheet } from 'react-native';
-import { Colors } from '../../../../utils/colors';
+import {StyleSheet} from 'react-native';
+import {Colors} from '../../../../utils/colors';
 import FONT from '../../../../utils/font';
 
 
@@ -8,8 +8,6 @@ export const getStyle = () => {
         projectInfoTitleContainer: {
             paddingHorizontal: 15,
             paddingTop: 5,
-            borderBottomWidth: 1,
-            borderColor: Colors.CARD_HEADER_COLOR,
         },
         projectInfoButtonContiner: {
             flexDirection: 'row',
@@ -25,7 +23,8 @@ export const getStyle = () => {
         },
         projectInfoContentContainer: {
             flexDirection: 'row',
-            justifyContent: 'space-between',
+            justifyContent: 'center',
+            gap: 20,
             paddingHorizontal: 15,
             paddingVertical: 5,
             backgroundColor: 'transparent'

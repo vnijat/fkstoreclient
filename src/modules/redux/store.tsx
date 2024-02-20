@@ -1,27 +1,20 @@
-import {combineReducers, configureStore, Store} from '@reduxjs/toolkit';
-import {setupListeners} from '@reduxjs/toolkit/dist/query';
 import {useDispatch} from 'react-redux';
+import {combineReducers, configureStore, Store} from '@reduxjs/toolkit';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {FLUSH, PAUSE, PERSIST, PersistConfig, persistReducer, persistStore, PURGE, REGISTER, REHYDRATE} from 'redux-persist';
+import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
+import {setupListeners} from '@reduxjs/toolkit/dist/query';
 import {InventoryApi} from '../api/apiSlice';
 import appStateSlicer from './appStateSlicer';
-import menuSlicer from './menuSlicer';
-import itemQuerySlicer from './itemQuerySlicer';
-import filterSlicer from './filterSlicer';
+import warehouseFiltersSlicer from './wareHouseFiltersSlicer';
 import itemOptions from './itemOptions';
-import clientQuery from './clientsQuerySlicer';
 import clientSlicer from './clientsSlicer';
-import projectQuery from './projectQuerySlicer';
 import projectSlicer from './projectSlicer';
 import configsSlicer from './configsSlicer';
-import ordersQueryParams from './orderQuerySlicer';
 import ordersSlicer from './orderSlicer';
-import purchaseQueryParams from './purchaseQuerySlicer';
 import purchaseSlicer from './purchaseSlicer';
 import tableConfigsSlicer from './tableConfigs';
-import inventoryTrackSlicer from './inventoryTrackSlicer';
-import invventoryTrackQueryParams from './inventoryTrackQueryParams';
-import {FLUSH, PAUSE, PERSIST, PersistConfig, persistReducer, persistStore, PURGE, REGISTER, REHYDRATE} from 'redux-persist';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
+import inventorySlicer from './inventorySlicer';
 import itemsSlicer from './itemsSlicer';
 import userSlicer from './userSlicer';
 
@@ -42,21 +35,14 @@ const rootReducer = combineReducers(
     {
         [InventoryApi.reducerPath]: InventoryApi.reducer,
         appStateSlicer,
-        menuSlicer,
-        itemQuerySlicer,
         itemsSlicer,
         itemOptions,
-        filterSlicer,
-        clientQuery,
         clientSlicer,
-        projectQuery,
         projectSlicer,
-        ordersQueryParams,
         ordersSlicer,
-        purchaseQueryParams,
         purchaseSlicer,
-        invventoryTrackQueryParams,
-        inventoryTrackSlicer,
+        inventorySlicer,
+        warehouseFiltersSlicer,
         configs: configsSlicer,
         tableConfigs: tableConfigsSlicer,
         user: userSlicer

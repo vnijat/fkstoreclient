@@ -42,8 +42,8 @@ export const getStyle = () => {
             alignItems: 'center'
         },
         returnBackIcon: {
-            height: 30,
-            width: 30,
+            height: 40,
+            width: 100,
             justifyContent: 'center',
             alignItems: 'center',
             backgroundColor: Colors.DEFAULT_TEXT_COLOR,
@@ -51,7 +51,7 @@ export const getStyle = () => {
         },
         orderActionsContainer: {
             backgroundColor: Colors.DEFAULT_TEXT_COLOR,
-            height: 50,
+            height: 60,
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'space-between',

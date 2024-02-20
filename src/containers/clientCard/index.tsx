@@ -1,66 +1,59 @@
-import React, { useMemo } from 'react';
-import { Text, View } from 'react-native';
-import { EmailIcon, PhoneIcon } from '../../assets/icons/clientCardIcons';
-import { ClientType } from '../../enums/clientType';
-import { IICON } from '../../types/icon';
-import { Colors } from '../../utils/colors';
-import { parsePhoneNumber } from 'libphonenumber-js';
-import { getStyle } from "./styles";
+import React, {useMemo} from 'react';
+import {Text, View} from 'react-native';
+import {EmailIcon, PhoneIcon} from '../../assets/icons/clientCardIcons';
+import {ClientType} from '../../enums/clientType';
+import {IICON} from '../../types/icon';
+import {Colors} from '../../utils/colors';
+import {parsePhoneNumber} from 'libphonenumber-js';
+import {getStyle} from "./styles";
 import ProjectInfo from './components/projectInfo';
 import Icon from 'react-native-vector-icons/Entypo';
 import ActionModal from './components/actionModal';
 import CustomPressable from '../../components/customPressable';
-import { RootState, useAppDispatch } from '../../modules/redux/store';
-import { useDeleteClientMutation } from '../../modules/api/clients.api';
+import {RootState, useAppDispatch} from '../../modules/redux/store';
+import {useDeleteClientMutation} from '../../modules/api/clients.api';
 import HELP from '../../services/helpers';
-import { setClientForPost, setIsClientForEdit, setIsShowClientModal } from '../../modules/redux/clientsSlicer';
-import { useSelector } from 'react-redux';
-import FONT from '../../utils/font';
+import {setClientForPost, setIsClientForEdit, setIsShowClientModal} from '../../modules/redux/clientsSlicer';
+import {useSelector} from 'react-redux';
+import {Client} from '../../types/client';
 
 interface IClientCard {
-    id: number | string;
-    companyName?: string,
-    firstName?: string,
-    lastName?: string,
-    projectsInProgress: number,
-    projectsDeclined: number,
-    projectsCompleted: number,
-    totalProjects: number,
-    type: ClientType;
-    email?: string;
-    phone?: string;
+    data: Client;
     withAction?: boolean;
 }
 
 const ClientCard = ({
-    companyName,
-    firstName,
-    lastName,
-    projectsCompleted,
-    projectsDeclined,
-    projectsInProgress,
-    totalProjects,
-    type,
-    phone,
-    email,
-    id,
+    data,
     withAction = true
 }: IClientCard) => {
+    const {
+        phone = '',
+        email,
+        type,
+        firstName,
+        lastName,
+        companyName,
+        id,
+        projectsCompleted,
+        projectsDeclined,
+        projectsInProgress,
+        totalProjects,
+    } = data;
     const style = getStyle();
     const isClientModalOpen = useSelector((state: RootState) => state.clientSlicer.isShowClientModal);
     const dispatch = useAppDispatch();
     const [apiDeleteClient] = useDeleteClientMutation();
 
     const infoIconOptions: IICON = {
-        size: 22,
-        color: Colors.CARD_HEADER_COLOR
+        size: 18,
+        color: Colors.METALLIC_GOLD
     };
 
     const renderClientIcon = useMemo(() => type && HELP.getClientTypeIcons(type), [type]);
 
     const clientInfo = [
-        { value: phone && parsePhoneNumber(phone, 'AZ').format('INTERNATIONAL'), icon: <PhoneIcon {...infoIconOptions} /> },
-        { value: email?.toLowerCase(), icon: <EmailIcon {...infoIconOptions} /> }
+        {value: phone && parsePhoneNumber(phone, 'AZ').format('INTERNATIONAL'), icon: <PhoneIcon {...infoIconOptions} />},
+        {value: email?.toLowerCase(), icon: <EmailIcon {...infoIconOptions} />}
     ];
 
     const onPressEdit = () => {
@@ -131,9 +124,9 @@ const ClientCard = ({
                     totalProjects,
                 }} />
                 <View style={style.contactsInfoTitleContainer}>
-                    <Text style={style.contactsInfoTitleText}>
+                    {(phone || email) && < Text style={style.contactsInfoTitleText}>
                         {'CONTACTS'}
-                    </Text>
+                    </Text>}
                 </View>
                 <View style={style.infoContainer}>
                     {clientInfo.map((info, index) => {

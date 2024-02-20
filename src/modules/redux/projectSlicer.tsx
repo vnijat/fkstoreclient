@@ -1,9 +1,10 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {Client} from '../../types/client';
-import {AddClientProject, IProjectType} from '../../types/project';
+import {AddClientProject, IProjectType, ProjectsQueryParams} from '../../types/project';
 
 
 interface IProjectSlicer {
+    projectsQueryParams: ProjectsQueryParams;
     projectDataForPost: AddClientProject;
     projectTypeDataForPost: IProjectType;
     isProjectForEdit: boolean;
@@ -19,6 +20,7 @@ interface IProjectSlicer {
 
 
 const initialState = {
+    projectsQueryParams: {},
     projectDataForPost: {},
     projectTypeDataForPost: {},
     isShowProjectTypesModal: false,
@@ -70,7 +72,11 @@ const projectSlicer = createSlice({
         },
         setProjectIdForRequest: (state, action: PayloadAction<number | string>) => {
             state.projectIdForRequest = action.payload;
+        },
+        setProjectsQueryParams: (state, action: PayloadAction<ProjectsQueryParams>) => {
+            Object.assign(state.projectsQueryParams, action.payload);
         }
+
     }
 });
 
@@ -87,5 +93,6 @@ export const {
     setIsShowOtherExpensesModal,
     setProjectTypeDataForPost,
     setIsShowProjectTypesModal,
+    setProjectsQueryParams,
 } = projectSlicer.actions;
 export default projectSlicer.reducer;

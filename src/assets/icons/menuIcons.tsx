@@ -29,6 +29,13 @@ export const PurchasesIcon = ({ size, color }: IICON) => {
     );
 };
 
+export const TransfersIcon = ({ size, color }: IICON) => {
+    return (
+        <Icon name="swap" size={size} color={color} />
+    );
+};
+
+
 export const AddItemIcon = ({ size, color }: IICON) => {
     return (
         <Icon name="add-to-list" size={size} color={color} />

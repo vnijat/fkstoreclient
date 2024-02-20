@@ -6,7 +6,7 @@ import {RootState} from "../../../../modules/redux/store";
 
 function ProjectDataProvider() {
     const projectTableDataConfig = useSelector((state: RootState) => state.tableConfigs.project);
-    const projectsQueryParams = useSelector((state: RootState) => state.projectQuery);
+    const projectsQueryParams = useSelector((state: RootState) => state.projectSlicer.projectsQueryParams);
     const isShowProjectOrdersModal = useSelector((state: RootState) => state.projectSlicer.isShowProjectOrdersModal);
     const isShowOtherExpensesModal = useSelector((state: RootState) => state.projectSlicer.isShowOtherExpensesModal);
     const isShowProjectTyepsModal = useSelector((state: RootState) => state.projectSlicer.isShowProjectTypesModal);

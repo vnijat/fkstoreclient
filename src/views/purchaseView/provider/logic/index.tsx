@@ -1,12 +1,11 @@
-import { ITableDataConfig } from "../../../../containers/simpleTable/types";
-import { useDeletePurchaseMutation } from "../../../../modules/api/purchase.api";
-import { setPurchaseQueryParams } from "../../../../modules/redux/purchaseQuerySlicer";
-import { setIsPurchaseForEdit, setIsShowPurchaseModal, setPurchaseDataForPost } from "../../../../modules/redux/purchaseSlicer";
-import { useAppDispatch } from "../../../../modules/redux/store";
-import { resetTable, setNewTableConfigs } from "../../../../modules/redux/tableConfigs";
+import {ITableDataConfig} from "../../../../containers/simpleTable/types";
+import {useDeletePurchaseMutation} from "../../../../modules/api/purchase.api";
+import {setIsPurchaseForEdit, setIsShowPurchaseModal, setPurchaseDataForPost, setPurchaseQueryParams} from "../../../../modules/redux/purchaseSlicer";
+import {useAppDispatch} from "../../../../modules/redux/store";
+import {resetTable, setNewTableConfigs} from "../../../../modules/redux/tableConfigs";
 import HELP from "../../../../services/helpers";
-import { Imeta } from "../../../../types/common/common";
-import { PurchaseDto } from "../../../../types/purchase";
+import {Imeta} from "../../../../types/common/common";
+import {PurchaseDto} from "../../../../types/purchase";
 
 
 
@@ -25,7 +24,7 @@ function PurchaseLogicProvider() {
     }
 
     function handleSearchInput(value: string) {
-        dispatch(setPurchaseQueryParams({ page: 1, search: value }));
+        dispatch(setPurchaseQueryParams({page: 1, search: value}));
     }
 
     function onPressAddPurchase() {
@@ -46,17 +45,17 @@ function PurchaseLogicProvider() {
     }
 
     function handleOnPressRow(data: PurchaseDto) {
-        dispatch(setPurchaseDataForPost({ ...data }));
+        dispatch(setPurchaseDataForPost({...data}));
         dispatch(setIsPurchaseForEdit(true));
         dispatch(setIsShowPurchaseModal(true));
     }
 
     function handleNewTableConfigs(data: ITableDataConfig<PurchaseDto>[]) {
-        dispatch(setNewTableConfigs({ tableName: 'purchase', data }));
+        dispatch(setNewTableConfigs({tableName: 'purchase', data}));
     }
 
     function handleResetTableConfigs() {
-        dispatch(resetTable({ tableName: 'purchase' }));
+        dispatch(resetTable({tableName: 'purchase'}));
     }
 
     return {

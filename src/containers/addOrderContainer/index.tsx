@@ -53,6 +53,9 @@ const AddOrderCntainer = ({}: IAddOrderContainer) => {
     const isOrderForEdit = useSelector((state: RootState) => state.ordersSlicer?.isOrderForEdit);
     const orderData = useSelector((state: RootState) => state.ordersSlicer.orderDataForPost);
     const [tempOrderData, setTempOrderData] = useState<AddOrderDto>();
+    const BUTTUN_HEIGHT = 40;
+
+
     const orderStatus = useMemo(() => {
         return {
             confirmed: orderData.status === OrderStatus.COMPLETED,
@@ -216,13 +219,20 @@ const AddOrderCntainer = ({}: IAddOrderContainer) => {
                         data={activeProjects}
                         renderItem={projectListItem}
                         keyExtractor={(item) => item.id!.toString()}
-                        columnWrapperStyle={{gap: 5}}
+                        columnWrapperStyle={{gap: 10}}
                         numColumns={4}
-                        contentContainerStyle={{padding: 10, gap: 5}}
+                        contentContainerStyle={{padding: 10, gap: 10}}
                     />
                 </View>
                 <View style={style.projectSelectionBottomContainer}>
-                    <PrimaryButton onHoverOpacity onPress={() => setIsSkipProjectSlection(true)} title={'Skip'} width={200} borderRadius={3} height={40} buttonColor={Colors.DEFAULT_TEXT_COLOR} />
+                    <PrimaryButton
+                        onHoverOpacity
+                        onPress={() => setIsSkipProjectSlection(true)}
+                        title={'SKIP'}
+                        width={200}
+                        borderRadius={3}
+                        height={BUTTUN_HEIGHT}
+                        buttonColor={Colors.DEFAULT_TEXT_COLOR} />
                 </View>
             </View>
         );
@@ -267,8 +277,23 @@ const AddOrderCntainer = ({}: IAddOrderContainer) => {
                                 {`ORDER STATUS: ${orderData.status}`.toUpperCase()}
                             </Text>
                             {tempOrderData && <View style={style.orderActionButtonsContainer}>
-                                {(!orderStatus.confirmed && !orderStatus.rejected) && <PrimaryButton onHoverOpacity title={'CONFIRM'} onPress={handleOrderConfirm} width={100} height={30} borderRadius={2} textColor={Colors.CARD_COLOR} buttonColor={Colors.METALLIC_GOLD} />}
-                                {(!orderStatus.rejected && orderStatus.confirmed) && <PrimaryButton onHoverOpacity title={'REJECT'} onPress={handleOrderReject} width={100} height={30} borderRadius={2} textColor={Colors.CARD_COLOR} buttonColor={Colors.INFRA_RED} />}
+                                {(!orderStatus.confirmed && !orderStatus.rejected) && <PrimaryButton
+                                    onHoverOpacity title={'CONFIRM'}
+                                    onPress={handleOrderConfirm}
+                                    width={100}
+                                    height={BUTTUN_HEIGHT}
+                                    borderRadius={2}
+                                    textColor={Colors.CARD_COLOR}
+                                    buttonColor={Colors.METALLIC_GOLD} />}
+                                {(!orderStatus.rejected && orderStatus.confirmed) && <PrimaryButton
+                                    onHoverOpacity
+                                    title={'REJECT'}
+                                    onPress={handleOrderReject}
+                                    width={100}
+                                    height={BUTTUN_HEIGHT}
+                                    borderRadius={2}
+                                    textColor={Colors.CARD_COLOR}
+                                    buttonColor={Colors.INFRA_RED} />}
                             </View>}
                         </View>
                         <View style={style.orderDetailContainer}>
@@ -290,16 +315,40 @@ const AddOrderCntainer = ({}: IAddOrderContainer) => {
                             {orderStatus.inProgress && <View style={style.orderFooterButtonContainer}>
                                 <View tooltip={'RETURN TO PROJECT SELECTION'}>
                                     <CustomPressable
-                                        style={style.returnBackIcon}
+                                        style={[style.returnBackIcon, {height: BUTTUN_HEIGHT}]}
                                         onHoverOpacity
                                         onPress={handleReturnBack}
                                     >
                                         <Icon name={'level-up'} size={20} color={Colors.CARD_COLOR} />
                                     </CustomPressable>
                                 </View>
-                                <PrimaryButton onHoverOpacity title={'RESET'} onPress={handleClearOrderData} width={100} height={30} borderRadius={2} textColor={Colors.CARD_COLOR} buttonColor={Colors.DEFAULT_TEXT_COLOR} />
-                                {tempOrderData ? <PrimaryButton onHoverOpacity title={'UPDATE'} onPress={handleUpdateOrder} width={100} height={30} borderRadius={2} textColor={Colors.CARD_COLOR} buttonColor={Colors.DEFAULT_TEXT_COLOR} />
-                                    : <PrimaryButton onHoverOpacity title={'CREATE'} onPress={handleCreateOrder} width={100} height={30} borderRadius={2} textColor={Colors.CARD_COLOR} buttonColor={Colors.DEFAULT_TEXT_COLOR} />
+                                <PrimaryButton
+                                    title={'RESET'}
+                                    onHoverOpacity
+                                    onPress={handleClearOrderData}
+                                    width={100}
+                                    height={BUTTUN_HEIGHT}
+                                    borderRadius={2}
+                                    textColor={Colors.CARD_COLOR}
+                                    buttonColor={Colors.DEFAULT_TEXT_COLOR} />
+                                {tempOrderData ? <PrimaryButton
+                                    title={'UPDATE'}
+                                    onHoverOpacity
+                                    onPress={handleUpdateOrder}
+                                    width={100}
+                                    height={BUTTUN_HEIGHT}
+                                    borderRadius={2}
+                                    textColor={Colors.CARD_COLOR}
+                                    buttonColor={Colors.DEFAULT_TEXT_COLOR} />
+                                    : <PrimaryButton
+                                        title={'CREATE'}
+                                        onHoverOpacity
+                                        onPress={handleCreateOrder}
+                                        width={100}
+                                        height={BUTTUN_HEIGHT}
+                                        borderRadius={2}
+                                        textColor={Colors.CARD_COLOR}
+                                        buttonColor={Colors.DEFAULT_TEXT_COLOR} />
                                 }
                             </View>}
                         </View>

@@ -84,7 +84,7 @@ const SingleSelectItem = ({singleSelected, data, onPressSingleItem, indent, isEd
                 <Text
                     style={[(isSelected && selectedItemTextStyle) ? selectedItemTextStyle : (itemTextStyle || {fontSize: 12, color: Colors.DEFAULT_TEXT_COLOR})]}
                 >
-                    {data?.label}
+                    {data?.label?.toUpperCase()}
                 </Text>
                 <View style={style.buttonRightContainer}>
                     <View style={style.selectedInfoContainer}>

@@ -1,21 +1,22 @@
-import { memo, useEffect, useMemo, useState } from "react";
-import { Text, View, ActivityIndicator } from "react-native";
-import { useSelector } from "react-redux";
-import { InputItem } from "../../components/inputItem/index.windows";
-import { PrimaryButton } from "../../components/primaryButton";
-import { RootState, useAppDispatch } from "../../modules/redux/store";
+import {memo, useEffect, useMemo, useState} from "react";
+import {Text, View, ActivityIndicator} from "react-native";
+import {useSelector} from "react-redux";
+import {InputItem} from "../../components/inputItem/index.windows";
+import {PrimaryButton} from "../../components/primaryButton";
+import {RootState, useAppDispatch} from "../../modules/redux/store";
 import HELP from "../../services/helpers";
-import { Colors } from "../../utils/colors";
+import {Colors} from "../../utils/colors";
 import ItemsForOrderListHeader from "./itemsPurchaseListHeader";
-import { getStyle } from "./style";
-import { useGetItemInputsQuery } from "../../modules/api/apiSlice";
-import { AddPurchaseDto } from "../../types/purchase";
-import { PurchaseStatus } from "../../enums/purchase";
-import { clearPurchaseDataForPost, setIsPurchaseForEdit, setIsShowPurchaseModal, setPurchaseDataForPost } from "../../modules/redux/purchaseSlicer";
+import {getStyle} from "./style";
+import {useGetItemInputsQuery} from "../../modules/api/apiSlice";
+import {AddPurchaseDto} from "../../types/purchase";
+import {PurchaseStatus} from "../../enums/purchase";
+import {clearPurchaseDataForPost, setIsPurchaseForEdit, setIsShowPurchaseModal, setPurchaseDataForPost} from "../../modules/redux/purchaseSlicer";
 import ItemsForPurchaseList from "./itemsForPurchaseList";
 import ItemsForPurchaseSearch from "./itemsForPurchaseSearch";
-import { useAddPurchaseMutation, useEditPurchaseMutation } from "../../modules/api/purchase.api";
+import {PurchaseApi, useAddPurchaseMutation, useEditPurchaseMutation} from "../../modules/api/purchase.api";
 import AddEditItemModal from "../../views/warehouseView/components/addEditItemModal";
+import SearchItemContainer from "../searchItemContainer";
 
 
 
@@ -23,13 +24,13 @@ interface IAddPurchaseContainer {
 
 }
 
-const AddPurchaseContainer = ({ }: IAddPurchaseContainer) => {
+const AddPurchaseContainer = ({}: IAddPurchaseContainer) => {
     const style = useMemo(() => getStyle(), []);
     const dispatch = useAppDispatch();
     const [apiAddPurchase] = useAddPurchaseMutation();
     const [apiUpdatePurchase] = useEditPurchaseMutation();
-    const { data: suppliersData, isLoading } = useGetItemInputsQuery(undefined, {
-        selectFromResult: ({ data, isLoading }) => ({
+    const {data: suppliersData, isLoading} = useGetItemInputsQuery(undefined, {
+        selectFromResult: ({data, isLoading}) => ({
             data: data?.supplier,
             isLoading
         })
@@ -66,8 +67,8 @@ const AddPurchaseContainer = ({ }: IAddPurchaseContainer) => {
         if (!!purchaseData.purchaseItems?.length) {
             const response = await apiAddPurchase(purchaseData);
             if (response?.data) {
-                dispatch(setPurchaseDataForPost({ ...response.data }));
-                setTempData({ ...response.data });
+                dispatch(setPurchaseDataForPost({...response.data}));
+                setTempData({...response.data});
             }
         } else {
             HELP.alertError(undefined, `Cant Create Purchase`, `Purchase List is Empty`);
@@ -83,15 +84,15 @@ const AddPurchaseContainer = ({ }: IAddPurchaseContainer) => {
     };
 
     const purchaseDetailSetValue = (value: string) => {
-        dispatch(setPurchaseDataForPost({ detail: value }));
+        dispatch(setPurchaseDataForPost({detail: value}));
     };
 
     const handleUpdatePurchase = async () => {
         if (!!purchaseData.purchaseItems?.length) {
-            const response = await apiUpdatePurchase({ body: purchaseData, id: purchaseData?.id! });
+            const response = await apiUpdatePurchase({body: purchaseData, id: purchaseData?.id!});
             if (response?.data) {
-                dispatch(setPurchaseDataForPost({ ...response.data }));
-                setTempData({ ...response.data });
+                dispatch(setPurchaseDataForPost({...response.data}));
+                setTempData({...response.data});
             }
         } else {
             HELP.alertError(undefined, `Cant Update Purchase`, `Purchase List is Empty`);
@@ -101,10 +102,10 @@ const AddPurchaseContainer = ({ }: IAddPurchaseContainer) => {
     const handlePurchaseConfirm = async () => {
         const isPurchaseCanConfirmed = !!purchaseData?.purchaseItems?.length && !purchaseData.purchaseItems?.some(item => item.quantity === 0 || item.pricePerUnit === 0);
         if (isPurchaseCanConfirmed) {
-            const response = await apiUpdatePurchase({ body: { ...purchaseData, status: PurchaseStatus.CONFIRMED }, id: purchaseData?.id! });
+            const response = await apiUpdatePurchase({body: {...purchaseData, status: PurchaseStatus.CONFIRMED}, id: purchaseData?.id!});
             if (response?.data) {
-                dispatch(setPurchaseDataForPost({ ...response.data }));
-                setTempData({ ...response.data });
+                dispatch(setPurchaseDataForPost({...response.data}));
+                setTempData({...response.data});
             } else {
 
             }
@@ -116,10 +117,10 @@ const AddPurchaseContainer = ({ }: IAddPurchaseContainer) => {
 
     const handlePurchaseReject = async () => {
         if (!!purchaseData.purchaseItems?.length) {
-            const response = await apiUpdatePurchase({ body: { ...purchaseData, status: PurchaseStatus.REJECTED }, id: purchaseData?.id! });
+            const response = await apiUpdatePurchase({body: {...purchaseData, status: PurchaseStatus.REJECTED}, id: purchaseData?.id!});
             if (response?.data) {
-                dispatch(setPurchaseDataForPost({ ...response.data }));
-                setTempData({ ...response.data });
+                dispatch(setPurchaseDataForPost({...response.data}));
+                setTempData({...response.data});
             }
         } else {
             HELP.alertError(undefined, `Cant Reject`, `Purchase List  is empty`);
@@ -171,11 +172,23 @@ const AddPurchaseContainer = ({ }: IAddPurchaseContainer) => {
 
 
 
+    const searchQueryFunction = (searchValue: string, options: {skip: boolean;}) => {
+        const {data, isLoading, isUninitialized} = PurchaseApi.endpoints.getItemForPurchase.useQuery(searchValue, {
+            skip: options.skip
+        });
+        return {
+            data,
+            isLoading,
+            isUninitialized
+        };
+    };
+
 
     return (
         <View style={style.container}>
             {purchaseStatus.inProgress && <View style={style.searchContainer}>
-                <ItemsForPurchaseSearch />
+                {/* <ItemsForPurchaseSearch /> */}
+                <SearchItemContainer getSelectedItem={(item) => console.log('getSelectedItem', item)} searchQueryFunction={searchQueryFunction} />
             </View>}
             <View style={style.orderContentContainer}>
                 <View style={style.orderListHeaderContainer}>
@@ -188,7 +201,7 @@ const AddPurchaseContainer = ({ }: IAddPurchaseContainer) => {
                             suppliersData={suppliersData ?? []} />}
                 </View>
             </View>
-            <View style={[style.orderActionsContainer, { borderColor: actionContainerColor }]}>
+            <View style={[style.orderActionsContainer, {borderColor: actionContainerColor}]}>
                 <Text style={style.orderStatusText}>
                     {`PURCHASE STATUS: ${purchaseData.status}`.toUpperCase()}
                 </Text>

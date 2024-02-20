@@ -2,8 +2,6 @@ import React, { memo, useMemo, useState } from "react";
 import { View } from "react-native";
 import { InputItem } from "../../../components/inputItem";
 import { PrimaryButton } from "../../../components/primaryButton";
-import { setPurchaseQueryParams } from "../../../modules/redux/purchaseQuerySlicer";
-import { setIsShowPurchaseModal } from "../../../modules/redux/purchaseSlicer";
 import { useAppDispatch } from "../../../modules/redux/store";
 import PurchaseDataProvider from "../provider/data";
 import PurchaseLogicProvider from "../provider/logic";
@@ -27,7 +25,7 @@ const PurchaseSearchContainer = ({ logicProvider, dataProvider }: IPurchaseSearc
         <>
             <View style={style.container}>
                 <View style={style.searchInputContainer}>
-                    <InputItem inputValue={purchaseQueryParams.search ?? ''} setValue={(value) => handleSearchInput(value as string)} isSearch height={30} />
+                    <InputItem inputValue={purchaseQueryParams?.search ?? ''} setValue={(value) => handleSearchInput(value as string)} isSearch height={30} />
                 </View>
                 <View style={style.actionButtonContainer}>
                     <PrimaryButton onPress={onPressAddPurchase}

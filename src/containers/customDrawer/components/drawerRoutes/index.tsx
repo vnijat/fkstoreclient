@@ -1,5 +1,5 @@
 import React from "react";
-import {ClientsIcon, OrdersIcon, ProjectsIcon, PurchasesIcon, TrackIcon, WarehouseIcon} from "../../../../assets/icons/menuIcons";
+import {ClientsIcon, OrdersIcon, ProjectsIcon, PurchasesIcon, TrackIcon, TransfersIcon, WarehouseIcon} from "../../../../assets/icons/menuIcons";
 import {RouteNames} from "../../../../enums/routes";
 import UseLanguage from "../../../../modules/lozalization/useLanguage.hook";
 import CustomDrawerItem from "../drawerItem/drawerItem";
@@ -33,6 +33,11 @@ const NavigationRoutes = ({navigation, currentRoute, routeNames}: INavigationRou
                     title: lang['orders'],
                     routeName: RouteNames.ORDERS,
                     icon: (color: string) => <OrdersIcon size={ICON_SIZE} color={color} />,
+                },
+                {
+                    title: lang['transfers'],
+                    routeName: RouteNames.TRANSFERS,
+                    icon: (color: string) => <TransfersIcon size={ICON_SIZE} color={color} />,
                 },
                 {
                     title: lang['purchases'],

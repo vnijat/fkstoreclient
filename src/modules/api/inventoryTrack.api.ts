@@ -1,4 +1,4 @@
-import { InventoryTrackQueryParams, InventoryTrackResponse } from '../../types/inventoryTrack';
+import {InventoryTrackQueryParams, InventoryTrackResponse, InventoryTransfersParams, InventoryTransfersResponse} from '../../types/inventory';
 import {InventoryApi} from './apiSlice';
 
 export const inventoryTrackApi = InventoryApi.injectEndpoints({
@@ -13,8 +13,20 @@ export const inventoryTrackApi = InventoryApi.injectEndpoints({
         };
       },
     }),
+    getTransfersData: build.query<InventoryTransfersResponse, InventoryTransfersParams>({
+      providesTags: ['inventoryTransfers'],
+      query: params => {
+        return {
+          url: '/inventory/transfers',
+          params: params,
+        };
+      }
+    })
   }),
   overrideExisting: true,
 });
 
-export const {useGetTrackDataQuery} = inventoryTrackApi;
+export const {
+  useGetTrackDataQuery,
+  useGetTransfersDataQuery
+} = inventoryTrackApi;

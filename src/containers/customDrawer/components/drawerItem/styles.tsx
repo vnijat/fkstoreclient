@@ -30,7 +30,8 @@ export const getStyle = () => {
         routeTitle: {
             fontSize: FONT.FONT_SIZE_SMALL,
             fontWeight: FONT.FONT_BOLD,
-            fontFamily: FONT.FONT_FAMILY
+            fontFamily: FONT.FONT_FAMILY,
+            padding: 2
         }
     });
 

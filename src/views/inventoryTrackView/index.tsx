@@ -3,12 +3,12 @@ import { View } from "react-native";
 import PaginationContainer from "../../containers/paginationContainer";
 import SimpleTable from "../../containers/simpleTable";
 import { ICustomColumn } from "../../containers/simpleTable/types";
-import { InventoryTrackData } from "../../types/inventoryTrack";
+import { InventoryTrackData } from "../../types/inventory";
 import TrackStatusColumn from "./components/customColumns/statusColumn";
 import TrackHeader from "./components/header";
-import InventoryTrackDataProvider from "./provider/data";
-import InventoryTrackLogicProvider from "./provider/logic";
 import { getStyle } from "./styles";
+import InventoryTrackLogicProvider from "./provider/logic";
+import InventoryTrackDataProvider from "./provider/data";
 
 
 

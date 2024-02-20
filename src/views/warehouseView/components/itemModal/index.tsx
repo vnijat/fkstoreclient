@@ -14,7 +14,7 @@ import {Colors} from "../../../../utils/colors";
 import HELP from "../../../../services/helpers";
 import SimpleTable from "../../../../containers/simpleTable";
 import {ICustomColumn, ITableDataConfig} from "../../../../containers/simpleTable/types";
-import {InventoryTrackData} from "../../../../types/inventoryTrack";
+import {InventoryTrackData} from "../../../../types/inventory";
 import TrackStatusColumn from "../../../inventoryTrackView/components/customColumns/statusColumn";
 import FONT from "../../../../utils/font";
 import {Role} from "../../../../enums/userRole";

@@ -1,15 +1,14 @@
-import { ITableDataConfig } from "../../../../containers/simpleTable/types";
-import { useDeleteManyItemsMutation } from "../../../../modules/api/apiSlice";
+import {ITableDataConfig} from "../../../../containers/simpleTable/types";
+import {useDeleteManyItemsMutation} from "../../../../modules/api/apiSlice";
 import UseLanguage from "../../../../modules/lozalization/useLanguage.hook";
-import { clearFilters, setFilterByParams, setSelectedWithLabel } from "../../../../modules/redux/filterSlicer";
-import { setItemQueryParams } from "../../../../modules/redux/itemQuerySlicer";
-import { clearSelectedItems, setIsEditMode, setIsItemForEdit, setIsShowAddEditModal, setIsShowItemModal, setItemForPost, setItemIdForFullResponse } from "../../../../modules/redux/itemsSlicer";
-import { useAppDispatch } from "../../../../modules/redux/store";
-import { resetTable, setNewTableConfigs } from "../../../../modules/redux/tableConfigs";
+import {clearFilters, setFilterByParams, setSelectedWithLabel} from "../../../../modules/redux/wareHouseFiltersSlicer";
+import {clearSelectedItems, setIsEditMode, setIsItemForEdit, setIsShowAddEditModal, setIsShowItemModal, setItemForPost, setItemIdForFullResponse, setItemQueryParams} from "../../../../modules/redux/itemsSlicer";
+import {useAppDispatch} from "../../../../modules/redux/store";
+import {resetTable, setNewTableConfigs} from "../../../../modules/redux/tableConfigs";
 import HELP from "../../../../services/helpers";
-import { Imeta } from "../../../../types/common/common";
-import { FilterParamskey, Item } from "../../../../types/item";
-import { ItemForPostDefaults } from "../../../../utils/defaults";
+import {Imeta} from "../../../../types/common/common";
+import {FilterParamskey, Item} from "../../../../types/item";
+import {ItemForPostDefaults} from "../../../../utils/defaults";
 
 
 
@@ -29,21 +28,21 @@ function WareHouseLogicProvider() {
 
 
     function onResetTable() {
-        dispatch(resetTable({ tableName: 'item' }));
+        dispatch(resetTable({tableName: 'item'}));
     }
 
 
     function setNewTableConfig(data: ITableDataConfig<Item>[]) {
-        dispatch(setNewTableConfigs({ tableName: 'item', data }));
+        dispatch(setNewTableConfigs({tableName: 'item', data}));
     }
 
-    function handleFilterParamSelect(selected: { id: number; label: string; parent: FilterParamskey; }) {
+    function handleFilterParamSelect(selected: {id: number; label: string; parent: FilterParamskey;}) {
         dispatch(setSelectedWithLabel(selected));
-        dispatch(setFilterByParams({ id: selected.id, parent: selected.parent }));
+        dispatch(setFilterByParams({id: selected.id, parent: selected.parent}));
     }
 
     function handleSearchValueChange(value: string) {
-        dispatch(setItemQueryParams({ search: value, page: 1 }));
+        dispatch(setItemQueryParams({search: value, page: 1}));
 
     }
 
@@ -65,15 +64,15 @@ function WareHouseLogicProvider() {
 
     function handleClearFilters() {
         dispatch(clearFilters());
-        dispatch(setItemQueryParams({ search: '', page: 1 }));
+        dispatch(setItemQueryParams({search: '', page: 1}));
     }
 
     function onPressEdit(data: Item) {
-        const { properties, ...rest } = data;
+        const {properties, ...rest} = data;
         const itemForPost = HELP.modifyItemForEdit(rest, rest.id);
         const productProperties = properties ?? ItemForPostDefaults.properties;
         dispatch(setIsItemForEdit(true));
-        dispatch(setItemForPost({ ...itemForPost, properties: productProperties }));
+        dispatch(setItemForPost({...itemForPost, properties: productProperties}));
         dispatch(setIsShowAddEditModal(true));
         dispatch(setIsEditMode(false));
     }
@@ -84,7 +83,7 @@ function WareHouseLogicProvider() {
 
 
     function handleOutofstockSelect(value: boolean) {
-        dispatch(setItemQueryParams({ outOfStock: value, page: 1 }));
+        dispatch(setItemQueryParams({outOfStock: value, page: 1}));
     }
 
 

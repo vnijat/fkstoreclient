@@ -1,17 +1,18 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { PaymentMethod, PurchaseStatus } from '../../enums/purchase';
-import { Item } from '../../types/item';
-import { AddPurchaseDto, PurchaseItem } from '../../types/purchase';
+import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {PaymentMethod, PurchaseStatus} from '../../enums/purchase';
+import {Item} from '../../types/item';
+import {AddPurchaseDto, PurchaseItem, PurchaseQueryParams} from '../../types/purchase';
 
 
 interface IPurchaseSlicer {
+    purchasesQueryParams: PurchaseQueryParams;
     purchaseDataForPost: AddPurchaseDto;
     isPurchaseForedit: boolean;
     isShowPurchaseModal: boolean;
 }
 
 const initialState = {
-    purchaseDataForPost: { status: PurchaseStatus.IN_PROGRESS },
+    purchaseDataForPost: {status: PurchaseStatus.IN_PROGRESS},
     isPurchaseForedit: false,
     isShowPurchaseModal: false
 } as IPurchaseSlicer;
@@ -48,13 +49,13 @@ const purchaseSlicer = createSlice({
                 state.purchaseDataForPost.purchaseItems.push(purchaseItem);
             }
         },
-        updateItemForPurchase: (state, action: PayloadAction<{ itemId: number, data: { [key: string]: any; }; }>) => {
+        updateItemForPurchase: (state, action: PayloadAction<{itemId: number, data: {[key: string]: any;};}>) => {
             if (state?.purchaseDataForPost?.purchaseItems) {
                 const itemIndex = state?.purchaseDataForPost?.purchaseItems.findIndex((item) => item.itemId == action.payload.itemId);
                 state.purchaseDataForPost.purchaseItems[itemIndex] = Object.assign(state.purchaseDataForPost.purchaseItems[itemIndex], action.payload.data);
             }
         },
-        deleteItemFromPurchase: (state, action: PayloadAction<{ itemId: number | string; }>) => {
+        deleteItemFromPurchase: (state, action: PayloadAction<{itemId: number | string;}>) => {
             if (state?.purchaseDataForPost?.purchaseItems) {
                 const itemIndex = state.purchaseDataForPost.purchaseItems.findIndex((item) => item.itemId == action.payload.itemId);
                 state.purchaseDataForPost.purchaseItems.splice(itemIndex, 1);
@@ -68,6 +69,9 @@ const purchaseSlicer = createSlice({
         },
         setIsShowPurchaseModal: (state, action: PayloadAction<boolean>) => {
             state.isShowPurchaseModal = action.payload;
+        },
+        setPurchaseQueryParams: (state, action: PayloadAction<PurchaseQueryParams>) => {
+            Object.assign(state.purchasesQueryParams, action.payload);
         }
     }
 });
@@ -80,5 +84,6 @@ export const {
     clearPurchaseDataForPost,
     setIsPurchaseForEdit,
     setIsShowPurchaseModal,
+    setPurchaseQueryParams
 } = purchaseSlicer.actions;
 export default purchaseSlicer.reducer;

@@ -185,10 +185,10 @@ export const InputItem: FC<IInputItem> = memo(
         return (
           <CheckBox
             value={inputValue as boolean}
-            tintColor={Colors.CARD_COLOR}
+            tintColor={Colors.CARD_HEADER_COLOR}
             onValueChange={onCheckBoxValueChange}
-            onCheckColor={Colors.CARD_HEADER_COLOR}
-            onTintColor={Colors.CARD_HEADER_COLOR}
+            onCheckColor={Colors.METALLIC_GOLD}
+            onTintColor={Colors.METALLIC_GOLD}
             onFillColor={Colors.CULTURED} />
         );
       } else {

@@ -1,5 +1,5 @@
 import {ITableDataConfig} from '../../../containers/simpleTable/types';
-import {InventoryTrackData} from '../../../types/inventoryTrack';
+import {InventoryTrackData} from '../../../types/inventory';
 
 export const inventoryTrackTableConfig: ITableDataConfig<InventoryTrackData>[] =
   [

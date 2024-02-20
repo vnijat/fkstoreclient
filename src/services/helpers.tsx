@@ -60,7 +60,7 @@ const modifyItemForEdit = <T extends {[key: string]: any;}>(data: T[] | T, itemI
         if (isObject) {
             itemForPost[`${key}Id`] = objectValue?.id?.toString();
         } else {
-            itemForPost[key] = !!(objectValue as string).length ? ((isNaN(Number(objectValue)) || key === 'code') ? objectValue : Number(objectValue).toString()) : objectValue;
+            itemForPost[key] = !!(objectValue as string)?.length ? ((isNaN(Number(objectValue)) || key === 'code') ? objectValue : Number(objectValue).toString()) : objectValue;
         }
     }
     return itemForPost;

@@ -2,8 +2,7 @@ import {IsingelSelectData} from "../../../../containers/customPicker";
 import {ClientSort} from "../../../../enums/clientSort";
 import {ClientType} from "../../../../enums/clientType";
 import {Order} from "../../../../enums/order.enum";
-import {setClientsQueryParams} from "../../../../modules/redux/clientsQuerySlicer";
-import {setIsShowClientModal} from "../../../../modules/redux/clientsSlicer";
+import {setClientsQueryParams, setIsShowClientModal} from "../../../../modules/redux/clientsSlicer";
 import {useAppDispatch} from "../../../../modules/redux/store";
 import {Imeta} from "../../../../types/common/common";
 

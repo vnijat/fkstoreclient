@@ -2,7 +2,7 @@ import {createSlice, isAsyncThunkAction, PayloadAction} from '@reduxjs/toolkit';
 import {OrderItemStatus} from '../../enums/orderItemStatus';
 import {OrderStatus} from '../../enums/orderStatus';
 import {Item} from '../../types/item';
-import {AddOrderDto, OrderItem} from '../../types/projectOrder';
+import {AddOrderDto, OrderItem, OrdersQueryParams} from '../../types/projectOrder';
 import {Project} from '../../types/project';
 import {Toast} from 'react-native-toast-notifications';
 import {IToastData} from '../../components/customToastComponent';
@@ -10,6 +10,7 @@ import {toastVariants} from '../../types/toast';
 
 
 interface IOrders {
+    ordersQueryParams: OrdersQueryParams;
     orderDataForPost: AddOrderDto;
     isOrderForEdit: boolean;
     isShowOrderModal: boolean;
@@ -17,6 +18,7 @@ interface IOrders {
 }
 
 const initialState = {
+    ordersQueryParams: {},
     orderDataForPost: {status: OrderStatus.PENDING},
     isOrderForEdit: false,
     isShowOrderModal: false,
@@ -95,6 +97,9 @@ const ordersSlicer = createSlice({
             if (state?.orderDataForPost?.orderItems?.length) {
                 state.orderDataForPost.orderItems.forEach((item) => item.projectId = action.payload);
             }
+        },
+        setOrdersQueryParams: (state, action: PayloadAction<OrdersQueryParams>) => {
+            Object.assign(state.ordersQueryParams, action.payload);
         }
     }
 });
@@ -108,6 +113,7 @@ export const {
     setIsOrderForEdit,
     setIsShowOrderModal,
     setSelectedProject,
-    setProjectIdForAllOrderItems
+    setProjectIdForAllOrderItems,
+    setOrdersQueryParams
 } = ordersSlicer.actions;
 export default ordersSlicer.reducer;

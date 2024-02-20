@@ -1,11 +1,11 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { FilterParamskey } from '../../types/item';
+import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {FilterParamskey} from '../../types/item';
 
 
 
 
 
-export interface IfilterSlicerInterface {
+export interface IWarehouseFilter {
     filterByParams: {
         categoryId: number[];
         supplierId: number[];
@@ -34,14 +34,14 @@ const initialState = {
         colorId: []
     },
     selectedWithLabel: []
-} as IfilterSlicerInterface;
+} as IWarehouseFilter;
 
-const filterSlicer = createSlice({
-    name: 'filterSlicer',
+const warehouseFiltersSlicer = createSlice({
+    name: 'warehouseFiltersSlicer',
     initialState,
     reducers: {
-        setFilterByParams: (state, action: PayloadAction<{ parent: FilterParamskey; id: number; }>) => {
-            const { parent, id } = action.payload;
+        setFilterByParams: (state, action: PayloadAction<{parent: FilterParamskey; id: number;}>) => {
+            const {parent, id} = action.payload;
             const isExist = state.filterByParams[parent]?.includes(id);
             if (isExist) {
                 state.filterByParams[parent] = state.filterByParams[parent]?.filter(currID => currID !== id);
@@ -49,8 +49,8 @@ const filterSlicer = createSlice({
                 state.filterByParams[parent].push(id);
             }
         },
-        setSelectedWithLabel: (state, action: PayloadAction<{ id: number; label: string; parent: FilterParamskey; }>) => {
-            const { parent, id } = action.payload;
+        setSelectedWithLabel: (state, action: PayloadAction<{id: number; label: string; parent: FilterParamskey;}>) => {
+            const {parent, id} = action.payload;
             const isExist = state.selectedWithLabel.some(item => item.parent === parent && item.id === id);
             if (isExist) {
                 const indexOfExisted = state.selectedWithLabel.findIndex((item) => item.parent === parent && item.id === id);
@@ -65,5 +65,5 @@ const filterSlicer = createSlice({
     },
 });
 
-export const { setFilterByParams, setSelectedWithLabel, clearFilters } = filterSlicer.actions;
-export default filterSlicer.reducer;
+export const {setFilterByParams, setSelectedWithLabel, clearFilters} = warehouseFiltersSlicer.actions;
+export default warehouseFiltersSlicer.reducer;

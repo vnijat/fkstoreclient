@@ -10,7 +10,7 @@ import {Item} from "../../../../types/item";
 function OrderDataProvider() {
     const dispatch = useAppDispatch();
     const isShowOrderModal = useSelector((state: RootState) => state.ordersSlicer.isShowOrderModal);
-    const ordersQueryParams = useSelector((state: RootState) => state.ordersQueryParams);
+    const ordersQueryParams = useSelector((state: RootState) => state.ordersSlicer.ordersQueryParams);
     const tableConfigs = useSelector((state: RootState) => state.tableConfigs.order);
     const orderDataForPost = useSelector((state: RootState) => state.ordersSlicer.orderDataForPost);
     const {data: projectsForPicker} = useGetProjectsForPickerQuery(undefined, {

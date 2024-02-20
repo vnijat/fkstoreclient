@@ -6,7 +6,7 @@ import {
 } from '../enums/itemProperties';
 import {Order} from '../enums/order.enum';
 import {Common, Imeta} from './common/common';
-import {InventoryTrackData} from './inventoryTrack';
+import {InventoryTrackData} from './inventory';
 import {OrderItem} from './projectOrder';
 import {PurchaseItem} from './purchase';
 interface AddItemInterface {
@@ -124,6 +124,7 @@ interface Item extends Common {
   location: Location;
   store: Store;
   color: Color;
+  relatedItems: Item[];
   totalCostPrice: number;
   totalSellPrice: number;
   outOfStock: boolean;
@@ -157,7 +158,7 @@ interface ItemResponse {
   items: Item[];
   itemsCount: number;
   meta: Imeta;
-  orderBy: {sort: string; order: Order};
+  orderBy: {sort: string; order: Order;};
   sumTotal: number;
   outOfStock?: boolean;
 }

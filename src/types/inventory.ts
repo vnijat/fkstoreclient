@@ -1,8 +1,8 @@
 import {Order} from '../enums/order.enum';
 import {OrderItemStatus} from '../enums/orderItemStatus';
 import {PurchaseItemStatus} from '../enums/purchase';
-import {Imeta} from './common/common';
-import {Store} from './item';
+import {Common, Imeta} from './common/common';
+import {Item, Store} from './item';
 import {OrderItem} from './projectOrder';
 import {PurchaseItem} from './purchase';
 
@@ -15,6 +15,9 @@ interface InventoryTrackQueryParams {
   startDate?: string;
   endDate?: string;
 }
+
+
+
 
 interface InventoryTrackData {
   id: number;
@@ -32,6 +35,10 @@ interface InventoryTrackData {
   type: 'purchase' | 'order' | 'move';
   status: OrderItemStatus | PurchaseItemStatus;
 }
+
+interface InventoryTransfersParams extends InventoryTrackQueryParams {
+  storeId?: string;
+}
 interface InventoryTrackResponse {
   data: InventoryTrackData[];
   meta: Imeta;
@@ -40,8 +47,31 @@ interface InventoryTrackResponse {
   inventoryStartDate: Date;
 }
 
+interface InventoryTransfers extends Common {
+  quantity: number;
+  originalStore: Store;
+  destinationStore: Store;
+  transferedFromItem: Item;
+  transferedFromItemId: number;
+  transferedToItem: Item;
+  transferedToItemId: number;
+  generatedItem: Item;
+  generatedItemId: number;
+}
+
+
+interface InventoryTransfersResponse {
+  data: InventoryTransfers[];
+  meta: Imeta;
+  dataCount: number;
+  orderBy: {sort: string; order: Order;};
+}
+
 export type {
   InventoryTrackResponse,
   InventoryTrackQueryParams,
   InventoryTrackData,
+  InventoryTransfers,
+  InventoryTransfersResponse,
+  InventoryTransfersParams
 };

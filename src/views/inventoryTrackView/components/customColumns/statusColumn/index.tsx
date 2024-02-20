@@ -3,7 +3,7 @@ import { View, Text } from "react-native";
 import Icon from "react-native-vector-icons/Entypo";
 import { OrderItemStatus } from "../../../../../enums/orderItemStatus";
 import { PurchaseItemStatus } from "../../../../../enums/purchase";
-import { InventoryTrackData } from "../../../../../types/inventoryTrack";
+import { InventoryTrackData } from "../../../../../types/inventory";
 import { Colors } from "../../../../../utils/colors";
 import { getStyle } from "./styles";
 

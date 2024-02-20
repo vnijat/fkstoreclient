@@ -1,9 +1,9 @@
 import { ITableDataConfig } from "../../../../containers/simpleTable/types";
-import { setInventoryTrackQueryParams } from "../../../../modules/redux/inventoryTrackQueryParams";
+import {setInventoryTrackQueryParams} from "../../../../modules/redux/inventorySlicer";
 import { RootState, useAppDispatch } from "../../../../modules/redux/store";
 import { resetTable, setNewTableConfigs } from "../../../../modules/redux/tableConfigs";
 import { Imeta } from "../../../../types/common/common";
-import { InventoryTrackData } from "../../../../types/inventoryTrack";
+import { InventoryTrackData } from "../../../../types/inventory";
 
 
 

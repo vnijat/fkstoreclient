@@ -38,15 +38,6 @@ const WareHouseView: FC<any> = ({ navigation }) => {
   } = logicProvider;
   const style = getStyle();
 
-  // const renderListTable = useMemo(() => {
-  //   if (queryData?.items.length || isLoading) {
-  //     return <ItemListTable data={queryData?.items || []} isLoading={isLoading} />;
-  //   }
-  //   else {
-  //     return null;
-  //   }
-  // }, [queryData?.items, isLoading]);
-
   const onPressDeleteItem = async (data: Item) => {
     await handleDeleteWareHouseItems([data.id!], lang);
   };

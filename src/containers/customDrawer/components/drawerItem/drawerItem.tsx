@@ -1,10 +1,10 @@
-import React, { FC, useState } from "react";
-import { Text, View } from "react-native";
+import React, {FC, useState} from "react";
+import {Text, View} from "react-native";
 import CustomPressable from "../../../../components/customPressable";
-import { Colors } from "../../../../utils/colors";
+import {Colors} from "../../../../utils/colors";
 import FONT from "../../../../utils/font";
-import { IRouteData } from "../drawerRoutes";
-import { getStyle } from "./styles";
+import {IRouteData} from "../drawerRoutes";
+import {getStyle} from "./styles";
 
 interface CustomDrawerItemProps {
     onPressRoute: (route: string) => void;
@@ -13,8 +13,8 @@ interface CustomDrawerItemProps {
     isChild?: boolean;
 }
 
-const CustomDrawerItem: FC<CustomDrawerItemProps> = ({ currentRoute, onPressRoute, routeObject, isChild }) => {
-    const { title, routeName, icon, childRoutes } = routeObject;
+const CustomDrawerItem: FC<CustomDrawerItemProps> = ({currentRoute, onPressRoute, routeObject, isChild}) => {
+    const {title, routeName, icon, childRoutes} = routeObject;
     const [isShowChild, setIsShowChild] = useState(false);
     const style = getStyle();
     const isSelected = routeName === currentRoute;
@@ -28,22 +28,22 @@ const CustomDrawerItem: FC<CustomDrawerItemProps> = ({ currentRoute, onPressRout
         onPressRoute(routeName);
     };
     return (
-        <>
-            <CustomPressable onHoverOpacity style={[{ backgroundColor: isSelected ? Colors.METALLIC_GOLD : 'transparent' }, isChild ? style.childDrawer : style.drawerItem]}
+        <View tooltip={title}>
+            <CustomPressable onHoverOpacity style={[{backgroundColor: isSelected ? Colors.METALLIC_GOLD : 'transparent'}, isChild ? style.childDrawer : style.drawerItem]}
                 onLongPress={onLongPress}
                 onPress={onPressHandler}>
                 {icon(isSelected ? Colors.CARD_COLOR : Colors.DEFAULT_TEXT_COLOR)}
-                <Text style={[style.routeTitle, { color: isSelected ? Colors.CARD_COLOR : Colors.DEFAULT_TEXT_COLOR }]} >
+                <Text numberOfLines={1}  style={[style.routeTitle, {color: isSelected ? Colors.CARD_COLOR : Colors.DEFAULT_TEXT_COLOR}]}  >
                     {title.toUpperCase()}
                 </Text>
             </CustomPressable>
             {
                 childRoutes?.length && showChild &&
                 childRoutes.map((route, index) => {
-                    return <CustomDrawerItem routeObject={route} {...{ currentRoute, onPressRoute }} key={`${index} - ${route.routeName}`} isChild />;
+                    return <CustomDrawerItem routeObject={route} {...{currentRoute, onPressRoute}} key={`${index} - ${route.routeName}`} isChild />;
                 })
             }
-        </>
+        </View>
     );
 };
 

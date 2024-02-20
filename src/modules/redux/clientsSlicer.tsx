@@ -1,8 +1,9 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { AddClient } from '../../types/client';
+import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {AddClient, ClientsQueryParams} from '../../types/client';
 
 
 interface IclientSlicer {
+    clientsQueryParams: ClientsQueryParams;
     clientForPost: AddClient;
     isClientForEdit: boolean;
     isShowClientModal: boolean;
@@ -11,6 +12,7 @@ interface IclientSlicer {
 
 
 const initialState = {
+    clientsQueryParams: {},
     clientForPost: {},
     isClientForEdit: false,
     isShowClientModal: false
@@ -20,7 +22,7 @@ const clientSlicer = createSlice({
     name: 'clientSlicer',
     initialState,
     reducers: {
-        setClientForPost: (state, action: PayloadAction<{ [key: string]: string | number; } | AddClient>) => {
+        setClientForPost: (state, action: PayloadAction<{[key: string]: string | number;} | AddClient>) => {
             Object.assign(state.clientForPost, action.payload);
         },
         clearClientForPost: (state) => {
@@ -32,8 +34,16 @@ const clientSlicer = createSlice({
         setIsShowClientModal: (state, action: PayloadAction<boolean>) => {
             state.isShowClientModal = action.payload;
         },
+        setClientsQueryParams: (state, action: PayloadAction<ClientsQueryParams>) => {
+            Object.assign(state.clientsQueryParams, action.payload);
+        }
     }
 });
 
-export const { setClientForPost, clearClientForPost, setIsClientForEdit, setIsShowClientModal } = clientSlicer.actions;
+export const {
+    setClientForPost,
+    setClientsQueryParams,
+    clearClientForPost,
+    setIsClientForEdit,
+    setIsShowClientModal} = clientSlicer.actions;
 export default clientSlicer.reducer;

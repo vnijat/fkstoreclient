@@ -1,7 +1,7 @@
 import LocalizedStrings from "localized-strings";
-import { useMemo } from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "../redux/store";
+import {useMemo} from "react";
+import {useSelector} from "react-redux";
+import {RootState} from "../redux/store";
 
 
 
@@ -67,7 +67,8 @@ function UseLanguage() {
                 },
                 trackView: 'Track',
                 date: 'Date',
-                productName: 'Product Name'
+                productName: 'Product Name',
+                transfers: 'Transfers',
             },
             ru: {
                 dashBoard: 'Панел',
@@ -125,7 +126,8 @@ function UseLanguage() {
                 },
                 trackView: 'Track',
                 date: 'Дата',
-                productName: 'Название продукта'
+                productName: 'Название продукта',
+                transfers: 'Перемещения',
             },
             az: {
                 dashBoard: 'Panel',
@@ -183,7 +185,8 @@ function UseLanguage() {
                 },
                 trackView: 'Track',
                 date: 'Tarix',
-                productName: 'Məhsulun Adı'
+                productName: 'Məhsulun Adı',
+                transfers: 'Transfer',
             }
         },
         {

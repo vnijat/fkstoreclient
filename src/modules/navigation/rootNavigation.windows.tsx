@@ -19,6 +19,7 @@ import LoginView from '../../views/loginView';
 import HeaderComponent from './components/headerComponent';
 import HELP from '../../services/helpers';
 import {Role} from '../../enums/userRole';
+import InventoryTransfersView from '../../views/inventoryTransfersView';
 
 
 export const navigationRef = createNavigationContainerRef();
@@ -62,6 +63,7 @@ export const RootNavigation: FC<any> = () => {
             <Stack.Screen name={RouteNames.ORDERS} component={OrderView} />
             <Stack.Screen name={RouteNames.PURCHASES} component={PurchaseView} />
             <Stack.Screen name={RouteNames.TRACKVIEW} component={InventoryTrackView} />
+            <Stack.Screen name={RouteNames.TRANSFERS} component={InventoryTransfersView} />
           </>
         }
       </Stack.Navigator >

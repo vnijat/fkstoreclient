@@ -5,11 +5,12 @@ import {orderTableDataConfigs} from '../../configs/tableDataConfigs/orderTableCo
 import {projectTableDataConfigs} from '../../configs/tableDataConfigs/projectTableConfigs';
 import {purchaseTableDataConfigs} from '../../configs/tableDataConfigs/purchaseTableConfigs';
 import {ITableDataConfig} from '../../containers/simpleTable/types';
-import {InventoryTrackData} from '../../types/inventoryTrack';
+import {InventoryTrackData, InventoryTransfers} from '../../types/inventory';
 import {Item} from '../../types/item';
 import {Project} from '../../types/project';
 import {ProjectOrder} from '../../types/projectOrder';
 import {PurchaseDto} from '../../types/purchase';
+import {inventoryTransfersTableConfig} from '../../configs/tableDataConfigs/inventoryTransfersTableConfigs';
 
 export interface ITableConfigsSlicer {
     item: ITableDataConfig<Item>[];
@@ -17,7 +18,7 @@ export interface ITableConfigsSlicer {
     purchase: ITableDataConfig<PurchaseDto>[];
     project: ITableDataConfig<Project>[];
     inventoryTrack: ITableDataConfig<InventoryTrackData>[];
-
+    inventoryTransfers: ITableDataConfig<InventoryTransfers>[];
 }
 
 type tableNamesType = keyof ITableConfigsSlicer;
@@ -27,7 +28,8 @@ const initialState = {
     order: orderTableDataConfigs,
     purchase: purchaseTableDataConfigs,
     project: projectTableDataConfigs,
-    inventoryTrack: inventoryTrackTableConfig
+    inventoryTrack: inventoryTrackTableConfig,
+    inventoryTransfers:inventoryTransfersTableConfig
 } as ITableConfigsSlicer;
 
 const tableConfigsSlicer = createSlice({

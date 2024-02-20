@@ -1,10 +1,9 @@
-import React, { memo, useMemo, useRef, useState } from "react";
-import { Text, View, Animated, Pressable, Easing } from "react-native";
-import { CompletedIcon, DeclinedIcon, InProgressIcon, ShowIcon, TotalProjcetsIcon } from "../../../../assets/icons/clientCardIcons";
-import CustomPressable from "../../../../components/customPressable";
-import { ProjectStatus } from "../../../../enums/projectStatus";
-import { Colors } from "../../../../utils/colors";
-import { getStyle } from "./styles";
+import React, {memo, useMemo, useRef, useState} from "react";
+import {Text, View, Animated, Pressable, Easing} from "react-native";
+import {CompletedIcon, DeclinedIcon, InProgressIcon, ShowIcon, TotalProjcetsIcon} from "../../../../assets/icons/clientCardIcons";
+import {ProjectStatus} from "../../../../enums/projectStatus";
+import {Colors} from "../../../../utils/colors";
+import {getStyle} from "./styles";
 
 
 
@@ -16,7 +15,7 @@ interface IProjectInfo {
 }
 
 
-const ProjectInfo = ({ projectsCompleted, projectsDeclined, projectsInProgress, totalProjects }: IProjectInfo) => {
+const ProjectInfo = ({projectsCompleted, projectsDeclined, projectsInProgress, totalProjects}: IProjectInfo) => {
     const style = useMemo(() => getStyle(), []);
     const animatedValue = useRef(new Animated.Value(0.3)).current;
     const ICON_SIZE = 16;
@@ -65,7 +64,7 @@ const ProjectInfo = ({ projectsCompleted, projectsDeclined, projectsInProgress, 
     };
 
     return (
-        <View>
+        <View style={{justifyContent: 'center', gap: 5}}>
             <View style={style.projectInfoTitleContainer}>
                 <View style={style.projectInfoButtonContiner}>
                     <Text style={style.projectInfoButtonText}>
@@ -73,7 +72,7 @@ const ProjectInfo = ({ projectsCompleted, projectsDeclined, projectsInProgress, 
                     </Text>
                 </View>
             </View>
-            <Animated.View style={{ opacity: animatedValue }}>
+            <Animated.View style={{opacity: animatedValue}}>
                 <Pressable
                     onHoverIn={startAnimatedOpacity}
                     onHoverOut={endAnimatedOpacity}
@@ -81,10 +80,10 @@ const ProjectInfo = ({ projectsCompleted, projectsDeclined, projectsInProgress, 
                 >
                     {
                         projectsInfo.map((info, index) => {
-                            const { value, icon, color, title } = info;
+                            const {value, icon, color, title} = info;
                             return (
                                 <View key={index} style={style.infoItemContainer}>
-                                    <View key={index} style={[style.infoIconContiner, { borderColor: color }]}>
+                                    <View key={index} style={[style.infoIconContiner, {borderColor: color}]}>
                                         <View style={style.infoIcon}>
                                             {icon}
                                         </View>

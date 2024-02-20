@@ -75,7 +75,7 @@ const ProjectTypesModal = ({logicProvider, dataProvider}: IProjectTypesModal) =>
                 onPress={handleOnpressReset}
                 style={style.resetButton}
             >
-                <Icon name={'back'} size={25} color={Colors.METALLIC_GOLD} />
+                <Icon name={'back'} size={25} color={Colors.CARD_COLOR} />
             </CustomPressable>
         );
     }, [isEditMode]);

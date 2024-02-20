@@ -13,4 +13,5 @@ export enum RouteNames {
   SCAN = 'Scan',
   DASHBOARD = 'Dashboard',
   PRODUCTS = 'Products',
+  TRANSFERS = 'Transfers',
 }

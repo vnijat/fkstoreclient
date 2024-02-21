@@ -51,7 +51,6 @@ const ordersSlicer = createSlice({
                 projectId: state.selectedProject?.id,
                 storeId: item.store.id,
                 store: item.store
-
             };
             if (!state.orderDataForPost?.orderItems?.length) {
                 state.orderDataForPost.orderItems = [];
@@ -61,7 +60,7 @@ const ordersSlicer = createSlice({
                     duration: 3000,
                     data: {
                         title: '',
-                        message: '',
+                        message: 'ITEM ALLREADY IN ORDER',
                         type: 'info',
                     } as IToastData
                 });

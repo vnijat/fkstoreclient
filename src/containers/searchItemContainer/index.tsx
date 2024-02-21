@@ -68,6 +68,10 @@ const SearchItemContainer = ({searchQueryFunction, getSelectedItem}: ISearchItem
         clearTimeout(timeoutId as ReturnType<typeof setTimeout>);
     };
 
+    const onSelectItem = (item: Item) => {
+        getSelectedItem(item);
+        setShowContent(false);
+    };
 
     const handleContentDissmiss = () => {
         setShowContent(false);
@@ -82,7 +86,7 @@ const SearchItemContainer = ({searchQueryFunction, getSelectedItem}: ISearchItem
             >
                 <InputItem
                     inputValue={value}
-                    setValue={handleSearch}
+                    setValue={(value) => handleSearch(value as string)}
                     isSearch
                     inputTitle={`Search by Item Name or Barcode`}
                     titleColor={Colors.METALLIC_GOLD}
@@ -111,7 +115,7 @@ const SearchItemContainer = ({searchQueryFunction, getSelectedItem}: ISearchItem
                 <View style={[style.floatResultsContainer, {height: searchContentHeight, }]}>
                     <ScrollView style={{flex: 1}} contentContainerStyle={{paddingVertical: 5}}>
                         {!!data?.length && data?.map((item, index) => {
-                            return <SearchResultItem data={item} onSelect={getSelectedItem} key={`${index}-searchItem`} />;
+                            return <SearchResultItem data={item} onSelect={onSelectItem} key={`${index}-searchItem`} />;
                         })}
                     </ScrollView>
                 </View>

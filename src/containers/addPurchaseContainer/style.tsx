@@ -1,45 +1,45 @@
-import { StyleSheet } from 'react-native';
-import { Colors } from '../../utils/colors';
+import {StyleSheet} from 'react-native';
+import {Colors} from '../../utils/colors';
 import FONT from '../../utils/font';
 
 
 export const getStyle = () => {
     const style = StyleSheet.create({
         container: {
-            flex: 1,
-            paddingHorizontal: 5
+            paddingHorizontal: 5,
         },
-        orderContentContainer: {
+        purchaseContentContainer: {
             paddingTop: 5,
-            flexShrink: 0.5
+            flexGrow: 0.4,
+            minHeight: '50%',
         },
-        orderListHeaderContainer: {
+        purchaseListHeaderContainer: {
             height: 20,
             backgroundColor:
                 Colors.CARD_HEADER_COLOR,
             justifyContent: 'center'
         },
         searchContainer: {
-            flex: 0.1
+            flexGrow: 0.1
         },
-        orderListContainer: {
+        purchaseListContainer: {
             backgroundColor: Colors.CULTURED,
-            height: 300
+            flexGrow: 1
         },
-        orderDetailContainer: {
-            flex: 0.2
+        purchaseDetailContainer: {
+            flexGrow: 0.2
         },
-        orderFooterContainer: {
-            flex: 0.1
+        purchaseFooterContainer: {
+            flexGrow: 0.1
         },
-        orderFooterButtonContainer: {
+        purchaseFooterButtonContainer: {
             height: 50,
             backgroundColor: Colors.CARD_HEADER_COLOR,
             flexDirection: 'row',
             justifyContent: 'space-around',
             alignItems: 'center'
         },
-        orderActionsContainer: {
+        purchaseActionsContainer: {
             backgroundColor: Colors.DEFAULT_TEXT_COLOR,
             height: 50,
             flexDirection: 'row',
@@ -47,11 +47,11 @@ export const getStyle = () => {
             justifyContent: 'space-between',
             borderTopWidth: 5
         },
-        orderStatusText: {
+        purchaseStatusText: {
             fontSize: FONT.FONT_SIZE_SMALL,
             marginLeft: 10
         },
-        orderActionButtonsContainer: {
+        purchaseActionButtonsContainer: {
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'space-between',

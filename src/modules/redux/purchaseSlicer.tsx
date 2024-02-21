@@ -2,6 +2,8 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {PaymentMethod, PurchaseStatus} from '../../enums/purchase';
 import {Item} from '../../types/item';
 import {AddPurchaseDto, PurchaseItem, PurchaseQueryParams} from '../../types/purchase';
+import {IToastData} from '../../components/customToastComponent';
+import {Toast} from 'react-native-toast-notifications';
 
 
 interface IPurchaseSlicer {
@@ -45,7 +47,17 @@ const purchaseSlicer = createSlice({
             if (!state.purchaseDataForPost?.purchaseItems?.length) {
                 state.purchaseDataForPost.purchaseItems = [];
             }
-            if (!isExist) {
+
+            if (isExist) {
+                Toast.show('Custom Toast', {
+                    duration: 3000,
+                    data: {
+                        title: '',
+                        message: 'ITEM ALLREADY IN PURCHASE',
+                        type: 'info',
+                    } as IToastData
+                });
+            } else {
                 state.purchaseDataForPost.purchaseItems.push(purchaseItem);
             }
         },

@@ -1,20 +1,19 @@
-import {memo, useCallback, useEffect, useMemo, useState} from "react";
-import {Text, View, ActivityIndicator, Alert, FlatList} from "react-native";
+import {memo, useCallback, useEffect, useMemo, useRef, useState} from "react";
+import {Text, View, ActivityIndicator, Alert, FlatList, useWindowDimensions} from "react-native";
 import {shallowEqual, useSelector} from "react-redux";
 import {InputItem} from "../../components/inputItem/index.windows";
 import {PrimaryButton} from "../../components/primaryButton";
 import {OrderItemStatus} from "../../enums/orderItemStatus";
 import {OrderStatus} from "../../enums/orderStatus";
-import {useAddOrderMutation, useEditOrderMutation} from "../../modules/api/orders.api";
+import {OrdersApi, useAddOrderMutation, useEditOrderMutation} from "../../modules/api/orders.api";
 import {useGetActiveProjectsQuery, useGetProjectsForPickerQuery} from "../../modules/api/projects.api";
-import {clearOrderDataForPost, setIsOrderForEdit, setIsShowOrderModal, setOrderDataForPost, setProjectId, setProjectIdForAllOrderItems, setSelectedProject} from "../../modules/redux/orderSlicer";
+import {addItemForOrder, clearOrderDataForPost, setIsOrderForEdit, setIsShowOrderModal, setOrderDataForPost, setProjectIdForAllOrderItems, setSelectedProject} from "../../modules/redux/orderSlicer";
 import {RootState, useAppDispatch} from "../../modules/redux/store";
 import HELP from "../../services/helpers";
-import {AddOrderDto} from "../../types/projectOrder";
+import {AddOrderDto, Order} from "../../types/projectOrder";
 import {Colors} from "../../utils/colors";
 import ItemsForOrderList from "./itemsForOrderList";
 import ItemsForOrderListHeader from "./itemsForOrderListHeader";
-import ItemsForOrderSearch from "./itemsForOrderSearch";
 import {getStyle} from "./style";
 import ProjectCard from "../../components/projectCard";
 import {Project} from "../../types/project";
@@ -24,6 +23,8 @@ import {setIsShowClientModal} from "../../modules/redux/clientsSlicer";
 import ClientInfoModal from "../../views/projectsView/components/clientInfoModal";
 import CustomPressable from "../../components/customPressable";
 import Icon from "react-native-vector-icons/Entypo";
+import SearchItemContainer from "../searchItemContainer";
+import {Item} from "../../types/item";
 
 
 
@@ -32,6 +33,9 @@ interface IAddOrderContainer {
 }
 
 const AddOrderCntainer = ({}: IAddOrderContainer) => {
+    const {height: windowHeight} = useWindowDimensions();
+    const heightRef = useRef(windowHeight);
+    heightRef.current = windowHeight;
     const style = useMemo(() => getStyle(), []);
     const dispatch = useAppDispatch();
     const [isSkipProjectSlection, setIsSkipProjectSlection] = useState<boolean>(false);
@@ -116,8 +120,11 @@ const AddOrderCntainer = ({}: IAddOrderContainer) => {
     };
 
     const handleUpdateOrder = async () => {
+        const isOrderCardIsEmpty = !orderData?.orderItems?.length;
+        const isEveryItemInUse = orderData?.orderItems?.every(item => item.status === OrderItemStatus.IN_USE);
+        const alertMessage = isOrderCardIsEmpty ? 'No Order on Cart' : 'You can update order only item with status in use';
         try {
-            if (!!orderData.orderItems?.length) {
+            if (!isOrderCardIsEmpty && isEveryItemInUse) {
                 const response = await apiUpdateOrder({body: orderData, id: orderData?.id!}).unwrap();
                 if (response) {
                     dispatch(setOrderDataForPost({...response}));
@@ -125,7 +132,7 @@ const AddOrderCntainer = ({}: IAddOrderContainer) => {
                 }
                 HELP.showToast('success', 'Order Updated');
             } else {
-                HELP.alertError(undefined, `Cant Update Order`, `Order Cart is Empty`);
+                HELP.alertError(undefined, `Cant Update Order`, alertMessage);
             }
 
         } catch (error) {
@@ -240,7 +247,25 @@ const AddOrderCntainer = ({}: IAddOrderContainer) => {
     }, [activeProjects, isSkipProjectSlection, projectCodeValue, orderData.orderItems]);
 
 
+    const searchQueryFunction = (searchValue: string, options: {skip: boolean;}) => {
+        const {data, isLoading, isUninitialized} = OrdersApi.endpoints.getItemForOrder.useQuery(searchValue, {
+            skip: options.skip
+        });
+        return {
+            data,
+            isLoading,
+            isUninitialized
+        };
+    };
 
+
+    const hanldeItemSelection = (data: Item) => {
+        if (data.inUse) {
+            HELP.alertError(undefined, 'Item is in another Order, Please complete another order first');
+            return;
+        }
+        dispatch(addItemForOrder(data));
+    };
 
 
     const renderSelectedProject = useMemo(() => {
@@ -255,13 +280,14 @@ const AddOrderCntainer = ({}: IAddOrderContainer) => {
     }, [selectedProject, orderStatus]);
 
     return (
-        <View style={style.container}>
+        <View style={[style.container, {maxHeight: heightRef.current - 150}]}>
             <ClientInfoModal />
             {
                 ((selectedProject || isSkipProjectSlection)) ?
                     <>
                         {orderStatus.inProgress && <View style={style.searchContainer}>
-                            <ItemsForOrderSearch selectedProject={selectedProject} />
+                            <SearchItemContainer searchQueryFunction={searchQueryFunction} getSelectedItem={hanldeItemSelection} />
+                            {/* <ItemsForOrderSearch selectedProject={selectedProject} /> */}
                         </View>}
                         <View style={style.orderContentContainer}>
                             <View style={style.orderListHeaderContainer}>

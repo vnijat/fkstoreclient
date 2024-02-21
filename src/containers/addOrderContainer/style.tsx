@@ -1,17 +1,15 @@
-import {StyleSheet} from 'react-native';
+import {Dimensions, StyleSheet} from 'react-native';
 import {Colors} from '../../utils/colors';
 import FONT from '../../utils/font';
-
 
 export const getStyle = () => {
     const style = StyleSheet.create({
         container: {
-            flex: 1,
-            // paddingHorizontal: 5,
         },
         orderContentContainer: {
             paddingTop: 5,
-            flexShrink: 0.5
+            flexGrow: 0.4,
+            minHeight: '40%'
         },
         orderListHeaderContainer: {
             height: 20,
@@ -20,19 +18,18 @@ export const getStyle = () => {
             justifyContent: 'center'
         },
         searchContainer: {
-            flex: 0.1
-        },
-        orderListContainer: {
-            backgroundColor: Colors.CULTURED,
-            height: 300
-        },
-        orderDetailContainer: {
-            flex: 0.2,
-            flexDirection: 'row',
-            margin: 5,
+            flexGrow: 0.1
         },
         orderFooterContainer: {
-            flex: 0.2
+            flexGrow: 0.2
+        },
+        orderListContainer: {
+            flexGrow: 1,
+            backgroundColor: Colors.CULTURED,
+        },
+        orderDetailContainer: {
+            flexDirection: 'row',
+            margin: 5,
         },
         orderFooterButtonContainer: {
             height: 50,
@@ -51,12 +48,13 @@ export const getStyle = () => {
         },
         orderActionsContainer: {
             backgroundColor: Colors.DEFAULT_TEXT_COLOR,
-            height: 60,
+            maxHeight: 60,
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'space-between',
             borderTopWidth: 5,
             paddingHorizontal: 10,
+            paddingVertical: 2
         },
         orderStatusText: {
             fontSize: FONT.FONT_SIZE_SMALL,
@@ -70,25 +68,26 @@ export const getStyle = () => {
             marginRight: 20
         },
         projectSelectionContainer: {
-            height: 600,
-            flex: 1,
+            // height: 600,
+            flexGrow: 1,
             gap: 5,
             justifyContent: 'center',
+            padding: 10,
         },
         projectListContainer: {
-            flex: 0.8,
+            flexGrow: 0.8,
             justifyContent: 'center',
             alignItems: 'center',
         },
         projectSelectionHeaderContainer: {
-            flex: 0.1,
+            flexGrow: 0.1,
             backgroundColor: Colors.DEFAULT_TEXT_COLOR,
             borderBottomRightRadius: 5,
             borderBottomLeftRadius: 5,
             justifyContent: 'center',
         },
         projectSelectionBottomContainer: {
-            flex: 0.1,
+            flexGrow: 0.1,
             justifyContent: 'center',
             alignItems: 'flex-end',
             paddingHorizontal: 10,

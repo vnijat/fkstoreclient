@@ -1,5 +1,5 @@
-import {memo, useEffect, useMemo, useState} from "react";
-import {Text, View, ActivityIndicator} from "react-native";
+import {memo, useEffect, useMemo, useRef, useState} from "react";
+import {Text, View, ActivityIndicator, useWindowDimensions} from "react-native";
 import {useSelector} from "react-redux";
 import {InputItem} from "../../components/inputItem/index.windows";
 import {PrimaryButton} from "../../components/primaryButton";
@@ -11,12 +11,13 @@ import {getStyle} from "./style";
 import {useGetItemInputsQuery} from "../../modules/api/apiSlice";
 import {AddPurchaseDto} from "../../types/purchase";
 import {PurchaseStatus} from "../../enums/purchase";
-import {clearPurchaseDataForPost, setIsPurchaseForEdit, setIsShowPurchaseModal, setPurchaseDataForPost} from "../../modules/redux/purchaseSlicer";
+import {addItemForPurchase, clearPurchaseDataForPost, setIsPurchaseForEdit, setIsShowPurchaseModal, setPurchaseDataForPost} from "../../modules/redux/purchaseSlicer";
 import ItemsForPurchaseList from "./itemsForPurchaseList";
 import ItemsForPurchaseSearch from "./itemsForPurchaseSearch";
 import {PurchaseApi, useAddPurchaseMutation, useEditPurchaseMutation} from "../../modules/api/purchase.api";
 import AddEditItemModal from "../../views/warehouseView/components/addEditItemModal";
 import SearchItemContainer from "../searchItemContainer";
+import {Item} from "../../types/item";
 
 
 
@@ -25,6 +26,9 @@ interface IAddPurchaseContainer {
 }
 
 const AddPurchaseContainer = ({}: IAddPurchaseContainer) => {
+    const {height: windowHeight} = useWindowDimensions();
+    const heightRef = useRef(windowHeight);
+    heightRef.current = windowHeight;
     const style = useMemo(() => getStyle(), []);
     const dispatch = useAppDispatch();
     const [apiAddPurchase] = useAddPurchaseMutation();
@@ -45,6 +49,16 @@ const AddPurchaseContainer = ({}: IAddPurchaseContainer) => {
             inProgress: purchaseData.status === PurchaseStatus.IN_PROGRESS
         };
     }, [purchaseData.status]);
+
+    const actionContainerColor = useMemo(() => {
+        const colors = {
+            [PurchaseStatus.CONFIRMED]: Colors.COMPLETED_COLOR,
+            [PurchaseStatus.REJECTED]: Colors.DECLINED_COLOR,
+            [PurchaseStatus.IN_PROGRESS]: Colors.INPROGRESS_COLOR
+        };
+        return purchaseData.status && colors[purchaseData.status];
+    }, [PurchaseStatus, purchaseData.status]);
+
 
 
     useEffect(() => {
@@ -99,6 +113,23 @@ const AddPurchaseContainer = ({}: IAddPurchaseContainer) => {
         }
     };
 
+    const searchQueryFunction = (searchValue: string, options: {skip: boolean;}) => {
+        const {data, isLoading, isUninitialized} = PurchaseApi.endpoints.getItemForPurchase.useQuery(searchValue, {
+            skip: options.skip
+        });
+        return {
+            data,
+            isLoading,
+            isUninitialized
+        };
+    };
+
+
+    const handleSelectedItemFromSearch = (item: Item) => {
+        dispatch(addItemForPurchase(item));
+    };
+
+
     const handlePurchaseConfirm = async () => {
         const isPurchaseCanConfirmed = !!purchaseData?.purchaseItems?.length && !purchaseData.purchaseItems?.some(item => item.quantity === 0 || item.pricePerUnit === 0);
         if (isPurchaseCanConfirmed) {
@@ -128,19 +159,16 @@ const AddPurchaseContainer = ({}: IAddPurchaseContainer) => {
     };
 
 
-    const actionContainerColor = useMemo(() => {
-        const colors = {
-            [PurchaseStatus.CONFIRMED]: Colors.COMPLETED_COLOR,
-            [PurchaseStatus.REJECTED]: Colors.DECLINED_COLOR,
-            [PurchaseStatus.IN_PROGRESS]: Colors.INPROGRESS_COLOR
-        };
-        return purchaseData.status && colors[purchaseData.status];
-    }, [PurchaseStatus, purchaseData.status]);
+
+
+
+
+
 
     const renderActionButtons = useMemo(() => {
         if (tempData) {
             return (
-                <View style={style.orderActionButtonsContainer}>
+                <View style={style.purchaseActionButtonsContainer}>
                     {(!purchaseStatus.confirmed && !purchaseStatus.rejected)
                         &&
                         <PrimaryButton
@@ -172,42 +200,33 @@ const AddPurchaseContainer = ({}: IAddPurchaseContainer) => {
 
 
 
-    const searchQueryFunction = (searchValue: string, options: {skip: boolean;}) => {
-        const {data, isLoading, isUninitialized} = PurchaseApi.endpoints.getItemForPurchase.useQuery(searchValue, {
-            skip: options.skip
-        });
-        return {
-            data,
-            isLoading,
-            isUninitialized
-        };
-    };
+
 
 
     return (
-        <View style={style.container}>
+        <View style={[style.container, {maxHeight: heightRef.current - 150}]}>
             {purchaseStatus.inProgress && <View style={style.searchContainer}>
                 {/* <ItemsForPurchaseSearch /> */}
-                <SearchItemContainer getSelectedItem={(item) => console.log('getSelectedItem', item)} searchQueryFunction={searchQueryFunction} />
+                <SearchItemContainer getSelectedItem={handleSelectedItemFromSearch} searchQueryFunction={searchQueryFunction} />
             </View>}
-            <View style={style.orderContentContainer}>
-                <View style={style.orderListHeaderContainer}>
+            <View style={style.purchaseContentContainer}>
+                <View style={style.purchaseListHeaderContainer}>
                     <ItemsForOrderListHeader />
                 </View>
-                <View style={style.orderListContainer}>
+                <View style={style.purchaseListContainer}>
                     {isLoading ? <ActivityIndicator size={'large'} color={Colors.METALLIC_GOLD} />
                         : <ItemsForPurchaseList
                             purchaseItems={purchaseData.purchaseItems ?? []}
                             suppliersData={suppliersData ?? []} />}
                 </View>
             </View>
-            <View style={[style.orderActionsContainer, {borderColor: actionContainerColor}]}>
-                <Text style={style.orderStatusText}>
+            <View style={[style.purchaseActionsContainer, {borderColor: actionContainerColor}]}>
+                <Text style={style.purchaseStatusText}>
                     {`PURCHASE STATUS: ${purchaseData.status}`.toUpperCase()}
                 </Text>
                 {renderActionButtons}
             </View>
-            <View style={style.orderDetailContainer}>
+            <View style={style.purchaseDetailContainer}>
                 <InputItem
                     inputTitle={'PURCHASE DETAIL'}
                     setValue={purchaseDetailSetValue}
@@ -217,8 +236,8 @@ const AddPurchaseContainer = ({}: IAddPurchaseContainer) => {
                     height={60}
                 />
             </View>
-            <View style={style.orderFooterContainer}>
-                {purchaseStatus.inProgress && <View style={style.orderFooterButtonContainer}>
+            <View style={style.purchaseFooterContainer}>
+                {purchaseStatus.inProgress && <View style={style.purchaseFooterButtonContainer}>
                     <PrimaryButton onHoverOpacity title={'RESET'} onPress={handleClearPurchaseData} width={100} height={30} borderRadius={2} textColor={Colors.CARD_COLOR} buttonColor={Colors.DEFAULT_TEXT_COLOR} />
                     {tempData ? <PrimaryButton onHoverOpacity title={'UPDATE'} onPress={handleUpdatePurchase} width={100} height={30} borderRadius={2} textColor={Colors.CARD_COLOR} buttonColor={Colors.DEFAULT_TEXT_COLOR} />
                         : <PrimaryButton onHoverOpacity title={'CREATE'} onPress={handleCreatePurchase} width={100} height={30} borderRadius={2} textColor={Colors.CARD_COLOR} buttonColor={Colors.DEFAULT_TEXT_COLOR} />

@@ -18,7 +18,7 @@ export const OrdersApi = InventoryApi.injectEndpoints({
         };
       },
     }),
-    itemForOrder: build.query<Item[], string>({
+    getItemForOrder: build.query<Item[], string>({
       providesTags: ['itemForOrder'],
       query: searchValue => {
         return {
@@ -80,5 +80,5 @@ export const {
   useAddOrderMutation,
   useEditOrderMutation,
   useDeleteOrderMutation,
-  useItemForOrderQuery,
+  useGetItemForOrderQuery,
 } = OrdersApi;

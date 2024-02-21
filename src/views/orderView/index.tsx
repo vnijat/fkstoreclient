@@ -44,7 +44,7 @@ export const OrderView: FC<IorderView> = ({ navigation }) => {
         <View style={{ flex: 1, flexDirection: 'row' }}>
             <View style={{ flex: 0.05 }} />
             <View style={style.container}>
-                {isShowOrderModal && <AddEditOrderModal isOpen={isShowOrderModal} onClose={onCloseModal} />}
+                <AddEditOrderModal isOpen={isShowOrderModal} onClose={onCloseModal} />
                 <View style={{ flexShrink: 1 }}>
                     <OrderSearch searchValue={ordersQueryParams.search ?? ''} />
                 </View>

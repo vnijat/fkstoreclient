@@ -287,7 +287,6 @@ const AddOrderCntainer = ({}: IAddOrderContainer) => {
                     <>
                         {orderStatus.inProgress && <View style={style.searchContainer}>
                             <SearchItemContainer searchQueryFunction={searchQueryFunction} getSelectedItem={hanldeItemSelection} />
-                            {/* <ItemsForOrderSearch selectedProject={selectedProject} /> */}
                         </View>}
                         <View style={style.orderContentContainer}>
                             <View style={style.orderListHeaderContainer}>

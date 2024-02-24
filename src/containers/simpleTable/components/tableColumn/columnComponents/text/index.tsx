@@ -1,4 +1,4 @@
-import { Text, View } from "react-native-windows";
+import {View, Text} from "react-native";
 import { Colors } from "../../../../../../utils/colors";
 import FONT from "../../../../../../utils/font";
 

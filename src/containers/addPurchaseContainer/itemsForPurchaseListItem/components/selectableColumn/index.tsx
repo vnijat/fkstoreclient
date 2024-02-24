@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { View } from "react-native-windows";
+import { View } from "react-native";
 import { Colors } from "../../../../../utils/colors";
 import CustomPicker, { IsingelSelectData } from "../../../../customPicker";
 import { getStyle } from "./style";

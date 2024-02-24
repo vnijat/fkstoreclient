@@ -57,7 +57,6 @@ const WareHouseView: FC<any> = ({ navigation }) => {
             {renderSearchContainer}
           </View>
           <View style={style.listTable}>
-            {/* {renderListTable} */}
             <SimpleTable
               tableData={queryData?.items!}
               tableDataConfig={wareHouseTableConfigs}

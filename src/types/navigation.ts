@@ -8,6 +8,7 @@ type RootStackParamList = {
   [RouteNames.PURCHASES]: undefined;
   [RouteNames.WAREHOUSE]: undefined;
   [RouteNames.TRACKVIEW]: undefined;
+  [RouteNames.TRANSFERS]: undefined;
 };
 
 

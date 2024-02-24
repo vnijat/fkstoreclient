@@ -1,5 +1,5 @@
 import React, {useMemo} from "react";
-import {View} from "react-native-windows";
+import {View} from "react-native";
 import {InputItem} from "../../../../components/inputItem";
 import MulitDateTimePicker from "../../../../containers/dateTimePickerMulti";
 import InventoryTrackDataProvider from "../../provider/data";

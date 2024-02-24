@@ -1,6 +1,5 @@
 import React, {useMemo} from "react";
-import {View} from "react-native";
-import {Text} from "react-native-windows";
+import {View, Text} from "react-native";
 import CustomContextMenu from "../../../components/customContextMenu";
 import CustomPressable from "../../../components/customPressable";
 import {InputItem} from "../../../components/inputItem/index.windows";

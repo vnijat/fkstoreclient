@@ -3,7 +3,6 @@ import {combineReducers, configureStore, Store} from '@reduxjs/toolkit';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {FLUSH, PAUSE, PERSIST, PersistConfig, persistReducer, persistStore, PURGE, REGISTER, REHYDRATE} from 'redux-persist';
 import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
-import {setupListeners} from '@reduxjs/toolkit/dist/query';
 import {InventoryApi} from '../api/apiSlice';
 import appStateSlicer from './appStateSlicer';
 import warehouseFiltersSlicer from './wareHouseFiltersSlicer';
@@ -17,6 +16,7 @@ import tableConfigsSlicer from './tableConfigs';
 import inventorySlicer from './inventorySlicer';
 import itemsSlicer from './itemsSlicer';
 import userSlicer from './userSlicer';
+import {setupListeners} from '@reduxjs/toolkit/query';
 
 
 const persistConfig: PersistConfig<any> = {

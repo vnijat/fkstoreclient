@@ -1,25 +1,23 @@
-import {createNavigationContainerRef, NavigationProp, useNavigation} from '@react-navigation/native';
+import {createNavigationContainerRef} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import React, {FC, useEffect, useMemo, useState} from 'react';
 import SideBar from '../../containers/customDrawer';
-import CustomDrawer from '../../containers/customDrawer';
-import SettingsAddEditModal from '../../containers/settingsAddEditModal/index.windows';
 import {RouteNames} from '../../enums/routes';
 import {RootStackParamList} from '../../types/navigation';
-import {ClientsView} from '../../views/clientsView';
-import InventoryTrackView from '../../views/inventoryTrackView';
-import {OrderView} from '../../views/orderView';
-import ProjectsView from '../../views/projectsView';
-import PurchaseView from '../../views/purchaseView';
-import WareHouseView from '../../views/warehouseView';
-import AddEditItemModal from '../../views/warehouseView/components/addEditItemModal';
 import {useSelector} from 'react-redux';
 import {RootState} from '../redux/store';
 import LoginView from '../../views/loginView';
 import HeaderComponent from './components/headerComponent';
-import HELP from '../../services/helpers';
+import WareHouseView from '../../views/warehouseView';
+import {View} from 'react-native';
 import {Role} from '../../enums/userRole';
+import ProjectsView from '../../views/projectsView';
+import {OrderView} from '../../views/orderView';
+import PurchaseView from '../../views/purchaseView';
+import InventoryTrackView from '../../views/inventoryTrackView';
 import InventoryTransfersView from '../../views/inventoryTransfersView';
+import HELP from '../../services/helpers';
+
 
 
 export const navigationRef = createNavigationContainerRef();
@@ -28,7 +26,7 @@ const Stack = createStackNavigator<RootStackParamList>();
 export const RootNavigation: FC<any> = () => {
   const user = useSelector((state: RootState) => state.user.user);
   const [event, setEvent] = useState();
-  console.log("user:>>", user);
+
   navigationRef.addListener('state', (ev) => setEvent(ev));
   const renderSideBar = useMemo(() => {
     if (user && navigationRef?.isReady() && navigationRef.getRootState()) {
@@ -44,7 +42,7 @@ export const RootNavigation: FC<any> = () => {
 
 
   return (
-    <>
+    <View style={{flexDirection: 'column', flex: 1}}>
       <HeaderComponent />
       {renderSideBar}
       <Stack.Navigator screenOptions={{
@@ -67,9 +65,9 @@ export const RootNavigation: FC<any> = () => {
           </>
         }
       </Stack.Navigator >
-      <AddEditItemModal />
-      <SettingsAddEditModal />
-    </>
+      {/* <AddEditItemModal /> */}
+      {/* <SettingsAddEditModal /> */}
+    </View>
 
   );
 };

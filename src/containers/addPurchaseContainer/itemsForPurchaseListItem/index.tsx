@@ -1,18 +1,17 @@
-import React, { useMemo } from "react";
-import { View } from "react-native";
-import { Text } from "react-native-windows";
+import React, {useMemo} from "react";
+import {View, Text} from "react-native";
 import CustomContextMenu from "../../../components/customContextMenu";
 import CustomPressable from "../../../components/customPressable";
-import { PaymentMethod } from "../../../enums/purchase";
-import { deleteItemFromPurchase, updateItemForPurchase } from "../../../modules/redux/purchaseSlicer";
-import { useAppDispatch } from "../../../modules/redux/store";
-import { ItemOptionForInputs } from "../../../types/item";
-import { PurchaseItem } from "../../../types/purchase";
-import { Colors } from "../../../utils/colors";
+import {PaymentMethod} from "../../../enums/purchase";
+import {deleteItemFromPurchase, updateItemForPurchase} from "../../../modules/redux/purchaseSlicer";
+import {useAppDispatch} from "../../../modules/redux/store";
+import {ItemOptionForInputs} from "../../../types/item";
+import {PurchaseItem} from "../../../types/purchase";
+import {Colors} from "../../../utils/colors";
 import EditableColumn from "./components/editableColumn";
 import SelectableColumn from "./components/selectableColumn";
 import StaticColumn from "./components/staticColumn";
-import { getStyle } from "./style";
+import {getStyle} from "./style";
 
 
 interface IItemsForPurchaseListItem {
@@ -25,7 +24,7 @@ interface IrowData {
     value: any;
     editable?: boolean;
     selectable?: boolean;
-    selectableData?: { value: string | number, label: string; }[];
+    selectableData?: {value: string | number, label: string;}[];
     searchEnabled?: boolean;
     dtoKey?: string;
     isDeselectEnabled?: boolean;
@@ -35,11 +34,11 @@ interface IrowData {
 }
 
 
-const ItemsForPurchaseListItem = ({ purchaseItem, index, suppliersData }: IItemsForPurchaseListItem) => {
+const ItemsForPurchaseListItem = ({purchaseItem, index, suppliersData}: IItemsForPurchaseListItem) => {
     const style = useMemo(() => getStyle(), []);
     const dispatch = useAppDispatch();
-    const selectableSuppliersData = useMemo(() => suppliersData.map((data) => ({ value: data.id, label: data.label })) as { value: string | number, label: string; }[], [suppliersData.length]);
-    const paymentMethodData = useMemo(() => Object.keys(PaymentMethod).map((payment) => ({ value: PaymentMethod[payment as keyof typeof PaymentMethod], label: payment })), []);
+    const selectableSuppliersData = useMemo(() => suppliersData.map((data) => ({value: data.id, label: data.label})) as {value: string | number, label: string;}[], [suppliersData.length]);
+    const paymentMethodData = useMemo(() => Object.keys(PaymentMethod).map((payment) => ({value: PaymentMethod[payment as keyof typeof PaymentMethod], label: payment})), []);
     const {
         fullfilled,
         supplier,
@@ -55,29 +54,29 @@ const ItemsForPurchaseListItem = ({ purchaseItem, index, suppliersData }: IItems
         store
     } = purchaseItem;
     const rowData: IrowData[] = useMemo(() => [
-        { value: (1 + (index ?? 0)), },
-        { value: store?.name },
-        { value: (fullfilled && supplier) ? supplier.name : supplierId, selectable: !fullfilled, selectableData: selectableSuppliersData, searchEnabled: true, dtoKey: 'supplierId' },
-        { value: paymentMethod, selectable: !fullfilled, selectableData: paymentMethodData, dtoKey: 'paymentMethod' },
-        { value: poInfo, editable: true, disabled: fullfilled, dtoKey: 'poInfo' },
-        { value: name },
-        { value: barcode },
-        { value: unit },
-        { value: Number(pricePerUnit), editable: true, dtoKey: 'pricePerUnit', isNumeric: true, disabled: fullfilled },
-        { value: fullfilled ? { true: 'Price Updated', false: 'Price Not Updated' }[`${updateMainPrice}`] : updateMainPrice, isCheckBox: true, editable: !fullfilled, dtoKey: 'updateMainPrice' },
-        { value: Number(quantity), editable: true, dtoKey: 'quantity', isNumeric: true, disabled: fullfilled },
+        {value: (1 + (index ?? 0)), },
+        {value: store?.name},
+        {value: (fullfilled && supplier) ? supplier.name : supplierId, selectable: !fullfilled, selectableData: selectableSuppliersData, searchEnabled: true, dtoKey: 'supplierId'},
+        {value: paymentMethod, selectable: !fullfilled, selectableData: paymentMethodData, dtoKey: 'paymentMethod'},
+        {value: poInfo, editable: true, disabled: fullfilled, dtoKey: 'poInfo'},
+        {value: name},
+        {value: barcode},
+        {value: unit},
+        {value: Number(pricePerUnit), editable: true, dtoKey: 'pricePerUnit', isNumeric: true, disabled: fullfilled},
+        {value: fullfilled ? {true: 'Price Updated', false: 'Price Not Updated'}[`${updateMainPrice}`] : updateMainPrice, isCheckBox: true, editable: !fullfilled, dtoKey: 'updateMainPrice'},
+        {value: Number(quantity), editable: true, dtoKey: 'quantity', isNumeric: true, disabled: fullfilled},
     ], [quantity, fullfilled, pricePerUnit, supplierId, paymentMethod, poInfo, updateMainPrice]);
 
     const handleOnChangeEditableColumn = (inputValue: string | boolean, dtoKey: string) => {
         const value = (typeof inputValue === 'string' && inputValue !== '' && !isNaN(Number(inputValue))) ? Number(inputValue) : inputValue;
-        dispatch(updateItemForPurchase({ itemId: purchaseItem.itemId, data: { [dtoKey]: value } }));
+        dispatch(updateItemForPurchase({itemId: purchaseItem.itemId, data: {[dtoKey]: value}}));
     };
 
     const handleDeleteItemForPurchase = () => {
         if (purchaseItem.fullfilled) {
             return;
         }
-        dispatch(deleteItemFromPurchase({ itemId: purchaseItem.itemId }));
+        dispatch(deleteItemFromPurchase({itemId: purchaseItem.itemId}));
     };
 
     const contextActionButtons = [
@@ -109,7 +108,7 @@ const ItemsForPurchaseListItem = ({ purchaseItem, index, suppliersData }: IItems
     }, [purchaseItem]);
 
     const getSelectedValue = (value: string, dtoKey: string) => {
-        dispatch(updateItemForPurchase({ itemId: purchaseItem.itemId, data: { [dtoKey]: value } }));
+        dispatch(updateItemForPurchase({itemId: purchaseItem.itemId, data: {[dtoKey]: value}}));
     };
 
     const renderColumns = useMemo(() => {

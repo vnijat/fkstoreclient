@@ -14,18 +14,10 @@ import {Toast} from "react-native-toast-notifications";
 import {IToastData} from "../components/customToastComponent";
 import {Role} from "../enums/userRole";
 import store, {RootState} from "../modules/redux/store";
-var Sound;
-
-const isMobile = Platform.OS === 'ios' || Platform.OS === 'android';
-
-if (isMobile) {
-    Sound = require('react-native-sound');
-}
 
 countries.registerLocale(require('i18n-iso-countries/langs/en.json'));
 countries.registerLocale(require('i18n-iso-countries/langs/az.json'));
 const countryobjects = countries.getNames('en', {select: 'official'});
-const scanSignal = isMobile ? new Sound('scan.mp3', Sound.MAIN_BUNDLE) : null;
 
 const modifieErrorMessage = (error: any) => {
     return error.data.message.reduce((errorObject: {[key: string]: string[];}, message: string,) => {
@@ -81,10 +73,6 @@ const alertPromise = (title: string, message: string) => {
 };
 
 
-const playScanSound = () => {
-    if (scanSignal) scanSignal.play();
-};
-
 const getSlicesForPaginationPage = (currentPage: number, pageCount: number, show?: number) => {
     const maxToshow = show || 5;
     let diffFromMax = 2;
@@ -100,7 +88,6 @@ const getSlicesForPaginationPage = (currentPage: number, pageCount: number, show
 
     return {sliceStart, sliceEnd};
 };
-
 
 
 const getNestedCategoriesIds = (tree: IMultipleSelectData[]) => {
@@ -198,7 +185,7 @@ const getProjectStatusIcons = (status: ProjectStatus, size?: number, color?: str
 
 const alertError = (error?: {status: string, data: {message: string | string[];};}, title?: string, message?: string) => {
     const errorTitle = title || `Conflict Status Code  ${error?.status}` || '';
-    const dataMessage = Array.isArray(error?.data.message) ? error?.data.message.join('*\n') : error?.data.message;
+    const dataMessage = Array.isArray(error?.data?.message) ? error?.data?.message.join('*\n') : error?.data?.message;
     const errorMessage = message || dataMessage || '';
     showToast('warning', errorMessage, errorTitle, 5000);
 };
@@ -259,7 +246,6 @@ const HELP = {
     modifyTextForLangSelect,
     getUTCAddTZ,
     getUTCSubTZ,
-    playScanSound,
     hasPermission
 };
 

@@ -1,5 +1,5 @@
 import React, {memo, useEffect, useMemo, useRef, useState} from "react";
-import {Text, TextInput, View, ActivityIndicator, Pressable, ScrollView, Modal, Modal} from "react-native";
+import {Text, TextInput, View, ActivityIndicator, Pressable, ScrollView, Modal} from "react-native";
 import {useGetItemCodeSuggestionsQuery} from "../../modules/api/apiSlice";
 import {Colors} from "../../utils/colors";
 import {regExPatterns} from "../../utils/validation";

@@ -29,8 +29,8 @@ const babelLoaderConfiguration = {
     options: {
       cacheDirectory: true,
       // Presets and plugins imported from main babel.config.js in root dir
-      presets: babelConfig.presets,
-      plugins: ['react-native-web', ...(babelConfig.plugins || [])],
+      presets: [...babelConfig.presets, "@babel/preset-react"],
+      plugins: ['react-native-web', ...(babelConfig.plugins || []), '@babel/plugin-transform-runtime'],
     },
   },
 };

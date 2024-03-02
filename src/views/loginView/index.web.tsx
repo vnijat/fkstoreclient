@@ -150,7 +150,7 @@ const LoginView = () => {
         <View style={style.container} >
             <View style={style.logoContainer}>
                 <View style={style.logoBox}>
-                    <Image source={{uri: require('../../assets/logo/LOGO.svg')}} resizeMode={'contain'} style={{height: 80, width: 80}} />
+                    <Image source={{uri: '../../assets/logo/LOGO.svg'}} resizeMode={'contain'} style={{height: 80, width: 80}} />
                 </View>
             </View>
             <View style={style.inputsContainer}>

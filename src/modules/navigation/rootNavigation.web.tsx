@@ -5,7 +5,6 @@ import SideBar from '../../containers/customDrawer';
 import {RouteNames} from '../../enums/routes';
 import {RootStackParamList} from '../../types/navigation';
 import {useSelector} from 'react-redux';
-import {RootState} from '../redux/store';
 import LoginView from '../../views/loginView';
 import HeaderComponent from './components/headerComponent';
 import WareHouseView from '../../views/warehouseView';
@@ -17,6 +16,7 @@ import PurchaseView from '../../views/purchaseView';
 import InventoryTrackView from '../../views/inventoryTrackView';
 import InventoryTransfersView from '../../views/inventoryTransfersView';
 import HELP from '../../services/helpers';
+import {RootState} from '../redux/store';
 
 
 

@@ -21,7 +21,7 @@ const SideBar: FC<ISideBar> = ({navigation, currentRoute, routeNames}) => {
                 <NavigationRoutes navigation={navigation} currentRoute={currentRoute} routeNames={routeNames} />
             </View>
             <View style={style.bottomContainer}>
-                <Image source={require('../../assets/logo/LOGO.svg')} resizeMode={'center'} style={{height: 60, width: 60}} />
+                <Image source={{uri:"../../assets/logo/LOGO.svg"}} resizeMode={'center'} style={{height: 60, width: 60}} />
             </View>
         </View >
     );

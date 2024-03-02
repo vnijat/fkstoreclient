@@ -1,7 +1,6 @@
 import {memo, useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {Text, View, ActivityIndicator, Alert, FlatList, useWindowDimensions} from "react-native";
 import {shallowEqual, useSelector} from "react-redux";
-import {InputItem} from "../../components/inputItem/index.windows";
 import {PrimaryButton} from "../../components/primaryButton";
 import {OrderItemStatus} from "../../enums/orderItemStatus";
 import {OrderStatus} from "../../enums/orderStatus";
@@ -25,6 +24,7 @@ import CustomPressable from "../../components/customPressable";
 import Icon from "react-native-vector-icons/Entypo";
 import SearchItemContainer from "../searchItemContainer";
 import {Item} from "../../types/item";
+import {InputItem} from "../../components/inputItem";
 
 
 

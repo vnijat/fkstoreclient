@@ -1,5 +1,5 @@
 import {memo, useMemo} from "react";
-import {View} from "react-native-windows";
+import {View} from "react-native";
 import {useSelector} from "react-redux";
 import CustomModal from "../../../../components/customModal";
 import ClientCard from "../../../../containers/clientCard";

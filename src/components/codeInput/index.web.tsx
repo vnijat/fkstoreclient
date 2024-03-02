@@ -1,6 +1,5 @@
 import React, {memo, useEffect, useMemo, useRef, useState} from "react";
-import {Text, TextInput, View, ActivityIndicator, Pressable, ScrollView} from "react-native";
-import {Flyout} from "react-native-windows";
+import {Text, TextInput, View, ActivityIndicator, Pressable, ScrollView, Modal, Modal} from "react-native";
 import {useGetItemCodeSuggestionsQuery} from "../../modules/api/apiSlice";
 import {Colors} from "../../utils/colors";
 import {regExPatterns} from "../../utils/validation";
@@ -98,7 +97,6 @@ const CodeInput = ({inputValue, maxLength, width, height, categoryId, errorDetai
                 </Text>
             }
             <View style={style.codeInputContainer}
-                ref={inputRef}
             >
                 <TextInput
                     value={inputValue}
@@ -111,13 +109,9 @@ const CodeInput = ({inputValue, maxLength, width, height, categoryId, errorDetai
                     placeholderTextColor={isDisabled ? Colors.DEFAULT_TEXT_COLOR : undefined}
                 />
             </View>
-            <Flyout
-                target={inputRef.current}
-                placement={'bottom'}
-                isOpen={isOpenSuggested}
+            <Modal
+                visible={isOpenSuggested}
                 onDismiss={onDissmisSuggested}
-                showMode={'transient'}
-
             >
                 <View style={style.codeSuggestionContent}>
                     {(isUninitialized || isLoading)
@@ -144,7 +138,7 @@ const CodeInput = ({inputValue, maxLength, width, height, categoryId, errorDetai
                         </ScrollView>
                     }
                 </View>
-            </Flyout >
+            </Modal >
         </View >
     );
 

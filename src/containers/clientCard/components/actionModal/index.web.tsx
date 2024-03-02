@@ -1,7 +1,6 @@
 import React, {memo, useRef, useState} from "react";
-import {View} from 'react-native';
-import {Flyout} from "react-native-windows";
 import CustomPressable from "../../../../components/customPressable";
+import {Modal} from "react-native";
 
 interface IActionModal {
     children?: React.ReactNode;
@@ -11,7 +10,6 @@ interface IActionModal {
 
 
 const ActionModal = ({children, pressableComponent}: IActionModal) => {
-    const ref = useRef(null);
     const [isOpen, setIsOpen] = useState(false);
 
     const onPressButton = () => {
@@ -21,22 +19,19 @@ const ActionModal = ({children, pressableComponent}: IActionModal) => {
 
     return (
         <>
-            <CustomPressable ref={ref}
+            <CustomPressable
                 onPress={onPressButton}
                 onHoverOpacity
                 style={{justifyContent: 'center', padding: 1}}
             >
                 {pressableComponent}
             </CustomPressable>
-            <Flyout
-                isOpen={isOpen}
-                target={ref.current}
-                placement={'bottom-edge-aligned-right'}
-                showMode={'transient-with-dismiss-on-pointer-move-away'}
+            <Modal
+                visible={isOpen}
                 onDismiss={() => setIsOpen(false)}
             >
                 {children}
-            </Flyout>
+            </Modal>
         </>
 
     );

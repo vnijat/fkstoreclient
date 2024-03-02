@@ -9,6 +9,11 @@ module.exports = {
             platforms: {
                 windows: null
             },
+        },
+        "react-native-svg": {
+            platforms: {
+                windows: null
+            }
         }
     }
 };

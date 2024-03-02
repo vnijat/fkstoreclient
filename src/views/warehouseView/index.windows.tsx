@@ -1,8 +1,5 @@
 import React, { FC, useEffect, useMemo, useState } from 'react';
 import { View } from 'react-native';
-import { shallowEqual, useSelector } from 'react-redux';
-import CustomModal from '../../components/customModal';
-import CustomPressable from '../../components/customPressable';
 import PaginationContainer from '../../containers/paginationContainer';
 import SimpleTable from '../../containers/simpleTable';
 import { IContextMenuButton, } from '../../containers/simpleTable/types';

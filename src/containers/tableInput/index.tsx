@@ -1,7 +1,6 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
-import {Text, TextInput, View} from "react-native";
+import {Text, TextInput, View, ScrollView} from "react-native";
 import Icon from "react-native-vector-icons/Entypo";
-import {ScrollView} from "react-native-windows";
 import CustomPressable from "../../components/customPressable";
 import HELP from "../../services/helpers";
 import {Colors} from "../../utils/colors";

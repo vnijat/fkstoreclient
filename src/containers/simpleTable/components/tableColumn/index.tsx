@@ -1,5 +1,4 @@
 import React, { useMemo } from "react";
-import { Text, View } from "react-native-windows";
 import { Colors } from "../../../../utils/colors";
 import { ITableDataTypes } from "../../types";
 import DateColumn from "./columnComponents/date";
@@ -7,6 +6,7 @@ import MoneyColumn from "./columnComponents/money";
 import NumericColumn from "./columnComponents/numeric";
 import TextColumn from "./columnComponents/text";
 import { getStyle } from "./style";
+import {View} from "react-native";
 
 interface ITableColumn {
     value: any;

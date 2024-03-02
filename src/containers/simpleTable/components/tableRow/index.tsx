@@ -1,5 +1,4 @@
 import {ElementType, useMemo} from "react";
-import {View} from "react-native-windows";
 import CustomContextMenu from "../../../../components/customContextMenu";
 import CustomPressable from "../../../../components/customPressable";
 import {Colors} from "../../../../utils/colors";
@@ -8,6 +7,7 @@ import TableContextMenuContent from "../contextMenuContent";
 import TableColumn from "../tableColumn";
 import {getStyle} from "./styles";
 import HELP from "../../../../services/helpers";
+import {View} from "react-native";
 
 
 

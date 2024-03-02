@@ -1,11 +1,11 @@
 import React, {useMemo} from "react";
-import {Text, View} from "react-native-windows";
 import UseLanguage from "../../../../modules/lozalization/useLanguage.hook";
 import HELP from "../../../../services/helpers";
 import {Colors} from "../../../../utils/colors";
 import FONT from "../../../../utils/font";
 import {ITableDataConfig, ITableRowData} from "../../types";
 import {getStyle} from "./styles";
+import {Text, View} from "react-native";
 
 
 

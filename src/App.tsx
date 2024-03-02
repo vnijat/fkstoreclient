@@ -4,7 +4,7 @@ import React, {FC} from 'react';
 import {RootNavigation, navigationRef} from './modules/navigation/rootNavigation';
 import {LogBox, View} from "react-native";
 import {Provider, } from 'react-redux';
-import {persistor, store} from './modules/redux/store';
+import store, {persistor} from './modules/redux/store';
 import {PersistGate} from 'redux-persist/integration/react';
 import {ToastProvider} from 'react-native-toast-notifications';
 import CustomToastComponent, {IToastOptions} from './components/customToastComponent';

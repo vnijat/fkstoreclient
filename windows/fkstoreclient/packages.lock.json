@@ -40,7 +40,10 @@
         }
       },
       "common": {
-        "type": "Project"
+        "type": "Project",
+        "dependencies": {
+          "boost": "[1.76.0, )"
+        }
       },
       "datetimepickerwindows": {
         "type": "Project",

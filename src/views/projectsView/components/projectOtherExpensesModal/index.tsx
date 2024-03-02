@@ -1,15 +1,9 @@
 import { useMemo } from "react";
-import { ActivityIndicator, Text, View } from "react-native";
-import { useSelector } from "react-redux";
+import {  View } from "react-native";
 import CustomModal from "../../../../components/customModal";
 import customModal from "../../../../components/customModal";
 import SimpleTable from "../../../../containers/simpleTable";
 import { ITableDataConfig } from "../../../../containers/simpleTable/types";
-import TableInput from "../../../../containers/tableInput";
-import { ITableConfig, RowDataType } from "../../../../containers/tableInput/types";
-import { useGetProjectOrdersQuery } from "../../../../modules/api/projects.api";
-import { setIsShowProjectOrdersModal } from "../../../../modules/redux/projectSlicer";
-import { RootState, useAppDispatch } from "../../../../modules/redux/store";
 import { OtherExpensesType, Project } from "../../../../types/project";
 import { OrderItem } from "../../../../types/projectOrder";
 import { Colors } from "../../../../utils/colors";

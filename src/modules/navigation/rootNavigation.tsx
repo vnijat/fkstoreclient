@@ -1,4 +1,3 @@
-import {createStackNavigator} from '@react-navigation/stack';
 import React, {FC} from 'react';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {RouteNames} from '../../enums/routes';
@@ -9,12 +8,12 @@ import {Colors} from '../../utils/colors';
 import HeaderLeft from './components/headerLeft';
 import {DrawerNavigation} from './drawerNavigation';
 import {createNavigationContainerRef} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
 
 export const navigationRef = createNavigationContainerRef();
-
+const Stack = createStackNavigator<RootStackMobileParamList>();
 
 export const RootNavigation: FC<any> = () => {
-  const Stack = createStackNavigator<RootStackMobileParamList>();
   return (
     <GestureHandlerRootView style={{flex: 1}}>
       <Stack.Navigator initialRouteName={RouteNames.DRAWER}

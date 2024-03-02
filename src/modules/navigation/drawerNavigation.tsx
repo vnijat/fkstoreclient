@@ -1,4 +1,3 @@
-import { createDrawerNavigator } from '@react-navigation/drawer';
 import React, { FC } from 'react';
 import { Pressable, StatusBar } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
@@ -9,9 +8,11 @@ import { DrawerStackMobileParamlist } from '../../types/navigation';
 import { Colors } from '../../utils/colors';
 import { BottomTabNavigator } from './bottomTabNavigator';
 import DrawerScreenOptions from './configs/drawerScreenOptions';
+import {createDrawerNavigator} from '@react-navigation/drawer';
+
+const Drawer = createDrawerNavigator<DrawerStackMobileParamlist>();
 
 export const DrawerNavigation = ({ }) => {
-    const Drawer = createDrawerNavigator<DrawerStackMobileParamlist>();
     return (
         <>
             <StatusBar backgroundColor={Colors.CARD_COLOR} />

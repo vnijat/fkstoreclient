@@ -1,7 +1,5 @@
 import React, { FC, useEffect, useMemo, useState } from 'react';
-import { useCallback } from 'react';
 import { View } from 'react-native';
-import { Text } from 'react-native-windows';
 import { shallowEqual, useSelector } from 'react-redux';
 import CustomModal from '../../components/customModal';
 import CustomPressable from '../../components/customPressable';

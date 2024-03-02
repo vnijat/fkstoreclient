@@ -70,7 +70,7 @@ function WareHouseLogicProvider() {
     function onPressEdit(data: Item) {
         const {properties, ...rest} = data;
         const itemForPost = HELP.modifyItemForEdit(rest, rest.id);
-        const productProperties = properties ?? ItemForPostDefaults.properties;
+        // const productProperties = properties ?? ItemForPostDefaults.properties;
         dispatch(setIsItemForEdit(true));
         dispatch(setItemForPost({...itemForPost, properties: productProperties}));
         dispatch(setIsShowAddEditModal(true));

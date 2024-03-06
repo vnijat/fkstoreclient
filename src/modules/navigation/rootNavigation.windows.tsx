@@ -28,7 +28,7 @@ const Stack = createStackNavigator<RootStackParamList>();
 export const RootNavigation: FC<any> = () => {
   const user = useSelector((state: RootState) => state.user.user);
   const [event, setEvent] = useState();
-  console.log("user:>>", user);
+
   navigationRef.addListener('state', (ev) => setEvent(ev));
   const renderSideBar = useMemo(() => {
     if (user && navigationRef?.isReady() && navigationRef.getRootState()) {
@@ -42,7 +42,7 @@ export const RootNavigation: FC<any> = () => {
   }, [event, user]);
 
 
-
+  console.log("user==>>", user);
   return (
     <>
       <HeaderComponent />

@@ -17,6 +17,7 @@ import InventoryTrackView from '../../views/inventoryTrackView';
 import InventoryTransfersView from '../../views/inventoryTransfersView';
 import HELP from '../../services/helpers';
 import {RootState} from '../redux/store';
+import {ClientsView} from '../../views/clientsView';
 
 
 

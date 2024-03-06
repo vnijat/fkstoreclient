@@ -3,8 +3,6 @@ import {combineReducers, configureStore, Store} from '@reduxjs/toolkit';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {FLUSH, PAUSE, PERSIST, PersistConfig, persistReducer, persistStore, PURGE, REGISTER, REHYDRATE} from 'redux-persist';
 import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
-import {setupListeners} from '@reduxjs/toolkit/dist/query';
-import {InventoryApi} from '../api/apiSlice';
 import appStateSlicer from './appStateSlicer';
 import warehouseFiltersSlicer from './wareHouseFiltersSlicer';
 import itemOptions from './itemOptions';
@@ -17,6 +15,7 @@ import tableConfigsSlicer from './tableConfigs';
 import inventorySlicer from './inventorySlicer';
 import itemsSlicer from './itemsSlicer';
 import userSlicer from './userSlicer';
+import {InventoryApi} from '../api/apiSlice';
 
 
 const persistConfig: PersistConfig<any> = {
@@ -50,7 +49,6 @@ const rootReducer = combineReducers(
 );
 
 const persistedReducer = persistReducer<any, any>(persistConfig, rootReducer);
-
 export const store = configureStore({
     reducer: persistedReducer,
     middleware: (getDefaultMiddleware) =>
@@ -59,14 +57,12 @@ export const store = configureStore({
                 ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER,],
                 warnAfter: 150,
             },
-
         }).concat(InventoryApi.middleware),
 });
 
 export type RootState = ReturnType<typeof rootReducer>;
 export type AppDispatch = typeof store.dispatch;
 export const useAppDispatch = () => useDispatch<AppDispatch>();
-setupListeners(store.dispatch);
 
 
 export const persistor = persistStore(store);

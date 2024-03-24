@@ -14,6 +14,7 @@ import {Toast} from "react-native-toast-notifications";
 import {IToastData} from "../components/customToastComponent";
 import {Role} from "../enums/userRole";
 import store, {RootState} from "../modules/redux/store";
+import axios from "axios";
 var Sound;
 if (Platform.OS !== 'windows') {
     Sound = require('react-native-sound');
@@ -37,6 +38,27 @@ const modifieErrorMessage = (error: any) => {
         return errorObject;
     }, {});
 };
+
+
+
+
+const getProviderIP = async () => {
+    try {
+
+        const response = await axios.get('https://api.ipify.org');
+        console.log("getProviderIP=>", response.data);
+    } catch (e) {
+        showToast('warning', 'Could not get your IP address');
+    }
+};
+
+
+const checkAndHandleServerApiAdress = async () => {
+    const providerIpAdress = await getProviderIP();
+    // console.log("providerIpAdress=>", providerIpAdress);
+};
+
+
 
 
 
@@ -146,19 +168,20 @@ const getNestedCategoriesForSelect = (tree: IMultipleSelectData[]) => {
 
 };
 
-
-const flatNestedCategories = (tree: IMultipleSelectData[] | IsingelSelectData[]) => {
+type TreeType = IMultipleSelectData & IsingelSelectData & {hasNested: boolean;};
+const flatNestedCategories = (tree: TreeType[]): TreeType[] => {
+    if (!tree) return [];
     return tree?.reduce((acc, curr) => {
         const {nested, ...rest} = curr;
         if (nested?.length) {
             acc = acc.concat(flatNestedCategories(nested));
         }
-        acc.push({...rest, hasNested: nested?.length});
+        acc.push({...rest, hasNested: !!nested?.length});
         return acc;
-    }, [] as IMultipleSelectData[] | IsingelSelectData[]);
+    }, [] as TreeType[]);
 };
 
-const mapNestedForPicker = (tree: IsingelSelectData[]): IsingelSelectData[] => {
+const mapNestedForPicker = (tree: TreeType[]): TreeType[] => {
     return tree?.map((data) => ({label: data?.label, value: data.id ? data.id : data.value, nested: mapNestedForPicker(data?.nested!)}));
 };
 
@@ -195,15 +218,18 @@ const getProjectStatusIcons = (status: ProjectStatus, size?: number, color?: str
 
 const alertError = (error?: {status: string, data: {message: string | string[];};}, title?: string, message?: string) => {
     const errorTitle = title || `Conflict Status Code  ${error?.status}` || '';
-    const dataMessage = Array.isArray(error?.data.message) ? error?.data.message.join('*\n') : error?.data.message;
+    const dataMessage = Array.isArray(error?.data?.message) ? error?.data?.message.join('*\n') : error?.data?.message;
     const errorMessage = message || dataMessage || '';
     showToast('warning', errorMessage, errorTitle, 5000);
 };
 
-const showToast = (toastType: ToastVariants = 'normal', message: string, title?: string, duration?: number) => {
+const showToast = (toastType: ToastVariants = 'normal', message: string, title?: string, duration?: number, onClose?: () => void) => {
     const toastVariant = toastVariants.includes(toastType) ? toastType : 'normal';
     Toast.show('Custom Toast', {
         duration: duration || 3000,
+        onClose: () => {
+            onClose && onClose();
+        },
         data: {
             title: title,
             message: message,
@@ -257,7 +283,8 @@ const HELP = {
     getUTCAddTZ,
     getUTCSubTZ,
     playScanSound,
-    hasPermission
+    hasPermission,
+    checkAndHandleServerApiAdress
 };
 
 export default HELP;

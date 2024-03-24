@@ -1,33 +1,32 @@
-import React, { FC, useEffect, useMemo, useState } from 'react';
-import { View } from 'react-native';
-import { shallowEqual, useSelector } from 'react-redux';
+import React, {FC, useEffect, useMemo, useState} from 'react';
+import {shallowEqual, useSelector} from 'react-redux';
 import CustomModal from '../../components/customModal';
 import CustomPressable from '../../components/customPressable';
 import PaginationContainer from '../../containers/paginationContainer';
 import SimpleTable from '../../containers/simpleTable';
-import { IContextMenuButton, ITableDataConfig, ITableRowData } from '../../containers/simpleTable/types';
+import {IContextMenuButton, ITableDataConfig, ITableRowData} from '../../containers/simpleTable/types';
 import UseLanguage from '../../modules/lozalization/useLanguage.hook';
 import HELP from '../../services/helpers';
-import { Imeta } from '../../types/common/common';
-import { Item } from '../../types/item';
-import { Colors } from '../../utils/colors';
+import {Imeta} from '../../types/common/common';
+import {Item} from '../../types/item';
+import {Colors} from '../../utils/colors';
 import AddEditItemModal from './components/addEditItemModal';
-import ItemListTable from './components/itemList';
 import ItemModal from './components/itemModal';
 import SearchContainer from './components/search';
 import WareHouseDataProvider from './provider/data';
 import WareHouseLogicProvider from './provider/logic';
-import { getStyle } from './styles';
+import {getStyle} from './styles';
+import {View} from 'react-native';
 
-const WareHouseView: FC<any> = ({ navigation }) => {
+const WareHouseView: FC<any> = ({navigation}) => {
   const dataProvider = WareHouseDataProvider();
   const logicProvider = WareHouseLogicProvider();
   const lang = UseLanguage();
-  const { queryData: { data: queryData, isLoading },
+  const {queryData: {data: queryData, isLoading},
     wareHouseQueryFilterParams,
     wareHouseQueryParams,
     wareHouseTableConfigs, } = dataProvider;
-  const { paginationHandler,
+  const {paginationHandler,
     onPressRowItem,
     onPressEdit,
     onResetTable,
@@ -41,12 +40,12 @@ const WareHouseView: FC<any> = ({ navigation }) => {
   };
 
   const tableContextMenuButtons: IContextMenuButton<Item>[] = useMemo(() => [
-    { title: 'Edit', onPress: onPressEdit },
-    { title: 'Delete', onPress: onPressDeleteItem },
+    {title: 'Edit', onPress: onPressEdit},
+    {title: 'Delete', onPress: onPressDeleteItem},
   ], [lang]);
 
 
-  const renderSearchContainer = useMemo(() => <SearchContainer {...{ dataProvider, logicProvider }} />, [dataProvider, logicProvider]);
+  const renderSearchContainer = useMemo(() => <SearchContainer {...{dataProvider, logicProvider}} />, [dataProvider, logicProvider]);
 
   const renderFooter = useMemo(() => {
     return < PaginationContainer
@@ -54,10 +53,10 @@ const WareHouseView: FC<any> = ({ navigation }) => {
       paginationHandler={paginationHandler} />;
   }, [queryData?.meta]);
 
-
   return (
-    <View style={{ flex: 1, flexDirection: 'row' }}>
-      <View style={{ flex: 0.05 }} />
+    <View style={{flex: 1, flexDirection: 'row'}}
+    >
+      <View style={{flex: 0.05}} />
       <View style={style.container}>
         <ItemModal />
         <View style={style.listContainer}>

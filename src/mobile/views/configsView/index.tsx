@@ -1,14 +1,14 @@
-import { Picker } from "@react-native-picker/picker";
-import React, { useState } from "react";
-import { KeyboardAvoidingView, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { useSelector } from "react-redux";
-import { InputItem } from "../../../components/inputItem";
-import { PrimaryButton } from "../../../components/primaryButton";
-import { setApiURL, setLanguage } from "../../../modules/redux/configsSlicer";
-import { RootState, useAppDispatch } from "../../../modules/redux/store";
+import React, {useState} from "react";
+import {KeyboardAvoidingView, View} from "react-native";
+import {SafeAreaView} from "react-native-safe-area-context";
+import {useSelector} from "react-redux";
+import {InputItem} from "../../../components/inputItem";
+import {PrimaryButton} from "../../../components/primaryButton";
+import {setApiURL, setLanguage} from "../../../modules/redux/configsSlicer";
+import {RootState, useAppDispatch} from "../../../modules/redux/store";
 import HELP from "../../../services/helpers";
-import { Colors } from "../../../utils/colors";
+import {Colors} from "../../../utils/colors";
+import CustomCheckBox from "../../../components/customCheckBox";
 
 
 
@@ -34,35 +34,37 @@ const ConfigsView = () => {
     };
 
 
-    const langPickData: { label: string, value: any; }[] = [
-        { label: 'AZ', value: 'az-AZ' },
-        { label: 'RU', value: 'ru-RU' },
-        { label: 'EN', value: 'en-EN' }
+    const langPickData: {label: string, value: any;}[] = [
+        {label: 'AZ', value: 'az-AZ'},
+        {label: 'RU', value: 'ru-RU'},
+        {label: 'EN', value: 'en-EN'}
     ];
 
-    const handleLangChange = (value: any, index: number) => {
+    const handleLangChange = (value: any) => {
         setLang(value);
     };
 
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: Colors.CARD_COLOR }}>
+        <SafeAreaView style={{flex: 1, backgroundColor: Colors.CARD_COLOR}}>
             <KeyboardAvoidingView >
                 <InputItem
                     setValue={(value) => setApiValue(value as string)}
                     inputValue={value}
                     inputTitle={'SERVER URL'}
                     placeHolder={'SERVER URL WITH PORT'}
-                    height={30}
+                    height={40}
                 />
-                <Picker
-                    selectedValue={lang}
-                    onValueChange={handleLangChange}
-                >
-                    {langPickData.map((lang, index) => {
-                        return <Picker.Item key={`${lang.label}-${index}`} label={lang.label} value={lang.value} />;
-                    })}
-                </Picker>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-around', paddingHorizontal: 20, paddingTop: 20 }}>
+
+                <InputItem
+                    setValue={(value) => handleLangChange(value as 'en-EN' | 'ru-RU' | 'az-AZ')}
+                    height={40}
+                    inputValue={lang}
+                    inputTitle={'LANGUAGE'}
+                    selectable
+                    selectableData={langPickData}
+
+                />
+                <View style={{flexDirection: 'row', justifyContent: 'space-around', paddingHorizontal: 20, paddingTop: 20}}>
                     <PrimaryButton
                         onPress={onPressReset}
                         title={'RESET'}

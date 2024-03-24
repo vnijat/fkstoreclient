@@ -1,7 +1,9 @@
 import RNDateTimePicker, {DateTimePickerEvent} from "@react-native-community/datetimepicker";
-import {useEffect, useState} from "react";
-import {View} from "react-native";
+import {useEffect, useRef, useState} from "react";
+import {Pressable, Text, View} from "react-native";
 import {Colors} from "../../utils/colors";
+import CustomPressable from "../../components/customPressable";
+import Icon from "react-native-vector-icons/Entypo";
 
 
 
@@ -10,13 +12,13 @@ interface IDateTimePicker {
     getDate: (date: string) => void;
     height?: number;
     width?: number;
+    disabled?: boolean;
 }
 
 
-const DateTimePicker = ({dateValue, getDate, height, width}: IDateTimePicker) => {
+const DateTimePicker = ({dateValue, getDate, height, width, disabled}: IDateTimePicker) => {
     const [date, setDate] = useState(dateValue ? new Date(dateValue) : new Date());
-
-
+    const [showPicker, setShowPicker] = useState(false);
 
     useEffect(() => {
         setDate(dateValue ? new Date(dateValue) : new Date());
@@ -25,12 +27,28 @@ const DateTimePicker = ({dateValue, getDate, height, width}: IDateTimePicker) =>
     const onChangeDate = (event: DateTimePickerEvent, date?: Date) => {
         date && setDate(date);
         date && getDate(date.toISOString());
+        setShowPicker(false);
+    };
+
+
+    const handleOnPress = () => {
+        if (disabled) return;
+        setShowPicker(true);
     };
 
     return (
-        <View style={{backgroundColor: Colors.DEFAULT_TEXT_COLOR}}>
-            <RNDateTimePicker value={date} onChange={onChangeDate} style={{width: width || '100%', height}} />
-        </View>
+        <CustomPressable onPressOut={handleOnPress} style={{flexDirection: 'row', backgroundColor: Colors.CARD_HEADER_COLOR, width, height: height || 40, padding: 5, borderRadius: 3, justifyContent: 'space-between', alignItems: 'center'}}>
+            <Text style={{color: Colors.DEFAULT_TEXT_COLOR}}>
+                {date.toLocaleDateString()}
+            </Text>
+            <Icon name={'calendar'} size={20} color={Colors.DEFAULT_TEXT_COLOR} />
+
+            {showPicker && <RNDateTimePicker
+                mode={'date'}
+                value={date}
+                onChange={onChangeDate}
+            />}
+        </CustomPressable>
     );
 
 

@@ -7,6 +7,7 @@ import {RootState} from "../../../../modules/redux/store";
 function InventoryTransfersDataProvider() {
     const queryParams = useSelector((state: RootState) => state.inventorySlicer.inventoryTransfersParams);
     const tableConfig = useSelector((state: RootState) => state.tableConfigs.inventoryTransfers);
+    const isShowTransfersAddModal = useSelector((state: RootState) => state.inventorySlicer.isShowTransferAddModal);
     const {data: queryData, isLoading} = useGetTransfersDataQuery(queryParams, {
         selectFromResult: ({data, isLoading, isUninitialized, error}) => ({
             data,
@@ -21,7 +22,8 @@ function InventoryTransfersDataProvider() {
             isLoading
         },
         tableConfig,
-        queryParams
+        queryParams,
+        isShowTransfersAddModal
     };
 
 

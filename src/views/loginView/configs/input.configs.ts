@@ -49,6 +49,12 @@ const createUserInputs: LoginInputsConfig[] = [
         parentDtoKey: 'user',
     },
     {
+        dtoKey: 'masterCode',
+        placeHolder: 'Master Code',
+        isSecureText: true,
+        hintText: 'GET MASTER CODE FROM ADMINISTRATOR'
+    },
+    {
         dtoKey: 'role',
         placeHolder: 'Role',
         isSecureText: false,
@@ -65,12 +71,6 @@ const createUserInputs: LoginInputsConfig[] = [
         }
         ]
     },
-    {
-        dtoKey: 'masterCode',
-        placeHolder: 'Master Code',
-        isSecureText: true,
-        hintText: 'GET MASTER CODE FROM ADMINISTRATOR'
-    }
 
 ];
 

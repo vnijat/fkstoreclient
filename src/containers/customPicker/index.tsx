@@ -6,10 +6,10 @@ import {
     StyleProp,
     ViewStyle,
     Alert,
-    TextStyle
+    TextStyle,
+    Modal
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
-import {Flyout} from 'react-native-windows';
 import {Colors} from '../../utils/colors';
 import {getStyle} from './style';
 import {setIsOpenOptionModal, setOptionNameForModal} from "../../modules/redux/itemOptions";
@@ -23,6 +23,7 @@ import SingleSelectItem from './components/singleSelectItem';
 import {useAppDispatch} from '../../modules/redux/store';
 import {FilterParamskey} from '../../types/item';
 import UseLanguage from '../../modules/lozalization/useLanguage.hook';
+import CustomModal from '../../components/customModal';
 
 export interface IsingelSelectData {
     id?: number;
@@ -251,7 +252,8 @@ const CustomPicker = ({
                 <CustomPressable
                     style={[buttonStyle || style.button]}
                     ref={buttonRef}
-                    onPress={onPress}
+                    onPressIn={onPress}
+                    hitSlop={{top: 10, bottom: 10, left: 30, right: 10}}
                     key={title}
                     onHoverOpacity
                 >
@@ -263,12 +265,9 @@ const CustomPicker = ({
                     <Icon name="chevron-small-down" size={17} color={arrowDownColor || Colors.CARD_HEADER_COLOR} />
                 </CustomPressable>
             </View>
-            <Flyout
-                target={buttonRef.current}
-                placement={'bottom'}
-                isOpen={isShowContent}
-                onDismiss={onDismiss}
-                showMode={'transient-with-dismiss-on-pointer-move-away'}
+            {<CustomModal
+                isShowModal={isShowContent}
+                closeModal={() => setShowContent(false)}
             >
                 <View style={style.flyoutContent}>
                     {isDataSearchEnabled
@@ -300,7 +299,7 @@ const CustomPicker = ({
                     )}
                     {isAddButton && <PrimaryButton onPress={onPressAdd} title={lang['addNew'].toUpperCase()} textColor={Colors.DEFAULT_TEXT_COLOR} buttonColor={Colors.CARD_HEADER_COLOR} height={30} disabled={disablePickerActionButtons} />}
                 </View>
-            </Flyout>
+            </CustomModal>}
         </>
     );
 };

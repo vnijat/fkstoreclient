@@ -1,4 +1,4 @@
-import BottomSheet, {BottomSheetBackdrop, BottomSheetFlatList, BottomSheetScrollView, BottomSheetTextInput} from "@gorhom/bottom-sheet";
+import BottomSheet, {BottomSheetBackdrop, BottomSheetFlatList, BottomSheetScrollView, BottomSheetTextInput, BottomSheetView} from "@gorhom/bottom-sheet";
 import {format} from "date-fns";
 import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {FlatList, Text, View, ActivityIndicator, Keyboard, TextInput} from "react-native";
@@ -22,9 +22,10 @@ import {getStyle} from "./styles";
 import {BottomTabMobileStack, RootStackMobileParamList} from "../../../types/navigation";
 import {StackNavigationProp} from "@react-navigation/stack";
 import {RouteNames} from "../../../enums/routes";
+import {useIsFocused} from "@react-navigation/native";
 
 interface IOrdersViewMobile {
-    navigation: StackNavigationProp<BottomTabMobileStack>;
+    navigation: StackNavigationProp<RootStackMobileParamList & BottomTabMobileStack>;
 
 }
 
@@ -91,17 +92,18 @@ const OrdersViewMobile = ({navigation}: IOrdersViewMobile) => {
 
     const onPressCard = (data: ProjectOrder) => {
         onPressRowItem(data);
-        bottomSheetRef.current?.expand();
+        navigation.navigate(RouteNames.ORDER_DETAILS, {data});
+        // bottomSheetRef.current?.expand();
     };
 
-    const bottomSheetBackDrop = useCallback(props => (
-        <BottomSheetBackdrop
-            {...props}
-            disappearsOnIndex={-1}
-            appearsOnIndex={1}
-            pressBehavior={'none'}
-        />
-    ), []);
+    // const bottomSheetBackDrop = useCallback(props => (
+    //     <BottomSheetBackdrop
+    //         {...props}
+    //         disappearsOnIndex={-1}
+    //         appearsOnIndex={1}
+    //         pressBehavior={'none'}
+    //     />
+    // ), []);
 
     const onListEndReach = () => {
         const isHasNewData = data?.orders?.length < data?.meta?.count;
@@ -220,6 +222,10 @@ const OrdersViewMobile = ({navigation}: IOrdersViewMobile) => {
     };
 
 
+    const orderItemFlatlist = useCallback(({item, index}: {item: OrderItem, index: number;}) =>
+        <OrdersCartListCard data={item}  {...{index, projectsForPicker}} onValueChange={onCardValueChange} handleRemove={hanldeDeleteProductFromOrder} />, []);
+
+
     const renderDropDownSearch = useMemo(() => {
         return (
             < SearchWithDropDown
@@ -251,7 +257,7 @@ const OrdersViewMobile = ({navigation}: IOrdersViewMobile) => {
                 }
             />
             {renderLoadingMore}
-            <BottomSheet
+            {/* <BottomSheet
                 ref={bottomSheetRef}
                 handleComponent={bottomSheetHandler}
                 index={-1}
@@ -275,15 +281,15 @@ const OrdersViewMobile = ({navigation}: IOrdersViewMobile) => {
                         }
                     </View>
                     {renderOrderDetailInput}
-                    <BottomSheetFlatList
-                        data={orderDataForPost.orderItems}
+                    <FlatList
+                        data={orderDataForPost.orderItems ?? []}
                         keyExtractor={(item, index) => `${item.id}-${index}`}
                         ListFooterComponent={listFooter}
                         keyboardShouldPersistTaps={'handled'}
-                        renderItem={({item, index}) => <OrdersCartListCard data={item}  {...{index, projectsForPicker}} onValueChange={onCardValueChange} handleRemove={hanldeDeleteProductFromOrder} />}
+                        renderItem={orderItemFlatlist}
                     />
                 </View>
-            </BottomSheet>
+            </BottomSheet> */}
         </SafeAreaView >
 
     );

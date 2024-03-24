@@ -79,7 +79,7 @@ function OrderLogicProvider() {
     }
 
     async function addScannedProductToOrder(barcode: string) {
-        const response = await dispatch(OrdersApi.endpoints.itemForOrder.initiate(barcode, {forceRefetch: true}));
+        const response = await dispatch(OrdersApi.endpoints.getItemForOrder.initiate(barcode, {forceRefetch: true}));
         if (response.data?.length === 1) {
             const productForOrder = response.data[0];
             dispatch(addItemForOrder(productForOrder));

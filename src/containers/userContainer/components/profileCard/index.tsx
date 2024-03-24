@@ -33,7 +33,7 @@ const ProfileCard = React.forwardRef(({user, onPressCard, apiUrl, token, ...rest
             {...rest}
             style={style.container}>
             <View style={{}}>
-                <Text style={{color: Colors.DEFAULT_TEXT_COLOR}}>
+                <Text style={{color: Colors.DEFAULT_TEXT_COLOR}} allowFontScaling>
                     {`Welcome, ${person}!`}
                 </Text>
             </View>

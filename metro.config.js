@@ -1,8 +1,10 @@
-const {getDefaultConfig, mergeConfig} = require('@react-native/metro-config');
+const { getDefaultConfig, mergeConfig } = require('@react-native/metro-config');
 
 const fs = require('fs');
 const path = require('path');
 const exclusionList = require('metro-config/src/defaults/exclusionList');
+const defaultcConfig = getDefaultConfig(__dirname);
+const { assetExts, sourceExts } = defaultcConfig.resolver;
 
 const rnwPath = fs.realpathSync(
   path.resolve(require.resolve('react-native-windows/package.json'), '..'),
@@ -27,8 +29,11 @@ const config = {
       new RegExp(`${rnwPath}/target/.*`),
       /.*\.ProjectImports\.zip/,
     ]),
+    assetExts: assetExts.filter((ext) => ext !== "svg"),
+    sourceExts: [...sourceExts, "svg"]
   },
   transformer: {
+    babelTransformerPath: require.resolve("react-native-svg-transformer"),
     getTransformOptions: async () => ({
       transform: {
         experimentalImportSupport: false,

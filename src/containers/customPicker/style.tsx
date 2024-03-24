@@ -74,6 +74,7 @@ export const getStyle = () => {
         listContainer: {
             flex: 1,
             maxHeight: 250,
+
         },
         pickerButtonText: {
             color: Colors.DEFAULT_TEXT_COLOR,
@@ -81,16 +82,13 @@ export const getStyle = () => {
         },
         flyoutContent: {
             flex: 1,
-            minWidth: 100,
-            borderRadius: 3,
-            borderWidth: 2,
-            borderColor: Colors.DEFAULT_TEXT_COLOR,
         },
         searchInputContainer: {
             backgroundColor: Colors.FLORAL_WHITE
         },
         listContentContainer: {
             backgroundColor: Colors.FLORAL_WHITE,
+            gap: 1,
         }
     });
 

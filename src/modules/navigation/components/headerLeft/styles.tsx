@@ -6,7 +6,7 @@ export const getStyle = () => {
         container: {
             marginLeft: 10,
             alignItems: 'center',
-            justifyContent: 'center'
+            justifyContent: 'center',
         },
 
     });

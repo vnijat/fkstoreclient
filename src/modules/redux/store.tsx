@@ -59,6 +59,7 @@ export const store = configureStore({
                 ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER,],
                 warnAfter: 150,
             },
+            immuatableCheck: false
 
         }).concat(InventoryApi.middleware),
 });

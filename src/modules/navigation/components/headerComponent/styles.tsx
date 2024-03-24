@@ -5,6 +5,7 @@ export const getStyle = () => {
     const style = StyleSheet.create({
         container: {
             height: 50,
+            padding: 5,
             backgroundColor: Colors.CARD_HEADER_COLOR,
             alignItems: 'flex-end',
             paddingHorizontal: 20,

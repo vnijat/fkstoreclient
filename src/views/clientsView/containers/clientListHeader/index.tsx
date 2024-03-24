@@ -83,29 +83,21 @@ const ClientListHeader = ({logicProvider, dataProvider}: IClinetListHeader) => {
     return (
         <>
             <View style={style.container}>
-                <View style={{flexGrow: 1, flexDirection: 'row'}}>
-                    <View style={{flex: 0.3, justifyContent: 'center', paddingLeft: 10}}>
+                <View style={{flexGrow: 1, flexDirection: 'row', gap: 5}}>
+                    <View style={{flexGrow: 1}}>
                         <InputItem isSearch setValue={handleSearchInput} inputValue={clientQueryParams?.search!} height={30} />
                     </View>
-                    <View style={{flex: 0.7, paddingLeft: 10, justifyContent: 'center'}}>
-                        <View style={{flexDirection: 'row', alignItems: 'center', gap: 10, }}>
-                            {renderSortByes}
+                    {renderSortByes}
+                    <CustomPressable style={style.addButton}
+                        onHoverOpacity
+                        onPress={handleOnPressAddClient}>
+                        <View style={{paddingRight: 5}}>
+                            <Icon size={12} name={'add-user'} color={Colors.CARD_COLOR} />
                         </View>
-                    </View>
-                </View>
-                <View style={{flexGrow: 1, justifyContent: 'center'}}>
-                    <View style={{flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center'}}>
-                        <CustomPressable style={style.addButton}
-                            onHoverOpacity
-                            onPress={handleOnPressAddClient}>
-                            <View style={{paddingRight: 5}}>
-                                <Icon size={12} name={'add-user'} color={Colors.CARD_COLOR} />
-                            </View>
-                            <Text style={{color: Colors.CARD_COLOR}}>
-                                {'Add Client'}
-                            </Text>
-                        </CustomPressable>
-                    </View>
+                        <Text style={{color: Colors.CARD_COLOR}}>
+                            {'Add Client'}
+                        </Text>
+                    </CustomPressable>
                 </View>
             </View>
         </>

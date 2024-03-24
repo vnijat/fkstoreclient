@@ -4,10 +4,6 @@ import FONT from '../../../../utils/font';
 
 export const getStyle = () => {
     const style = StyleSheet.create({
-        container: {
-            backgroundColor: Colors.FLORAL_WHITE,
-            flex: 1
-        },
         logoText: {
             color: '#FFFF',
             fontWeight: '700',
@@ -16,7 +12,7 @@ export const getStyle = () => {
         drawerItem: {
             justifyContent: 'center',
             alignItems: 'center',
-            height: 50,
+            height:60,
             marginBottom: 5,
         },
         childDrawer: {
@@ -25,7 +21,7 @@ export const getStyle = () => {
             marginLeft: 2,
             justifyContent: 'center',
             alignItems: 'center',
-            height: 50,
+            height: 60,
         },
         routeTitle: {
             fontSize: FONT.FONT_SIZE_SMALL,

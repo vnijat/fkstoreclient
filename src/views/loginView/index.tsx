@@ -1,5 +1,5 @@
-import React, {useMemo, useState} from 'react';
-import {Image, ImageBackground, Text, TextInput, View} from "react-native";
+import React, {useMemo, useRef, useState} from 'react';
+import {Image, ImageBackground, Text, TextInput, TextInputProps, View} from "react-native";
 import {Colors} from "../../utils/colors";
 import {PrimaryButton} from '../../components/primaryButton';
 import CustomPressable from '../../components/customPressable';
@@ -34,6 +34,7 @@ const LoginView = () => {
     const dispatch = useAppDispatch();
     const navigation = useNavigation();
     const [apiLoginUser] = useLoginUserMutation();
+    let inputsRef = useRef<TextInput[] | null>([]);
     const [apiCreateUserWithMasterPassword] = useCreateUserWithMasterPasswordMutation();
     const style = useMemo(() => getStyle(), []);
     const [isCreateUser, setIsCreateUser] = useState(false);
@@ -103,6 +104,16 @@ const LoginView = () => {
     };
 
 
+    const onSubmitInput = (index: number) => {
+        const nextInput = inputsRef?.current[index + 1];
+        if (nextInput) {
+            nextInput?.focus();
+        } else {
+            handleOnpressActionButton()
+        }
+    };
+
+
 
     const renderInputs = useMemo(() => {
         return inputConfigs.map((inputConfig, index) => {
@@ -131,11 +142,13 @@ const LoginView = () => {
             return (
                 <View key={dtoKey} tooltip={hintText}>
                     <TextInput
+                        ref={(ref) => (inputsRef.current[index] = ref)}
                         value={inputValue}
                         onChangeText={(data) => setInputData({[dtoKey]: data}, parentDtoKey)}
                         placeholderTextColor={Colors.DEFAULT_TEXT_COLOR}
                         secureTextEntry={isSecureText}
                         placeholder={placeHolder}
+                        onSubmitEditing={() => onSubmitInput(index)}
                         style={style.input}
                     />
                 </View>

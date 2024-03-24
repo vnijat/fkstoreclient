@@ -1,7 +1,7 @@
 import CustomModal from "../../../../components/customModal";
 import {Colors} from "../../../../utils/colors";
 import {User} from "../../../../types/user.type";
-import {useMemo, useState} from "react";
+import {useEffect, useMemo, useState} from "react";
 import {getStyle} from "./styles";
 import {Image, Text, TextInput, View} from "react-native";
 import {accountInputConfigs} from "../../configs";
@@ -29,6 +29,11 @@ const MyAccountModal = ({isShowModal, onClose, data, token, apiUrl, onPressSave}
             Authorization: `Bearer ${token}`
         }
     };
+
+    useEffect(() => {
+        setNewData(data);
+    }, [data]);
+
 
     const handleDataChange = (data: string | Date, dtoKey: keyof User) => {
         setNewData((prev) => ({...prev, [dtoKey]: data}));

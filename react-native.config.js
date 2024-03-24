@@ -5,7 +5,12 @@ module.exports = {
                 windows: null
             },
         },
-        "react-native-document-picker": {
+        "react-native-image-picker": {
+            platforms: {
+                windows: null
+            },
+        },
+        "react-native-svg": {
             platforms: {
                 windows: null
             },

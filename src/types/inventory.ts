@@ -65,6 +65,7 @@ interface InventoryTransfersResponse {
   meta: Imeta;
   dataCount: number;
   orderBy: {sort: string; order: Order;};
+  transfersStartDate: Date;
 }
 
 export type {

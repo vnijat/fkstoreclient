@@ -1,19 +1,20 @@
-import React, { memo, useMemo } from "react";
-import { Text, View } from "react-native";
-import { Colors } from "../../../../../utils/colors";
+import React, {memo, useMemo} from "react";
+import {Pressable, Text, View} from "react-native";
+import {Colors} from "../../../../../utils/colors";
 import MIcon from "react-native-vector-icons/MaterialCommunityIcons";
-import { Item } from "../../../../../types/item";
-import { getStyle } from "./styles";
+import {Item} from "../../../../../types/item";
+import {getStyle} from "./styles";
 import FONT from "../../../../../utils/font";
-import { BarcodeIcon } from "../../../../../assets/icons/productIcons";
+import {BarcodeIcon} from "../../../../../assets/icons/productIcons";
 
 
 interface IProductListItem {
     data: Item;
+    onPress: (data: Item) => void;
 }
 
 
-const ProductListItem = ({ data }: IProductListItem) => {
+const ProductListItem = ({data, onPress}: IProductListItem) => {
     const style = useMemo(() => getStyle(), []);
 
     const PRODUCT_INFO_ICONS = [
@@ -41,41 +42,40 @@ const ProductListItem = ({ data }: IProductListItem) => {
 
 
     return (
-        <View style={style.container}>
+        <Pressable style={[style.container, data.outOfStock && {opacity: 0.6}]} android_ripple={{color: Colors.METALLIC_GOLD}} onPress={() => onPress(data)}>
             <View style={style.contentContainer}>
-                <View style={{ flex: 0.7 }}>
-                    <View style={{ flex: 0.7 }}>
-                        <Text style={style.productNameText} numberOfLines={3} >
+                <View style={{flexGrow: 1}}>
+                    <View style={{flex: 0.7, gap: 5, }}>
+                        <Text style={style.productNameText} numberOfLines={1} adjustsFontSizeToFit >
                             {data?.name.toUpperCase()}
                         </Text>
-                        <View style={{ flexDirection: 'row' }}>
+                        <View style={{flexDirection: 'row', gap: 2, }}>
                             <MIcon name={'store-marker'} size={16} color={Colors.METALLIC_GOLD} />
-                            <Text style={{ fontSize: FONT.FONT_SIZE_SMALL, color: Colors.DEFAULT_TEXT_COLOR }}>
+                            <Text style={{fontSize: FONT.FONT_SIZE_SMALL, color: Colors.DEFAULT_TEXT_COLOR}}>
                                 {`${data?.store.name}-${data?.location.code}`}
                             </Text>
                         </View>
-                    </View>
-                    <View style={style.bottomContainer}>
-                        <BarcodeIcon size={18} color={Colors.DEFAULT_TEXT_COLOR} />
-                        <Text style={style.barcodeText} numberOfLines={1} selectable>
-                            {data?.barcode}
-                        </Text>
+                        <View style={style.productInfoContainer}>
+                            <View style={style.quantityContainer}>
+                                <Text style={style.quantityText} adjustsFontSizeToFit numberOfLines={1}>
+                                    {Number(data.quantity)}
+                                </Text>
+                            </View>
+                            <View style={style.unitTypeContainer}>
+                                <Text style={style.unitTypeText} numberOfLines={1} adjustsFontSizeToFit>
+                                    {data?.unit.name.toUpperCase()}
+                                </Text>
+                            </View>
+                        </View>
                     </View>
                 </View>
-                <View style={style.rigthContainer}>
-                    {PRODUCT_INFO_ICONS.map((info, index) => {
-                        return (
-                            <View style={style.rightContianerItem} key={`${index}-${info.title}`}>
-                                <Text style={style.rightContainerItemText}>
-                                    {info.value}
-                                </Text>
-                                {info.icon}
-                            </View>
-                        );
-                    })}
+                <View style={style.bottomContainer}>
+                    <Text style={style.barcodeText} numberOfLines={1} selectable>
+                        {data?.barcode}
+                    </Text>
                 </View>
             </View>
-        </View>
+        </Pressable>
     );
 };
 

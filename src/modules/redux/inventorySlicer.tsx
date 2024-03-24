@@ -6,6 +6,7 @@ import {InventoryTrackQueryParams, InventoryTransfersParams} from "../../types/i
 interface IInventorySclier {
     inventoryTrackParams: InventoryTrackQueryParams;
     inventoryTransfersParams: InventoryTransfersParams;
+    isShowTransferAddModal: boolean;
 
 }
 
@@ -13,7 +14,9 @@ interface IInventorySclier {
 
 
 const initialState = {
-    inventoryTrackParams: {}
+    inventoryTrackParams: {},
+    inventoryTransfersParams: {},
+    isShowTransferAddModal: false
 
 } as IInventorySclier;
 
@@ -28,12 +31,17 @@ const inventorySlicer = createSlice({
         },
         setInventoryTransfersParams: (state, action: PayloadAction<InventoryTransfersParams>) => {
             Object.assign(state.inventoryTransfersParams, action.payload);
+        },
+        setIsShowTransferAddModal: (state, action: PayloadAction<boolean>) => {
+            state.isShowTransferAddModal = action.payload;
         }
     }
 });
 
 export const {
-    setInventoryTrackQueryParams
+    setInventoryTrackQueryParams,
+    setInventoryTransfersParams,
+    setIsShowTransferAddModal
 } = inventorySlicer.actions;
 
 export default inventorySlicer.reducer;

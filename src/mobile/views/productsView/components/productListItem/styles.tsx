@@ -1,26 +1,30 @@
-import { StyleSheet } from 'react-native';
-import { Colors } from '../../../../../utils/colors';
+import {Dimensions, StyleSheet, } from 'react-native';
+import {Colors} from '../../../../../utils/colors';
 import FONT from '../../../../../utils/font';
+
+const {width} = Dimensions.get('screen');
 
 export const getStyle = () => {
     const style = StyleSheet.create({
         container: {
             backgroundColor: Colors.CARD_HEADER_COLOR,
-            height: 80,
-            marginHorizontal: 5,
-            marginVertical: 2,
-            borderRadius: 3
+            width: width * 0.48,
+            height: 150,
+            borderRadius: 3,
         },
         contentContainer: {
             flex: 1,
-            flexDirection: 'row',
             paddingHorizontal: 5,
             paddingVertical: 5
         },
         bottomContainer: {
-            flex: 0.3,
-            flexDirection: 'row',
-            alignItems: 'center'
+            borderTopWidth: 1,
+            borderStyle: 'dashed',
+            borderColor: Colors.METALLIC_GOLD,
+            flexShrink: 1,
+            alignItems: 'center',
+            justifyContent: 'center'
+
         },
         rigthContainer: {
             flex: 0.3,
@@ -39,12 +43,50 @@ export const getStyle = () => {
         },
         barcodeText: {
             color: Colors.DEFAULT_TEXT_COLOR,
-            fontSize: FONT.FONT_SIZE_SMALL,
-            fontWeight: FONT.FONT_BOLD
+            fontSize: FONT.FONT_SIZE_LARGE,
+            fontWeight: FONT.FONT_BOLD,
+            width: '100%',
+            textAlign: 'center',
+            textShadowRadius: 1,
         },
         productNameText: {
             color: Colors.DEFAULT_TEXT_COLOR,
-            fontSize: FONT.FONT_SIZE_MEDIUM
+            fontSize: FONT.FONT_SIZE_MEDIUM,
+            width: '100%',
+        },
+        productInfoContainer: {
+            flexDirection: 'row',
+            gap: 5,
+            alignItems: 'center',
+            // borderWidth: 1,
+            borderRadius: 3,
+            borderColor: Colors.METALLIC_GOLD,
+        },
+        quantityContainer: {
+            width: 90,
+            height: 60,
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderColor: Colors.METALLIC_GOLD,
+        },
+        quantityText: {
+            width: '100%',
+            textAlign: 'center',
+            justifyContent: 'center',
+            alignItems: 'center',
+            color: Colors.METALLIC_GOLD,
+            fontWeight: FONT.FONT_BOLD,
+            textShadowRadius: 1,
+        },
+        unitTypeContainer: {
+            flexGrow: 1,
+        },
+        unitTypeText: {
+            color: Colors.DEFAULT_TEXT_COLOR,
+            fontSize: FONT.FONT_SIZE_MEDIUM,
+            width: '100%',
+            textAlign: 'left',
+            textShadowRadius: 1,
         }
     });
 

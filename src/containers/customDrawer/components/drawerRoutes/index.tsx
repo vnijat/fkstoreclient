@@ -15,7 +15,7 @@ interface INavigationRoutes {
 export interface IRouteData {
     title: string;
     routeName: string;
-    icon: (color: string) => Element;
+    icon: (color: string) => React.ReactNode;
     childRoutes?: IRouteData[];
 }
 

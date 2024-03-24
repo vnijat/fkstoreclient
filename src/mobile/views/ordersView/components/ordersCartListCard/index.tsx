@@ -1,5 +1,5 @@
 import CheckBox from "@react-native-community/checkbox";
-import React, {useCallback, useMemo, useRef, useState} from "react";
+import React, {memo, useCallback, useMemo, useRef, useState} from "react";
 import DropDownPicker, {ItemType, ValueType} from 'react-native-dropdown-picker';
 import {Text, View, TextInput, NativeSyntheticEvent, TextInputEndEditingEventData} from "react-native";
 import {BarcodeIcon} from "../../../../../assets/icons/productIcons";
@@ -12,6 +12,8 @@ import {getStyle} from "./styles";
 import {Swipeable} from "react-native-gesture-handler";
 import CustomPressable from "../../../../../components/customPressable";
 import {IProjectsForPicker} from "../../../../../types/project";
+import CustomCheckBox from "../../../../../components/customCheckBox";
+import CustomPicker from "../../../../../containers/customPicker";
 
 interface IOrdersCartListCard {
     data: OrderItem;
@@ -76,11 +78,12 @@ const OrdersCartListCard = ({data, index, onValueChange, handleRemove, projectsF
 
 
     const renderForProject = useMemo(() => {
-        return (<View style={style.proejctContainer}>
-            <Text style={{color: Colors.DEFAULT_TEXT_COLOR, fontSize: FONT.FONT_SIZE_VERY_SMALL, marginLeft: 10}}>
-                {`project`.toUpperCase()}
-            </Text>
-            <DropDownPicker
+        return (
+            < CustomPicker
+
+
+            />);
+        {/* <DropDownPicker
                 open={isPickerOpen}
                 listMode={'MODAL'}
                 showArrowIcon={!fullfilled}
@@ -101,9 +104,7 @@ const OrdersCartListCard = ({data, index, onValueChange, handleRemove, projectsF
                 value={data?.projectId as ValueType}
                 setValue={() => {}}
                 onSelectItem={({value}) => handleValueChange(value, 'projectId')}
-            />
-        </View>
-        );
+            /> */}
     }, [project, projectsForPicker, isPickerOpen, data?.projectId, fullfilled]);
 
     const renderInput = useMemo(() => {
@@ -138,7 +139,7 @@ const OrdersCartListCard = ({data, index, onValueChange, handleRemove, projectsF
                     </Text>
                 </View>
                 {renderAvailableAtStock}
-                {renderForProject}
+                {/* {renderForProject} */}
                 <View style={style.cartItemContentContainer}>
                     <View style={style.contentTop}>
                         <View style={style.contentTopLeft}>
@@ -172,11 +173,10 @@ const OrdersCartListCard = ({data, index, onValueChange, handleRemove, projectsF
                                         <Text style={{color: Colors.DEFAULT_TEXT_COLOR, fontSize: FONT.FONT_SIZE_VERY_SMALL, }}>
                                             {status.title.toUpperCase()}
                                         </Text>
-                                        <CheckBox
-                                            onValueChange={(value) => handleCheckBoxValue(index, value)}
+                                        <CustomCheckBox
                                             value={status.selected}
                                             disabled={fullfilled}
-                                            tintColors={{true: fullfilled ? Colors.COMPLETED_COLOR : Colors.METALLIC_GOLD, false: Colors.CARD_COLOR}}
+                                            onValueChange={(value) => handleCheckBoxValue(index, value)}
                                         />
                                     </View>
                                 );
@@ -220,4 +220,4 @@ const OrdersCartListCard = ({data, index, onValueChange, handleRemove, projectsF
 };
 
 
-export default OrdersCartListCard;;
+export default memo(OrdersCartListCard);

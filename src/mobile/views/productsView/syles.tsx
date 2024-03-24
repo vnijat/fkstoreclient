@@ -1,5 +1,5 @@
-import { Dimensions, StyleSheet } from 'react-native';
-import { Colors } from '../../../utils/colors';
+import {Dimensions, StyleSheet} from 'react-native';
+import {Colors} from '../../../utils/colors';
 import FONT from '../../../utils/font';
 
 export const getStyle = () => {
@@ -30,6 +30,7 @@ export const getStyle = () => {
         },
         searchPanelContainer: {
             height: 50,
+            width: '100%',
             backgroundColor: Colors.DEFAULT_TEXT_COLOR,
             justifyContent: 'center'
         },

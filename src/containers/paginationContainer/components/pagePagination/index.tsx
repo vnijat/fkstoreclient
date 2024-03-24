@@ -128,34 +128,35 @@ export const PagePagination: FC<IPagePAgination> = ({
 
   return (
     <View style={styles.paginationContainer}>
-      <View style={styles.paginationLeftContainer}>
-        {renderLeftButtons}
+      {/* <View style={styles.paginationLeftContainer}> */}
+      {/* {renderLeftButtons} */}
+      <View style={{flexShrink: 1}}>
         <PagesContainer pageCount={pageCount ?? 0} currentPage={page ?? 0} setNewPage={onPressPageNumber} />
-        {renderRightButtons}
       </View>
       <View
-        style={styles.paginationRightContainer}>
+        style={styles.paginationBottomContainer}>
         <Text style={styles.pageInfoText}>
           {showedItemCount > 0
             ? `Page ${page} / ${pageCount} | Showed ${showedItemsCount} / ${showedItemCount}`.toUpperCase()
             : 'No Data'}
         </Text>
-        <View style={styles.pickerContainer}>
-          <CustomPicker
-            singleSelectMode
-            singleSelectData={paginationTakeOptions}
-            singleSelected={take}
-            singleOnSelect={onChangeTakeParams}
-            itemStyle={styles.pickerItem}
-            itemTextStyle={styles.pickerItemText}
-            selectedItemStyle={styles.pickeritemSelected}
-            selectedItemTextStyle={styles.pickerItemSelectedText}
-            buttonStyle={styles.pickerButton}
-            butonTextStyle={styles.buttonTextStyle}
-            title={'SELECT'}
-          />
-        </View>
+        <CustomPicker
+          singleSelectMode
+          singleSelectData={paginationTakeOptions}
+          singleSelected={take}
+          singleOnSelect={onChangeTakeParams}
+          itemStyle={styles.pickerItem}
+          itemTextStyle={styles.pickerItemText}
+          selectedItemStyle={styles.pickeritemSelected}
+          selectedItemTextStyle={styles.pickerItemSelectedText}
+          buttonStyle={styles.pickerButton}
+          butonTextStyle={styles.buttonTextStyle}
+          arrowDownColor={Colors.METALLIC_GOLD}
+          title={'SELECT'}
+        />
       </View>
+      {/* {renderRightButtons} */}
+      {/* </View> */}
     </View>
   );
 };

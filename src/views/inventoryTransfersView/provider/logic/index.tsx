@@ -1,5 +1,5 @@
 import {ITableDataConfig} from "../../../../containers/simpleTable/types";
-import {setInventoryTrackQueryParams} from "../../../../modules/redux/inventorySlicer";
+import {setInventoryTrackQueryParams, setInventoryTransfersParams, setIsShowTransferAddModal} from "../../../../modules/redux/inventorySlicer";
 import {RootState, useAppDispatch} from "../../../../modules/redux/store";
 import {resetTable, setNewTableConfigs} from "../../../../modules/redux/tableConfigs";
 import {Imeta} from "../../../../types/common/common";
@@ -11,7 +11,7 @@ function InventoryTransfersLogicProvider() {
     const dispatch = useAppDispatch();
 
     function handleDateChange(data: {startDate: string, endDate: string;}) {
-        dispatch(setInventoryTrackQueryParams({
+        dispatch(setInventoryTransfersParams({
             startDate: data.startDate,
             endDate: data.endDate,
             page: 1
@@ -20,12 +20,16 @@ function InventoryTransfersLogicProvider() {
     }
 
     function handlePagination(data: Imeta) {
-        dispatch(setInventoryTrackQueryParams(data));
+        dispatch(setInventoryTransfersParams(data));
     }
 
     function handleSearchInput(value: string) {
-        dispatch(setInventoryTrackQueryParams({page: 1, search: value}));
+        dispatch(setInventoryTransfersParams({page: 1, search: value}));
 
+    }
+
+    function handleShowTransferAddModal() {
+        dispatch(setIsShowTransferAddModal(true));
     }
 
     function handleNewTableData(data: ITableDataConfig<InventoryTransfers>[]) {
@@ -42,7 +46,8 @@ function InventoryTransfersLogicProvider() {
         handleNewTableData,
         handleResetTableConfig,
         handleSearchInput,
-        handleDateChange
+        handleDateChange,
+        handleShowTransferAddModal
     };
 
 

@@ -1,8 +1,8 @@
-import React, { useMemo } from "react";
-import { Text } from "react-native";
+import React, {useMemo} from "react";
+import {Text} from "react-native";
 import CustomPressable from "../../../../components/customPressable";
-import { Colors } from "../../../../utils/colors";
-import { getStyle } from "./styles";
+import {Colors} from "../../../../utils/colors";
+import {getStyle} from "./styles";
 
 
 
@@ -14,7 +14,7 @@ interface IPageButton {
 }
 
 
-const PageButton = ({ isCurrent, value, onPressPageButton }: IPageButton) => {
+const PageButton = ({isCurrent, value, onPressPageButton}: IPageButton) => {
     const style = useMemo(() => getStyle(isCurrent), [isCurrent]);
 
     const handleOnpress = () => {
@@ -24,7 +24,7 @@ const PageButton = ({ isCurrent, value, onPressPageButton }: IPageButton) => {
     return (
         <CustomPressable
             onHoverOpacity
-            onPressIn={handleOnpress}
+            onPress={handleOnpress}
             style={style.pageButtons}
             pressedStyle={style.pageNumberPressed}>
             <Text style={style.pageText}>

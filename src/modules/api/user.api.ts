@@ -34,6 +34,21 @@ export const UserApi = InventoryApi.injectEndpoints({
                 body: body
             }),
             invalidatesTags: ['user'],
+        }),
+        uploadAvatar: build.mutation<{message: string, status: number;}, FormData>({
+            query: (body) => ({
+                url: '/user/avatar',
+                method: 'POST',
+                body: body,
+            }),
+            invalidatesTags: ['user'],
+        }),
+        removeAvatar: build.mutation<{message: string, status: number;}, undefined>({
+            query: () => ({
+                url: '/user/avatar',
+                method: 'DELETE',
+            }),
+            invalidatesTags: ['user'],
         })
     }),
     overrideExisting: true,
@@ -43,6 +58,8 @@ export const {
     useLoginUserMutation,
     useGetUserQuery,
     useCreateUserWithMasterPasswordMutation,
-    useEditUserMutation
+    useEditUserMutation,
+    useUploadAvatarMutation,
+    useRemoveAvatarMutation,
 } = UserApi
 

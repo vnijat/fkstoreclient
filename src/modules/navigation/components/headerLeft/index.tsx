@@ -1,6 +1,6 @@
 import {DrawerNavigationProp} from "@react-navigation/drawer";
 import {StackNavigationProp} from "@react-navigation/stack";
-import React, {useMemo} from "react";
+import React, {useCallback, useMemo} from "react";
 import {Pressable} from "react-native";
 import Icon from 'react-native-vector-icons/Entypo';
 import {Colors} from "../../../../utils/colors";
@@ -17,10 +17,14 @@ interface IHeaderLeft {
 const HeaderLeft = ({navigation}: IHeaderLeft) => {
     const style = useMemo(() => getStyle(), []);
 
+    const handleOnpress = useCallback(() => {
+        navigation.goBack();
+    }, []);
+
     return (
         <Pressable style={style.container}
-            onPress={() => navigation.goBack()}
-            hitSlop={{left: 20, top: 20, bottom: 20}}
+            onPress={handleOnpress}
+            hitSlop={{left: 20, top: 20, bottom: 20, right: 50}}
         >
             <Icon name='chevron-thin-left' size={25} color={Colors.DEFAULT_TEXT_COLOR} />
         </Pressable>

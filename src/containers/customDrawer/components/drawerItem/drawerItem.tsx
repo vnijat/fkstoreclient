@@ -28,7 +28,7 @@ const CustomDrawerItem: FC<CustomDrawerItemProps> = ({currentRoute, onPressRoute
         onPressRoute(routeName);
     };
     return (
-        <View tooltip={title}>
+        <View tooltip={title} >
             <CustomPressable onHoverOpacity style={[{backgroundColor: isSelected ? Colors.METALLIC_GOLD : 'transparent'}, isChild ? style.childDrawer : style.drawerItem]}
                 onLongPress={onLongPress}
                 onPress={onPressHandler}>

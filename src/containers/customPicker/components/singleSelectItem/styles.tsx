@@ -10,7 +10,7 @@ export const getStyle = (indent?: number) => {
             maxWidth: 200,
             alignItems: 'center',
             paddingHorizontal: 5,
-            justifyContent: 'space-between'
+            justifyContent: 'space-between',
         },
         counter: {
             width: 15,
